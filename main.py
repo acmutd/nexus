@@ -1,7 +1,6 @@
 import json
 from collections import defaultdict
 
-# Load JSON file
 with open("classes(1).json", "r", encoding="utf-8") as file:
     data = json.load(file)
 
@@ -40,36 +39,28 @@ for entry in lectures:
     course_groups[key]["instructors"] = entry["instructors"]
     course_groups[key]["course_number"] = entry["course_number"]
 
-def safe_int_conversion(value):
-    # Handle sections with letters (ex. bis2190.0w1.25s) by treating them as strings
-    # This will sort numeric sections first, then alphanumeric sections
-    if value.isdigit():
-        return (0, int(value))  # Numeric sections come first
-    return (1, value)  # Non-numeric sections come second
-
 # Create unique courses list with merged sections
 unique_courses = []
 for key, details in course_groups.items():
     course_data = {
         "course_number": details["course_number"],  
-        "course_prefix(es)": list(sorted(details["prefixes"])),  
-        "section(s)": list(sorted(details["sections"], key=safe_int_conversion)),  
+        "course_prefix": list(sorted(details["prefixes"])),  
+        "section": list(sorted(details["sections"])),  
         "title": details["title"],  
-        "instructor(s)": details["instructors"],  
-        "class_number(s)": list(sorted(details["class_numbers"])), 
+        "instructor": details["instructors"],  
+        "class_number": list(sorted(details["class_numbers"])), 
         "enrolled_current": details["enrolled_current"],  
         "enrolled_max": details["enrolled_max"],  
-        "assistant(s)": list(details["assistants"]),  
-        "school(s)": list(sorted(details["schools"])), 
-        "textbook(s)": list(details["textbooks"])  
+        "assistant": list(details["assistants"]),  
+        "school": list(sorted(details["schools"])), 
+        "textbook": list(details["textbooks"])  
     }
     unique_courses.append(course_data)
 
-# Sort courses by prefix and number
 unique_courses.sort(key=lambda x: (x["course_prefix"], x["course_number"]))
 
-# Save to output JSON file
 with open("unique_courses.json", "w", encoding="utf-8") as file:
     json.dump(unique_courses, file, indent=4, ensure_ascii=False)
 
 print(f"Processed {len(unique_courses)} unique courses. Results saved to 'unique_courses.json'")
+# Processed 1766 unique courses. Results saved to 'unique_courses.json'
