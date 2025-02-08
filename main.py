@@ -60,3 +60,28 @@ with open("unique_courses.json", "w", encoding="utf-8") as file:
 
 print(f"Processed {len(unique_courses)} unique courses. Results saved to 'unique_courses.json'")
 # Processed 1766 unique courses. Results saved to 'unique_courses.json'
+
+undergrad_course_count = 0
+for course in unique_courses:
+    if int(course["course_number"][0]) <= 4:
+        undergrad_course_count += 1
+print(f"Total number of undergraduate courses: {undergrad_course_count}")
+# Total number of undergraduate courses: 1199
+
+school_count = defaultdict(int)
+for course in unique_courses:
+    if int(course["course_number"][0]) <= 4:
+        for school in course["schools"]:
+            school_count[school] += 1
+
+for school, count in school_count.items():
+    print(f"{school}: {count}")
+# mgt: 528
+# bbs: 166
+# nsm: 272
+# ug: 4
+# aht: 215
+# is: 56
+# ecs: 349
+# eps: 192
+# hons: 1

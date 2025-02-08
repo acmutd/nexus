@@ -28,8 +28,8 @@
         "enrolled_current": 399,
         "enrolled_max": 402,
         "assistants": [
-            "Dipta Banik",
-            "Galymzhan Tazhibayev"
+            "Galymzhan Tazhibayev",
+            "Dipta Banik"
         ],
         "schools": [
             "mgt"
@@ -1882,8 +1882,8 @@
         "enrolled_current": 17,
         "enrolled_max": 30,
         "assistants": [
-            "Jimi Kim",
-            "Jingzhou Liu"
+            "Jingzhou Liu",
+            "Jimi Kim"
         ],
         "schools": [
             "nsm"
@@ -2177,10 +2177,10 @@
         "enrolled_current": 186,
         "enrolled_max": 231,
         "assistants": [
-            "Mahdi Dolatyari",
-            "Joseph Harper",
+            "Ahmad Khoshniat",
             "George Morgan",
-            "Ahmad Khoshniat"
+            "Mahdi Dolatyari",
+            "Joseph Harper"
         ],
         "schools": [
             "aht"
@@ -2204,8 +2204,8 @@
         "enrolled_current": 79,
         "enrolled_max": 80,
         "assistants": [
-            "Farzana Razzaque",
-            "Fatima Esmail"
+            "Fatima Esmail",
+            "Farzana Razzaque"
         ],
         "schools": [
             "aht"
@@ -2519,11 +2519,11 @@
         "enrolled_current": 156,
         "enrolled_max": 180,
         "assistants": [
-            "Michael Cabrera",
             "Anish Kusupati",
-            "Zeinab Abri",
             "Da Hyun Kim",
-            "Michael Plueger"
+            "Michael Plueger",
+            "Zeinab Abri",
+            "Michael Cabrera"
         ],
         "schools": [
             "aht"
@@ -2572,8 +2572,8 @@
         "enrolled_current": 101,
         "enrolled_max": 100,
         "assistants": [
-            "Lintai Shi",
-            "Mikey Bess"
+            "Mikey Bess",
+            "Lintai Shi"
         ],
         "schools": [
             "aht"
@@ -2817,9 +2817,9 @@
         "enrolled_current": 140,
         "enrolled_max": 140,
         "assistants": [
+            "Kyul Kang",
             "Marjan Daneshvarkashkooli",
-            "Angela Ford",
-            "Kyul Kang"
+            "Angela Ford"
         ],
         "schools": [
             "aht"
@@ -4260,9 +4260,9 @@
         "enrolled_current": 250,
         "enrolled_max": 251,
         "assistants": [
-            "Ridma Sirimanna",
             "Dun Ning",
-            "Rithika Anand"
+            "Rithika Anand",
+            "Ridma Sirimanna"
         ],
         "schools": [
             "nsm"
@@ -4319,17 +4319,17 @@
         "enrolled_max": 529,
         "assistants": [
             "",
-            "Eranda Berisha",
-            "Bhavani Balasundarasekar",
-            "Waris Khuwaja",
             "Jessica Gomez",
-            "Hibah Amin",
-            "Hsin-Jung Tien",
             "Juanita Martinez",
+            "Hsin-Jung Tien",
+            "Waris Khuwaja",
+            "Ceejay Saenz",
+            "Eranda Berisha",
+            "Junyu Liu",
             "Caylah Griffin",
             "Ashlianne Nelson",
-            "Ceejay Saenz",
-            "Junyu Liu"
+            "Hibah Amin",
+            "Bhavani Balasundarasekar"
         ],
         "schools": [
             "nsm"
@@ -4378,9 +4378,9 @@
         "enrolled_current": 250,
         "enrolled_max": 250,
         "assistants": [
-            "John Camp",
             "Sharan Kumar Balaji",
             "Maha Noorani",
+            "John Camp",
             "Stephanie Yamauchi"
         ],
         "schools": [
@@ -4405,9 +4405,9 @@
         "enrolled_current": 250,
         "enrolled_max": 251,
         "assistants": [
+            "Rithika Anand",
             "Ridma Sirimanna",
-            "Dun Ning",
-            "Rithika Anand"
+            "Dun Ning"
         ],
         "schools": [
             "nsm"
@@ -4456,9 +4456,9 @@
         "enrolled_current": 120,
         "enrolled_max": 120,
         "assistants": [
-            "Ebenezer Senu",
+            "Aparna Uppuluri",
             "Fabiha Zaheen Khan",
-            "Aparna Uppuluri"
+            "Ebenezer Senu"
         ],
         "schools": [
             "nsm"
@@ -4656,10 +4656,10 @@
         "enrolled_current": 180,
         "enrolled_max": 200,
         "assistants": [
-            "Umar Patel",
-            "Yihan Liu",
             "Jiahe Zhi",
+            "Umar Patel",
             "Zhan Shi",
+            "Yihan Liu",
             "Jacob Rappazzo"
         ],
         "schools": [
@@ -4685,10 +4685,10 @@
         "enrolled_current": 288,
         "enrolled_max": 290,
         "assistants": [
+            "Hamza Lalami",
             "Olufemi Ifeoluwa Afolami",
             "Prarthana Suresh",
-            "Dibyo Maiti",
-            "Hamza Lalami"
+            "Dibyo Maiti"
         ],
         "schools": [
             "nsm"
@@ -4746,8 +4746,8 @@
             "Suman Tiwari",
             "Hanling Gong",
             "Kavya Veera",
-            "Emma Winn",
-            "Lyndsey Langley"
+            "Lyndsey Langley",
+            "Emma Winn"
         ],
         "schools": [
             "nsm"
@@ -4772,9 +4772,9 @@
         "enrolled_current": 139,
         "enrolled_max": 160,
         "assistants": [
+            "Nan Zhang",
             "Sharan Kumar Balaji",
-            "Lindsay Spence",
-            "Nan Zhang"
+            "Lindsay Spence"
         ],
         "schools": [
             "nsm"
@@ -5793,9 +5793,9 @@
         "enrolled_current": 57,
         "enrolled_max": 240,
         "assistants": [
-            "Jack Sibert",
+            "Sushma Vs",
             "Dylan Wicherts",
-            "Sushma Vs"
+            "Jack Sibert"
         ],
         "schools": [
             "nsm"
@@ -6276,8 +6276,8 @@
         "enrolled_max": 57,
         "assistants": [
             "Mohammadaref Ghaderi",
-            "Paulina Trevino",
-            "Fatemeh Rahmani"
+            "Fatemeh Rahmani",
+            "Paulina Trevino"
         ],
         "schools": [
             "ecs"
@@ -6303,9 +6303,9 @@
         "enrolled_current": 63,
         "enrolled_max": 67,
         "assistants": [
+            "Fatemeh Rahmani",
             "Mohammadaref Ghaderi",
-            "Paulina Trevino",
-            "Fatemeh Rahmani"
+            "Paulina Trevino"
         ],
         "schools": [
             "ecs"
@@ -6379,8 +6379,8 @@
         "enrolled_max": 72,
         "assistants": [
             "Connor Carnes",
-            "Connor Neifert",
-            "Juliet Addo"
+            "Juliet Addo",
+            "Connor Neifert"
         ],
         "schools": [
             "ecs"
@@ -6476,8 +6476,8 @@
         "enrolled_current": 60,
         "enrolled_max": 60,
         "assistants": [
-            "Naomie Mirindi Neema",
-            "Farhan Vahdat Azad"
+            "Farhan Vahdat Azad",
+            "Naomie Mirindi Neema"
         ],
         "schools": [
             "ecs"
@@ -6697,8 +6697,8 @@
         "enrolled_current": 62,
         "enrolled_max": 62,
         "assistants": [
-            "Sumedha Guha",
-            "Krishna Prajapati"
+            "Krishna Prajapati",
+            "Sumedha Guha"
         ],
         "schools": [
             "ecs"
@@ -8078,8 +8078,8 @@
         "enrolled_current": 17,
         "enrolled_max": 51,
         "assistants": [
-            "Bruno Chavez Flores",
-            "Rachana Venkumahanti"
+            "Rachana Venkumahanti",
+            "Bruno Chavez Flores"
         ],
         "schools": [
             "mgt"
@@ -9017,8 +9017,8 @@
         "enrolled_current": 19,
         "enrolled_max": 96,
         "assistants": [
-            "Dishant Modi",
-            "Hiranmayi Tangella"
+            "Hiranmayi Tangella",
+            "Dishant Modi"
         ],
         "schools": [
             "mgt"
@@ -10481,8 +10481,8 @@
         "assistants": [
             "Sk Nayemuzzaman",
             "Sameer Dhole",
-            "Shakil Ahmed",
-            "Mushfiqul Abedin Khan"
+            "Mushfiqul Abedin Khan",
+            "Shakil Ahmed"
         ],
         "schools": [
             "ecs"
@@ -10567,9 +10567,9 @@
         "enrolled_current": 168,
         "enrolled_max": 340,
         "assistants": [
-            "",
+            "Mostafa Habibi Dehsheikhi",
             "Omer Eroglu",
-            "Mostafa Habibi Dehsheikhi"
+            ""
         ],
         "schools": [
             "ecs"
@@ -10627,11 +10627,11 @@
         "enrolled_current": 135,
         "enrolled_max": 300,
         "assistants": [
-            "Dipali Jain",
             "Alma Abbasnia",
+            "Dipali Jain",
+            "Seyed Saeed Hashemi Esmaeilabad",
             "Nayan Sarker",
-            "Lena Duraisamy Swamikannan",
-            "Seyed Saeed Hashemi Esmaeilabad"
+            "Lena Duraisamy Swamikannan"
         ],
         "schools": [
             "ecs"
@@ -10657,8 +10657,8 @@
         "enrolled_current": 39,
         "enrolled_max": 140,
         "assistants": [
-            "Shideh Tayeb Naimi",
-            "Mohammed Mahbub"
+            "Mohammed Mahbub",
+            "Shideh Tayeb Naimi"
         ],
         "schools": [
             "ecs"
@@ -10684,9 +10684,9 @@
         "enrolled_current": 60,
         "enrolled_max": 140,
         "assistants": [
-            "Shideh Tayeb Naimi",
+            "Mohammed Belal Uddin",
             "Mohammed Mahbub",
-            "Mohammed Belal Uddin"
+            "Shideh Tayeb Naimi"
         ],
         "schools": [
             "ecs"
@@ -11007,8 +11007,8 @@
         "enrolled_current": 67,
         "enrolled_max": 138,
         "assistants": [
-            "Zeinab Delaram",
-            "Dismas Ezechukwu"
+            "Dismas Ezechukwu",
+            "Zeinab Delaram"
         ],
         "schools": [
             "ecs"
@@ -11451,8 +11451,8 @@
         "enrolled_current": 4,
         "enrolled_max": 48,
         "assistants": [
-            "Carole Leung",
-            "Patricia Monique Sanchez"
+            "Patricia Monique Sanchez",
+            "Carole Leung"
         ],
         "schools": [
             "bbs"
@@ -11526,8 +11526,8 @@
         "enrolled_current": 2,
         "enrolled_max": 48,
         "assistants": [
-            "Israel Smitherman",
-            "Alireza Irani Helabad"
+            "Alireza Irani Helabad",
+            "Israel Smitherman"
         ],
         "schools": [
             "bbs"
@@ -14447,8 +14447,8 @@
         "enrolled_current": 47,
         "enrolled_max": 48,
         "assistants": [
-            "Kerrie Ann Hull",
-            "Minyeong Yoon"
+            "Minyeong Yoon",
+            "Kerrie Ann Hull"
         ],
         "schools": [
             "eps"
@@ -15233,8 +15233,8 @@
         "enrolled_current": 50,
         "enrolled_max": 90,
         "assistants": [
-            "Rakshitha Rao Ailneni",
-            "Maxwell Weinzierl"
+            "Maxwell Weinzierl",
+            "Rakshitha Rao Ailneni"
         ],
         "schools": [
             "ecs"
@@ -17716,8 +17716,8 @@
         "enrolled_current": 215,
         "enrolled_max": 245,
         "assistants": [
-            "Brandon Jones",
-            "Meizhen Chen"
+            "Meizhen Chen",
+            "Brandon Jones"
         ],
         "schools": [
             "eps"
@@ -17891,8 +17891,8 @@
         "enrolled_current": 28,
         "enrolled_max": 45,
         "assistants": [
-            "Yuan Ma",
-            "Ayesha Tasnim"
+            "Ayesha Tasnim",
+            "Yuan Ma"
         ],
         "schools": [
             "eps"
@@ -21305,8 +21305,8 @@
         "enrolled_current": 30,
         "enrolled_max": 30,
         "assistants": [
-            "Maria Islam",
-            "Rahul Thakar"
+            "Rahul Thakar",
+            "Maria Islam"
         ],
         "schools": [
             "eps"
@@ -21404,8 +21404,8 @@
         "enrolled_current": 34,
         "enrolled_max": 40,
         "assistants": [
-            "Kerrie Ann Hull",
-            "Minyeong Yoon"
+            "Minyeong Yoon",
+            "Kerrie Ann Hull"
         ],
         "schools": [
             "eps"
@@ -21453,8 +21453,8 @@
         "enrolled_current": 14,
         "enrolled_max": 24,
         "assistants": [
-            "Yeamin Faria Chowdhury",
-            "Changho Lee"
+            "Changho Lee",
+            "Yeamin Faria Chowdhury"
         ],
         "schools": [
             "eps"
@@ -21831,8 +21831,8 @@
         "enrolled_current": 97,
         "enrolled_max": 98,
         "assistants": [
-            "Amine Faali",
-            "Celia Hay"
+            "Celia Hay",
+            "Amine Faali"
         ],
         "schools": [
             "aht"
@@ -23281,8 +23281,8 @@
         "enrolled_current": 9,
         "enrolled_max": 96,
         "assistants": [
-            "Kenneth Keith",
-            "Aariz Khan"
+            "Aariz Khan",
+            "Kenneth Keith"
         ],
         "schools": [
             "mgt"
@@ -24197,8 +24197,8 @@
         "enrolled_current": 10,
         "enrolled_max": 20,
         "assistants": [
-            "Yeamin Faria Chowdhury",
-            "Changho Lee"
+            "Changho Lee",
+            "Yeamin Faria Chowdhury"
         ],
         "schools": [
             "eps"
@@ -24324,8 +24324,8 @@
         "enrolled_current": 433,
         "enrolled_max": 900,
         "assistants": [
-            "Ariel Wang",
-            "Sadman Shafiq"
+            "Sadman Shafiq",
+            "Ariel Wang"
         ],
         "schools": [
             "eps"
@@ -24841,14 +24841,14 @@
         "enrolled_current": 237,
         "enrolled_max": 240,
         "assistants": [
-            "Mojtaba Al Sayyedan",
-            "Jennifer Armstrong",
-            "Joey Turner",
-            "Saul Leon Dubon",
-            "Kehinde Tijani",
-            "Taylor Gee",
             "Sabro Bengaro",
-            "Odegua Akhighu"
+            "Taylor Gee",
+            "Mojtaba Al Sayyedan",
+            "Odegua Akhighu",
+            "Joey Turner",
+            "Kehinde Tijani",
+            "Jennifer Armstrong",
+            "Saul Leon Dubon"
         ],
         "schools": [
             "aht"
@@ -24872,10 +24872,10 @@
         "enrolled_current": 239,
         "enrolled_max": 240,
         "assistants": [
-            "Kehinde Tijani",
-            "Jennifer Armstrong",
+            "Joey Turner",
             "Saul Leon Dubon",
-            "Joey Turner"
+            "Kehinde Tijani",
+            "Jennifer Armstrong"
         ],
         "schools": [
             "aht"
@@ -24899,10 +24899,10 @@
         "enrolled_current": 235,
         "enrolled_max": 240,
         "assistants": [
-            "Maryam Sadeghi",
-            "Shengxin Zhang",
+            "Angie Simmons",
             "Ash Seidl-Staley",
-            "Angie Simmons"
+            "Shengxin Zhang",
+            "Maryam Sadeghi"
         ],
         "schools": [
             "aht"
@@ -24951,9 +24951,9 @@
         "enrolled_max": 240,
         "assistants": [
             "Anthony Vecchio",
-            "Clayton Cummings",
+            "Kaitlyn Weirich",
             "Brenda Lakhani",
-            "Kaitlyn Weirich"
+            "Clayton Cummings"
         ],
         "schools": [
             "aht"
@@ -27640,8 +27640,8 @@
         "enrolled_current": 341,
         "enrolled_max": 360,
         "assistants": [
-            "Marjan Daneshvarkashkooli",
             "Inez Olivas",
+            "Marjan Daneshvarkashkooli",
             "Lilia Martinez"
         ],
         "schools": [
@@ -28005,8 +28005,8 @@
         "enrolled_max": 70,
         "assistants": [
             "Aryan Patel",
-            "Bhavana Balagopal",
-            "Aditi Kailas Bagul"
+            "Aditi Kailas Bagul",
+            "Bhavana Balagopal"
         ],
         "schools": [
             "mgt"
@@ -28056,8 +28056,8 @@
         "enrolled_current": 41,
         "enrolled_max": 70,
         "assistants": [
-            "Athithyaa Muthuraman",
-            "Bhavana Balagopal"
+            "Bhavana Balagopal",
+            "Athithyaa Muthuraman"
         ],
         "schools": [
             "mgt"
@@ -28105,9 +28105,9 @@
         "enrolled_current": 39,
         "enrolled_max": 70,
         "assistants": [
+            "Aditi Kailas Bagul",
             "Sarah Shahid",
-            "Chaitanya Moregaonkar",
-            "Aditi Kailas Bagul"
+            "Chaitanya Moregaonkar"
         ],
         "schools": [
             "mgt"
@@ -28131,9 +28131,9 @@
         "enrolled_current": 60,
         "enrolled_max": 60,
         "assistants": [
-            "Vineet Vinod Agarwal",
             "Kareem Mohamed Abdelazim Elbanna",
-            "Jasmeen Banwait"
+            "Jasmeen Banwait",
+            "Vineet Vinod Agarwal"
         ],
         "schools": [
             "mgt"
@@ -28528,8 +28528,8 @@
         "enrolled_max": 160,
         "assistants": [
             "Cole Cash",
-            "Protima Dash",
-            "Mohammad Abdul Halim"
+            "Mohammad Abdul Halim",
+            "Protima Dash"
         ],
         "schools": [
             "nsm"
@@ -30165,9 +30165,9 @@
         "enrolled_current": 91,
         "enrolled_max": 160,
         "assistants": [
-            "Soroush Setayeshpour",
+            "Rituja Kulkarni",
             "Oredola Adebayo",
-            "Rituja Kulkarni"
+            "Soroush Setayeshpour"
         ],
         "schools": [
             "ecs"
@@ -31209,8 +31209,8 @@
         "enrolled_current": 83,
         "enrolled_max": 117,
         "assistants": [
-            "Ravi Kiran Reddy Konda",
-            ""
+            "",
+            "Ravi Kiran Reddy Konda"
         ],
         "schools": [
             "mgt"
@@ -32472,8 +32472,8 @@
         "enrolled_current": 179,
         "enrolled_max": 180,
         "assistants": [
-            "Peihan Li",
-            "Achint Kaur Bajwa"
+            "Achint Kaur Bajwa",
+            "Peihan Li"
         ],
         "schools": [
             "mgt"
@@ -32499,8 +32499,8 @@
         "enrolled_current": 95,
         "enrolled_max": 95,
         "assistants": [
-            "Yeshashwini Bekkary",
-            "Tongpu Yu"
+            "Tongpu Yu",
+            "Yeshashwini Bekkary"
         ],
         "schools": [
             "mgt"
@@ -36021,8 +36021,8 @@
         "enrolled_current": 244,
         "enrolled_max": 240,
         "assistants": [
-            "Amit Kumar Pandey",
-            "Bhushan Bendigeri"
+            "Bhushan Bendigeri",
+            "Amit Kumar Pandey"
         ],
         "schools": [
             "mgt"
@@ -36144,8 +36144,8 @@
         "enrolled_current": 63,
         "enrolled_max": 63,
         "assistants": [
-            "Amit Kumar Pandey",
-            "Bhushan Bendigeri"
+            "Bhushan Bendigeri",
+            "Amit Kumar Pandey"
         ],
         "schools": [
             "mgt"
@@ -36443,8 +36443,8 @@
         "enrolled_current": 43,
         "enrolled_max": 48,
         "assistants": [
-            "Dishant Modi",
-            "Hiranmayi Tangella"
+            "Hiranmayi Tangella",
+            "Dishant Modi"
         ],
         "schools": [
             "mgt"
@@ -36837,8 +36837,8 @@
         "enrolled_current": 72,
         "enrolled_max": 103,
         "assistants": [
-            "Dishant Modi",
-            "Hiranmayi Tangella"
+            "Hiranmayi Tangella",
+            "Dishant Modi"
         ],
         "schools": [
             "mgt"
@@ -37035,8 +37035,8 @@
         "enrolled_current": 10,
         "enrolled_max": 50,
         "assistants": [
-            "Dishant Modi",
-            "Hiranmayi Tangella"
+            "Hiranmayi Tangella",
+            "Dishant Modi"
         ],
         "schools": [
             "mgt"
@@ -37351,8 +37351,8 @@
         "enrolled_current": 0,
         "enrolled_max": 1,
         "assistants": [
-            "Bruno Chavez Flores",
-            "Rachana Venkumahanti"
+            "Rachana Venkumahanti",
+            "Bruno Chavez Flores"
         ],
         "schools": [
             "mgt"
@@ -38078,8 +38078,8 @@
         "enrolled_current": 98,
         "enrolled_max": 120,
         "assistants": [
-            "Coco Gagnet",
-            "Jeongmi Hwang"
+            "Jeongmi Hwang",
+            "Coco Gagnet"
         ],
         "schools": [
             "aht"
@@ -38732,8 +38732,8 @@
         "enrolled_current": 26,
         "enrolled_max": 40,
         "assistants": [
-            "Aya Arabiat",
             "Christina McNally",
+            "Aya Arabiat",
             "Seyed Hossein Hosseini"
         ],
         "schools": [
@@ -39488,8 +39488,8 @@
         "enrolled_current": 120,
         "enrolled_max": 130,
         "assistants": [
-            "Katie Widner",
-            "Victor Alfa"
+            "Victor Alfa",
+            "Katie Widner"
         ],
         "schools": [
             "eps"
@@ -39585,8 +39585,8 @@
         "enrolled_current": 29,
         "enrolled_max": 90,
         "assistants": [
-            "Maria Islam",
-            "Sonali Singh"
+            "Sonali Singh",
+            "Maria Islam"
         ],
         "schools": [
             "eps"
@@ -40550,8 +40550,8 @@
         "enrolled_current": 43,
         "enrolled_max": 48,
         "assistants": [
-            "Carole Leung",
-            "Patricia Monique Sanchez"
+            "Patricia Monique Sanchez",
+            "Carole Leung"
         ],
         "schools": [
             "bbs"
@@ -40625,8 +40625,8 @@
         "enrolled_current": 46,
         "enrolled_max": 48,
         "assistants": [
-            "Israel Smitherman",
-            "Alireza Irani Helabad"
+            "Alireza Irani Helabad",
+            "Israel Smitherman"
         ],
         "schools": [
             "bbs"
@@ -40917,8 +40917,8 @@
         "enrolled_current": 18,
         "enrolled_max": 120,
         "assistants": [
-            "Coco Gagnet",
-            "Jeongmi Hwang"
+            "Jeongmi Hwang",
+            "Coco Gagnet"
         ],
         "schools": [
             "aht"
@@ -43755,8 +43755,8 @@
         "enrolled_current": 4,
         "enrolled_max": 63,
         "assistants": [
-            "Ravi Kiran Reddy Konda",
-            ""
+            "",
+            "Ravi Kiran Reddy Konda"
         ],
         "schools": [
             "mgt"
@@ -43852,8 +43852,8 @@
         "enrolled_current": 1,
         "enrolled_max": 4,
         "assistants": [
-            "Bruno Chavez Flores",
-            "Rachana Venkumahanti"
+            "Rachana Venkumahanti",
+            "Bruno Chavez Flores"
         ],
         "schools": [
             "mgt"
