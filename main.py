@@ -1,87 +1,100 @@
+import asyncio
+import discord
 import json
-from collections import defaultdict
+from discord.ext import commands
+from dotenv import load_dotenv
+import os
+from flask import Flask, request, jsonify
 
-with open("classes(1).json", "r", encoding="utf-8") as file:
-    data = json.load(file)
+load_dotenv()
 
-lectures = [entry for entry in data if entry.get("activity_type") == "Lecture" and str(entry.get("school")) not in ["999", "HONS"]]
+TOKEN = os.getenv("DISCORD_TOKEN")
+GUILD_NAME = "nexus"
+JSON_FILE = "ecs_courses.json"
 
-# Group courses by their unique identifiers
-course_groups = defaultdict(lambda: {
-    "prefixes": set(),
-    "sections": set(),
-    "schools": set(),
-    "enrolled_current": 0,
-    "enrolled_max": 0,
-    "class_numbers": set(),
-    "assistants": set()
-})
+bot = commands.Bot(command_prefix="!", intents=discord.Intents.default())
 
-for entry in lectures:
-    key = (entry["course_number"].strip(), ''.join(sorted(entry["instructors"])))
-    
-    # Update sets and numeric values
-    course_groups[key]["prefixes"].add(entry["course_prefix"].strip())
-    course_groups[key]["sections"].add(str(entry["section"]).strip())
-    course_groups[key]["schools"].add(entry["school"].strip())
-    course_groups[key]["class_numbers"].add(int(entry["class_number"]))
-    course_groups[key]["assistants"].update(entry["assistants"].split(", "))
-    
-    course_groups[key]["enrolled_current"] += int(entry["enrolled_current"])
-    course_groups[key]["enrolled_max"] += int(entry["enrolled_max"])
-    
-    # Store non-set values
-    course_groups[key]["title"] = entry["title"].strip()
-    course_groups[key]["instructors"] = entry["instructors"].split(", ")
-    course_groups[key]["course_number"] = entry["course_number"]
+app = Flask(__name__)
 
 
-# Create unique courses list with merged sections
-unique_courses = []
-for key, details in course_groups.items():
-    course_data = {
-        "course_number": details["course_number"],  
-        "course_prefixes": list(sorted(details["prefixes"])),  
-        "sections": list(sorted(details["sections"])),  
-        "title": details["title"],  
-        "instructors": details["instructors"],  
-        "class_numbers": list(sorted(details["class_numbers"])), 
-        "enrolled_current": details["enrolled_current"],  
-        "enrolled_max": details["enrolled_max"],  
-        "assistants": list(details["assistants"]),  
-        "schools": list(sorted(details["schools"])), 
-    }
-    unique_courses.append(course_data)
+async def create_course_channels(guild):
+    with open("data/ecs_courses.json", "r") as file:
+        courses = json.load(file)
 
-unique_courses.sort(key=lambda x: (x["course_prefixes"], x["course_number"]))
+    for course in courses:
+        channel_name = f"{course['title']}-{course['instructors'][0]}"
 
-with open("unique_courses.json", "w", encoding="utf-8") as file:
-    json.dump(unique_courses, file, indent=4, ensure_ascii=False)
+        if not discord.utils.get(guild.channels, name=channel_name):
+            overwrites = {
+                guild.default_role: discord.PermissionOverwrite(view_channel=False),
+            }
+            await guild.create_text_channel(channel_name, overwrites=overwrites)
+            print(f"Created channel {channel_name}.")
 
-print(f"Processed {len(unique_courses)} unique courses. Results saved to 'unique_courses.json'")
-# Processed 1766 unique courses. Results saved to 'unique_courses.json'
 
-undergrad_course_count = 0
-for course in unique_courses:
-    if int(course["course_number"][0]) <= 4:
-        undergrad_course_count += 1
-print(f"Total number of undergraduate courses: {undergrad_course_count}")
-# Total number of undergraduate courses: 1199
+async def add_user_to_course_channel(discord_id, course_id, guild):
+    with open(JSON_FILE, "r") as file:
+        courses = json.load(file)
 
-school_count = defaultdict(int)
-for course in unique_courses:
-    if int(course["course_number"][0]) <= 4:
-        for school in course["schools"]:
-            school_count[school] += 1
+    course = next(
+        (course for course in courses if course_id in course["class_numbers"]), None
+    )
+    if not course:
+        print(f"Course with ID {course_id} not found.")
+        return
 
-for school, count in school_count.items():
-    print(f"{school}: {count}")
-# mgt: 528
-# bbs: 166
-# nsm: 272
-# ug: 4
-# aht: 215
-# is: 56
-# ecs: 349
-# eps: 192
-# hons: 1
+    channel_name = f"{course['title']}-{course['instructors'][0]}"
+
+    member = guild.get_member(discord_id)
+    if not member:
+        print(f"Member with Discord ID {discord_id} not found.")
+        return
+
+    channel = discord.utils.get(guild.channels, name=channel_name)
+    await channel.set_permissions(member, read_messages=True)
+
+    print(f"Added {member.name} to {channel_name}.")
+
+
+@bot.event
+async def on_ready():
+    guild = discord.utils.get(bot.guilds, name=GUILD_NAME)
+    if guild:
+        await create_course_channels(guild)
+
+
+@app.route("/add_user_to_course", methods=["POST"])
+def add_user_to_course():
+    discord_id = request.json.get("discord_id")
+    course_id = request.json.get("course_id")
+
+    if not discord_id or not course_id:
+        return jsonify({"error": "Both discord_id and course_id are required"}), 400
+
+    guild = discord.utils.get(bot.guilds, name=GUILD_NAME)
+    if not guild:
+        return jsonify({"error": f"Guild {GUILD_NAME} not found"}), 404
+
+    asyncio.run(add_user_to_course_channel(discord_id, course_id, guild))
+
+    return jsonify(
+        {"message": f"User {discord_id} is being added to course {course_id}."}
+    )
+
+
+def run_flask():
+    app.run(host="0.0.0.0", port=5001)
+
+
+def run_bot():
+    bot.run(TOKEN)
+
+
+async def run():
+    flask_thread = asyncio.to_thread(run_flask)
+    bot_thread = asyncio.to_thread(run_bot)
+    await asyncio.gather(flask_thread, bot_thread)
+
+
+if __name__ == "__main__":
+    asyncio.run(run())
