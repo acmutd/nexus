@@ -22,7 +22,7 @@ async def create_course_channels(guild):
         courses = json.load(file)
 
     for course in courses:
-        channel_name = f"{course['title']}-{course['instructors'][0]}"
+        channel_name = f"{course['title'].lower().replace(' ', '-')}-{course['instructors'][0].lower().replace(' ', '-')}"
 
         if not discord.utils.get(guild.channels, name=channel_name):
             overwrites = {
@@ -30,6 +30,7 @@ async def create_course_channels(guild):
             }
             await guild.create_text_channel(channel_name, overwrites=overwrites)
             print(f"Created channel {channel_name}.")
+    print("Done creating channels.")
 
 
 async def add_user_to_course_channel(discord_id, course_id, guild):
