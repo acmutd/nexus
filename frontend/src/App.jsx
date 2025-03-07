@@ -12,6 +12,7 @@ import GradeCalculator from './pages/GradeCalculator';
 import SectionChat from './pages/SectionChat'; 
 import DocPreview from './pages/DocPreview'; 
 import Footer from './components/Footer';
+import GradeHistory from './pages/GradeHistory';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Route path="/upload" element={<UploadDoc />} />
           <Route path="/section-chat/:roomId" element={<SectionChat />} />
           <Route path="/doc-preview" element={<DocPreview />} />
+          <Route path="/grade-history" element={<GradeHistory />} />
         </Routes>
       </div>
     </Router>
