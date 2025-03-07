@@ -2,9 +2,10 @@
     "name": "file-upload-test",
     "version": "1.0.0",
     "main": "index.js",
+    "type": "module",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "nodemon ./backend/index.js"
+        "devStart": "nodemon ./backend/index.js"
     },
     "keywords": [],
     "author": "",
@@ -54,7 +55,7 @@
     "devDependencies": {
         "chai": "^5.1.1",
         "mocha": "^10.7.3",
-        "nodemon": "^3.1.7",
+        "nodemon": "^3.1.9",
         "socket.io-client": "^4.8.0"
     }
 }

@@ -1,4 +1,4 @@
-import AWS from 'aws-sdk';
+/*import AWS from 'aws-sdk';
 import dotenv from 'dotenv';
 
 import {combineWithSuperDoc} from './gemini.service.js';
@@ -27,7 +27,7 @@ const dynamodb = new AWS.DynamoDB.DocumentClient({
  * @param {*} unitid 
  * @returns {Object} Response with file URL and super document result
  */
-export const uploadFileToAWS = async (file, unitid) => {
+/*export const uploadFileToAWS = async (file, unitid) => {
     try {
         const fileName = `${Date.now()}_${file.name}`;
         const mimetype = file.mimetype;
@@ -70,7 +70,7 @@ export const uploadFileToAWS = async (file, unitid) => {
  * @param {*} file 
  * @returns {Object} Response with file URL and unit ID
  */
-export const uploadUnitToAWS = async (file) => {
+/*export const uploadUnitToAWS = async (file) => {
     const fileName = `${Date.now()}`; //
     const mimetype = file.mimetype;
 
@@ -116,7 +116,7 @@ export const uploadSectionToAWS = async(courseId,units) => {
  * @param {string} key 
  * @returns {boolean} True if the file exists, false otherwise.
  */
-export const checkIfFileExists = async (bucketName, key) => {
+/*export const checkIfFileExists = async (bucketName, key) => {
     const params = {
         Bucket: bucketName,
         Key: key,
@@ -134,5 +134,5 @@ export const checkIfFileExists = async (bucketName, key) => {
         }
         throw error;
     }
-};
+};*/
 

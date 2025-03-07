@@ -1,4 +1,4 @@
-
+/*
 import { PDFDocument, rgb } from 'pdf-lib';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
@@ -178,11 +178,11 @@ export const combineWithSuperDoc = async (file, unitid) => {
        /* const params = await generatePDF(generatedContent.response.text());
         return params;
         */ 
-       const resultPDFBytes = await createMarkDownPDF(generatedContent.response.text());
+       /*const resultPDFBytes = await createMarkDownPDF(generatedContent.response.text());
        return resultPDFBytes
     } catch (error) {
         throw error;
     }
 };
 
-export { generatePDF };
+export { generatePDF };*/
