@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom'; // Use react-router-dom for navigation
 import { initializeApp } from 'firebase/app';
+import {doc, setDoc, getFirestore} from 'firebase/firestore';
 import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from 'firebase/auth';
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { FaGoogle } from "react-icons/fa";
@@ -25,6 +26,7 @@ export default function Signup() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const firestoreRef = useRef(null);
 
   useEffect(() => {
     // Fetch the Firebase config from endpoint
@@ -34,6 +36,8 @@ export default function Signup() {
         console.log('Fetched Firebase Config:', firebaseConfig);
         const app = initializeApp(firebaseConfig);
         const authInstance = getAuth(app);
+        const firestore = getFirestore(app);
+        firestoreRef.current = firestore;
         setAuth(authInstance);
         setLoading(false);
 
@@ -61,7 +65,15 @@ export default function Signup() {
     }
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user; 
+      await setDoc(doc(firestoreRef.current, 'users', user.uid), {
+        uid: user.uid,
+        email: user.email,
+        discordUsername: null,
+        discordId: null,
+        createdAt: new Date().toISOString(),
+      });
       // User will be automatically signed in and redirected by the onAuthStateChanged listener
     } catch (error) {
       console.error('Error signing up:', error);
