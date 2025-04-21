@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom'; // Use react-router-dom for navigation
+import { useNavigate } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
-import {doc, setDoc, getFirestore} from 'firebase/firestore';
+import { doc, setDoc, getFirestore } from 'firebase/firestore';
 import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from 'firebase/auth';
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { FaGoogle } from "react-icons/fa";
@@ -21,6 +21,7 @@ export default function Signup() {
   const [auth, setAuth] = useState(null);
   const [loading, setLoading] = useState(true);
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [netId, setNetId] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -29,7 +30,6 @@ export default function Signup() {
   const firestoreRef = useRef(null);
 
   useEffect(() => {
-    // Fetch the Firebase config from endpoint
     fetch('http://localhost:5001/api/firebase-config')
       .then((res) => res.json())
       .then((firebaseConfig) => {
@@ -41,10 +41,9 @@ export default function Signup() {
         setAuth(authInstance);
         setLoading(false);
 
-        // Listen for authentication state changes
         onAuthStateChanged(authInstance, (user) => {
           if (user) {
-            navigate('/home'); // Redirect to dashboard after successful signup
+            navigate('/home');
           }
         });
       })
@@ -59,6 +58,11 @@ export default function Signup() {
     e.preventDefault();
     setError('');
 
+    if (!netId) {
+      setError('NetID is required');
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
@@ -66,40 +70,50 @@ export default function Signup() {
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user; 
+      const user = userCredential.user;
       await setDoc(doc(firestoreRef.current, 'users', user.uid), {
         uid: user.uid,
         email: user.email,
+        netId: netId,
         discordUsername: null,
         discordId: null,
         createdAt: new Date().toISOString(),
       });
-      // User will be automatically signed in and redirected by the onAuthStateChanged listener
     } catch (error) {
       console.error('Error signing up:', error);
-      const errorMessage = error.message.replace('Firebase: ', ''); // Remove "Firebase: " from the error message
+      const errorMessage = error.message.replace('Firebase: ', '');
       setError(errorMessage);
     }
   };
 
-  const signupWithGoogle = () => {
+  const signupWithGoogle = async () => {
     if (!auth) {
       console.error('Firebase Auth is not initialized');
       return;
     }
 
+    if (!netId) {
+      setError('NetID is required');
+      return;
+    }
+
     const provider = new GoogleAuthProvider();
 
-    signInWithPopup(auth, provider)
-      .then((userCred) => {
-        console.log('User signed up:', userCred.user);
-        // User will be automatically signed in and redirected by the onAuthStateChanged listener
-      })
-      .catch((err) => {
-        console.error('Error signing up:', err);
-        const errorMessage = err.message.replace('Firebase: ', ''); // Remove "Firebase: " from the error message
-        setError(errorMessage);
+    try {
+      const userCred = await signInWithPopup(auth, provider);
+      await setDoc(doc(firestoreRef.current, 'users', userCred.user.uid), {
+        uid: userCred.user.uid,
+        email: userCred.user.email,
+        netId: netId,
+        discordUsername: null,
+        discordId: null,
+        createdAt: new Date().toISOString(),
       });
+    } catch (err) {
+      console.error('Error signing up:', err);
+      const errorMessage = err.message.replace('Firebase: ', '');
+      setError(errorMessage);
+    }
   };
 
   if (loading) {
@@ -119,6 +133,17 @@ export default function Signup() {
           <CardContent>
             <form onSubmit={signupWithEmail}>
               <div className="flex flex-col gap-6">
+                <div className="grid gap-2">
+                  <Label className="text-left" htmlFor="netId">NetID</Label>
+                  <Input 
+                    id="netId" 
+                    type="text" 
+                    placeholder="Enter your NetID" 
+                    required 
+                    value={netId}
+                    onChange={(e) => setNetId(e.target.value)}
+                  />
+                </div>
                 <div className="grid gap-2">
                   <Label className="text-left" htmlFor="email">Email</Label>
                   <Input 
