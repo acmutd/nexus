@@ -33,7 +33,6 @@ const Navbar = () => {
 
     window.addEventListener('message', handleMessage);
 
-    // Fetch Firebase config
     fetch('http://localhost:5001/api/firebase-config')
       .then((res) => res.json())
       .then((firebaseConfig) => {
@@ -43,11 +42,9 @@ const Navbar = () => {
         setAuth(authInstance);
         setDb(dbInstance);
 
-        // Listen for auth state changes
         const unsubscribeAuth = onAuthStateChanged(authInstance, (currentUser) => {
           if (currentUser) {
             setUser(currentUser);
-            // Set up real-time listener for user document
             const userRef = doc(dbInstance, 'users', currentUser.uid);
             const unsubscribeDoc = onSnapshot(userRef, (doc) => {
               if (doc.exists()) {
@@ -97,6 +94,34 @@ const Navbar = () => {
 
     if (!authWindow) {
       setAuthError('Please allow popups to connect your Discord account');
+    }
+  };
+
+  const handleDiscordUnlink = async () => {
+    if (!user) return;
+
+    try {
+      const response = await fetch('http://localhost:5001/api/discord/unlink', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ uid: user.uid }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to unlink Discord account');
+      }
+
+      setDiscordUsername(null);
+      setDiscordId(null);
+      setDiscordAvatar(null);
+      setAuthError(null);
+    } catch (error) {
+      console.error('Error unlinking Discord:', error);
+      setAuthError('Failed to unlink Discord account');
     }
   };
 
@@ -155,6 +180,13 @@ const Navbar = () => {
             <span className="text-sm text-muted-foreground">
               Connected as: {discordUsername}
             </span>
+            <Button 
+              variant="destructive" 
+              size="sm"
+              onClick={handleDiscordUnlink}
+            >
+              Unlink
+            </Button>
           </div>
         )}
         {user ? (

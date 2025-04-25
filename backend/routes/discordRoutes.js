@@ -22,9 +22,24 @@ if (!admin.apps.length) {
   console.log('Firebase Admin initialized');
 }
 
+// Add rate limiting map
+const tokenRequests = new Map();
+
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const getDiscordToken = async (code, retries = 3) => {
+  // Check rate limiting
+  const now = Date.now();
+  const userRequests = tokenRequests.get(code) || [];
+  const recentRequests = userRequests.filter(time => now - time < 60000); // Last minute
+
+  if (recentRequests.length >= 5) {
+    throw new Error('Rate limit exceeded. Please wait before trying again.');
+  }
+
+  // Update rate limiting tracking
+  tokenRequests.set(code, [...recentRequests, now]);
+
   for (let i = 0; i < retries; i++) {
     try {
       const tokenResponse = await axios.post(
@@ -44,8 +59,15 @@ const getDiscordToken = async (code, retries = 3) => {
       );
       return tokenResponse.data.access_token;
     } catch (error) {
+      console.error(`Token request attempt ${i + 1} failed:`, error.response?.data);
+      
+      if (error.response?.status === 429) { // Rate limit hit
+        const retryAfter = error.response.headers['retry-after'] || (i + 1) * 2;
+        await sleep(retryAfter * 1000);
+        continue;
+      }
+
       if (error.response?.data?.error === 'invalid_request' && i < retries - 1) {
-        console.log(`Attempt ${i + 1} failed, waiting before retry...`);
         await sleep(2000 * (i + 1)); // Exponential backoff
         continue;
       }
@@ -76,6 +98,40 @@ router.get('/auth', (req, res) => {
   res.redirect(redirectUrl);
 });
 
+// Endpoint to unlink Discord account
+router.post('/unlink', async (req, res) => {
+  const { uid } = req.body;
+  console.log('Unlinking Discord account for user:', uid);
+  
+  if (!uid) {
+    return res.status(400).json({ error: 'Missing UID parameter' });
+  }
+
+  try {
+    const userRef = admin.firestore().collection('users').doc(uid);
+    
+    // Check if user exists
+    const userDoc = await userRef.get();
+    if (!userDoc.exists) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    await userRef.update({
+      discordId: null,
+      discordUsername: null,
+      discordEmail: null,
+      discordAvatar: null,
+      lastUpdated: admin.firestore.FieldValue.serverTimestamp()
+    });
+
+    console.log('Successfully unlinked Discord account for user:', uid);
+    res.json({ success: true, message: 'Discord account unlinked successfully' });
+  } catch (error) {
+    console.error('Error unlinking Discord account:', error);
+    res.status(500).json({ error: 'Failed to unlink Discord account' });
+  }
+});
+
 // Callback endpoint for Discord OAuth
 router.get('/callback', async (req, res) => {
   console.log('Received callback with query params:', req.query);
@@ -98,15 +154,29 @@ router.get('/callback', async (req, res) => {
     const access_token = await getDiscordToken(code);
     console.log('Access token obtained');
 
-    // Fetch Discord user data
-    const userResponse = await axios.get('https://discord.com/api/users/@me', {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
-
-    const discordUser = userResponse.data;
-    console.log('Discord user data received:', discordUser);
+    // Fetch Discord user data with retry logic
+    let discordUser;
+    try {
+      const userResponse = await axios.get('https://discord.com/api/users/@me', {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+      discordUser = userResponse.data;
+      console.log('Discord user data received:', discordUser);
+    } catch (error) {
+      if (error.response?.status === 429) {
+        await sleep(error.response.headers['retry-after'] * 1000 || 5000);
+        const retryResponse = await axios.get('https://discord.com/api/users/@me', {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        });
+        discordUser = retryResponse.data;
+      } else {
+        throw error;
+      }
+    }
 
     // Update Firestore
     const userRef = admin.firestore().collection('users').doc(uid);
