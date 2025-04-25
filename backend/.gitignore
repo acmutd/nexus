@@ -3,4 +3,5 @@ backend/node_modules/
 dist/
 .env
 node_modules
-backend/service-account.json
+backend/
+service-account.json

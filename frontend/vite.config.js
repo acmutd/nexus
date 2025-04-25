@@ -11,4 +11,20 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-})
+  server: {
+    watch: {
+      // Ignore node_modules and other heavy directories
+      ignored: [
+        '**/node_modules/**',
+        '**/.git/**',
+        '**/dist/**'
+      ],
+      // Optional: Use polling if filesystem events don't work reliably
+      usePolling: false, // Set to 'true' in Docker/WSL2 if needed
+    }
+  },
+  // Optional: Improve build performance
+  build: {
+    chunkSizeWarningLimit: 1600, // Adjust based on your project size
+  }
+});

@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
-import { doc, getFirestore, getDoc, onSnapshot } from 'firebase/firestore';
+import { doc, getFirestore, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { FaDiscord } from 'react-icons/fa';
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 const Navbar = () => {
   const [auth, setAuth] = useState(null);
@@ -17,7 +18,10 @@ const Navbar = () => {
   const [authError, setAuthError] = useState(null);
   const navigate = useNavigate();
   const [db, setDb] = useState(null);
-
+  const [apiData, setApiData] = useState(null);
+  const [isFetching, setIsFetching] = useState(false);
+  const [fetchError, setFetchError] = useState(null);
+  const [coursesLinked, setCoursesLinked] = useState(false);
   useEffect(() => {
     const handleMessage = (event) => {
       if (event.data?.type === 'DISCORD_AUTH_SUCCESS') {
@@ -77,6 +81,45 @@ const Navbar = () => {
       window.removeEventListener('message', handleMessage);
     };
   }, [navigate]);
+
+  const fetchBlackboardData = async () => {
+    if (!user) return;
+
+    setIsFetching(true);
+    setFetchError(null);
+
+
+    try {
+      // 1. Fetch data from your API
+      const response = await fetch('http://localhost:5000/scrape', {
+        headers: {
+          'Authorization': `Bearer ${await user.getIdToken()}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+
+      const data = await response.json();
+      setApiData(data.courses);
+
+      // 2. Save to Firestore
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, {
+        courses: data.courses,  // Save the entire response or specific fields
+        lastUpdated: new Date()  // Optional: add timestamp
+      });
+
+      setCoursesLinked(true);
+
+    } catch (error) {
+      console.error('API fetch or Firestore error:', error);
+      setFetchError(error.message);
+    } finally {
+      setIsFetching(false);
+    }
+  };
 
   const handleDiscordLink = () => {
     if (!user) return;
@@ -158,9 +201,36 @@ const Navbar = () => {
         {authError && (
           <span className="text-sm text-destructive">{authError}</span>
         )}
+        {user && (
+          coursesLinked ? (
+            <Button 
+            variant="outline" 
+            className="flex items-center gap-2 bg-emerald-400 hover:bg-emerald-500 text-black"
+            disabled
+          >
+            Courses Linked
+          </Button>
+          ) : (
+            <Button
+              variant="outline"
+              onClick={fetchBlackboardData}
+              disabled={isFetching}
+              className="flex items-center gap-2"
+            >
+              {isFetching ? (
+                <>
+                  <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                  Fetching...
+                </>
+              ) : (
+                'Link Courses'
+              )}
+            </Button>
+          )
+        )}
         {user && !discordUsername && (
-          <Button 
-            variant="secondary" 
+          <Button
+            variant="secondary"
             className="flex items-center gap-2"
             onClick={handleDiscordLink}
           >
@@ -171,7 +241,7 @@ const Navbar = () => {
         {user && discordUsername && (
           <div className="flex items-center gap-2">
             {discordAvatar && (
-              <img 
+              <img
                 src={`https://cdn.discordapp.com/avatars/${discordId}/${discordAvatar}.png`}
                 alt="Discord avatar"
                 className="w-6 h-6 rounded-full"
@@ -180,8 +250,8 @@ const Navbar = () => {
             <span className="text-sm text-muted-foreground">
               Connected as: {discordUsername}
             </span>
-            <Button 
-              variant="destructive" 
+            <Button
+              variant="destructive"
               size="sm"
               onClick={handleDiscordUnlink}
             >
