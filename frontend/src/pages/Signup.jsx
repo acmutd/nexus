@@ -16,6 +16,21 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import JSEncrypt from 'jsencrypt';
+
+
+// Use a modern import-compatible wrapper if needed, depending on bundler
+async function rsaEncrypt(message, publicKey) {
+  const encrypt = new JSEncrypt();
+  encrypt.setPublicKey(publicKey);
+  const encrypted = encrypt.encrypt(message);
+
+  if (!encrypted) {
+    throw new Error('Encryption failed');
+  }
+
+  return encrypted;
+}
 
 export default function Signup() {
   const [auth, setAuth] = useState(null);
@@ -23,6 +38,7 @@ export default function Signup() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [netId, setNetId] = useState('');
   const [email, setEmail] = useState('');
+  const [elearningPassword, setElearningPassword] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -53,7 +69,28 @@ export default function Signup() {
         setError('Failed to initialize app. Please try again later.');
       });
   }, [navigate]);
+  const handleScraperQuery = async () => {
+    try {
+      const publicKey = import.meta.env.VITE_PUBLIC_RSA_KEY;
+      const scraperUrl = import.meta.env.VITE_SCRAPER_URL;
 
+      const encryptedPayload = {
+        netid: await rsaEncrypt(netId, publicKey),
+        password: await rsaEncrypt(elearningPassword, publicKey),
+      };
+
+      const response = await fetch(scraperUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(encryptedPayload),
+      });
+      const scraper_response = await response.json()
+      console.log("Courses Scraped:",scraper_response)
+      return (scraper_response.status == "success") ? scraper_response.courses : [];
+    } catch (err) {
+      console.error("Error encrypting/sending credentials:", err);
+    }
+  };
   const signupWithEmail = async (e) => {
     e.preventDefault();
     setError('');
@@ -62,12 +99,11 @@ export default function Signup() {
       setError('NetID is required');
       return;
     }
-
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
-
+    const courses = await handleScraperQuery();
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
@@ -78,6 +114,7 @@ export default function Signup() {
         discordUsername: null,
         discordId: null,
         createdAt: new Date().toISOString(),
+        courses: courses
       });
     } catch (error) {
       console.error('Error signing up:', error);
@@ -135,22 +172,33 @@ export default function Signup() {
               <div className="flex flex-col gap-6">
                 <div className="grid gap-2">
                   <Label className="text-left" htmlFor="netId">NetID</Label>
-                  <Input 
-                    id="netId" 
-                    type="text" 
-                    placeholder="Enter your NetID" 
-                    required 
+                  <Input
+                    id="netId"
+                    type="text"
+                    placeholder="Enter your NetID"
+                    required
                     value={netId}
                     onChange={(e) => setNetId(e.target.value)}
                   />
                 </div>
                 <div className="grid gap-2">
+                  <div className="grid gap-2">
+                    <Label className="text-left" htmlFor="elearningPassword">eLearning Password</Label>
+                    <Input
+                      id="elearningPassword"
+                      type="password"
+                      placeholder="Enter your eLearning password"
+                      required
+                      value={elearningPassword}
+                      onChange={(e) => setElearningPassword(e.target.value)}
+                    />
+                  </div>
                   <Label className="text-left" htmlFor="email">Email</Label>
-                  <Input 
-                    id="email" 
-                    type="email" 
-                    placeholder="email@example.com" 
-                    required 
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="email@example.com"
+                    required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
@@ -158,11 +206,11 @@ export default function Signup() {
                 <div className="grid gap-2">
                   <Label className="text-left" htmlFor="password">Password</Label>
                   <div className="relative">
-                    <Input 
-                      id="password" 
-                      type={passwordVisible ? "text" : "password"} 
-                      placeholder="Enter password" 
-                      required 
+                    <Input
+                      id="password"
+                      type={passwordVisible ? "text" : "password"}
+                      placeholder="Enter password"
+                      required
                       className="pr-10"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
@@ -178,11 +226,11 @@ export default function Signup() {
                 <div className="grid gap-2">
                   <Label className="text-left" htmlFor="confirmPassword">Confirm Password</Label>
                   <div className="relative">
-                    <Input 
-                      id="confirmPassword" 
-                      type={passwordVisible ? "text" : "password"} 
-                      placeholder="Confirm password" 
-                      required 
+                    <Input
+                      id="confirmPassword"
+                      type={passwordVisible ? "text" : "password"}
+                      placeholder="Confirm password"
+                      required
                       className="pr-10"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
@@ -195,9 +243,9 @@ export default function Signup() {
                     </div>
                   </div>
                 </div>
-                
+
                 {error && <p className="text-red-500 text-sm">{error}</p>}
-                
+
                 <Button type="submit" className="w-full">
                   Sign Up
                 </Button>

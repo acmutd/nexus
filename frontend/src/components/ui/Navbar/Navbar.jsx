@@ -46,7 +46,6 @@ const Navbar = () => {
         const dbInstance = getFirestore(app);
         setAuth(authInstance);
         setDb(dbInstance);
-
         const unsubscribeAuth = onAuthStateChanged(authInstance, (currentUser) => {
           if (currentUser) {
             setUser(currentUser);
@@ -77,7 +76,7 @@ const Navbar = () => {
         console.error('Firebase config fetch error:', err);
         setLoading(false);
       });
-
+      
     return () => {
       window.removeEventListener('message', handleMessage);
     };
