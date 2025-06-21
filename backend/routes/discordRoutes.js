@@ -2,13 +2,11 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 const admin = require('firebase-admin');
-const path = require('path');
 require('dotenv').config();
 
-const { 
-  DISCORD_CLIENT_ID, 
+const {
+  DISCORD_CLIENT_ID,
   DISCORD_CLIENT_SECRET,
-  GOOGLE_APPLICATION_CREDENTIALS,
   FIREBASE_PROJECT_ID
 } = process.env;
 
@@ -19,25 +17,20 @@ if (!admin.apps.length) {
     credential: admin.credential.cert(serviceAccount),
     projectId: FIREBASE_PROJECT_ID
   });
-  console.log('Firebase Admin initialized');
+  console.log('✅ Firebase Admin initialized');
 }
 
-// Add rate limiting map
 const tokenRequests = new Map();
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
+// Exchange code for Discord token
 const getDiscordToken = async (code, retries = 3) => {
-  // Check rate limiting
   const now = Date.now();
   const userRequests = tokenRequests.get(code) || [];
-  const recentRequests = userRequests.filter(time => now - time < 60000); // Last minute
-
+  const recentRequests = userRequests.filter(t => now - t < 60000);
   if (recentRequests.length >= 5) {
     throw new Error('Rate limit exceeded. Please wait before trying again.');
   }
-
-  // Update rate limiting tracking
   tokenRequests.set(code, [...recentRequests, now]);
 
   for (let i = 0; i < retries; i++) {
@@ -51,35 +44,86 @@ const getDiscordToken = async (code, retries = 3) => {
           grant_type: 'authorization_code',
           redirect_uri: 'http://localhost:5001/api/discord/callback'
         }).toString(),
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }
+        { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
       );
       return tokenResponse.data.access_token;
-    } catch (error) {
-      console.error(`Token request attempt ${i + 1} failed:`, error.response?.data);
-      
-      if (error.response?.status === 429) { // Rate limit hit
-        const retryAfter = error.response.headers['retry-after'] || (i + 1) * 2;
+    } catch (err) {
+      console.error(`Token request attempt ${i + 1} failed:`, err.response?.data || err.message);
+      if (err.response?.status === 429) {
+        const retryAfter = err.response.headers['retry-after'] || (i + 1) * 2;
         await sleep(retryAfter * 1000);
         continue;
       }
-
-      if (error.response?.data?.error === 'invalid_request' && i < retries - 1) {
-        await sleep(2000 * (i + 1)); // Exponential backoff
+      if (err.response?.data?.error === 'invalid_request' && i < retries - 1) {
+        await sleep(2000 * (i + 1));
         continue;
       }
-      throw error;
+      throw err;
     }
   }
 };
 
-// Endpoint to initiate Discord OAuth
+// UNLINK endpoint
+router.post('/unlink', async (req, res) => {
+  try {
+    const { uid } = req.body;
+    console.log(`👉 Unlink request for UID: ${uid}`);
+
+    if (!uid) {
+      return res.status(400).json({ error: 'Missing UID' });
+    }
+
+    const userRef = admin.firestore().collection('users').doc(uid);
+    const userDoc = await userRef.get();
+
+    if (!userDoc.exists) {
+      console.log(`❌ User not found: ${uid}`);
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    await userRef.update({
+      discordId: null,
+      discordUsername: null,
+      discordEmail: null,
+      discordAvatar: null,
+      lastUpdated: admin.firestore.FieldValue.serverTimestamp()
+    });
+
+    console.log(`✅ Discord unlinked for user: ${uid}`);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('❌ Unlink error:', err);
+    res.status(500).json({ error: 'Failed to unlink Discord account' });
+  }
+});
+
+// ALLOCATE endpoint — forwards to bot server
+router.post('/allocate', async (req, res) => {
+  try {
+    console.log('👉 Backend allocation request:', req.body);
+    const { discordId, courses } = req.body;
+
+    if (!discordId || !courses || !Array.isArray(courses)) {
+      return res.status(400).json({ error: 'Missing or invalid discordId or courses' });
+    }
+
+    // Send to bot server
+    const botResponse = await axios.post('http://localhost:3000/bot/allocate', {
+      discordId,
+      courses
+    });
+
+    res.json(botResponse.data);
+  } catch (err) {
+    console.error('❌ Backend allocation error:', err.response?.data || err.message);
+    res.status(500).json({ error: 'Failed to allocate courses via bot', details: err.response?.data || err.message });
+  }
+});
+
+// AUTH endpoint
 router.get('/auth', (req, res) => {
   const { uid } = req.query;
-  console.log('Discord auth initiated for user:', uid);
+  console.log(`👉 Auth request for UID: ${uid}`);
 
   if (!uid) {
     return res.status(400).send('Missing UID parameter');
@@ -93,54 +137,20 @@ router.get('/auth', (req, res) => {
     state: uid
   });
 
-  const redirectUrl = `https://discord.com/oauth2/authorize?${params}`;
-  console.log('Redirecting to Discord:', redirectUrl);
-  res.redirect(redirectUrl);
+  const url = `https://discord.com/oauth2/authorize?${params.toString()}`;
+  console.log(`🔗 Redirecting to: ${url}`);
+  res.redirect(url);
 });
 
-// Endpoint to unlink Discord account
-router.post('/unlink', async (req, res) => {
-  const { uid } = req.body;
-  console.log('Unlinking Discord account for user:', uid);
-  
-  if (!uid) {
-    return res.status(400).json({ error: 'Missing UID parameter' });
-  }
-
-  try {
-    const userRef = admin.firestore().collection('users').doc(uid);
-    
-    // Check if user exists
-    const userDoc = await userRef.get();
-    if (!userDoc.exists) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    await userRef.update({
-      discordId: null,
-      discordUsername: null,
-      discordEmail: null,
-      discordAvatar: null,
-      lastUpdated: admin.firestore.FieldValue.serverTimestamp()
-    });
-
-    console.log('Successfully unlinked Discord account for user:', uid);
-    res.json({ success: true, message: 'Discord account unlinked successfully' });
-  } catch (error) {
-    console.error('Error unlinking Discord account:', error);
-    res.status(500).json({ error: 'Failed to unlink Discord account' });
-  }
-});
-
-// Callback endpoint for Discord OAuth
+// CALLBACK endpoint
 router.get('/callback', async (req, res) => {
-  console.log('Received callback with query params:', req.query);
+  console.log('👉 Callback received:', req.query);
   const { code, state: uid } = req.query;
 
   if (!code || !uid) {
     return res.status(400).send(`
       <script>
-        window.opener.postMessage({ 
+        window.opener.postMessage({
           type: 'DISCORD_AUTH_ERROR',
           error: 'Missing required parameters'
         }, '*');
@@ -150,35 +160,16 @@ router.get('/callback', async (req, res) => {
   }
 
   try {
-    console.log('Attempting to get access token...');
-    const access_token = await getDiscordToken(code);
-    console.log('Access token obtained');
+    const token = await getDiscordToken(code);
+    console.log('✅ Access token retrieved');
 
-    // Fetch Discord user data with retry logic
-    let discordUser;
-    try {
-      const userResponse = await axios.get('https://discord.com/api/users/@me', {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      });
-      discordUser = userResponse.data;
-      console.log('Discord user data received:', discordUser);
-    } catch (error) {
-      if (error.response?.status === 429) {
-        await sleep(error.response.headers['retry-after'] * 1000 || 5000);
-        const retryResponse = await axios.get('https://discord.com/api/users/@me', {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
-        discordUser = retryResponse.data;
-      } else {
-        throw error;
-      }
-    }
+    const userRes = await axios.get('https://discord.com/api/users/@me', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
 
-    // Update Firestore
+    const discordUser = userRes.data;
+    console.log('✅ Discord user:', discordUser);
+
     const userRef = admin.firestore().collection('users').doc(uid);
     await userRef.update({
       discordId: discordUser.id,
@@ -202,9 +193,8 @@ router.get('/callback', async (req, res) => {
         window.close();
       </script>
     `);
-
-  } catch (error) {
-    console.error('Discord authentication error:', error.response?.data || error.message);
+  } catch (err) {
+    console.error('❌ Callback error:', err);
     res.status(500).send(`
       <script>
         window.opener.postMessage({
