@@ -6,7 +6,7 @@ import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { doc, getFirestore, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { FaDiscord } from 'react-icons/fa';
-import { ReloadIcon } from "@radix-ui/react-icons";
+import { ReloadIcon } from '@radix-ui/react-icons';  // ✅ Added import for ReloadIcon
 
 const Navbar = () => {
   const [auth, setAuth] = useState(null);
@@ -22,6 +22,7 @@ const Navbar = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [fetchError, setFetchError] = useState(null);
   const [coursesLinked, setCoursesLinked] = useState(false);
+
   useEffect(() => {
     const handleMessage = (event) => {
       if (event.data?.type === 'DISCORD_AUTH_SUCCESS') {
@@ -88,9 +89,7 @@ const Navbar = () => {
     setIsFetching(true);
     setFetchError(null);
 
-
     try {
-      // 1. Fetch data from your API
       const response = await fetch('http://localhost:5000/scrape', {
         headers: {
           'Authorization': `Bearer ${await user.getIdToken()}`
@@ -104,11 +103,10 @@ const Navbar = () => {
       const data = await response.json();
       setApiData(data.courses);
 
-      // 2. Save to Firestore
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, {
-        courses: data.courses,  // Save the entire response or specific fields
-        lastUpdated: new Date()  // Optional: add timestamp
+        courses: data.courses,
+        lastUpdated: new Date()
       });
 
       setCoursesLinked(true);
@@ -204,12 +202,12 @@ const Navbar = () => {
         {user && (
           coursesLinked ? (
             <Button 
-            variant="outline" 
-            className="flex items-center gap-2 bg-emerald-400 hover:bg-emerald-500 text-black"
-            disabled
-          >
-            Courses Linked
-          </Button>
+              variant="outline" 
+              className="flex items-center gap-2 bg-emerald-400 hover:bg-emerald-500 text-black"
+              disabled
+            >
+              Courses Linked
+            </Button>
           ) : (
             <Button
               variant="outline"
