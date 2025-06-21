@@ -4,9 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
-import { doc, getFirestore, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { doc, getFirestore, onSnapshot, updateDoc } from 'firebase/firestore';
 import { FaDiscord } from 'react-icons/fa';
-import { ReloadIcon } from '@radix-ui/react-icons';  // ✅ Added import for ReloadIcon
+import { ReloadIcon } from '@radix-ui/react-icons';
 
 const Navbar = () => {
   const [auth, setAuth] = useState(null);
@@ -22,6 +22,8 @@ const Navbar = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [fetchError, setFetchError] = useState(null);
   const [coursesLinked, setCoursesLinked] = useState(false);
+
+  const scraperUrl = import.meta.env.VITE_SCRAPER_URL;
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -76,7 +78,7 @@ const Navbar = () => {
         console.error('Firebase config fetch error:', err);
         setLoading(false);
       });
-      
+
     return () => {
       window.removeEventListener('message', handleMessage);
     };
@@ -89,10 +91,16 @@ const Navbar = () => {
     setFetchError(null);
 
     try {
-      const response = await fetch('http://localhost:5000/scrape', {
+      const response = await fetch(scraperUrl, {
+        method: 'POST',
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${await user.getIdToken()}`
-        }
+        },
+        body: JSON.stringify({
+          // Add payload here if your Lambda expects something specific
+          uid: user.uid
+        })
       });
 
       if (!response.ok) {
