@@ -1,34 +1,21 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
-import { doc, setDoc, getFirestore } from 'firebase/firestore';
-import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from 'firebase/auth';
+import { doc, setDoc, getDoc, getFirestore } from 'firebase/firestore';
+import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
-import { FaGoogle } from "react-icons/fa";
 import { cn } from "@/lib/utils";
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import JSEncrypt from 'jsencrypt';
 
-
-// Use a modern import-compatible wrapper if needed, depending on bundler
 async function rsaEncrypt(message, publicKey) {
   const encrypt = new JSEncrypt();
   encrypt.setPublicKey(publicKey);
   const encrypted = encrypt.encrypt(message);
-
-  if (!encrypted) {
-    throw new Error('Encryption failed');
-  }
-
+  if (!encrypted) throw new Error('Encryption failed');
   return encrypted;
 }
 
@@ -47,9 +34,8 @@ export default function Signup() {
 
   useEffect(() => {
     fetch('http://localhost:5001/api/firebase-config')
-      .then((res) => res.json())
-      .then((firebaseConfig) => {
-        console.log('Fetched Firebase Config:', firebaseConfig);
+      .then(res => res.json())
+      .then(firebaseConfig => {
         const app = initializeApp(firebaseConfig);
         const authInstance = getAuth(app);
         const firestore = getFirestore(app);
@@ -58,17 +44,16 @@ export default function Signup() {
         setLoading(false);
 
         onAuthStateChanged(authInstance, (user) => {
-          if (user) {
-            navigate('/home');
-          }
+          if (user) navigate('/home');
         });
       })
-      .catch((err) => {
+      .catch(err => {
         console.error('Error fetching Firebase config:', err);
         setLoading(false);
-        setError('Failed to initialize app. Please try again later.');
+        setError('Failed to initialize app.');
       });
   }, [navigate]);
+
   const handleScraperQuery = async () => {
     try {
       const publicKey = import.meta.env.VITE_PUBLIC_RSA_KEY;
@@ -76,195 +61,107 @@ export default function Signup() {
 
       const encryptedPayload = {
         netid: await rsaEncrypt(netId, publicKey),
-        password: await rsaEncrypt(elearningPassword, publicKey),
+        password: await rsaEncrypt(elearningPassword, publicKey)
       };
 
       const response = await fetch(scraperUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(encryptedPayload),
+        body: JSON.stringify(encryptedPayload)
       });
-      const scraper_response = await response.json()
-      console.log("Courses Scraped:",scraper_response)
-      return (scraper_response.status == "success") ? scraper_response.courses : [];
+      const scraper_response = await response.json();
+      return (scraper_response.status === 'success') ? scraper_response.courses : [];
     } catch (err) {
-      console.error("Error encrypting/sending credentials:", err);
+      console.error('Scraper error:', err);
+      return [];
     }
   };
+
+  const checkAndAllocateDiscordCourses = async (uid, courses) => {
+    try {
+      const userDocRef = doc(firestoreRef.current, 'users', uid);
+      const userDoc = await getDoc(userDocRef);
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        const { discordId, servers } = userData;
+        if (discordId && servers && servers.length > 0) {
+          const res = await fetch('http://localhost:3000/discord/allocate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ discordId, servers, courses })
+          });
+          const result = await res.json();
+          if (!res.ok) {
+            console.error('Allocation error:', result);
+          } else {
+            console.log('✅ Allocation successful:', result);
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error during allocation check:', err);
+    }
+  };
+
   const signupWithEmail = async (e) => {
     e.preventDefault();
     setError('');
 
-    if (!netId) {
-      setError('NetID is required');
-      return;
-    }
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
+
     const courses = await handleScraperQuery();
+
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+      const userCred = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCred.user;
+
       await setDoc(doc(firestoreRef.current, 'users', user.uid), {
         uid: user.uid,
         email: user.email,
-        netId: netId,
+        netId,
         discordUsername: null,
         discordId: null,
         createdAt: new Date().toISOString(),
-        courses: courses
+        courses,
+        servers: []
       });
-    } catch (error) {
-      console.error('Error signing up:', error);
-      const errorMessage = error.message.replace('Firebase: ', '');
-      setError(errorMessage);
-    }
-  };
 
-  const signupWithGoogle = async () => {
-    if (!auth) {
-      console.error('Firebase Auth is not initialized');
-      return;
-    }
+      // After signup, check if allocation is needed
+      await checkAndAllocateDiscordCourses(user.uid, courses);
 
-    if (!netId) {
-      setError('NetID is required');
-      return;
-    }
-
-    const provider = new GoogleAuthProvider();
-
-    try {
-      const userCred = await signInWithPopup(auth, provider);
-      await setDoc(doc(firestoreRef.current, 'users', userCred.user.uid), {
-        uid: userCred.user.uid,
-        email: userCred.user.email,
-        netId: netId,
-        discordUsername: null,
-        discordId: null,
-        createdAt: new Date().toISOString(),
-      });
     } catch (err) {
-      console.error('Error signing up:', err);
-      const errorMessage = err.message.replace('Firebase: ', '');
-      setError(errorMessage);
+      console.error('Signup error:', err);
+      setError(err.message.replace('Firebase: ', ''));
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <div className={cn("flex flex-col gap-6")}>
-        <Card className="w-[350px]">
-          <CardHeader>
-            <CardTitle className="text-2xl">Sign up for NextEP</CardTitle>
-            <CardDescription>
-              Create an account to get started
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={signupWithEmail}>
-              <div className="flex flex-col gap-6">
-                <div className="grid gap-2">
-                  <Label className="text-left" htmlFor="netId">NetID</Label>
-                  <Input
-                    id="netId"
-                    type="text"
-                    placeholder="Enter your NetID"
-                    required
-                    value={netId}
-                    onChange={(e) => setNetId(e.target.value)}
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <div className="grid gap-2">
-                    <Label className="text-left" htmlFor="elearningPassword">eLearning Password</Label>
-                    <Input
-                      id="elearningPassword"
-                      type="password"
-                      placeholder="Enter your eLearning password"
-                      required
-                      value={elearningPassword}
-                      onChange={(e) => setElearningPassword(e.target.value)}
-                    />
-                  </div>
-                  <Label className="text-left" htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="email@example.com"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label className="text-left" htmlFor="password">Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={passwordVisible ? "text" : "password"}
-                      placeholder="Enter password"
-                      required
-                      className="pr-10"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <div
-                      className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600 cursor-pointer"
-                      onClick={() => setPasswordVisible(!passwordVisible)}
-                    >
-                      {passwordVisible ? <IoMdEye /> : <IoMdEyeOff />}
-                    </div>
-                  </div>
-                </div>
-                <div className="grid gap-2">
-                  <Label className="text-left" htmlFor="confirmPassword">Confirm Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="confirmPassword"
-                      type={passwordVisible ? "text" : "password"}
-                      placeholder="Confirm password"
-                      required
-                      className="pr-10"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
-                    <div
-                      className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600 cursor-pointer"
-                      onClick={() => setPasswordVisible(!passwordVisible)}
-                    >
-                      {passwordVisible ? <IoMdEye /> : <IoMdEyeOff />}
-                    </div>
-                  </div>
-                </div>
-
-                {error && <p className="text-red-500 text-sm">{error}</p>}
-
-                <Button type="submit" className="w-full">
-                  Sign Up
-                </Button>
-
-                <Button variant="outline" className="w-full" onClick={signupWithGoogle}>
-                  <FaGoogle className="mr-2" />
-                  Sign up with Google
-                </Button>
-              </div>
-              <div className="mt-4 text-center text-sm">
-                Already have an account?{" "}
-                <a href="/login" className="underline underline-offset-4">
-                  Log in
-                </a>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
+      <Card className="w-[350px]">
+        <CardHeader>
+          <CardTitle className="text-2xl">Sign up for NextEP</CardTitle>
+          <CardDescription>Create an account to get started</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={signupWithEmail} className="flex flex-col gap-4">
+            <Input id="netId" placeholder="NetID" value={netId} onChange={e => setNetId(e.target.value)} required />
+            <Input type="password" placeholder="eLearning Password" value={elearningPassword} onChange={e => setElearningPassword(e.target.value)} required />
+            <Input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
+            <Input type={passwordVisible ? 'text' : 'password'} placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
+            <Input type={passwordVisible ? 'text' : 'password'} placeholder="Confirm Password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required />
+            <Button type="button" onClick={() => setPasswordVisible(!passwordVisible)}>
+              {passwordVisible ? <IoMdEye /> : <IoMdEyeOff />} Show/Hide Password
+            </Button>
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+            <Button type="submit">Sign Up</Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }
