@@ -11,10 +11,11 @@ function LandingPage() {
         <img className="w-full bg-blue-950" src={isMed ? "/LandingPageLongBG.svg" : "/LandingPageBG.svg"} style={{position: 'absolute', zIndex: -1}}/>
         <div className="flex flex-col items-center justify-center min-h-full pt-30">
         {/* --------------------------------- HEADER --------------------------------- */}
-          <h1 className="font-titilliumWeb-bold text-white text-5xl ">
+          <h1 className="font-titilliumWeb-bold text-white text-5xl" >
             Welcome to Nexus!
           </h1>
-          <h2 className="w-1/2 font-titilliumWeb-regular text-white text-2xl text-center pt-4">
+          <h2 className="w-1/2 font-titilliumWeb-regular text-white text-2xl text-center pt-4"
+              style={{width: isMed ? 524 : 824}}>
             The best place for connecting with classmates, enhancing collaboration, and boosting academic success.
           </h2>
           <button className="text-white bg-nexus500 py-3 px-14 text-xl font-titilliumWeb-bold rounded-lg mt-8 flex flex-row 
@@ -23,9 +24,10 @@ function LandingPage() {
             <HiArrowNarrowRight className="pt-0.5" size={25}/>
           </button>
         {/* --------------------------------- CALCULATOR BOX --------------------------------- */}
-          <div className="w-3/5 h-1/5 bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl mt-12 flex flex-row">
-            {isMed ? (<img src='/Person.svg' className="h-[250px] w-[225px] absolute right-50 top-63" style={{display: 'none'}}/>) : 
-                     (<img src='/Person.svg' className="h-[250px] w-[225px] absolute right-50 top-63"/>)
+          <div className="w-3/5 bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row" 
+               style={{width: isMed ? 575 : 775, scale: isMed ? .8 : 1, marginTop: isMed ? 8 : 48}}>
+            {isMed ? (<img src='/Person.svg' className="h-[250px] w-[225px] absolute -right-16 -top-32"/>) : 
+                     (<img src='/Person.svg' className="h-[250px] w-[225px] absolute -right-16 -top-32"/>)
             }
             <div className="flex flex-row">
               <div className="pt-12 pl-12 pb-12">
@@ -40,7 +42,8 @@ function LandingPage() {
             </div>
           </div>
         {/* --------------------------------- MEGAPHONE BOX --------------------------------- */}
-          <div className="w-3/5 h-1/5 bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl mt-12 flex flex-row">
+          <div className="w-3/5 bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row" 
+               style={{width: isMed ? 575 : 775, scale: isMed ? .8 : 1, marginTop: isMed ? 0 : 48}}>
             <img src="/Megaphone.svg" className="w-2/5"/>
             <div className="pt-12 pr-12 pb-12">
               <h1 className="text-nexus700 font-titilliumWeb-bold text-4xl">
@@ -52,7 +55,8 @@ function LandingPage() {
             </div>
           </div>
         {/* --------------------------------- NOTES BOX --------------------------------- */}
-          <div className="w-3/5 h-1/5 bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl mt-12 flex flex-row">
+          <div className="w-3/5 bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row" 
+               style={{width: isMed ? 575 : 775, scale: isMed ? .8 : 1, marginTop: isMed ? 0 : 48}}>
             <div className="pt-12 pl-12 pb-12">
               <h1 className="text-nexus700 font-titilliumWeb-bold text-4xl">
                 Resource Sharing
