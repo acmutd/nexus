@@ -1,13 +1,14 @@
 import React from 'react'
 import { HiArrowNarrowRight } from 'react-icons/hi';
 import { useMediaQuery } from 'react-responsive';
+import { Link } from 'react-router-dom';
 
 function LandingPage() {
   const isFull = useMediaQuery({ query: '(min-width: 1224px'})
   const isMed = useMediaQuery({ query: '(max-width: 1223px'})
 
   return (
-    <div>
+    <div >
         <img className="w-full bg-blue-950" src={isMed ? "/LandingPageLongBG.svg" : "/LandingPageBG.svg"} style={{position: 'absolute', zIndex: -1}}/>
         <div className="flex flex-col items-center justify-center min-h-full pt-30">
         {/* --------------------------------- HEADER --------------------------------- */}
@@ -18,11 +19,11 @@ function LandingPage() {
               style={{width: isMed ? 524 : 824}}>
             The best place for connecting with classmates, enhancing collaboration, and boosting academic success.
           </h2>
-          <button className="text-white bg-nexus500 py-3 px-14 text-xl font-titilliumWeb-bold rounded-lg mt-8 flex flex-row 
+          <Link to="/accessrequest" className="text-white bg-nexus500 py-3 px-14 text-xl font-titilliumWeb-bold rounded-lg mt-8 flex flex-row 
                             transition duration-300 hover:scale-105 drop-shadow-black">
-            Get Started 
+              Get Started 
             <HiArrowNarrowRight className="pt-0.5" size={25}/>
-          </button>
+          </Link>
         {/* --------------------------------- CALCULATOR BOX --------------------------------- */}
           <div className="w-3/5 bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row" 
                style={{width: isMed ? 575 : 775, scale: isMed ? .8 : 1, marginTop: isMed ? 8 : 48}}>

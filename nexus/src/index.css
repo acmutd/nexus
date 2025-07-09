@@ -10,9 +10,15 @@
   src: url("../src/assets/fonts/TitilliumWeb-Regular.ttf");
 }
 
+@font-face {
+  font-family: TitilliumWeb-SemiBold;
+  src: url("../src/assets/fonts/TitilliumWeb-SemiBold.ttf");
+}
+
 @theme {
   --font-titilliumWeb-regular: TitilliumWeb-Regular, 'sans-serif';
   --font-titilliumWeb-bold: TitilliumWeb-Bold, 'sans-serif';
+  --font-titilliumWeb-semibold: TitilliumWeb-SemiBold, 'sans-serif';
   --color-nexus50: #E6F0FF;
   --color-nexus100: #CCE0FF;
   --color-nexus200: #99C2FF;
