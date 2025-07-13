@@ -3,6 +3,8 @@ import LandingPage from "./pages/landingpage"
 import AccessRequest from './pages/accessrequest';
 import DiscordLogin from './pages/discordlogin';
 import Navbar from "./components/NavBar"
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 
 function App() {
 
@@ -16,6 +18,8 @@ function App() {
           }/>
           <Route path="/accessrequest" element={<AccessRequest />}/>
           <Route path="/discordlogin" element={<DiscordLogin />}/>
+          <Route path="/login" element={<Login />}/>
+          <Route path="/signup" element={<Signup />}/>
         </Routes>
 
       </div>
