@@ -7,7 +7,7 @@ function AccessRequest() {
 
   return (
     <div>
-      <div className="bg-gradient-to-b from-nexus900 to-nexus700 flex flex-col items-center justify-center h-full pt-25">
+      <div className="bg-gradient-to-b from-nexus900 to-nexus700 flex flex-col items-center justify-center h-full pt-20">
         {isMed ? (
           <img
             className="bg-gradient-to-b from-nexus900 to-nexus700 flex-1 items-center justify-center"
@@ -26,7 +26,7 @@ function AccessRequest() {
           Before We Begin:
         </h1>
         {/* --------------------------------- DISCLAIMER BOX --------------------------------- */}
-        <div className="flex-1 w-2/5 h-4/5 bg-gradient-to-b from-nexus100 from-10% via-nexus50 to-nexus100 to-90% rounded-xl mt-6 p-6" style={{ zIndex: 2 }}>
+        <div className="flex-1 w-2/5 h-4/5 bg-gradient-to-b from-nexus100 from-10% to-white to-90% rounded-xl mt-6 p-6" style={{ zIndex: 2 }}>
           <div className="items-center justify-center flex flex-row">
             <img src="/assets/Logo.svg" style={{ scale: isMed ? .6 : 1, margin: isMed ? -12 : 24 }} />
             <img src="/assets/UTDLogo.svg" style={{ scale: isMed ? .6 : 1, margin: isMed ? -12 : 24 }} />
@@ -55,7 +55,7 @@ function AccessRequest() {
           </div>
           {/* --------------------------------- BUTTONS --------------------------------- */}
           <div className="flex flex-row justify-between items-center">
-            <Link to="/accessrequest" className="text-white bg-gray-500 py-3 text-xl font-titilliumWeb-bold rounded-lg mt-8 flex flex-row 
+            <Link to="/courseEntry" className="text-white bg-gray-500 py-3 text-xl font-titilliumWeb-bold rounded-lg mt-8 flex flex-row 
                           transition duration-300 hover:scale-105 drop-shadow-black items-center justify-center"
               style={{ width: isMed ? '45%' : '33.3333%' }}>
               Skip
