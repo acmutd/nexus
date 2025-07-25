@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './pages/Hero';
@@ -13,8 +13,40 @@ import SectionChat from './pages/SectionChat';
 import DocPreview from './pages/DocPreview'; 
 import Footer from './components/Footer';
 import GradeHistory from './pages/GradeHistory';
+import Onboarding from './pages/Onboarding';
+import { initFirebase } from './firebase'; 
 
 function App() {
+  const [firebaseInitialized, setFirebaseInitialized] = useState(false);
+  const [firebaseError, setFirebaseError] = useState(null);
+  
+  useEffect(() => {
+    initFirebase()
+      .then(() => {
+        setFirebaseInitialized(true);
+      })
+      .catch(error => {
+        console.error('Firebase initialization failed:', error);
+        setFirebaseError(error.message);
+      });
+  }, []);
+  
+  if (!firebaseInitialized && !firebaseError) {
+    return (
+      <div className="min-h-screen bg-nexus-blue-900 flex items-center justify-center">
+        <div className="text-white text-xl">Loading application...</div>
+      </div>
+    );
+  }
+  
+  if (firebaseError) {
+    return (
+      <div className="min-h-screen bg-nexus-blue-900 flex items-center justify-center">
+        <div className="text-white text-xl">Failed to initialize app: {firebaseError}</div>
+      </div>
+    );
+  }
+
   return (
     <Router>
       <div className="min-h-screen bg-nexus-blue-900">
@@ -38,6 +70,8 @@ function App() {
           <Route path="/section-chat/:roomId" element={<SectionChat />} />
           <Route path="/doc-preview" element={<DocPreview />} />
           <Route path="/grade-history" element={<GradeHistory />} />
+          <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/grade-history/:courseId" element={<GradeHistory />} />
         </Routes>
       </div>
     </Router>
