@@ -5,6 +5,7 @@ import CourseEntry from './pages/courseEntry';
 import DiscordLogin from './pages/discordlogin';
 import Navbar from "./components/NavBar"
 import Login from './pages/Login';
+import LoginWithNetID from "./pages/LoginWithNetID";
 import Signup from './pages/Signup';
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
           <Route path="/courseEntry" element={<CourseEntry />}/>
           <Route path="/discordlogin" element={<DiscordLogin />}/>
           <Route path="/login" element={<Login />}/>
+          <Route path="/LoginWithNetID" element={<LoginWithNetID />}/>
           <Route path="/signup" element={<Signup />}/>
         </Routes>
 

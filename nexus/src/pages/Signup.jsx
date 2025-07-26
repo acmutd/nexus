@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="w-[450px] mx-auto mt-10 p-10 bg-blue-200 rounded-xl shadow-md">
-      <form>
+    <div className="min-h-screen flex items-center justify-center bg-blue-950">
+      <div className="w-[450px] mx-auto mt-10 p-10 bg-blue-200 rounded-xl shadow-md">
+        <form>
         <h2 className="text-2xl font-bold text-gray-800 text-left mb-4 py-2">
           Sign-Up
         </h2>
@@ -91,11 +91,12 @@ const Signup = () => {
 
         <div className="text-center text-sm text-blue-700 font-bold">
           Already have an account?{" "}
-          <Link to="/register" className="font-bold text-blue-700 hover:underline">
+          <Link to="/login" className="font-bold text-blue-700 hover:underline">
             LOGIN HERE
           </Link>
         </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

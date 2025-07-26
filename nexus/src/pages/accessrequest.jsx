@@ -60,7 +60,7 @@ function AccessRequest() {
               style={{ width: isMed ? '45%' : '33.3333%' }}>
               Skip
             </Link>
-            <Link to="/discordlogin" className="text-white bg-nexus500 py-3 text-xl font-titilliumWeb-bold rounded-lg mt-8 flex flex-row 
+            <Link to="/LoginWithNetID" className="text-white bg-nexus500 py-3 text-xl font-titilliumWeb-bold rounded-lg mt-8 flex flex-row 
                         transition duration-300 hover:scale-105 drop-shadow-black items-center justify-center"
               style={{ width: isMed ? '45%' : '33.3333%' }}>
               Continue
