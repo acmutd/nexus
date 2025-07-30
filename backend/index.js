@@ -6,7 +6,6 @@ require("dotenv").config();
 
 const discordRoutes = require("./routes/discordRoutes");
 const authRoutes = require("./routes/authRoutes");
-const client = require("./config/bot");  // Your bot client
 
 // Initialize Express app
 const app = express();
@@ -37,10 +36,7 @@ app.get('/api/firebase-config', (req, res) => {
 });
 
 // ✅ API routes
-app.use("/api/discord", (req, res, next) => {
-  req.client = client;  // Attach bot client to req
-  next();
-}, discordRoutes);
+app.use("/api/discord", discordRoutes);
 
 app.use("/api/auth", authRoutes);
 
