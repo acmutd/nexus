@@ -6,6 +6,8 @@ import DiscordLogin from './pages/discordlogin';
 import Navbar from "./components/NavBar"
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import SuperDoc from './pages/superdoc';
+import Upload from './pages/upload';
 function App() {
 
   return (
@@ -21,6 +23,8 @@ function App() {
           <Route path="/discordlogin" element={<DiscordLogin />}/>
           <Route path="/login" element={<Login />}/>
           <Route path="/signup" element={<Signup />}/>
+          <Route path="/superdoc" element={<SuperDoc />}/>
+          <Route path="/upload" element={<Upload />}/>
         </Routes>
 
       </div>

@@ -16,7 +16,7 @@ const Navbar = () => {
   }, []);
 
   const navbarClasses = `fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-    isScrolled ? 'bg-white bg-opacity-90 shadow-md navbar-blur' : 'bg-transparent'
+    isScrolled ? 'bg-white bg-opacity-90 shadow-md navbar-blur' : 'bg-gradient-to-r from-nexus800 to-nexus900 '
   }`;
 
   const linkClasses = `hover:text-nexus-blue-200 flex items-center relative group ${
