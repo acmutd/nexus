@@ -2,11 +2,25 @@ import { Link } from "react-router-dom";
 
 const Login = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-950">
+    <div className="min-h-screen flex items-center justify-center bg-blue-950 bg-no-repeat bg-cover bg-center">
+        <img 
+        src="/assets/AccessRequestLongBG.svg" 
+        alt="Background" 
+        className="absolute top-0 left-5 w-full h-full scale-x-185" 
+      />
       <div className="w-[450px] mx-auto mt-10 p-10 bg-blue-200 rounded-xl shadow-md">
+        
+        <div className="flex justify-start mb-6">
+            <img src="/assets/UTDLogo.svg" alt="UTD Logo" className="h-16 mb-6 ml-18" />
+            <img src="/assets/Logo.svg" alt="Nexus Logo" className="h-16 mb-6 ml-12"/>
+        </div>
+        <div>
+            
+        </div>
+
         <form>
         <h2 className="text-2xl font-bold text-gray-800 text-left mb-4 py-2">
-          Login to Nexus
+          Login with E-Learning Credentials
         </h2>
 
         <div className="mb-4">
@@ -14,13 +28,13 @@ const Login = () => {
             htmlFor="username"
             className="block text-left text-blue-700 mb-2 font-semibold"
           >
-            Email
+            NetID
           </label>
           <input
             type="text"
-            id="username"
-            name="username"
-            placeholder="Enter Email"
+            id="NetID"
+            name="NetID"
+            placeholder="Enter NetID"
             className="w-full bg-white px-4 py-2 border placeholder-gray-400 rounded-md focus:outline-none"
           />
         </div>
@@ -30,13 +44,13 @@ const Login = () => {
             htmlFor="password"
             className="block text-left text-blue-700 mb-2 font-semibold"
           >
-            Password
+            E-Learning Password
           </label>
           <input
             type="password"
             id="password"
             name="password"
-            placeholder="Enter password"
+            placeholder="Enter Password"
             className="w-full bg-white px-4 py-2 border placeholder-gray-400 rounded-md focus:outline-none"
           />
         </div>
@@ -49,13 +63,6 @@ const Login = () => {
             Login
           </button>
         </div>
-
-        <div className="text-center text-sm text-gray-700 font-bold">
-          Don’t have an account?{' '}
-          <Link to="/signup" className="font-bold text-blue-700 hover:underline ">
-            Register here
-          </Link>
-          </div>
         </form>
       </div>
     </div>

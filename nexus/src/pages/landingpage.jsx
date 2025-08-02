@@ -24,7 +24,7 @@ function LandingPage() {
           style={{ width: isMed ? 524 : 824 }}>
           The best place for connecting with classmates, enhancing collaboration, and boosting academic success.
         </h2>
-        <Link to="/accessrequest" className="text-white bg-nexus500 py-3 px-14 text-xl font-titilliumWeb-bold rounded-lg mt-8 flex flex-row 
+        <Link to="/signup" className="text-white bg-nexus500 py-3 px-14 text-xl font-titilliumWeb-bold rounded-lg mt-8 flex flex-row 
                             transition duration-300 hover:scale-105 drop-shadow-black">
           Get Started
           <HiArrowNarrowRight className="pt-0.5" size={25} />
