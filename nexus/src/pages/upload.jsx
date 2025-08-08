@@ -34,7 +34,7 @@ function Upload() {
                        placeholder='Select Location'/>
                 <input className="flex w-4/5 h-[40px] focus:outline-blue-500 bg-white border-1 border-gray-500 mt-5 rounded-lg pl-2"
                     placeholder='Select Unit'/>
-                <button className="flex w-3/5 h-[40px] bg-nexus600 rounded-lg font-titilliumWeb-semibold text-2xl text-nexus50 items-center justify-center
+                <button className="flex w-3/5 h-[40px] mb-4 bg-nexus600 rounded-lg font-titilliumWeb-semibold text-2xl text-nexus50 items-center justify-center
                                     hover:bg-nexus500 hover:scale-105 transition duration-300 mt-6">
                     Upload
                 </button>

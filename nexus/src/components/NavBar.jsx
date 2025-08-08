@@ -34,7 +34,7 @@ const Navbar = () => {
   }`;
 
   const handleSuperdocClick = () => {
-    navigate('/doc-preview', {
+    navigate('/superdoc', {
       state: {
         fileName: 'Superdoc',
         documentName: 'Superdoc',
@@ -45,7 +45,7 @@ const Navbar = () => {
 
   return (
     <nav className={navbarClasses}>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto ">
         <div className="flex justify-between items-center py-4 navbar-content">
           <button
             className="flex items-center transition duration-300 transform hover:scale-110 z-60"
