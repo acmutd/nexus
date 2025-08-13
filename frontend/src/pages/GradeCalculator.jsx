@@ -5,6 +5,7 @@ import { getFirebaseAuth, getFirebaseFirestore } from '../firebase.js';
 import { doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import GradeCalculatorSidebar from '../components/GradeCalculatorSidebar.jsx'
+import backgroundImage from '../assets/GradeCalcBackground.svg'
 
 const GradeCalculator = () => {
     const [categories, setCategories] = useState([
@@ -326,7 +327,15 @@ const GradeCalculator = () => {
             />
             
             <div className={`flex-1 transition-all duration-300 ${sidebarCollapsed ? 'ml-16' : 'ml-64'}`}>
-                <div className="bg-gradient-to-br from-nexus-blue-800 via-nexus-blue-900 to-nexus-blue-700 min-h-screen">
+                <div 
+                    className="bg-gradient-to-br from-nexus-blue-800 via-nexus-blue-900 to-nexus-blue-700 min-h-screen"
+                    style={{
+                        backgroundImage: `url(${backgroundImage})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat'
+                    }}
+                >
                     <div className="flex flex-col justify-center items-center">
                         <motion.h1
                             className="mt-4 pt-20 pb-10 font-bold text-center"
@@ -358,7 +367,7 @@ const GradeCalculator = () => {
                             transition={{ duration: 0.5, delay: 1.0 }}
                         >
                             {categories.map((category, categoryIndex) => (
-                                <div key={categoryIndex} className="rounded-lg p-6 bg-black bg-opacity-30 border-2 border-nexus-blue-400 category">
+                                <div key={categoryIndex} className="rounded-[20px] p-6 bg-gradient-to-br from-nexus-blue-800 via-nexus-blue-900 to-nexus-blue-700 border-2 border-nexus-blue-400 category">
                                     <div className="flex flex-row items-center">
                                         <label htmlFor={`category-${categoryIndex}`} className="pr-3 block text-sm font-medium text-white">Category</label>
                                         <input
@@ -381,61 +390,50 @@ const GradeCalculator = () => {
                                             required
                                         />
                                     </div>
-                                    <div className="pt-5 grid grid-cols-3 gap-x-4 gap-y-2 place-content-evenly">
-                                        <h1 className="text-white">Assignment</h1>
-                                        <h1 className="text-white">Grade Earned (Points)</h1>
-                                        <h1 className="text-white">Points Possible </h1>
-                                        {category.assignments.map((assignment, assignmentIndex) => (
-                                            <React.Fragment key={assignmentIndex}>
-                                                <input
-                                                    type="text"
-                                                    className="mt-1 text-xs h-8 w-5/6 block w-full rounded-md bg-nexus-blue-50 border-gray-300 shadow-sm focus:border-nexus-blue-300 focus:ring focus:ring-nexus-blue-200 focus:ring-opacity-50 text-nexus-blue-800 p-1"
-                                                    value={assignment.assignment}
-                                                    onChange={(e) => handleAssignmentChange(categoryIndex, assignmentIndex, "assignment", e.target.value)}
-                                                    placeholder="Name"
-                                                    required
-                                                />
-                                                <input
-                                                    type="number"
-                                                    className="mt-1 text-xs h-8 w-5/6 block w-full rounded-md bg-nexus-blue-50 border-gray-300 shadow-sm focus:border-nexus-blue-300 focus:ring focus:ring-nexus-blue-200 focus:ring-opacity-50 text-nexus-blue-800 p-1"
-                                                    value={assignment.grade}
-                                                    onChange={(e) => handleAssignmentChange(categoryIndex, assignmentIndex, "grade", e.target.value)}
-                                                    placeholder="Grade Earned"
-                                                    required
-                                                />
-                                                <input
-                                                    type="number"
-                                                    className="mt-1 text-xs h-8 w-5/6 block w-full rounded-md bg-nexus-blue-50 border-gray-300 shadow-sm focus:border-nexus-blue-300 focus:ring focus:ring-nexus-blue-200 focus:ring-opacity-50 text-nexus-blue-800 p-1"
-                                                    value={assignment.weight}
-                                                    onChange={(e) => handleAssignmentChange(categoryIndex, assignmentIndex, "weight", e.target.value)}
-                                                    placeholder="Points Possible"
-                                                    required
-                                                />
-                                            </React.Fragment>
-                                        ))}
-                                    </div>
-                                    <div className="flex flex-row justify-around items-center">
-                                        <h1 className="pt-3 text-xl text-white"><strong>Category Grade:</strong> {categoryGrades[categoryIndex] || 'N/A'}</h1>
-                                        <div className="flex space-x-2 mt-2">
-                                            <button
-                                                type="button"
-                                                onClick={() => addAssignmentRow(categoryIndex)}
-                                                className="mt-4 h-8 w-8 flex items-center justify-center bg-nexus-blue-300 text-white text-xl font-bold rounded-md transition duration-300 hover:bg-nexus-blue-400"
-                                            >
-                                                +
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    if (category.assignments.length > 1) {
-                                                        deleteAssignmentRow(categoryIndex, category.assignments.length - 1);
-                                                    }
-                                                }}
-                                                className="mt-4 h-8 w-8 flex items-center justify-center bg-red-700 text-white text-xl font-bold rounded-md transition duration-200 hover:bg-red-800"
-                                            >
-                                                -
-                                            </button>
+                                    <div className="mt-4 bg-white bg-opacity-10 rounded-lg p-4">
+                                        <div className="grid grid-cols-3 gap-x-4 gap-y-2 place-content-evenly">
+                                            <h1 className="text-white">Assignment</h1>
+                                            <h1 className="text-white">Grade Earned (Points)</h1>
+                                            <h1 className="text-white">Points Possible </h1>
+                                            {category.assignments.map((assignment, assignmentIndex) => (
+                                                <React.Fragment key={assignmentIndex}>
+                                                    <input
+                                                        type="text"
+                                                        className="mt-1 text-xs h-8 w-5/6 block w-full rounded-md bg-nexus-blue-50 border-gray-300 shadow-sm focus:border-nexus-blue-300 focus:ring focus:ring-nexus-blue-200 focus:ring-opacity-50 text-nexus-blue-800 p-1"
+                                                        value={assignment.assignment}
+                                                        onChange={(e) => handleAssignmentChange(categoryIndex, assignmentIndex, "assignment", e.target.value)}
+                                                        placeholder="Name"
+                                                        required
+                                                    />
+                                                    <input
+                                                        type="number"
+                                                        className="mt-1 text-xs h-8 w-5/6 block w-full rounded-md bg-nexus-blue-50 border-gray-300 shadow-sm focus:border-nexus-blue-300 focus:ring focus:ring-nexus-blue-200 focus:ring-opacity-50 text-nexus-blue-800 p-1"
+                                                        value={assignment.grade}
+                                                        onChange={(e) => handleAssignmentChange(categoryIndex, assignmentIndex, "grade", e.target.value)}
+                                                        placeholder="Grade Earned"
+                                                        required
+                                                    />
+                                                    <input
+                                                        type="number"
+                                                        className="mt-1 text-xs h-8 w-5/6 block w-full rounded-md bg-nexus-blue-50 border-gray-300 shadow-sm focus:border-nexus-blue-300 focus:ring focus:ring-nexus-blue-200 focus:ring-opacity-50 text-nexus-blue-800 p-1"
+                                                        value={assignment.weight}
+                                                        onChange={(e) => handleAssignmentChange(categoryIndex, assignmentIndex, "weight", e.target.value)}
+                                                        placeholder="Points Possible"
+                                                        required
+                                                    />
+                                                </React.Fragment>
+                                            ))}
                                         </div>
+                                    </div>
+                                    <div className="flex flex-row justify-between items-center">
+                                        <h1 className="pt-3 text-xl text-white"><strong>Category Grade:</strong> {categoryGrades[categoryIndex] || 'N/A'}</h1>
+                                        <button
+                                            type="button"
+                                            onClick={() => addAssignmentRow(categoryIndex)}
+                                            className="mt-4 px-4 py-2 bg-nexus-blue-300 text-white text-sm font-semibold rounded-md transition duration-300 hover:bg-nexus-blue-400"
+                                        >
+                                            Add Assignment
+                                        </button>
                                     </div>
                                 </div>
                             ))}
