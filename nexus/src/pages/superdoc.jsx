@@ -5,10 +5,9 @@ import { HiOutlineDocument, HiUpload, HiChevronLeft, HiChevronRight, HiChevronDo
 import { motion, AnimatePresence } from 'framer-motion';
 
 function SuperDoc() {
-  const isMed = useMediaQuery({ query: '(max-width: 1223px)' })
+  const isMed = useMediaQuery({ query: '(max-width: 800px)' })
   const comboboxRef = useRef()
   const [isDropdownVisible, setDropDownVisible] = useState(false)
-  const [highlightedIndex, setHighlightedIndex] = useState(0)
   const [search, setSearch] = useState('')
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState('')
@@ -39,6 +38,7 @@ function SuperDoc() {
 
   /* --------------------------  COMBOBOX STUFF  ----------------------------*/
   const courseUnits = new Map()
+  // courseUnits will be a map that uses the section name as the key and the individual unit notes as values
   courseUnits.set("MATH 1448", ['MATH 1448 Unit 1', 'MATH 1448 Unit 2', 'MATH 1448 Unit 3'])
   courseUnits.set("CS 1337", ['CS 1337 Unit 1', 'CS 1337 Unit 2'])
 
@@ -77,12 +77,8 @@ function SuperDoc() {
   }
     
   return (
-    <div className="flex w-full h-full flex-row">
-      <img
-        className={`${isMed ? "mt-20" : ""} bg-blue-950`}
-        src={isMed ? "/assets/SuperdocBackgroundLong.svg" : `/assets/SuperdocBackground.svg`}
-        style={{ position: 'absolute', zIndex: -1 }}
-      />
+    <div className="min-h-screen flexjustify-center bg-blue-950 bg-cover bg-center"
+      style={{ backgroundImage: isMed ? "url('/assets/SuperdocBackgroundLong.svg')" : "url('/assets/SuperdocBackground.svg')" }}>
       { /* ------------------------------- DOC SIDE BAR ------------------------------------ */}
       <motion.aside
         className="shadow-md flex flex-col h-screen fixed left-0 top-0 pt-16 overflow-visible z-40"
@@ -90,12 +86,10 @@ function SuperDoc() {
         animate={isCollapsed ? "collapsed" : "expanded"}
         variants={sidebarVariants}
         transition={{ type: "tween", duration: 0.4 }}
-        style={{backgroundImage: isCollapsed ? 'linear-gradient(#002966, #002966)' : 'linear-gradient(#002966, #001433)'}}
-      >
+        style={{backgroundImage: isCollapsed ? 'linear-gradient(#002966, #002966)' : 'linear-gradient(#002966, #001433)'}}>
         <button
           onClick={toggleSidebar}
-          className="absolute top-20 -right-6 bg-nexus600 text-white p-2 rounded-r-md z-50 shadow-md"
-        >
+          className="absolute top-20 -right-6 bg-nexus600 text-white p-2 rounded-r-md z-50 shadow-md">
           {isCollapsed ? <HiChevronRight size={20} /> : <HiChevronLeft size={20} />}
         </button>
         <AnimatePresence>
@@ -155,7 +149,7 @@ function SuperDoc() {
           animate={isCollapsed ? "collapsed" : "exapnded"}
           initial="expanded"
           transition={{duration: 0.4}}
-          className={`${isMed ? "w-[65%]" : "w-[77%]"} h-full mt-25`}>
+          className={`${isMed ? "w-[65%]" : "w-[75%]"} h-full mt-25`}>
       {/* ----------------------------------- COMBOBOX ------------------------------------- */}
             <div className={`flex h-[37px] ${isMed ? "w-[150px]" : "w-[300px]"} bg-white rounded-t-md border-1 border-gray-400`} 
                  ref={comboboxRef}>
@@ -178,8 +172,7 @@ function SuperDoc() {
                   transition={{duration: .1}}>
                   {filteredSearch.map((course, index) => {
                     return(
-                      <ul className={`py-2 p-1 ${highlightedIndex === index ? 'bg-nexus500 text-white' : 'bg-white'}`}
-                          onMouseOver={() => setHighlightedIndex(index)}
+                      <ul className={`hover:bg-nexus500 hover:text-white py-2 p-1 `}
                           onClick={() => {handleClickCourse(course)}}>
                         {course}
                       </ul>
@@ -189,11 +182,11 @@ function SuperDoc() {
               : null}
             </div>
       {/* ----------------------------- SUPER DOC ----------------------------------- */}
-          <h1 className="text-3xl font-titilliumWeb-bold pt-4 text-nexus50">
+          <h1 className="flex text-3xl font-titilliumWeb-bold pt-4 text-nexus50">
             SuperDoc - {selectedUnit}
           </h1>
-          <div className="flex flex-col w-full h-full max-h-[685px] bg-gradient-to-b from-nexus800 to-nexus900 mt-2 rounded-md items-center">
-            <h1 className="flex text-lg font-titilliumWeb-regular text-white text-center w-full justify-center py-10">
+          <div className={`flex flex-col h-full w-full max-h-[685px] bg-gradient-to-b from-nexus800 to-nexus900 mt-2 rounded-md items-center justify-center`}>
+            <h1 className="flex text-lg font-titilliumWeb-regular text-white text-center w-full justify-center py-10 mx-4">
                 There is currently no document uploaded for this unit.
             </h1>
             <Link className="flex w-2/5 h-[50px] bg-nexus600 hover:bg-nexus500 mb-10 items-center justify-center rounded-md hover:scale-105 duration-300 transition

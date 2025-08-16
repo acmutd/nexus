@@ -1,13 +1,14 @@
 import React from 'react'
 import { useMediaQuery } from 'react-responsive';
+import { animate, AnimatePresence, motion, scale } from "motion/react"
 
 function Upload() {
-    const isMed = useMediaQuery({ query: '(max-width: 1000px)' })
+    const isMed = useMediaQuery({ query: '(max-width: 800px)' })
 
     return (
-        <div className="flex w-full h-screen bg-nexus900 justify-center items-center">
-            <img className="absolute bg-nexus900 z-1"
-                src={isMed ? `/assets/UploadDocBackgroundLong.svg` : `/assets/UploadDocBackground.svg`}/>  
+    <div className="min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center"
+      style={{ backgroundImage: isMed ? "url('/assets/UploadDocBackgroundLong.svg')" : "url('/assets/UploadDocBackground.svg')" }}>
+            
 {/*--------------------------------------- UPLOAD DOC CONTAINER ---------------------------------------*/}
             <div className={`flex flex-col ${isMed ? "w-[45%]" : "w-[35%]"} h-4/5 bg-gradient-to-b from-nexus800 to-nexus900 rounded-3xl z-10 mt-15 items-center`}>
                 <img className="w-[65px] h-[65px] mt-7" src="/assets/DocIcon.svg" />

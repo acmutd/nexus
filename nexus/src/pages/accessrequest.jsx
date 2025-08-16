@@ -3,24 +3,12 @@ import { Link } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 
 function AccessRequest() {
-  const isMed = useMediaQuery({ query: '(max-width: 1223px)' })
+  const isMed = useMediaQuery({ query: '(max-width: 800px)' })
 
   return (
     <div>
-      <div className="bg-gradient-to-b from-nexus900 to-nexus700 flex flex-col items-center justify-center h-full pt-20">
-        {isMed ? (
-          <img
-            className="bg-gradient-to-b from-nexus900 to-nexus700 flex-1 items-center justify-center"
-            src="/assets/AccessRequestLongBG.svg"
-            style={{ position: 'absolute', zIndex: 0 }}
-          />
-        ) : (
-          <img
-            className="bg-gradient-to-b from-nexus900 to-nexus700 flex-1 items-center justify-center"
-            src="/assets/AccessRequestBG.svg"
-            style={{ position: 'absolute', zIndex: 0 }}
-          />
-        )}
+    <div className="min-h-screen flex flex-col items-center justify-center bg-nexus800 bg-cover bg-center"
+      style={{ backgroundImage: isMed ? "url('/assets/AccessRequestBGLong.svg')" : "url('/assets/AccessRequestBG.svg')" }}>
         {/* --------------------------------- HEADER --------------------------------- */}
         <h1 className="font-titilliumWeb-bold text-white text-4xl" style={{ zIndex: 1 }}>
           Before We Begin:

@@ -9,6 +9,7 @@ import LoginWithNetID from "./pages/LoginWithNetID";
 import Signup from './pages/Signup';
 import SuperDoc from './pages/superdoc';
 import Upload from './pages/upload';
+import CourseList from './pages/courseList';
 function App() {
 
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/signup" element={<Signup />}/>
           <Route path="/superdoc" element={<SuperDoc />}/>
           <Route path="/upload" element={<Upload />}/>
+          <Route path="/courselist" element={<CourseList />}/>
         </Routes>
 
       </div>

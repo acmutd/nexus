@@ -12,7 +12,7 @@ const API_ORIGIN = (() => {
 })();
 
 export default function DiscordLogin() {
-  const isMed = useMediaQuery({ query: '(max-width: 1223px)' });
+  const isMed = useMediaQuery({ query: '(max-width: 800px)' });
   const navigate = useNavigate();
 
   // Firebase
