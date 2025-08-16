@@ -18,7 +18,7 @@ function LandingPage() {
       <div className="flex flex-col items-center justify-center min-h-full pt-30">
         {/* --------------------------------- HEADER --------------------------------- */}
         <h1 className="font-titilliumWeb-bold text-white text-5xl">
-          <Typewriter options={{strings: "Welcome To Nexus!", autoStart: true, cursor: "_", delay: 100}}>
+          <Typewriter options={{strings: "Welcome To Nexus!", autoStart: true, cursor: "_", delay: 50}}>
           </Typewriter>
         </h1>
         <h2

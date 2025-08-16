@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useMediaQuery } from 'react-responsive';
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
@@ -17,6 +18,7 @@ const buildCourseId = (code, instructor) =>
 
 export default function LoginWithNetID() {
   const navigate = useNavigate();
+  const isMed = useMediaQuery({ query: '(max-width: 800px)' });
 
   // Firebase
   const [auth, setAuth] = useState(null);
@@ -187,21 +189,17 @@ export default function LoginWithNetID() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-950 bg-no-repeat bg-cover bg-center">
-      <img
-        src="/assets/AccessRequestLongBG.svg"
-        alt="Background"
-        className="absolute top-0 left-5 w-full h-full scale-x-185"
-      />
+      <div className="min-h-screen w-full flex flex-col items-center justify-center bg-blue-950 bg-cover bg-center"
+        style={{ backgroundImage: "url('/assets/AccessRequestBG.svg')"}}>
 
-      <div className="w-[450px] mx-auto mt-10 p-10 bg-blue-200 rounded-xl shadow-md relative">
-        <div className="flex justify-start mb-6">
-          <img src="/assets/UTDLogo.svg" alt="UTD Logo" className="h-16 mb-6 ml-18" />
-          <img src="/assets/Logo.svg" alt="Nexus Logo" className="h-16 mb-6 ml-12" />
-        </div>
+      <div className="w-2/5 mx-auto mt-10 p-10 bg-gradient-to-b from-nexus100 from-10% via-nexus50 to-nexus100 to-90% rounded-xl shadow-md relative">
+          <div className="items-center justify-center flex flex-row">
+            <img src="/assets/Logo.svg" style={{ scale: isMed ? .6 : 1, paddingRight: isMed ? -12 : 24 }} />
+            <img src="/assets/UTDLogo.svg" style={{ scale: isMed ? .6 : 1, paddingLeft: isMed ? -12 : 24 }} />
+          </div>
 
         <form onSubmit={onSubmit}>
-          <h2 className="text-2xl font-bold text-gray-800 text-left mb-4 py-2">
+          <h2 className="text-3xl font-titilliumWeb-bold text-center font-bold text-gray-800 mb-4 py-2">
             Login with E-Learning Credentials
           </h2>
 

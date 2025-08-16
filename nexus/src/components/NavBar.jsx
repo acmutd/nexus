@@ -110,11 +110,6 @@ const Navbar = () => {
           </button>
 
           <div className="flex space-x-6 items-center">
-            <Link to="/links" className={linkClasses}>
-              Discord Links
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
-            </Link>
-
             <Link to="/bbauth" className={linkClasses}>
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
             </Link>

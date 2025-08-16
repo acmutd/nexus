@@ -77,8 +77,21 @@ function SuperDoc() {
   }
     
   return (
-    <div className="min-h-screen flexjustify-center bg-blue-950 bg-cover bg-center"
-      style={{ backgroundImage: isMed ? "url('/assets/SuperdocBackgroundLong.svg')" : "url('/assets/SuperdocBackground.svg')" }}>
+    <div className="min-h-screen max-w-screen overflow-x-hidden justify-center">
+      <div className="fixed inset-0 z-0 bg-gradient-to-b from-nexus700 to-nexus900">
+
+      </div>
+      <img className="absolute top-17" src='/assets/SuperDocClouds.svg' />
+      <motion.div 
+          initial={{translateX: 0}} 
+          animate={{translateX: isMed ? 400 : 700}}
+          transition={{
+                        duration: 2.5,
+                        type: "spring",
+                        bounce: .4
+                      }}>
+        <img className="absolute top-15" src='/assets/SuperDocPigeon.svg'/>
+      </motion.div>
       { /* ------------------------------- DOC SIDE BAR ------------------------------------ */}
       <motion.aside
         className="shadow-md flex flex-col h-screen fixed left-0 top-0 pt-16 overflow-visible z-40"

@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import 'simplebar-react/dist/simplebar.min.css';
 import LandingPage from "./pages/landingpage"
 import AccessRequest from './pages/accessrequest';
 import CourseEntry from './pages/courseEntry';

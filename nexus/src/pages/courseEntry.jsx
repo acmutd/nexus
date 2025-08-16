@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import CourseCard from '../components/CourseCard';
 import { Link, useNavigate } from 'react-router-dom';
+import SimpleBar from 'simplebar-react'
 import { useMediaQuery } from 'react-responsive';
 import { HiChevronDown, HiOutlineX } from "react-icons/hi";
 import { AnimatePresence, motion } from "motion/react";
-
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
@@ -268,23 +267,11 @@ function CourseEntry() {
 
   return (
     <div className="relative">
-      <div className={`relative flex flex-col items-center justify-center w-full h-screen ${isMed ? "pt-80 ":"pt-20"}`}>
-        {isMed ? (
-          <img
-            className="w-screen bg-gradient-to-b from-nexus900 to-nexus700 flex items-center justify-center"
-            src="/assets/AccessRequestLongBG.svg"
-            style={{ position: 'absolute', zIndex: 0, top: 0, bottom: 0, left: 0, right: 0}}
-          />
-        ) : (
-          <img
-            className="w-screen bg-gradient-to-b from-nexus900 to-nexus700 flex items-center justify-center"
-            src="/assets/AccessRequestBG.svg"
-            style={{ position: 'absolute', zIndex: 0, top: 0, bottom: 0, left: 0, right: 0}}
-          />
-        )}
-
+      <div className="min-h-screen flex flex-col items-center justify-center bg-blue-950 bg-cover bg-center"
+        style={{ backgroundImage: isMed ? "url('/assets/AccessRequestBGLong.svg')" : "url('/assets/AccessRequestBG.svg')"}}>
         {/* --------------------------------- DISCLAIMER BOX --------------------------------- */}
-        <div className="relative flex-1 w-2/5 bg-gradient-to-b from-nexus100 from-10% via-nexus50 to-nexus100 to-90% rounded-xl mt-6 p-6" style={{ zIndex: 1 }}>
+        <SimpleBar className={` relative flex-1 max-h-130 w-2/5 bg-gradient-to-b from-nexus100 from-10% via-nexus50 to-nexus100 to-90% rounded-xl mt-16 p-6`}
+                   style={{ border: '1px solid #ccc', zIndex: 1 }}>
           <div className="items-center justify-center flex flex-row">
             <img src="/assets/Logo.svg" style={{ scale: isMed ? .6 : 1, margin: isMed ? -12 : 24 }} />
             <img src="/assets/UTDLogo.svg" style={{ scale: isMed ? .6 : 1, margin: isMed ? -12 : 24 }} />
@@ -394,7 +381,7 @@ function CourseEntry() {
               {saving ? 'Saving…' : 'All Done!'}
             </button>
           </div>
-        </div>
+        </SimpleBar>
       </div>
     </div>
   );
