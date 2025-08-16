@@ -153,7 +153,10 @@ export default function Signup() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-950">
+    <div
+      className="min-h-screen flex items-center justify-center bg-blue-950 bg-no-repeat bg-cover bg-center"
+      style={{ backgroundImage: "url('/assets/SignUpBackground.svg')" }}
+    >
       <div className="w-[450px] mx-auto mt-10 p-10 bg-blue-200 rounded-xl shadow-md">
         <form onSubmit={onSubmit}>
           <h2 className="text-2xl font-bold text-gray-800 text-left mb-1">

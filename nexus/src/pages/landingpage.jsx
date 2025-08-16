@@ -2,10 +2,11 @@ import React from 'react'
 import { HiArrowNarrowRight } from 'react-icons/hi';
 import { useMediaQuery } from 'react-responsive';
 import { Link } from 'react-router-dom';
+import { motion, AnimatePresence} from 'framer-motion';
+import Typewriter from "typewriter-effect"
 
 function LandingPage() {
-  const isFull = useMediaQuery({ query: '(min-width: 1224px)' })
-  const isMed = useMediaQuery({ query: '(max-width: 1223px)' })
+  const isMed = useMediaQuery({ query: '(max-width: 800px)' })
 
   return (
     <div>
@@ -17,7 +18,8 @@ function LandingPage() {
       <div className="flex flex-col items-center justify-center min-h-full pt-30">
         {/* --------------------------------- HEADER --------------------------------- */}
         <h1 className="font-titilliumWeb-bold text-white text-5xl">
-          Welcome to Nexus!
+          <Typewriter options={{strings: "Welcome To Nexus!", autoStart: true, cursor: "_", delay: 100}}>
+          </Typewriter>
         </h1>
         <h2
           className="w-1/2 font-titilliumWeb-regular text-white text-2xl text-center pt-4"
@@ -42,13 +44,21 @@ function LandingPage() {
                 Stay on top of your grades and assignments and see the impact of a quiz or exam on your grade using the grade calculator.
               </h2>
             </div>
-            <img src="/assets/Calculator.svg" className="w-2/5" />
+            <motion.ul whileHover={{rotate: 12, scale: 1.1}} 
+                      transition={{type: "spring", visualDuration: .25, bounce: .2}}
+                      className="w-full">
+              <img src="/assets/Calculator.svg" />
+            </motion.ul>
           </div>
         </div>
         {/* --------------------------------- MEGAPHONE BOX --------------------------------- */}
         <div className="w-3/5 bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row"
           style={{ width: isMed ? 575 : 775, scale: isMed ? .8 : 1, marginTop: isMed ? 0 : 48 }}>
-          <img src="/assets/Megaphone.svg" className="w-2/5" />
+          <motion.ul whileHover={{rotate: -12, scale: 1.1}} 
+                    transition={{type: "spring", visualDuration: .25, bounce: .2}}
+                    className="w-full">
+            <img src="/assets/Megaphone.svg"/>
+          </motion.ul>
           <div className="pt-12 pr-12 pb-12">
             <h1 className="text-nexus700 font-titilliumWeb-bold text-4xl">
               Collaborative Environment
@@ -66,10 +76,14 @@ function LandingPage() {
               Resource Sharing
             </h1>
             <h2 className="text-nexus900 font-titilliumWeb-regular text-2xl overflow-wrap">
-              Missed a lecture? Cramming for an exam? No biggie! Access and contribute to study materials alongside your classmates using Nexus’ Superdoc!
+              Missed a lecture? Cramming for an exam? No problem! Access and contribute to study materials alongside your classmates using Nexus’ Superdoc!
             </h2>
           </div>
-          <img src="/assets/Book.svg" className="w-2/5" />
+          <motion.ul whileHover={{rotate: 12, scale: 1.1}} 
+                    transition={{type: "spring", visualDuration: .25, bounce: .2}}
+                    className="w-full">
+            <img src="/assets/Book.svg"/>
+          </motion.ul>
         </div>
       </div>
     </div>
