@@ -18,6 +18,7 @@ export default function Signup() {
 
   const [loading, setLoading] = useState(true);
   const [pwVisible, setPwVisible] = useState(false);
+  const [pw2Visible, setPw2Visible] = useState(false);
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
@@ -187,33 +188,34 @@ export default function Signup() {
           </div>
 
           <div className="mb-4 relative">
-            <label
-              htmlFor="password"
-              className="block text-left text-blue-700 mb-2 font-semibold"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type={pwVisible ? "text" : "password"}
-              placeholder="Enter password"
-              className="w-full bg-white text-black px-4 py-2 border border-gray-300 rounded-md focus:outline-none placeholder-gray-400 pr-10"
-              value={pw}
-              onChange={(e) => setPw(e.target.value)}
-              autoComplete="new-password"
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setPwVisible((v) => !v)}
-              className="absolute top-10 right-4 -translate-y-1/2 text-gray-600"
-              aria-label={pwVisible ? "Hide password" : "Show password"}
-            >
-              {pwVisible ? <IoMdEyeOff /> : <IoMdEye />}
-            </button>
-          </div>
+          <label
+            htmlFor="password"
+            className="block text-left text-blue-700 mb-2 font-semibold"
+          >
+            Password
+          </label>
+          <input
+            id="password"
+            type={pwVisible ? "text" : "password"}
+            placeholder="Enter password"
+            className="w-full bg-white text-black px-4 py-2 border border-gray-300 rounded-md focus:outline-none placeholder-gray-400 pr-10"
+            value={pw}
+            onChange={(e) => setPw(e.target.value)}
+            autoComplete="new-password"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setPwVisible((v) => !v)}
+            className="absolute top-13 right-4 -translate-y-1/2 text-gray-600"
+            aria-label={pwVisible ? "Hide password" : "Show password"}
+          >
+            {pwVisible ? <IoMdEyeOff /> : <IoMdEye />}
+          </button>
+        </div>
 
-          <div className="mb-4">
+
+          {/* <div className="mb-4">
             <label
               htmlFor="confirm_password"
               className="block text-left text-blue-700 mb-2 font-semibold"
@@ -230,7 +232,35 @@ export default function Signup() {
               autoComplete="new-password"
               required
             />
-          </div>
+            
+          </div> */}
+           <div className="mb-4 relative">
+          <label
+            htmlFor="confirm_password"
+            className="block text-left text-blue-700 mb-2 font-semibold"
+          >
+            Confirm Password
+          </label>
+          <input
+            id="confirm_password"
+            type={pw2Visible ? "text" : "password"}
+            placeholder="Confirm password"
+            className="w-full bg-white text-black px-4 py-2 border border-gray-300 rounded-md focus:outline-none placeholder-gray-400 pr-10"
+            value={pw2}
+            onChange={(e) => setPw2(e.target.value)}
+            autoComplete="new-password"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setPw2Visible((v) => !v)}
+            className="absolute top-13 right-4 -translate-y-1/2 text-gray-600"
+            aria-label={pw2Visible ? "Hide confirm password" : "Show confirm password"}
+          >
+            {pw2Visible ? <IoMdEyeOff /> : <IoMdEye />}
+          </button>
+        </div>
+
 
           {error && (
             <div className="mb-3 text-red-600 text-sm">{error}</div>
