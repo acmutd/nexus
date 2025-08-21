@@ -18,15 +18,16 @@ router.post('/query', async (req, res) => {
 
     if (!scraperRes.ok) {
       const text = await scraperRes.text();
+      console.error("Scraper Error:",scraperRes);
       console.error('Scraper error:', scraperRes.status, text);
       return res.status(502).json({ status: 'error', message: 'Scraper failed' });
     }
-
+    console.log("ScraperRes",scraperRes)
     const data = await scraperRes.json();
-
+    console.log("Data:",data)
     return res.json({
       status: 'success',
-      courses: data.courses || [],
+      courses: data || [],
     });
   } catch (err) {
     console.error('scraper/query error:', err);
