@@ -34,7 +34,7 @@ export default function LoginWithNetID() {
 
   // Initialize or reuse Firebase app
   useEffect(() => {
-    let unsub = () => {};
+    let unsub = () => { };
     (async () => {
       try {
         if (getApps().length) {
@@ -67,6 +67,8 @@ export default function LoginWithNetID() {
     return () => unsub();
   }, [navigate]);
 
+
+  //Allocates channels for users who are already in servers
   const checkAndAllocateDiscordCourses = async (uid, courses) => {
     try {
       const userDocRef = doc(dbRef.current, "users", uid);
@@ -113,7 +115,9 @@ export default function LoginWithNetID() {
         body: JSON.stringify({ netid: netId, password: elearnPw }),
       });
       const data = await res.json();
+      console.log("Data:", data);
 
+      
       // 2) Normalize to { course_id: "PREFIX-####-Prof" }
       const raw = data?.status === "success" ? data.courses || [] : [];
       const courses = raw.map((c) => {
@@ -125,11 +129,11 @@ export default function LoginWithNetID() {
         if (!m) return { course_id: s.toUpperCase() };
         const prefix = m[1].toUpperCase();
         const number = m[2];
-        const prof   = m[3] ? titleCaseOne(m[3]) : "";
-        const code   = `${prefix}-${number}`;
+        const prof = m[3] ? titleCaseOne(m[3]) : "";
+        const code = `${prefix}-${number}`;
         return { course_id: buildCourseId(code, prof) };
       });
-
+      
       // 3) Save to Firestore
       const user = auth.currentUser;
       if (!user) {
@@ -150,11 +154,12 @@ export default function LoginWithNetID() {
       );
 
       // 4) Optional Discord allocation
-      await checkAndAllocateDiscordCourses(user.uid, courses);
+      //await checkAndAllocateDiscordCourses(user.uid, courses);
 
       // 5) Navigate next
       if (courses.length > 0) {
-        navigate("/courses");
+        const courseString = encodeURIComponent(JSON.stringify(courses));
+        navigate(`/courseEntry?courses=${courseString}`);
       } else {
         navigate("/courseEntry");
       }
@@ -189,14 +194,14 @@ export default function LoginWithNetID() {
   }
 
   return (
-      <div className="min-h-screen w-full flex flex-col items-center justify-center bg-blue-950 bg-cover bg-center"
-        style={{ backgroundImage: "url('/assets/AccessRequestBG.svg')"}}>
+    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-blue-950 bg-cover bg-center"
+      style={{ backgroundImage: "url('/assets/AccessRequestBG.svg')" }}>
 
       <div className="w-2/5 mx-auto mt-10 p-10 bg-gradient-to-b from-nexus100 from-10% via-nexus50 to-nexus100 to-90% rounded-xl shadow-md relative">
-          <div className="items-center justify-center flex flex-row">
-            <img src="/assets/Logo.svg" style={{ scale: isMed ? .6 : 1, paddingRight: isMed ? -12 : 24 }} />
-            <img src="/assets/UTDLogo.svg" style={{ scale: isMed ? .6 : 1, paddingLeft: isMed ? -12 : 24 }} />
-          </div>
+        <div className="items-center justify-center flex flex-row">
+          <img src="/assets/Logo.svg" style={{ scale: isMed ? .6 : 1, paddingRight: isMed ? -12 : 24 }} />
+          <img src="/assets/UTDLogo.svg" style={{ scale: isMed ? .6 : 1, paddingLeft: isMed ? -12 : 24 }} />
+        </div>
 
         <form onSubmit={onSubmit}>
           <h2 className="text-3xl font-titilliumWeb-bold text-center font-bold text-gray-800 mb-4 py-2">

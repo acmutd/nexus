@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+
 import SimpleBar from 'simplebar-react'
 import { useMediaQuery } from 'react-responsive';
 import { HiChevronDown, HiOutlineX } from "react-icons/hi";
@@ -39,16 +40,20 @@ function CourseEntry() {
   const [isDropDownVisible, setDropDownVisible] = useState(false);
   const [isWarningVisible, setWarningVisible] = useState(false);
   const [warningMessage, setWarningMessage] = useState("");
-  const [selectedCourses, setSelectedCourses] = useState([]); 
+  const [selectedCourses, setSelectedCourses] = useState([]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
   // Catalog from JSON
   const [codeToProfs, setCodeToProfs] = useState(new Map());
 
+  // Search Parameters
+  const [searchParams] = useSearchParams();
+
+
   // --- Firebase init or reuse ---
   useEffect(() => {
-    let unsub = () => {};
+    let unsub = () => { };
     (async () => {
       try {
         if (getApps().length) {
@@ -81,6 +86,22 @@ function CourseEntry() {
     return () => unsub();
   }, [navigate]);
 
+  useEffect(() => {
+    const coursesParam = searchParams.get('courses');
+    let importedCourses = [];
+
+    if (coursesParam) {
+      try {
+        importedCourses = JSON.parse(decodeURIComponent(coursesParam));
+      } catch (error) {
+        console.error("Error parsing course data:", error);
+      }
+    }
+
+    if(importedCourses){
+      setSelectedCourses(importedCourses); 
+    }
+  },[searchParams])
   useEffect(() => {
     let live = true;
     (async () => {
@@ -157,7 +178,7 @@ function CourseEntry() {
   };
 
   function handleAddCourseFromSuggestion(item) {
-    const code = item.code; 
+    const code = item.code;
     const instructor = item.instructor || "";
     const courseId = buildCourseId(code, instructor);
 
@@ -268,10 +289,10 @@ function CourseEntry() {
   return (
     <div className="relative">
       <div className="min-h-screen flex flex-col items-center justify-center bg-blue-950 bg-cover bg-center"
-        style={{ backgroundImage: isMed ? "url('/assets/AccessRequestBGLong.svg')" : "url('/assets/AccessRequestBG.svg')"}}>
+        style={{ backgroundImage: isMed ? "url('/assets/AccessRequestBGLong.svg')" : "url('/assets/AccessRequestBG.svg')" }}>
         {/* --------------------------------- DISCLAIMER BOX --------------------------------- */}
         <SimpleBar className={` relative flex-1 max-h-130 w-2/5 bg-gradient-to-b from-nexus100 from-10% via-nexus50 to-nexus100 to-90% rounded-xl mt-16 p-6`}
-                   style={{ border: '1px solid #ccc', zIndex: 1 }}>
+          style={{ border: '1px solid #ccc', zIndex: 1 }}>
           <div className="items-center justify-center flex flex-row">
             <img src="/assets/Logo.svg" style={{ scale: isMed ? .6 : 1, margin: isMed ? -12 : 24 }} />
             <img src="/assets/UTDLogo.svg" style={{ scale: isMed ? .6 : 1, margin: isMed ? -12 : 24 }} />
@@ -304,7 +325,7 @@ function CourseEntry() {
                   onChange={handleInputChange}
                   onKeyDown={handleKeyPress}
                 />
-                <motion.ul onClick={() => setDropDownVisible(!isDropDownVisible)} animate={{rotate: isDropDownVisible ? 180 : 0}}>
+                <motion.ul onClick={() => setDropDownVisible(!isDropDownVisible)} animate={{ rotate: isDropDownVisible ? 180 : 0 }}>
                   <HiChevronDown size={35} color='#4a5565' />
                 </motion.ul>
               </div>
@@ -338,7 +359,7 @@ function CourseEntry() {
             </div>
           </div>
 
-          <div className="bg-gray-400 mt-5 h-[1px] w-full"/>
+          <div className="bg-gray-400 mt-5 h-[1px] w-full" />
 
           {/* --------------------------------- COURSES LIST --------------------------------- */}
           <div className="flex flex-col rounded-xl items-center text-center justify-center w-full" style={{ marginTop: 16 }}>
