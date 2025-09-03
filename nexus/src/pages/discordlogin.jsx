@@ -186,30 +186,44 @@ export default function DiscordLogin() {
               <img src="/assets/DiscordLogo.svg" style={{ scale: isMed ? 0.6 : 1, margin: isMed ? -12 : 12 }} />
             </div>
 
-            <div
-              className="items-center justify-center flex flex-col"
-              style={{ marginTop: isMed ? -8 : 0, scale: isMed ? 0.8 : 1 }}
+            {/**/}
+          <div
+            className="items-center justify-center flex flex-col"
+            style={{ marginTop: isMed ? -8 : 0, scale: isMed ? 0.8 : 1 }}
+          >
+            <h1
+              className="w-4/5 text-center font-titilliumWeb-regular text-nexus800 text-5xl"
+              style={{ width: isMed ? '100%' : '80%', fontSize: isMed ? 36 : 48 }}
             >
-              <h1
-                className="w-4/5 text-center font-titilliumWeb-regular text-nexus800 text-5xl"
-                style={{ width: isMed ? '100%' : '80%', fontSize: isMed ? 36 : 48 }}
+              Now Let's Get Your Discord Setup!
+            </h1>
+
+            {/* Login button */}
+            <div className="flex flex-row w-full justify-center items-center mt-8">
+              <button
+                onClick={startDiscordLogin}
+                disabled={linking}
+                className={`text-white bg-nexus500 py-3 text-2xl font-titilliumWeb-bold rounded-lg flex flex-row 
+                            transition duration-300 drop-shadow-black text-center items-center justify-center
+                            ${linking ? 'opacity-70 cursor-not-allowed' : 'hover:scale-105'}`}
+                style={{ width: isMed ? '90%' : '80%' }}
               >
-                Now Let's Get Your Discord Setup!
-              </h1>
-              <div className="flex flex-row w-full justify-center items-center">
-                <button
-                  onClick={startDiscordLogin}
-                  disabled={linking}
-                  className={`text-white bg-nexus500 py-3 text-2xl font-titilliumWeb-bold rounded-lg flex flex-row 
-                              transition duration-300 drop-shadow-black text-center items-center justify-center
-                              ${linking ? 'opacity-70 cursor-not-allowed' : 'hover:scale-105'}`}
-                  style={{ width: isMed ? '90%' : '80%', marginTop: isMed ? 0 : 24 }}
-                >
-                  {linking ? 'Connecting…' : 'Login Through Discord'}
-                </button>
-              </div>
+                {linking ? 'Connecting…' : 'Login Through Discord'}
+              </button>
             </div>
 
+            {/* Skip button */}
+            <div className="flex flex-row w-full justify-center items-center mt-4">
+              <button
+                onClick={() => navigate('/accessrequest')}
+                className="text-white bg-gray-500 py-3 text-xl font-titilliumWeb-bold rounded-lg 
+                          transition duration-300 hover:scale-105 drop-shadow-black"
+                style={{ width: isMed ? '90%' : '80%' }}
+              >
+                Skip
+              </button>
+            </div>
+          </div>
 
             {error && <div className="mt-4 text-center text-red-700 text-sm">{error}</div>}
             {okMsg && <div className="mt-4 text-center text-green-700 text-sm">{okMsg}</div>}
