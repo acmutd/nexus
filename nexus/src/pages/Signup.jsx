@@ -210,7 +210,7 @@ export default function Signup() {
             className="absolute top-13 right-4 -translate-y-1/2 text-gray-600"
             aria-label={pwVisible ? "Hide password" : "Show password"}
           >
-            {pwVisible ? <IoMdEyeOff /> : <IoMdEye />}
+            {pwVisible ? <IoMdEye  /> : <IoMdEyeOff />}
           </button>
         </div>
 
@@ -237,7 +237,7 @@ export default function Signup() {
             className="absolute top-13 right-4 -translate-y-1/2 text-gray-600"
             aria-label={pw2Visible ? "Hide confirm password" : "Show confirm password"}
           >
-            {pw2Visible ? <IoMdEyeOff /> : <IoMdEye />}
+            {pw2Visible ? <IoMdEye  /> : <IoMdEyeOff />}
           </button>
         </div>
 

@@ -177,7 +177,7 @@ const Login = () => {
               className="absolute top-13 right-4 -translate-y-1/2 text-gray-600"
               aria-label={pwVisible ? "Hide password" : "Show password"}
             >
-              {pwVisible ? <IoMdEyeOff /> : <IoMdEye />}
+              {pwVisible ? <IoMdEye /> : <IoMdEyeOff />}
             </button>
           </div>
 
