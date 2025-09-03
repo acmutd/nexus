@@ -1,0 +1,28 @@
+# Use the official Python image as a base
+FROM python:3.12
+# Set work directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install playwright 
+RUN playwright install --with-deps chromium
+
+
+# Copy project files
+COPY ./src .
+
+# Expose the port the app runs on
+EXPOSE 8080
+
+# Run the application
+CMD ["gunicorn", "--bind", ":8080", "--workers", "1", "--threads", "8", "--access-logfile", "-", "--error-logfile", "-", "--capture-output", "--enable-stdio-inheritance", "main:app"]
+
+docker run -p 9000:8080 --rm --init  gcr-scraper

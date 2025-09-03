@@ -1,0 +1,4 @@
+To Run Locally: 
+    - docker build -t gcr-scraper . 
+    - docker run -p 9000:8080 --rm --init  gcr-scraper
+call:localhost:9000/scrape
