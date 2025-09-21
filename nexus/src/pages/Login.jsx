@@ -131,7 +131,12 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-950">
+
+    
+    <div
+      className="min-h-screen flex items-center justify-center bg-blue-950 bg-no-repeat bg-cover bg-center"
+      style={{ backgroundImage: "url('/assets/Login-cropped.svg')" }}
+    >
       <div className="w-[450px] mx-auto mt-10 p-10 bg-blue-200 rounded-xl shadow-md">
         <form onSubmit={loginWithEmail}>
           <h2 className="text-2xl font-bold text-gray-800 text-left mb-1">
@@ -177,7 +182,7 @@ const Login = () => {
               className="absolute top-13 right-4 -translate-y-1/2 text-gray-600"
               aria-label={pwVisible ? "Hide password" : "Show password"}
             >
-              {pwVisible ? <IoMdEyeOff /> : <IoMdEye />}
+              {pwVisible ? <IoMdEye /> : <IoMdEyeOff />}
             </button>
           </div>
 
@@ -188,7 +193,7 @@ const Login = () => {
           <div className="mb-3">
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white rounded-md py-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-base"
+              className="w-full bg-black text-white rounded-md py-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-base"
             >
               Login
             </button>

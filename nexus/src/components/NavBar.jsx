@@ -81,11 +81,12 @@ const Navbar = () => {
     isScrolled ? 'text-nexus-blue-900' : 'text-white'
   }`;
 
-  const buttonClasses = `font-bold py-2 px-3 rounded flex items-center transition duration-300 transform hover:scale-110 ${
-    isScrolled
-      ? 'bg-nexus-blue-900 text-white hover:bg-nexus-blue-800'
-      : 'bg-white text-nexus-blue-900 hover:bg-nexus-blue-100'
-  }`;
+  const buttonClasses = `font-bold py-2 px-3 rounded flex items-center border transition duration-300 transform hover:scale-110 ${
+  isScrolled
+    ? 'bg-blue-900 border-nexus-blue-900 text-white hover:bg-nexus-blue-100'
+    : 'bg-white text-nexus-blue-900 hover:bg-gray-100'
+}`;
+
 
   const handleSuperdocClick = () => {
     navigate('/superdoc', {
