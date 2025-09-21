@@ -8,6 +8,7 @@ import Navbar from "./components/NavBar"
 import Login from './pages/Login';
 import LoginWithNetID from "./pages/LoginWithNetID";
 import Signup from './pages/Signup';
+import GradeCalculator from './pages/GradeCalculator';
 import SuperDoc from './pages/superdoc';
 import Upload from './pages/upload';
 import CourseList from './pages/courseList';
@@ -23,6 +24,9 @@ function App() {
           }/>
           <Route path="/accessrequest" element={<AccessRequest />}/>
           <Route path="/courseEntry" element={<CourseEntry />}/>
+          <Route path="/grade-calculator" element={<GradeCalculator />} />
+          <Route path="/grade-history" element={<GradeHistory />} />
+          <Route path="/grade-history/:courseId" element={<GradeHistory />} />
           <Route path="/discordlogin" element={<DiscordLogin />}/>
           <Route path="/login" element={<Login />}/>
           <Route path="/LoginWithNetID" element={<LoginWithNetID />}/>

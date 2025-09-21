@@ -7,6 +7,7 @@ require('dotenv').config();
 const {
   DISCORD_CLIENT_ID,
   DISCORD_CLIENT_SECRET,
+  GOOGLE_APPLICATION_CREDENTIALS,
   FIREBASE_PROJECT_ID
 } = process.env;
 
