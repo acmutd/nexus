@@ -1,9 +1,3 @@
-import express from 'express';
-import firebaseConfigRoutes from './config/firebase-config.js';
-import discordRoutes from './routes/discordRoutes.js';
-import gradesRoute from './routes/gradesRoute.js'
-import cors from 'cors';
-
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");

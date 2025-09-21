@@ -131,8 +131,6 @@ const Login = () => {
   }
 
   return (
-
-    
     <div
       className="min-h-screen flex items-center justify-center bg-blue-950 bg-no-repeat bg-cover bg-center"
       style={{ backgroundImage: "url('/assets/LoginBackground.svg')" }}

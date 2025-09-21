@@ -4,11 +4,12 @@ import LandingPage from "./pages/landingpage"
 import AccessRequest from './pages/accessrequest';
 import CourseEntry from './pages/courseEntry';
 import DiscordLogin from './pages/discordlogin';
-import Navbar from "./components/NavBar"
+import Navbar from "./components/Navbar"
 import Login from './pages/Login';
 import LoginWithNetID from "./pages/LoginWithNetID";
 import Signup from './pages/Signup';
 import GradeCalculator from './pages/GradeCalculator';
+import GradeHistory from './pages/GradeHistory';
 import SuperDoc from './pages/superdoc';
 import Upload from './pages/upload';
 import CourseList from './pages/courseList';

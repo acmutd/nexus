@@ -6,7 +6,6 @@ import { HiChevronLeft, HiTrash, HiRefresh } from 'react-icons/hi';
 import { getFirebaseAuth, getFirebaseFirestore } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
-import backgroundImage from '../assets/Grade-History-Background2.svg'
 import pigeonIcon from '../assets/gradeistoryPigeon.svg'
 
 const GradeHistory = () => {
@@ -115,22 +114,15 @@ const GradeHistory = () => {
 
   if (loading) {
     return (
-      <div className="h-screen flex justify-center items-center bg-gradient-to-br from-nexus-blue-800 via-nexus-blue-900 to-nexus-blue-700">
+      <div className="h-screen flex justify-center items-center bg-gradient-to-br from-nexus800 via-nexus900 to-nexus700">
         <div className="text-white text-xl">Loading grade histories...</div>
       </div>
     );
   }
 
   return (
-      <div 
-        className="min-h-screen pt-16"
-        style={{
-          background: `linear-gradient(to bottom right, rgba(0, 41, 102, 0.85), rgba(0, 20, 51, 0.9), rgba(0, 61, 153, 0.85)), url(${backgroundImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      >
+      <div className="min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center bg-fixed"
+           style={{ backgroundImage: "url('/assets/GradeHistoryBG.svg')", fontFamily: "titilliumWeb-Regular" }}>
       <div className="container mx-auto px-4 py-8">
         
         <motion.div
@@ -141,7 +133,7 @@ const GradeHistory = () => {
         >
           <button
             onClick={() => navigate('/grade-calculator')}
-            className="flex items-center text-nexus-blue-200 hover:text-white mb-4"
+            className="flex items-center text-nexus200 hover:text-white mb-4"
           >
             <HiChevronLeft className="mr-1" />
             Back to Calculator
@@ -165,19 +157,19 @@ const GradeHistory = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="lg:col-span-1"
           >
-            <div className="bg-black bg-opacity-30 border-2 border-nexus-blue-400 rounded-lg p-4">
+            <div className="bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 bg-opacity-30 border-2 border-nexus400 rounded-lg p-4">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl text-white font-bold">Saved Grades</h2>
                 <button 
                   onClick={() => navigate('/grade-calculator')}
-                  className="bg-nexus-blue-300 text-white py-1 px-3 rounded hover:bg-nexus-blue-400"
+                  className="bg-nexus300 text-white py-1 px-3 rounded hover:bg-nexus400"
                 >
                   New Calculation
                 </button>
               </div>
               
               {histories.length === 0 ? (
-                <p className="text-nexus-blue-300">No saved grade histories found for this course.</p>
+                <p className="text-nexus300">No saved grade histories found for this course.</p>
               ) : (
                 <ul className="space-y-2 max-h-[60vh] overflow-y-auto">
                   {histories.map((history, index) => (
@@ -185,8 +177,8 @@ const GradeHistory = () => {
                       key={history.id || `history-${index}`}
                       className={`p-3 rounded cursor-pointer transition-colors relative ${
                         selectedHistoryDetails?.id === history.id 
-                          ? 'bg-nexus-blue-700 text-white' 
-                          : 'bg-nexus-blue-800 text-nexus-blue-300 hover:bg-nexus-blue-700 hover:text-white'
+                          ? 'bg-nexus700 text-white' 
+                          : 'bg-nexus800 text-nexus300 hover:bg-nexus700 hover:text-white'
                       }`}
                       onClick={() => fetchHistoryDetails(history.id || `history-${index}`)}
                     >
@@ -203,7 +195,7 @@ const GradeHistory = () => {
                               e.stopPropagation();
                               setConfirmDelete(history.id || `history-${index}`);
                             }}
-                            className="text-nexus-blue-300 hover:text-red-400"
+                            className="text-nexus300 hover:text-red-400"
                           >
                             <HiTrash size={18} />
                           </button>
@@ -211,7 +203,7 @@ const GradeHistory = () => {
                       </div>
                       
                       {confirmDelete === (history.id || `history-${index}`) && (
-                        <div className="absolute top-full left-0 mt-2 p-2 bg-nexus-blue-600 rounded shadow-lg z-10">
+                        <div className="absolute top-full left-0 mt-2 p-2 bg-nexus600 rounded shadow-lg z-10">
                           <p className="text-white text-sm mb-2">Delete this history?</p>
                           <div className="flex space-x-2">
                             <button
@@ -228,7 +220,7 @@ const GradeHistory = () => {
                                 e.stopPropagation();
                                 setConfirmDelete(null);
                               }}
-                              className="bg-nexus-blue-300 text-white text-xs py-1 px-2 rounded transition duration-300 hover:bg-nexus-blue-400"
+                              className="bg-nexus300 text-white text-xs py-1 px-2 rounded transition duration-300 hover:bg-nexus400"
                             >
                               Cancel
                             </button>
@@ -250,7 +242,7 @@ const GradeHistory = () => {
           >
             
             {selectedHistoryDetails ? (
-              <div className="bg-black bg-opacity-30 border-2 border-nexus-blue-400 rounded-lg p-6">
+              <div className="bg-nexus900 bg-opacity-30 border-2 border-nexus400 rounded-lg p-6">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl text-white font-bold">{selectedHistoryDetails.saveTitle}</h2>
                   <div className="flex space-x-2">
@@ -259,7 +251,7 @@ const GradeHistory = () => {
                 </div>
                 
                 <div className="grid grid-cols-2 gap-6 mb-6">
-                  <div className="bg-nexus-blue-800 bg-opacity-50 p-4 rounded">
+                  <div className="bg-nexus800 bg-opacity-50 p-4 rounded">
                     <h3 className="text-xl text-white font-semibold mb-2">Overall Results</h3>
                     <div className="space-y-2">
                       <p className="text-white">
@@ -277,7 +269,7 @@ const GradeHistory = () => {
                     </div>
                   </div>
                   
-                  <div className="bg-nexus-blue-800 bg-opacity-50 p-4 rounded">
+                  <div className="bg-nexus800 bg-opacity-50 p-4 rounded">
                     <h3 className="text-xl text-white font-semibold mb-2">Grade Distribution</h3>
                     <div className="space-y-4">
                       {selectedHistoryDetails.categories.map((category, idx) => {
@@ -323,8 +315,8 @@ const GradeHistory = () => {
                             </div>
                             <div className="flex-1">
                               <div className="text-white font-medium">{category.categoryName}</div>
-                              <div className="text-nexus-blue-300 text-sm">Weight: {category.categoryWeight}%</div>
-                              <div className="text-nexus-blue-400 text-xs">
+                              <div className="text-nexus300 text-sm">Weight: {category.categoryWeight}%</div>
+                              <div className="text-nexus400 text-xs">
                                 Contribution: {((gradeValue * parseFloat(category.categoryWeight)) / 100).toFixed(1)}%
                               </div>
                             </div>
@@ -338,27 +330,27 @@ const GradeHistory = () => {
                 <h3 className="text-xl text-white font-semibold mb-3">Categories</h3>
                 <div className="space-y-4">
                   {selectedHistoryDetails.categories.map((category, index) => (
-                    <div key={index} className="bg-nexus-blue-700 p-4 rounded">
+                    <div key={index} className="bg-nexus700 p-4 rounded">
                       <div className="flex justify-between items-center mb-2">
                         <h4 className="text-lg text-white font-medium">
                           {category.categoryName} ({category.categoryWeight}%)
                         </h4>
-                        <span className="bg-nexus-blue-500 text-white px-2 py-1 rounded text-sm">
+                        <span className="bg-nexus500 text-white px-2 py-1 rounded text-sm">
                           Grade: {category.categoryGrade}
                         </span>
                       </div>
                       
                       {category.assignments && category.assignments.length > 0 && (
                         <div className="mt-2">
-                          <h5 className="text-sm text-nexus-blue-300 mb-1">Assignments</h5>
-                          <div className="bg-nexus-blue-800 rounded p-2">
-                            <div className="grid grid-cols-3 text-xs text-nexus-blue-300 mb-1">
+                          <h5 className="text-sm text-nexus300 mb-1">Assignments</h5>
+                          <div className="bg-nexus800 rounded p-2">
+                            <div className="grid grid-cols-3 text-xs text-nexus300 mb-1">
                               <div>Name</div>
                               <div>Grade</div>
                               <div>Weight</div>
                             </div>
                             {category.assignments.map((assignment, idx) => (
-                              <div key={idx} className="grid grid-cols-3 text-white text-sm py-1 border-t border-nexus-blue-600">
+                              <div key={idx} className="grid grid-cols-3 text-white text-sm py-1 border-t border-nexus600">
                                 <div>{assignment.assignmentName || 'Unnamed'}</div>
                                 <div>{assignment.grade || 'N/A'}</div>
                                 <div>{assignment.weight || 'N/A'}</div>
@@ -372,8 +364,8 @@ const GradeHistory = () => {
                 </div>
               </div>
             ) : (
-              <div className="h-full flex items-center justify-center bg-black bg-opacity-30 border-2 border-nexus-blue-400 rounded-lg p-6">
-                <p className="text-nexus-blue-300 text-xl">
+              <div className="h-full flex items-center justify-center bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 bg-opacity-30 border-2 border-nexus400 rounded-lg p-6">
+                <p className="text-nexus300 text-xl">
                   Select a grade history to view details
                 </p>
               </div>

@@ -9,7 +9,7 @@ function CourseList() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center"
-      style={{ backgroundImage: isMed ? "url('/assets/CoursesBackgroundLong.svg')" : "url('/assets/CoursesBackground.svg')" }}>
+      style={{ backgroundImage: isMed ? "url('/assets/CoursesLongBG.svg')" : "url('/assets/CoursesBG.svg')" }}>
     {/* ----------------------------------- MAIN CONTAINER ---------------------------------------- */}
         <div className={`flex flex-col w-1/2 h-full items-center rounded-4xl mt-15 bg-gradient-to-b from-nexus900 via-50% via-nexus800 to-90% to-nexus900 py-12`}>
     {/* ----------------------------------- HEADING + SEARCH ---------------------------------------- */}

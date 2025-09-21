@@ -9,12 +9,10 @@ function LandingPage() {
   const isMed = useMediaQuery({ query: '(max-width: 800px)' })
 
   return (
-    <div>
-      <img
-        className="w-full bg-blue-950"
-        src={isMed ? "/assets/LandingPageLongBG.svg" : "/assets/LandingPageBG.svg"}
-        style={{ position: 'absolute', zIndex: -1 }}
-      />
+    <div
+      className="min-h-screen flex items-center justify-center bg-blue-950 bg-no-repeat bg-cover bg-center pb-15"
+      style={isMed ? { backgroundImage: "url('/assets/LandingPageLongBG.svg')" } : {backgroundImage: "url('/assets/LandingPageBG.svg')"}}
+    >
       <div className="flex flex-col items-center justify-center min-h-full pt-30">
         {/* --------------------------------- HEADER --------------------------------- */}
         <h1 className="font-titilliumWeb-bold text-white text-5xl">

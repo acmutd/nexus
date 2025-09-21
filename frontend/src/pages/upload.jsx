@@ -7,7 +7,7 @@ function Upload() {
 
     return (
     <div className="min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center"
-      style={{ backgroundImage: isMed ? "url('/assets/UploadDocBackgroundLong.svg')" : "url('/assets/UploadDocBackground.svg')" }}>
+      style={{ backgroundImage: isMed ? "url('/assets/UploadDocLongBG.svg')" : "url('/assets/UploadDocBG.svg')" }}>
 {/*--------------------------------------- UPLOAD DOC CONTAINER ---------------------------------------*/}
             <div className={`flex flex-col ${isMed ? "w-[45%]" : "w-[35%]"} h-4/5 bg-gradient-to-b from-nexus800 to-nexus900 rounded-3xl z-10 mt-15 items-center`}>
                 <img className="w-[65px] h-[65px] mt-7" src="/assets/DocIcon.svg" />
