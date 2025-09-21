@@ -6,6 +6,8 @@ import { HiChevronLeft, HiTrash, HiRefresh } from 'react-icons/hi';
 import { getFirebaseAuth, getFirebaseFirestore } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
+import backgroundImage from '../assets/Grade-History-Background2.svg'
+import pigeonIcon from '../assets/gradeistoryPigeon.svg'
 
 const GradeHistory = () => {
   const { courseId } = useParams();
@@ -120,8 +122,17 @@ const GradeHistory = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-nexus-blue-800 via-nexus-blue-900 to-nexus-blue-700 pt-16">
+      <div 
+        className="min-h-screen pt-16"
+        style={{
+          background: `linear-gradient(to bottom right, rgba(0, 41, 102, 0.85), rgba(0, 20, 51, 0.9), rgba(0, 61, 153, 0.85)), url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
       <div className="container mx-auto px-4 py-8">
+        
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -235,20 +246,15 @@ const GradeHistory = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="lg:col-span-2"
+            className="lg:col-span-2 "
           >
+            
             {selectedHistoryDetails ? (
               <div className="bg-black bg-opacity-30 border-2 border-nexus-blue-400 rounded-lg p-6">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl text-white font-bold">{selectedHistoryDetails.saveTitle}</h2>
                   <div className="flex space-x-2">
-                    <button
-                      onClick={() => loadInCalculator(selectedHistoryDetails.id)}
-                      className="flex items-center bg-nexus-blue-300 text-white py-2 px-4 rounded hover:bg-nexus-blue-400"
-                    >
-                      <HiRefresh className="mr-2" />
-                      Load in Calculator
-                    </button>
+                    
                   </div>
                 </div>
                 

@@ -6,6 +6,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import GradeCalculatorSidebar from '../components/GradeCalculatorSidebar.jsx'
 import backgroundImage from '../assets/GradeCalcBackground.svg'
+import { HiTrash } from 'react-icons/hi'; 
 
 const GradeCalculator = () => {
     const [categories, setCategories] = useState([
@@ -360,15 +361,36 @@ const GradeCalculator = () => {
                             }
                         </motion.h1>
                         
+                        
                         <motion.div 
-                            className="mb-6 px-2 pt-6 grid grid-cols-2 gap-6 categories"
+                            className={`mb-6 px-2 pt-6 ${categories.length === 1 ? 'flex justify-center' : 'grid grid-cols-2 gap-6'} categories`}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: 1.0 }}
                         >
                             {categories.map((category, categoryIndex) => (
-                                <div key={categoryIndex} className="rounded-[20px] p-6 bg-gradient-to-br from-nexus-blue-800 via-nexus-blue-900 to-nexus-blue-700 border-2 border-nexus-blue-400 category">
-                                    <div className="flex flex-row items-center">
+                                <div 
+                                    key={categoryIndex} 
+                                    className={`rounded-[20px] p-6 bg-gradient-to-br from-nexus-blue-800 via-nexus-blue-900 to-nexus-blue-700 border-2 border-nexus-blue-400 category relative ${
+                                        categories.length === 1 ? 'max-w-2xl w-full' : ''
+                                    }`}
+                                >
+                                    {categories.length > 1 && (
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const newCategories = categories.filter((_, index) => index !== categoryIndex);
+                                                setCategories(newCategories);
+                                            }}
+                                            className="absolute top-4 right-4 h-10 w-10 flex items-center justify-center text-nexus-blue-200 rounded-md transition-all duration-200 hover:text-white group z-10"
+                                            title="Delete Category"
+                                        >
+                                            <HiTrash size={27} className="group-hover:scale-110 transition-transform duration-150 mt-3" />
+                                        </button>
+                                    )}
+                                    
+                                   
+                                    <div className={`flex flex-row items-center ${categories.length > 1 ? 'pr-12' : ''}`}>
                                         <label htmlFor={`category-${categoryIndex}`} className="pr-3 block text-sm font-medium text-white">Category</label>
                                         <input
                                             type="text"
@@ -390,7 +412,20 @@ const GradeCalculator = () => {
                                             required
                                         />
                                     </div>
-                                    <div className="mt-4 bg-white bg-opacity-10 rounded-lg p-4">
+
+                                    <div className="mt-6 bg-white bg-opacity-10 rounded-lg p-4 relative">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                if (category.assignments.length > 1) {
+                                                    deleteAssignmentRow(categoryIndex, category.assignments.length - 1);
+                                                }
+                                            }}
+                                            className="absolute top-2 right-2 h-6 w-6 flex items-center justify-center bg-[#D73A49] text-white text-sm font-bold rounded-md transition duration-200 hover:bg-red-700"
+                                        >
+                                            –
+                                        </button>
+                                        
                                         <div className="grid grid-cols-3 gap-x-4 gap-y-2 place-content-evenly">
                                             <h1 className="text-white">Assignment</h1>
                                             <h1 className="text-white">Grade Earned (Points)</h1>
@@ -477,78 +512,78 @@ const GradeCalculator = () => {
                             Add Category
                         </button>
                         <button 
-                            className="px-4 py-2 bg-nexus-blue-300 text-white text-lg font-semibold rounded-md transition duration-300 hover:bg-nexus-blue-400"
+                            className="px-4 py-2 bg-[#0D6EFD] text-white text-lg font-semibold rounded-md transition duration-300 hover:bg-nexus-blue-400"
                             onClick={() => setSaveDialogOpen(true)}
                         >
                             Save
                         </button>
                         
                         {saveDialogOpen && (
-                            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                                <div className="bg-black bg-opacity-13 p-6 rounded-lg shadow-lg border-2 border-nexus-blue-400 w-96">
-                                    <h2 className="text-xl text-white font-bold mb-4">Save Grade History</h2>
-                                    
-                                    {error && (
-                                        <div className="bg-red-500 text-white p-2 rounded mb-4 text-sm">
-                                            {error}
+                                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                    <div className="bg-gradient-to-br from-nexus-blue-800 via-nexus-blue-900 to-nexus-blue-700 p-6 rounded-lg shadow-lg border-2 border-nexus-blue-400 w-96">
+                                        <h2 className="text-xl text-white font-bold mb-4">Save Grade History</h2>
+                                        
+                                        {error && (
+                                            <div className="bg-red-500 text-white p-2 rounded mb-4 text-sm">
+                                                {error}
+                                            </div>
+                                        )}
+                                        
+                                        <div className="mb-4">
+                                            <label className="block text-white text-sm font-medium mb-2">
+                                                Select Course
+                                            </label>
+                                            <select
+                                                value={selectedCourseForSave}
+                                                onChange={(e) => setSelectedCourseForSave(e.target.value)}
+                                                className={`w-full p-2 rounded bg-nexus-blue-50 ${selectedCourseForSave ? 'text-nexus-blue-800' : 'text-gray-400'}`}
+                                            >
+                                                <option value="" disabled className="text-gray-400">Choose a course...</option>
+                                                {courses.map((course, index) => (
+                                                    <option key={course.uniqueKey || `calc-option-${index}`} value={course.courseId} className="text-nexus-blue-800">
+                                                        {course.displayName}
+                                                    </option>
+                                                ))}
+                                            </select>
                                         </div>
-                                    )}
-                                    
-                                    <div className="mb-4">
-                                        <label className="block text-white text-sm font-medium mb-2">
-                                            Select Course
-                                        </label>
-                                        <select
-                                            value={selectedCourseForSave}
-                                            onChange={(e) => setSelectedCourseForSave(e.target.value)}
-                                            className={`w-full p-2 rounded bg-nexus-blue-50 ${selectedCourseForSave ? 'text-nexus-blue-800' : 'text-gray-400'}`}
-                                        >
-                                            <option value="" disabled className="text-gray-400">Choose a course...</option>
-                                            {courses.map((course, index) => (
-                                                <option key={course.uniqueKey || `calc-option-${index}`} value={course.courseId} className="text-nexus-blue-800">
-                                                    {course.displayName}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    
-                                    <div className="mb-4">
-                                        <label className="block text-white text-sm font-medium mb-2">
-                                            Grade History Title
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className="w-full p-2 rounded bg-nexus-blue-50 text-nexus-blue-800"
-                                            placeholder="Enter a title for this grade history"
-                                            value={saveTitle}
-                                            onChange={(e) => setSaveTitle(e.target.value)}
-                                        />
-                                    </div>
-                                    
-                                    <div className="flex justify-end space-x-3">
-                                        <button 
-                                            className="px-4 py-2 bg-red-700 text-white text-xl font-bold rounded-md transition duration-200 hover:bg-red-800"
-                                            onClick={() => {
-                                                setSaveDialogOpen(false);
-                                                setError('');
-                                                setSelectedCourseForSave('');
-                                                setSaveTitle('');
-                                            }}
-                                        >
-                                            Cancel
-                                        </button>
-                                        <button 
-                                            className="px-4 py-2 bg-nexus-blue-300 text-white text-xl font-bold rounded-md transition duration-300 hover:bg-nexus-blue-400"
-                                            onClick={handleSaveGradeHistory}
-                                            disabled={!saveTitle.trim() || !selectedCourseForSave}
-                                        >
-                                            Save
-                                        </button>
+                                        
+                                        <div className="mb-4">
+                                            <label className="block text-white text-sm font-medium mb-2">
+                                                Grade History Title
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="w-full p-2 rounded bg-nexus-blue-50 text-nexus-blue-800"
+                                                placeholder="Enter a title for this grade history"
+                                                value={saveTitle}
+                                                onChange={(e) => setSaveTitle(e.target.value)}
+                                            />
+                                        </div>
+                                        
+                                        <div className="flex justify-end space-x-3">
+                                            <button 
+                                                className="px-4 py-2 bg-[#D73A49] text-white text-xl font-bold rounded-md transition duration-200 hover:bg-red-700"
+                                                onClick={() => {
+                                                    setSaveDialogOpen(false);
+                                                    setError('');
+                                                    setSelectedCourseForSave('');
+                                                    setSaveTitle('');
+                                                }}
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button 
+                                                className="px-4 py-2 bg-nexus-blue-300 text-white text-xl font-bold rounded-md transition duration-300 hover:bg-nexus-blue-400 cursor-pointer"
+                                                onClick={handleSaveGradeHistory}
+                                                disabled={!saveTitle.trim() || !selectedCourseForSave}
+                                            >
+                                                Save
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        )}
-                    </motion.div>
+                            )}
+                                                </motion.div>
                 </div>
             </div>
         </div>
