@@ -24,6 +24,20 @@ if (!admin.apps.length) {
 const tokenRequests = new Map();
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+// Build Discord CDN avatar URL (animated if hash starts with 'a_'). Fallback to default avatar.
+function discordAvatarUrl(id, avatarHash) {
+  if (id && avatarHash) {
+    const ext = String(avatarHash).startsWith('a_') ? 'gif' : 'png';
+    return `https://cdn.discordapp.com/avatars/${id}/${avatarHash}.${ext}?size=128`;
+  }
+  try {
+    const idx = Number(BigInt(id) % 6n);
+    return `https://cdn.discordapp.com/embed/avatars/${idx}.png`;
+  } catch {
+    return `https://cdn.discordapp.com/embed/avatars/0.png`;
+  }
+}
+
 // Exchange code for Discord token
 const getDiscordToken = async (code, retries = 3) => {
   const now = Date.now();
@@ -64,7 +78,7 @@ const getDiscordToken = async (code, retries = 3) => {
   }
 };
 
-// UNLINK endpoint
+// UNLINK endpoint delete the nested discord object for a clean unlink
 router.post('/unlink', async (req, res) => {
   try {
     const { uid } = req.body;
@@ -83,10 +97,7 @@ router.post('/unlink', async (req, res) => {
     }
 
     await userRef.update({
-      discordId: null,
-      discordUsername: null,
-      discordEmail: null,
-      discordAvatar: null,
+      discord: admin.firestore.FieldValue.delete(),
       lastUpdated: admin.firestore.FieldValue.serverTimestamp()
     });
 
@@ -134,7 +145,7 @@ router.get('/auth', (req, res) => {
     client_id: DISCORD_CLIENT_ID,
     redirect_uri: 'http://localhost:5001/api/discord/callback',
     response_type: 'code',
-    scope: 'identify email',
+    scope: 'identify', // request only what we need; add 'email' if you truly need it
     state: uid
   });
 
@@ -151,7 +162,7 @@ router.get('/callback', async (req, res) => {
   if (!code || !uid) {
     return res.status(400).send(`
       <script>
-        window.opener.postMessage({
+        window.opener && window.opener.postMessage({
           type: 'DISCORD_AUTH_ERROR',
           error: 'Missing required parameters'
         }, '*');
@@ -168,40 +179,51 @@ router.get('/callback', async (req, res) => {
       headers: { Authorization: `Bearer ${token}` }
     });
 
-    const discordUser = userRes.data;
-    console.log('Discord user:', discordUser);
+    const d = userRes.data; // { id, username, global_name, avatar, etc }
+    console.log('Discord user:', d);
+
+    const avatarUrl = discordAvatarUrl(d.id, d.avatar);
 
     const userRef = admin.firestore().collection('users').doc(uid);
-    await userRef.update({
-      discordId: discordUser.id,
-      discordUsername: discordUser.username,
-      discordEmail: discordUser.email,
-      discordAvatar: discordUser.avatar,
-      lastUpdated: admin.firestore.FieldValue.serverTimestamp()
-    });
+    await userRef.set({
+      discord: {
+        id: d.id,
+        username: d.username ?? null,
+        globalName: d.global_name ?? null,
+        avatarHash: d.avatar ?? null,
+        avatarUrl: avatarUrl,
+        linkedAt: admin.firestore.FieldValue.serverTimestamp(),
+      },
+      lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
+    }, { merge: true });
 
+    // Let the opener know it worked
     res.send(`
       <script>
-        window.opener.postMessage({
-          type: 'DISCORD_AUTH_SUCCESS',
-          data: {
-            username: '${discordUser.username}',
-            id: '${discordUser.id}',
-            email: '${discordUser.email}',
-            avatar: '${discordUser.avatar}'
-          }
-        }, '*');
+        try {
+          window.opener && window.opener.postMessage({
+            type: 'DISCORD_AUTH_SUCCESS',
+            data: {
+              id: ${JSON.stringify(d.id)},
+              username: ${JSON.stringify(d.username ?? null)},
+              globalName: ${JSON.stringify(d.global_name ?? null)},
+              avatarUrl: ${JSON.stringify(avatarUrl)}
+            }
+          }, '*');
+        } catch (e) {}
         window.close();
       </script>
     `);
   } catch (err) {
-    console.error('Callback error:', err);
+    console.error('Callback error:', err?.response?.data || err.message || err);
     res.status(500).send(`
       <script>
-        window.opener.postMessage({
-          type: 'DISCORD_AUTH_ERROR',
-          error: 'Failed to authenticate with Discord'
-        }, '*');
+        try {
+          window.opener && window.opener.postMessage({
+            type: 'DISCORD_AUTH_ERROR',
+            error: 'Failed to authenticate with Discord'
+          }, '*');
+        } catch (e) {}
         window.close();
       </script>
     `);
