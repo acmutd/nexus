@@ -1,10 +1,12 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { HiAcademicCap, HiCalculator, HiChat, HiUserCircle, HiDocumentText } from 'react-icons/hi';
+import { HiAcademicCap, HiCalculator, HiUserCircle, HiDocumentText } from 'react-icons/hi';
 
 import { getApps, getApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+
+// import the avatar menu
+import AvatarMenu from './AvatarMenu';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -39,7 +41,6 @@ const Navbar = () => {
 
     // Try immediately, if not ready, poll briefly
     if (!attach()) {
-      
       const t = setInterval(() => {
         if (attach()) {
           clearInterval(t);
@@ -83,21 +84,16 @@ const Navbar = () => {
   }`;
 
   const buttonClasses = `font-bold py-2 px-3 rounded flex items-center border transition duration-300 transform hover:scale-110 ${
-  isScrolled
-    ? 'bg-blue-900 border-nexus-blue-900 text-white hover:bg-nexus-blue-100'
-    : 'bg-white text-nexus-blue-900 hover:bg-gray-100'
-}`;
-
+    isScrolled
+      ? 'bg-blue-900 border-nexus-blue-900 text-white hover:bg-nexus-blue-100'
+      : 'bg-white text-nexus-blue-900 hover:bg-gray-100'
+  }`;
 
   const handleSuperdocClick = () => {
     navigate('/superdoc', {
       state: { fileName: 'Superdoc', documentName: 'Superdoc', selectedUnit: 'Unit 1' }
     });
   };
-
-  // tiny helper to trim long emails
-  const shortEmail = (email) =>
-    !email ? '' : email.length > 24 ? email.slice(0, 21) + '…' : email;
 
   return (
     <nav className={navbarClasses}>
@@ -115,6 +111,7 @@ const Navbar = () => {
             <Link to="/bbauth" className={linkClasses}>
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
             </Link>
+
             <Link to="/courselist" className={linkClasses}>
               <HiAcademicCap className="mr-1" /> Courses
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
@@ -131,19 +128,20 @@ const Navbar = () => {
             </button>
 
             {/* Auth-aware area */}
-            {authReady && user ? (
-              <>
-                <span className={isScrolled ? 'text-nexus-blue-900' : 'text-white'}>
-                  {shortEmail(user.email)}
-                </span>
-                <button onClick={handleLogout} className={buttonClasses} aria-label="Logout">
-                  <HiUserCircle className="mr-1" /> Logout
-                </button>
-              </>
+            {authReady ? (
+              user ? (
+                // Avatar dropdown 
+                <AvatarMenu
+                  redirectOnLogout="/login"
+                  buttonTone={isScrolled ? 'dark' : 'light'}
+                />
+              ) : (
+                <Link to="/login" className={buttonClasses} aria-label="Login">
+                  <HiUserCircle className="mr-1" /> Login
+                </Link>
+              )
             ) : (
-              <Link to="/login" className={buttonClasses} aria-label="Login">
-                <HiUserCircle className="mr-1" /> Login
-              </Link>
+              <div className="h-10 w-10 rounded-full bg-white/40 animate-pulse" />
             )}
           </div>
         </div>
