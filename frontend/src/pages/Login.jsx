@@ -11,7 +11,7 @@ import {
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { FaGoogle } from "react-icons/fa";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5001";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 
 const Login = () => {
   const navigate = useNavigate();

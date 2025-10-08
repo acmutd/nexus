@@ -6,9 +6,9 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 const API_ORIGIN = (() => {
-  try { return new URL(API_BASE).origin; } catch { return 'http://localhost:5001'; }
+  try { return new URL(API_BASE).origin; } catch { return 'http://localhost:3000'; }
 })();
 
 export default function DiscordLogin() {

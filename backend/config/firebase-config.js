@@ -1,28 +1,25 @@
-import { initializeApp, cert } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
-import express from 'express';
-import dotenv from 'dotenv';
-import { readFileSync } from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+const admin = require('firebase-admin');
+const express = require('express');
+const dotenv = require('dotenv');
+const fs = require('fs');
+const path = require('path');
 
 dotenv.config();
-const express = require('express');
+
 const router = express.Router();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 const serviceAccountPath = path.join(__dirname, '../service-account.json');
-const serviceAccount = JSON.parse(readFileSync(serviceAccountPath, 'utf8'));
+const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
 
-//for firbase admin sdk
-const admin = initializeApp({
-  credential: cert(serviceAccount),
-  databaseURL: `https://${process.env.FIREBASE_PROJECT_ID}.firebaseio.com`
-});
+// Initialize Firebase Admin if not already initialized
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: `https://${process.env.FIREBASE_PROJECT_ID}.firebaseio.com`
+  });
+}
 
-const db = getFirestore();
+const db = admin.firestore();
 
 // Define the /api/firebase-config route for client side
 router.get("/api/firebase-config", (req, res) => {
@@ -38,11 +35,4 @@ router.get("/api/firebase-config", (req, res) => {
   res.json(clientConfig);
 });
 
-// Define the /api/firebase-config route
-router.get("/api/firebase-config", (req, res) => {
-  res.json(firebaseConfig);
-});
-module.exports = router;
-
-export { admin, db };
-export default router;
+module.exports = { admin, db, router };

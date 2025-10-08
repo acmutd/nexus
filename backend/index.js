@@ -7,6 +7,7 @@ require("dotenv").config();
 const discordRoutes = require("./routes/discordRoutes");
 const authRoutes = require("./routes/authRoutes");
 const scraperRoutes = require("./routes/scraperRoutes");   // <-- NEW
+const gradesRoutes = require("./routes/gradesRoute");
 
 // Initialize Express app
 const app = express();
@@ -41,6 +42,8 @@ app.use("/api/discord", discordRoutes);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/scraper", scraperRoutes);   // <-- NEW
+app.use("/api/grades", gradesRoutes); 
+
 
 // Main allocation endpoint (frontend POSTs here)
 app.post("/api/discord/allocate", async (req, res) => {
@@ -95,7 +98,7 @@ app.post("/api/discord/allocate", async (req, res) => {
 });
 
 // Start server
-const PORT = 5001;
+const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

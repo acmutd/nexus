@@ -284,7 +284,7 @@ const GradeCalculator = () => {
                 desiredGrade: classGrade
             };
             
-            const response = await axios.post('http://localhost:5001/api/grades/saveGrades', gradeHistoryData);
+            const response = await axios.post('http://localhost:3000/api/grades/saveGrades', gradeHistoryData);
             
             console.log('Grade history saved:', response.data);
             setSaveDialogOpen(false);

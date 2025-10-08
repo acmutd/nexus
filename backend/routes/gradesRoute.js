@@ -1,6 +1,6 @@
-import express from "express";
-import { db } from "../config/firebase-config.js";
-import { FieldValue } from "firebase-admin/firestore";
+const express = require("express");
+const { db } = require("../config/firebase-config.js");
+const { FieldValue } = require("firebase-admin/firestore");
 
 const router = express.Router();
 
@@ -163,4 +163,4 @@ router.delete("/deleteGrade/:uid/:courseId/:gradeId", async (req, res) => {
     }
 });
 
-export default router;
+module.exports = router;
