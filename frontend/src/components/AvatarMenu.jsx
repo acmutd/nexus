@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { getApp } from 'firebase/app';
+import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { AnimatePresence, motion } from 'framer-motion';
 import { getFirestore, doc, onSnapshot } from 'firebase/firestore';
@@ -134,11 +135,13 @@ export default function AvatarMenu({
             { /* ----------------------------- SETTINGS + LOGOUT ------------------------------------ */}
             <button
               type="button"
-              onClick={() => { settingsOnClick?.(); setOpen(false); }}
+              onClick={() => {setOpen(false)}}
               className="w-full text-left mt-2 px-2 py-2 text-sm hover:bg-nexus700"
               role="menuitem"
             >
-              Settings
+              <Link to="/settings">
+                Settings
+              </Link>
             </button>
 
             <div className="my-1 h-px bg-black/10" />
