@@ -14,6 +14,9 @@ import SuperDoc from './pages/superdoc';
 import Upload from './pages/upload';
 import Settings from './pages/settings';
 import CourseList from './pages/courseList';
+import Home from './pages/home';
+
+
 function App() {
 
   return (
@@ -37,6 +40,7 @@ function App() {
           <Route path="/superdoc" element={<SuperDoc />}/>
           <Route path="/upload" element={<Upload />}/>
           <Route path="/courselist" element={<CourseList />}/>
+          <Route path="/home" element={<Home />}/>
         </Routes>
 
       </div>
