@@ -57,7 +57,7 @@ const getDiscordToken = async (code, retries = 3) => {
           client_secret: DISCORD_CLIENT_SECRET,
           code,
           grant_type: 'authorization_code',
-          redirect_uri: 'http://localhost:5001/api/discord/callback'
+          redirect_uri: 'http://localhost:3000/api/discord/callback'
         }).toString(),
         { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
       );
@@ -143,7 +143,7 @@ router.get('/auth', (req, res) => {
 
   const params = new URLSearchParams({
     client_id: DISCORD_CLIENT_ID,
-    redirect_uri: 'http://localhost:5001/api/discord/callback',
+    redirect_uri: 'http://localhost:3000/api/discord/callback',
     response_type: 'code',
     scope: 'identify', // request only what we need; add 'email' if you truly need it
     state: uid
