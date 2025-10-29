@@ -132,17 +132,17 @@ export default function AvatarMenu({
                 </div>
             </div>
 
-            { /* ----------------------------- SETTINGS + LOGOUT ------------------------------------ */}
-            <button
-              type="button"
-              onClick={() => {setOpen(false)}}
-              className="w-full text-left mt-2 px-2 py-2 text-sm hover:bg-nexus700"
-              role="menuitem"
-            >
-              <Link to="/settings">
+            {/* ----------------------------- SETTINGS + LOGOUT ------------------------------------ */}
+            <Link to="/settings">
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="w-full text-left mt-2 px-2 py-2 text-sm hover:bg-nexus700"
+                role="menuitem"
+              >
                 Settings
-              </Link>
-            </button>
+              </button>
+            </Link>
 
             <div className="my-1 h-px bg-black/10" />
 
