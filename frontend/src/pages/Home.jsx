@@ -36,7 +36,7 @@ const GradeCircle = ({ grade }) => {
         r={normalizedRadius}
         cx={radius}
         cy={radius}
-        strokeDasharray={circumference + ' ' + circumference}
+        strokeDasharray={`${circumference} ${circumference}`}
         strokeDashoffset={strokeDashoffset}
         transform={`rotate(-90 ${radius} ${radius})`}
       />
@@ -56,7 +56,7 @@ const GradeCircle = ({ grade }) => {
 const Home = () => {
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-start bg-blue-950 bg-no-repeat bg-cover bg-center pt-20 pb-10"
+      className="min-h-screen flex flex-col items-center justify-start bg-blue-900 bg-no-repeat bg-cover bg-center pt-20 pb-10"
       style={{ backgroundImage: "url('/assets/HomeBG.svg')" }}
     >
       <h1 className="text-white text-4xl font-bold mb-10 text-center">
@@ -68,18 +68,45 @@ const Home = () => {
           What do you want to do today?
         </h2>
 
-        <div className="flex flex-wrap justify-center gap-4 mb-8">
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl shadow-lg p-6 w-36 h-28 flex items-center justify-center text-white text-center hover:bg-white/20 transition cursor-pointer">
-            Discord Servers
+        <div className="flex flex-wrap justify-center gap-8 mb-10">
+          <div className="flex flex-col items-center">
+            <div
+              className="bg-white/10 backdrop-blur-lg rounded-xl shadow-lg p-6 w-36 h-28 hover:bg-white/20 transition cursor-pointer bg-cover bg-center"
+              style={{ backgroundImage: "url('/assets/Discord Button.svg')" }}
+            ></div>
+            <span className="text-white text-sm font-semibold mt-2">
+              Discord Servers
+            </span>
           </div>
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl shadow-lg p-6 w-36 h-28 flex items-center justify-center text-white text-center hover:bg-white/20 transition cursor-pointer">
-            Superdoc
+
+          <div className="flex flex-col items-center">
+            <div
+              className="bg-white/10 backdrop-blur-lg rounded-xl shadow-lg p-6 w-36 h-28 hover:bg-white/20 transition cursor-pointer bg-cover bg-center"
+              style={{ backgroundImage: "url('/assets/Superdoc Button.svg')" }}
+            ></div>
+            <span className="text-white text-sm font-semibold mt-2">
+              Superdoc
+            </span>
           </div>
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl shadow-lg p-6 w-36 h-28 flex items-center justify-center text-white text-center hover:bg-white/20 transition cursor-pointer">
-            Grade Calc
+
+          <div className="flex flex-col items-center">
+            <div
+              className="bg-white/10 backdrop-blur-lg rounded-xl shadow-lg p-6 w-36 h-28 hover:bg-white/20 transition cursor-pointer bg-cover bg-center"
+              style={{ backgroundImage: "url('/assets/Grade Calc Button.svg')" }}
+            ></div>
+            <span className="text-white text-sm font-semibold mt-2">
+              Grade Calc
+            </span>
           </div>
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl shadow-lg p-6 w-36 h-28 flex items-center justify-center text-white text-center hover:bg-white/20 transition cursor-pointer">
-            Settings
+
+          <div className="flex flex-col items-center">
+            <div
+              className="bg-white/10 backdrop-blur-lg rounded-xl shadow-lg p-6 w-36 h-28 hover:bg-white/20 transition cursor-pointer bg-cover bg-center"
+              style={{ backgroundImage: "url('/assets/Settings Button.svg')" }}
+            ></div>
+            <span className="text-white text-sm font-semibold mt-2">
+              Settings
+            </span>
           </div>
         </div>
 
