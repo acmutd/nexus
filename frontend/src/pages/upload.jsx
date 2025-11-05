@@ -9,7 +9,8 @@ function Upload() {
     <div className="min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center"
       style={{ backgroundImage: isMed ? "url('/assets/UploadDocLongBG.svg')" : "url('/assets/UploadDocBG.svg')" }}>
 {/*--------------------------------------- UPLOAD DOC CONTAINER ---------------------------------------*/}
-            <div className={`flex flex-col ${isMed ? "w-[45%]" : "w-[35%]"} h-4/5 bg-gradient-to-b from-nexus800 to-nexus900 rounded-3xl z-10 mt-15 items-center`}>
+            <motion.div className={`flex flex-col ${isMed ? "w-[45%]" : "w-[35%]"} h-4/5 bg-gradient-to-b from-nexus800 to-nexus900 rounded-3xl z-10 mt-15 py-5 items-center`}
+                        initial={{y: 20, opacity: 0}} animate={{y:0, opacity: 1}} transition={{duration: 0.5}}>
                 <img className="w-[65px] h-[65px] mt-7" src="/assets/DocIcon.svg" />
                 <h1 className={`font-titilliumWeb-bold ${isMed ? "text-2xl" : "text-4xl"} text-nexus50 mt-3 text-center`}>
                     Upload Document
@@ -38,7 +39,7 @@ function Upload() {
                                     hover:bg-nexus500 hover:scale-105 transition duration-300 mt-6">
                     Upload
                 </button>
-            </div>
+            </motion.div>
         </div>
     )
 }

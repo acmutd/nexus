@@ -123,7 +123,7 @@ const GradeHistory = () => {
   return (
       <div className="min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center bg-fixed"
            style={{ backgroundImage: "url('/assets/GradeHistoryBG.svg')", fontFamily: "titilliumWeb-Regular" }}>
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 mt-20">
         
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -242,7 +242,8 @@ const GradeHistory = () => {
           >
             
             {selectedHistoryDetails ? (
-              <div className="bg-nexus900 bg-opacity-30 border-2 border-nexus400 rounded-lg p-6">
+              <div className="bg-nexus900 bg-opacity-30 border-2 border-nexus400 rounded-lg p-6 relative">
+                <img className="absolute -top-34 right-0 w-[175px] h-[175px]" src="/assets/GradeHistoryPigy.svg"/>
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl text-white font-bold">{selectedHistoryDetails.saveTitle}</h2>
                   <div className="flex space-x-2">
@@ -364,7 +365,8 @@ const GradeHistory = () => {
                 </div>
               </div>
             ) : (
-              <div className="h-full flex items-center justify-center bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 bg-opacity-30 border-2 border-nexus400 rounded-lg p-6">
+              <div className="h-full flex items-center justify-center bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 bg-opacity-30 border-2 border-nexus400 rounded-lg p-6 relative">
+                <img className="absolute -top-34 right-0 w-[175px] h-[175px]" src="/assets/GradeHistoryPigy.svg"/>
                 <p className="text-nexus300 text-xl">
                   Select a grade history to view details
                 </p>

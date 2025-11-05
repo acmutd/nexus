@@ -132,12 +132,12 @@ const Login = () => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center bg-blue-950 bg-no-repeat bg-cover bg-center"
+      className="min-h-screen flex items-center justify-center bg-blue-950 bg-no-repeat bg-cover bg-center font-titilliumWeb-regular"
       style={{ backgroundImage: "url('/assets/LoginBackground.svg')" }}
     >
       <div className="w-[450px] mx-auto mt-10 p-10 bg-blue-200 rounded-xl shadow-md">
         <form onSubmit={loginWithEmail}>
-          <h2 className="text-2xl font-bold text-gray-800 text-left mb-1">
+          <h2 className="text-2xl text-gray-800 text-left mb-1 font-titilliumWeb-bold">
             Login to Nexus
           </h2>
           <p className="text-left text-blue-700 mb-6">
@@ -191,7 +191,7 @@ const Login = () => {
           <div className="mb-3">
             <button
               type="submit"
-              className="w-full bg-black text-white rounded-md py-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-base"
+              className="w-full bg-nexus600 text-white rounded-md py-2 px-4 transition duration-200 hover:bg-nexus800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-base cursor-pointer"
             >
               Login
             </button>
@@ -201,7 +201,7 @@ const Login = () => {
             <button
               type="button"
               onClick={loginWithGoogle}
-              className="w-full bg-white text-blue-900 border border-blue-300 rounded-md py-2 px-4 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-base flex items-center justify-center"
+              className="w-full bg-white text-blue-900 border border-blue-300 rounded-md py-2 px-4 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-base flex items-center justify-center cursor-pointer"
             >
               <FaGoogle className="mr-2" />
               Login with Google

@@ -198,6 +198,12 @@ function SuperDoc() {
           <h1 className="flex text-3xl font-titilliumWeb-bold pt-4 text-nexus50">
             SuperDoc - {selectedUnit}
           </h1>
+          <span className="text-gray-400 font-titilliumWeb-regular">
+            To make edits to the SuperDoc, link your Google Account in {' '}
+            <Link to="/settings" className='hover:underline text-gray-300'>
+              Settings.
+            </Link>
+          </span>
           <div className={`flex flex-col h-full w-full max-h-[685px] bg-gradient-to-b from-nexus800 to-nexus900 mt-2 rounded-md items-center justify-center`}>
             <h1 className="flex text-lg font-titilliumWeb-regular text-white text-center w-full justify-center py-10 mx-4">
                 There is currently no document uploaded for this unit.

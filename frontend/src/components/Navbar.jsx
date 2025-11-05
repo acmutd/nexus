@@ -75,7 +75,7 @@ const Navbar = () => {
     isScrolled ? 'bg-white bg-opacity-90 shadow-md navbar-blur' : 'bg-gradient-to-r from-nexus800 to-nexus900 '
   }`;
 
-  const linkClasses = `hover:text-nexus-blue-200 flex items-center relative group ${
+  const linkClasses = `hover:text-nexus-blue-200 flex items-center relative group cursor-pointer ${
     isScrolled ? 'text-nexus-blue-900 hover:text-nexus-blue-600' : 'text-white'
   }`;
 
@@ -100,7 +100,7 @@ const Navbar = () => {
       <div className="container mx-auto ">
         <div className="flex justify-between items-center py-4 navbar-content">
           <button
-            className="flex items-center transition duration-300 transform hover:scale-110 z-60"
+            className="flex items-center transition duration-300 transform hover:scale-110 z-60 cursor-pointer"
             onClick={() => { window.scrollTo(0, 0); navigate('/'); }}
           >
             <img src="/assets/Logo.svg" alt="Nexus Logo" className="h-10 mr-2" />

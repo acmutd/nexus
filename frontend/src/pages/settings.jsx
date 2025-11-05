@@ -359,7 +359,7 @@ function Settings() {
 
       {/* Content */}
       <motion.h1
-        className="w-full mt-4 pt-20 flex justify-center items-center"
+        className="w-full mt-4 pt-20 flex justify-center items-center relative flex-col"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.5 }}
@@ -380,8 +380,11 @@ function Settings() {
                   </h1>
 
                   {/* Google Link/Unlink */}
+                  <span className=" text-gray-400 font-titilliumWeb-regular my-2">
+                    You'll need to Link a Google Account to be able to contribute to the SuperDoc!
+                  </span>
                   <div
-                    className={`flex w-full h-12 bg-nexus700 mt-4 rounded-md items-center shadow-2xl ${actionBusy ? '' : 'hover:bg-nexus500'}`}
+                    className={`flex w-full h-12 bg-nexus700 rounded-md items-center shadow-2xl ${actionBusy ? '' : 'hover:bg-nexus500'}`}
                     style={{ cursor: 'pointer' }}
                     onClick={actionBusy ? undefined : handleGoogleAction}
                   >
@@ -443,7 +446,7 @@ function Settings() {
 
         <iframe
           src="/assets/Windmill.html"
-          className="fixed h-200 w-150 -right-40 top-20 z-10 scale-110"
+          className="fixed h-200 w-150 -right-40 top-40 z-10 scale-110"
           title="decorative-windmill"
         />
       </motion.h1>

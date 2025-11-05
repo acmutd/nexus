@@ -155,12 +155,12 @@ export default function Signup() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center bg-blue-950 bg-no-repeat bg-cover bg-center"
+      className="min-h-screen flex items-center justify-center bg-blue-950 bg-no-repeat bg-cover bg-center font-titilliumWeb-regular"
       style={{ backgroundImage: "url('/assets/SignUpBackground.svg')" }}
     >
       <div className="w-[450px] mx-auto mt-10 p-10 bg-blue-200 rounded-xl shadow-md">
         <form onSubmit={onSubmit}>
-          <h2 className="text-2xl font-bold text-gray-800 text-left mb-1">
+          <h2 className="text-2xl font-titilliumWeb-bold text-gray-800 text-left mb-1">
             Sign up for Nexus
           </h2>
           <p className="text-left text-blue-700 mb-6">
@@ -207,7 +207,7 @@ export default function Signup() {
           <button
             type="button"
             onClick={() => setPwVisible((v) => !v)}
-            className="absolute top-13 right-4 -translate-y-1/2 text-gray-600"
+            className="absolute top-13 right-4 -translate-y-1/2 text-gray-600 cursor-pointer"
             aria-label={pwVisible ? "Hide password" : "Show password"}
           >
             {pwVisible ? <IoMdEye  /> : <IoMdEyeOff />}
@@ -225,7 +225,7 @@ export default function Signup() {
             id="confirm_password"
             type={pw2Visible ? "text" : "password"}
             placeholder="Confirm password"
-            className="w-full bg-white text-black px-4 py-2 border border-gray-300 rounded-md focus:outline-none placeholder-gray-400 pr-10"
+            className="w-full bg-white text-black px-4 py-2 border border-gray-300 rounded-md focus:outline-none placeholder-gray-400 pr-10 "
             value={pw2}
             onChange={(e) => setPw2(e.target.value)}
             autoComplete="new-password"
@@ -234,7 +234,7 @@ export default function Signup() {
           <button
             type="button"
             onClick={() => setPw2Visible((v) => !v)}
-            className="absolute top-13 right-4 -translate-y-1/2 text-gray-600"
+            className="absolute top-13 right-4 -translate-y-1/2 text-gray-600 cursor-pointer"
             aria-label={pw2Visible ? "Hide confirm password" : "Show confirm password"}
           >
             {pw2Visible ? <IoMdEye  /> : <IoMdEyeOff />}
@@ -249,7 +249,7 @@ export default function Signup() {
           <div className="mb-3">
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white rounded-md py-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-base"
+              className="w-full bg-nexus600 text-white rounded-md py-2 px-4 transition duration-200 hover:bg-nexus800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-base cursor-pointer"
             >
               Sign Up
             </button>
@@ -259,7 +259,7 @@ export default function Signup() {
             <button
               type="button"
               onClick={signupWithGoogle}
-              className="w-full bg-white text-blue-900 border border-blue-300 rounded-md py-2 px-4 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-base inline-flex items-center justify-center"
+              className="w-full bg-white text-blue-900 border border-blue-300 rounded-md py-2 px-4 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-base inline-flex items-center justify-center cursor-pointer"
             >
               <FaGoogle className="mr-2" />
               Sign up with Google

@@ -119,7 +119,7 @@ export default function AvatarMenu({
             { /* ----------------------------- AVATAR + EMAIL ------------------------------------ */}
             <div className="flex justify-center items-center py-4 border-b-2 border-nexus700 flex-col">
               {avatarUrl ? (
-                <img src={avatarUrl} alt="Discord avatar" className="rounded-full h-full w-full object-cover" referrerPolicy="no-referrer"/>
+                <img src={avatarUrl} alt="Discord avatar" className="rounded-full h-20 w-20 object-cover" referrerPolicy="no-referrer"/>
                 ) : (
                 <div className="border-4 border-nexus400 rounded-full h-20 w-20 flex items-center justify-center bg-nexus100" style={{cursor: 'pointer'}}>
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 opacity-60" viewBox="0 0 24 24" fill="black">

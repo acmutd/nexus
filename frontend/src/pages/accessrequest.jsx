@@ -34,9 +34,15 @@ function AccessRequest() {
             </h1>
             <h2 className="w-4/5 font-titilliumWeb-regular text-nexus800 text-2xl items-center justify-center text-center"
               style={{ fontSize: isMed ? 18 : 20 }}>
-              Scrape data from your classes in order to partition your classes/role into discord servers.
+              <span className="font-titilliumWeb-bold">
+                Scrape
+              </span> {' '}data from your classes in order to partition your classes/role into Discord servers. By agreeing, you'll give Nexus {' '}
+              <span className="font-titilliumWeb-bold">
+                temporary 
+              </span>
+              {' '}access to your data.
             </h2>
-            <h3 className="w-4/5 font-titilliumWeb-bold text-nexus800 text-2xl items-center justify-center text-center mt-6 mb-4"
+            <h3 className="w-4/5 font-titilliumWeb-regular text-nexus800 text-2xl items-center justify-center text-center mt-6 mb-4"
               style={{ fontSize: isMed ? 18 : 20 }}>
               If you want to skip, all you’ll have to do is manually enter in your courses.
             </h3>
@@ -51,7 +57,7 @@ function AccessRequest() {
             <Link to="/LoginWithNetID" className="text-white bg-nexus500 py-3 text-xl font-titilliumWeb-bold rounded-lg mt-8 flex flex-row 
                         transition duration-300 hover:scale-105 drop-shadow-black items-center justify-center"
               style={{ width: isMed ? '45%' : '33.3333%' }}>
-              Continue
+              I Agree
             </Link>
           </div>
         </div>
