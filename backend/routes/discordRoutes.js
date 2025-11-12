@@ -96,12 +96,31 @@ router.post('/unlink', async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    const userData = userDoc.data();
+    const discordId = userData?.discord?.id;
+
+    // Remove Discord info from database first
     await userRef.update({
       discord: admin.firestore.FieldValue.delete(),
       lastUpdated: admin.firestore.FieldValue.serverTimestamp()
     });
 
     console.log(`Discord unlinked for user: ${uid}`);
+
+    // Remove Discord channel access via bot API
+    if (discordId) {
+      try {
+        console.log(`Removing channel access for Discord ID: ${discordId}`);
+        const botResponse = await axios.post('http://localhost:3001/api/discord/remove-access', {
+          discordId: discordId
+        });
+        console.log('Bot access removal response:', botResponse.data);
+      } catch (botError) {
+        console.warn('Failed to remove Discord channel access:', botError.response?.data || botError.message);
+        // Continue anyway - database unlink succeeded
+      }
+    }
+
     res.json({ success: true });
   } catch (err) {
     console.error('Unlink error:', err);
@@ -109,7 +128,7 @@ router.post('/unlink', async (req, res) => {
   }
 });
 
-// ALLOCATE endpoint — forwards to bot server
+// ALLOCATE endpoint  forwards to bot server
 router.post('/allocate', async (req, res) => {
   try {
     console.log('Backend allocation request:', req.body);
@@ -196,6 +215,39 @@ router.get('/callback', async (req, res) => {
       },
       lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
     }, { merge: true });
+
+    //  NEW: Grant Discord course access after successful linking
+    try {
+      console.log('Granting Discord course access for user:', uid);
+      
+      // Get user's current courses from Firestore
+      const userDoc = await userRef.get();
+      const userData = userDoc.data();
+      const userCourses = userData?.courses || [];
+      
+      if (userCourses.length > 0) {
+        console.log('User has courses, calling bot grant-access API:', userCourses);
+        
+        // Call the Discord bot's grant-access endpoint
+        const botResponse = await axios.post('http://localhost:3001/api/discord/grant-access', {
+          discordId: d.id,
+          courses: userCourses
+        }, {
+          timeout: 10000,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        console.log('Bot grant-access response:', botResponse.status);
+      } else {
+        console.log('User has no courses, skipping Discord access grant');
+      }
+    } catch (botError) {
+      // Don't fail the Discord linking if bot is unavailable
+      console.error('Failed to grant Discord access (bot may be offline):', 
+        botError.response?.data || botError.message);
+    }
 
     // Let the opener know it worked
     res.send(`
