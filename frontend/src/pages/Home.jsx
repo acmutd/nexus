@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const gradesData = [
   { subject: 'Math', homework: 92, exam: 88, weights: { homework: 0.4, exam: 0.6 } },
@@ -15,9 +16,10 @@ const calculateWeightedGrade = (homework, exam, weights) => {
   return Math.round(homework * weights.homework + exam * weights.exam);
 };
 
-const GradeCircle = ({ grade }) => {
-  const radius = 30; 
-  const stroke = 5;
+const GradeCircle = ({ grade, index }) => {
+  const colors = ['#60A5FA', '#34D399', '#F59E0B', '#EF4444', '#8B5CF6'];
+  const radius = 35; 
+  const stroke = 7;
   const normalizedRadius = radius - stroke / 2;
   const circumference = normalizedRadius * 2 * Math.PI;
   const strokeDashoffset = circumference - (grade / 100) * circumference;
@@ -34,7 +36,7 @@ const GradeCircle = ({ grade }) => {
         className="opacity-20"
       />
       <circle
-        stroke="#6366F1"
+        stroke={colors[index % colors.length]}
         fill="transparent"
         strokeWidth={stroke}
         strokeLinecap="round"
@@ -51,7 +53,7 @@ const GradeCircle = ({ grade }) => {
         dominantBaseline="middle"
         textAnchor="middle"
         fill="white"
-        className="text-white text-sm font-bold"
+        className="text-white text-lg font-bold"
       >
         {grade}%
       </text>
@@ -60,74 +62,84 @@ const GradeCircle = ({ grade }) => {
 };
 
 const Home = () => {
+
   return (
-    <div
-      className="min-h-screen flex flex-col items-center justify-start bg-blue-900 bg-no-repeat bg-cover bg-center pt-20 pb-10"
-      style={{ backgroundImage: "url('/assets/HomeBG.svg')" }}
-    >
-      <h1 className="text-white text-4xl font-bold mb-10 text-center">
-        Welcome Back <span className="text-blue-400">Tommy</span>
-      </h1>
+    <div className="flex w-full h-full">
+      {/* -------------------------------------- BACKGROUND -------------------------------------------*/}
+      <div className="flex h-full w-full bg-no-repeat bg-center bg-cover fixed z-0" style={{ backgroundImage: "url('/assets/HomeBG.svg')"}}/>
+      
+      {/* -------------------------------------- CONTENT -------------------------------------------*/}
+      <motion.div className="flex flex-col w-full h-full items-center justify-center mt-35 mb-15 z-1" initial={{opacity:0, y:20}} animate={{opacity: 1, y:0}} transition={{duration: 0.7}}>
+        <h1 className="text-white text-4xl font-bold text-center mb-5">
+          Welcome Back, {' '} <span className="text-blue-400">[STUDENT NAME]</span>!
+        </h1>
+        
+        <div className="bg-gradient-to-b from-nexus800 via-nexus900 to-nexus800 p-12 w-3/5 max-w-5xl flex flex-col items-center overflow-y-auto rounded-2xl">
+          <h2 className="text-white text-3xl font-titilliumWeb-semibold mb-6 w-full">
+            What Do You Want To Do Today?
+          </h2>
 
-      <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-xl p-8 w-11/12 max-w-5xl border border-white/20 flex flex-col items-center overflow-y-auto max-h-[85vh]">
-        <h2 className="text-white text-2xl font-semibold mb-6 text-center">
-          What do you want to do today?
-        </h2>
+          {/* ----------------------- BUTTONS --------------------------------*/}
+          <div className="flex flex-wrap justify-center gap-12 mb-10">
+            {['Discord', 'Superdoc', 'Grade Calc', 'Settings'].map((name) => (
+              <div key={name} className="flex flex-col items-center">
+                <div
+                  className="rounded-xl p-6 w-36 h-36 hover:scale-110 transition cursor-pointer bg-cover bg-center"
+                  style={{ backgroundImage: `url('/assets/${name} Button.svg')` }}
+                  ></div>
+                <span className="text-white text-sm font-semibold mt-2">
+                  {name === 'Discord' ? 'Discord Servers' : name}
+                </span>
+              </div>
+            ))}
+          </div>
 
-        <div className="flex flex-wrap justify-center gap-8 mb-10">
-          {['Discord', 'Superdoc', 'Grade Calc', 'Settings'].map((name) => (
-            <div key={name} className="flex flex-col items-center">
-              <div
-                className="bg-white/10 backdrop-blur-lg rounded-xl shadow-lg p-6 w-36 h-28 hover:bg-white/20 transition cursor-pointer bg-cover bg-center"
-                style={{ backgroundImage: `url('/assets/${name} Button.svg')` }}
-              ></div>
-              <span className="text-white text-sm font-semibold mt-2">
-                {name === 'Discord' ? 'Discord Servers' : name}
-              </span>
+          {/* Recent Activity*/}
+          <div className="bg-nexus800 rounded-xl p-6 w-full text-white mb-4">
+            <h3 className="text-2xl font-titilliumWeb-semibold mb-1">Recent Activity</h3>
+            <ul className="text-nexus300 text-lg space-y-1 font-titilliumWeb-regular ">
+              <li>Logged in</li>
+              <li>Viewed Superdoc</li>
+            </ul>
+          </div>
+
+          {/*Grades */}
+          <div className="flex bg-nexus800 rounded-xl p-6 w-full h-full text-white">
+            {/* -------------------- CONTENT ------------------------ */}
+            <div className="flex flex-wrap w-full h-fit justify-center items-center">
+              <h3 className="flex w-full text-2xl font-titilliumWeb-semibold mb-4">Grades</h3>
+              <div className="flex flex-row flex-wrap w-full h-full gap-8">
+                {gradesData.map((item, index) => {
+                  const finalGrade = calculateWeightedGrade(
+                    item.homework,
+                    item.exam,
+                    item.weights
+                  );
+                  return (
+                    <div key={item.subject} className="flex flex-row justify-center items-center w-fit h-full gap-2">
+                      <GradeCircle grade={finalGrade} index={index}/>
+                      <div className="flex flex-col items-start justify-center w-fit">
+                        <span className="text-white text-lg font-semibold mt-2">{item.subject}</span>
+                        <div className="flex flex-col text-sm text-gray-300 text-start">
+                          <span>
+                            Homework: {item.homework}% ({item.weights.homework * 100}%)
+                          </span>
+                          <span>
+                            Exam: {item.exam}% ({item.weights.exam * 100}%)
+                          </span>
+                          <span className="text-blue-300 font-semibold">
+                            Final: {finalGrade}%
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          ))}
-        </div>
-
-        {/* Recent Activity*/}
-        <div className="bg-blue-900 backdrop-blur-lg rounded-xl shadow-lg p-3 w-full text-white mb-4">
-          <h3 className="text-lg font-semibold mb-1">Recent Activity</h3>
-          <ul className="text-gray-300 text-sm space-y-1">
-            <li>Logged in</li>
-            <li>Viewed Superdoc</li>
-          </ul>
-        </div>
-
-        {/*Grades */}
-        <div className="bg-blue-900 backdrop-blur-lg rounded-xl shadow-lg p-6 w-full text-white max-h-[500px] overflow-x-auto overflow-y-hidden">
-          <h3 className="text-xl font-semibold mb-4">Grades</h3>
-          <div className="flex gap-8">
-            {gradesData.map((item) => {
-              const finalGrade = calculateWeightedGrade(
-                item.homework,
-                item.exam,
-                item.weights
-              );
-              return (
-                <div key={item.subject} className="flex flex-col items-center min-w-[180px]">
-                  <GradeCircle grade={finalGrade} />
-                  <span className="text-white text-lg font-semibold mt-2">{item.subject}</span>
-                  <div className="flex flex-col text-sm text-gray-300 mt-1 text-center">
-                    <span>
-                      Homework: {item.homework}% ({item.weights.homework * 100}%)
-                    </span>
-                    <span>
-                      Exam: {item.exam}% ({item.weights.exam * 100}%)
-                    </span>
-                    <span className="text-blue-300 font-semibold">
-                      Final: {finalGrade}%
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
