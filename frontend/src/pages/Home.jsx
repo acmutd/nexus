@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const gradesData = [
@@ -10,7 +10,6 @@ const gradesData = [
   { subject: 'Art', homework: 95, exam: 91, weights: { homework: 0.6, exam: 0.4 } },
   { subject: 'Music', homework: 94, exam: 98, weights: { homework: 0.5, exam: 0.5 } },
 ];
-
 
 const calculateWeightedGrade = (homework, exam, weights) => {
   return Math.round(homework * weights.homework + exam * weights.exam);
@@ -62,6 +61,24 @@ const GradeCircle = ({ grade, index }) => {
 };
 
 const Home = () => {
+  const navigate = useNavigate()
+
+  function handleButtonClick(name) {
+    switch(name) {
+      case "Discord": 
+        navigate('/courseList')
+        break;
+      case "Superdoc":
+        navigate("/superdoc")
+        break;
+      case "Grade Calc":
+        navigate("/grade-calculator")
+        break;
+      case "Settings":
+        navigate("/settings")
+        break;
+    }
+  }
 
   return (
     <div className="flex w-full h-full">
@@ -85,8 +102,9 @@ const Home = () => {
               <div key={name} className="flex flex-col items-center">
                 <div
                   className="rounded-xl p-6 w-36 h-36 hover:scale-110 transition cursor-pointer bg-cover bg-center"
-                  style={{ backgroundImage: `url('/assets/${name} Button.svg')` }}
-                  ></div>
+                  style={{ backgroundImage: `url('/assets/${name} Button.svg')` }} 
+                  onClick={() => handleButtonClick(name)}
+                />
                 <span className="text-white text-sm font-semibold mt-2">
                   {name === 'Discord' ? 'Discord Servers' : name}
                 </span>

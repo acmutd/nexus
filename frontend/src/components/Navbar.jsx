@@ -101,7 +101,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center py-4 navbar-content">
           <button
             className="flex items-center transition duration-300 transform hover:scale-110 z-60 cursor-pointer"
-            onClick={() => { window.scrollTo(0, 0); navigate('/'); }}
+            onClick={() => { window.scrollTo(0, 0); user ? navigate('/home') : navigate('/'); }}
           >
             <img src="/assets/Logo.svg" alt="Nexus Logo" className="h-10 mr-2" />
             <span className={logoTextClasses}>Nexus</span>

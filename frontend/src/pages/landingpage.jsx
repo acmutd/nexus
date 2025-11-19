@@ -1,12 +1,80 @@
-import React from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 import { HiArrowNarrowRight } from 'react-icons/hi';
 import { useMediaQuery } from 'react-responsive';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence} from 'framer-motion';
 import Typewriter from "typewriter-effect"
+import { initializeApp, getApps, getApp } from 'firebase/app';
+import {
+  getAuth,
+  onAuthStateChanged,
+  unlink,
+  GoogleAuthProvider,
+  linkWithPopup
+} from 'firebase/auth';
+
+import {
+  getFirestore,
+  doc,
+  getDoc
+} from 'firebase/firestore';
 
 function LandingPage() {
   const isMed = useMediaQuery({ query: '(max-width: 800px)' })
+  const navigate = useNavigate();
+
+  // Firebase handles
+  const [auth, setAuth] = useState(null);
+  const dbRef = useRef(null);
+
+  const [initLoading, setInitLoading] = useState(true);
+  const [initError, setInitError] = useState('');
+
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    let unsub = () => {};
+    (async () => {
+      try {
+        if (getApps().length) {
+          const app = getApp();
+          const a = getAuth(app);
+          const db = getFirestore(app);
+          setAuth(a);
+          dbRef.current = db;
+        } else {
+          const res = await fetch(`${API_BASE}/api/firebase-config`);
+          if (!res.ok) throw new Error(`Config fetch failed: ${res.status} ${res.statusText}`);
+          const cfg = await res.json();
+          const app = initializeApp(cfg);
+          const a = getAuth(app);
+          const db = getFirestore(app);
+          setAuth(a);
+          dbRef.current = db;
+        }
+
+        // Listen for auth state
+        const a = getAuth();
+        unsub = onAuthStateChanged(a, async (u) => {
+          setUser(u || null);
+          setInitLoading(false);
+        });
+      } catch (e) {
+        console.error('Firebase init error:', e);
+        setInitError(String(e?.message || e));
+        setInitLoading(false);
+      }
+    })();
+    return () => {
+      unsub && unsub();
+    };
+  }, []);
+
+  useEffect(() => {
+    if(user) {
+      navigate("/home")
+    } 
+  }, [user])
 
   return (
     <div
