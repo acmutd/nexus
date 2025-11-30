@@ -8,6 +8,7 @@ const discordRoutes = require("./routes/discordRoutes");
 const authRoutes = require("./routes/authRoutes");
 const scraperRoutes = require("./routes/scraperRoutes");   // <-- NEW
 const gradesRoutes = require("./routes/gradesRoute");
+const transcriptRoutes = require("./routes/transcriptRoutes");
 
 // Initialize Express app
 const app = express();
@@ -43,7 +44,7 @@ app.use("/api/discord", discordRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/scraper", scraperRoutes);   // <-- NEW
 app.use("/api/grades", gradesRoutes); 
-
+app.use('/api', transcriptRoutes);
 
 // Main allocation endpoint (frontend POSTs here)
 app.post("/api/discord/allocate", async (req, res) => {

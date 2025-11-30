@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import 'simplebar-react/dist/simplebar.min.css';
 import LandingPage from "./pages/landingpage"
 import AccessRequest from './pages/accessrequest';
-import CourseEntry from './pages/courseEntry';
+//import CourseEntry from './pages/courseEntry';
 import DiscordLogin from './pages/discordlogin';
 import Navbar from "./components/Navbar"
 import Login from './pages/Login';
@@ -15,6 +15,7 @@ import Upload from './pages/upload';
 import Settings from './pages/settings';
 import CourseList from './pages/courseList';
 import Home from './pages/home';
+import CourseEntry from './pages/courseEntryWithTranscript';
 
 
 function App() {
