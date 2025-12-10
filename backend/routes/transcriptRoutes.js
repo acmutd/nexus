@@ -94,7 +94,7 @@ router.post('/parse-transcript', async (req, res) => {
       
       await userRef.set(
         {
-          transcriptData: transcriptData,
+          //transcriptData: transcriptData,
           lastTranscriptUpload: new Date().toISOString(),
           courses: currentSemesterCourses
         },
