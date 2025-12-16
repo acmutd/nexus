@@ -90,7 +90,6 @@ const Home = () => {
         <h1 className="text-white text-4xl font-bold text-center mb-5">
           Welcome Back, {' '} <span className="text-blue-400">[STUDENT NAME]</span>!
         </h1>
-        
         <div className="bg-gradient-to-b from-nexus800 via-nexus900 to-nexus800 p-12 w-3/5 max-w-5xl flex flex-col items-center overflow-y-auto rounded-2xl">
           <h2 className="text-white text-3xl font-titilliumWeb-semibold mb-6 w-full">
             What Do You Want To Do Today?
@@ -134,7 +133,7 @@ const Home = () => {
                     item.weights
                   );
                   return (
-                    <div key={item.subject} className="flex flex-row justify-center items-center w-fit h-full gap-2">
+                    <div key={item.subject} className="flex flex-row flex-wrap justify-center items-center w-fit h-fit gap-2">
                       <GradeCircle grade={finalGrade} index={index}/>
                       <div className="flex flex-col items-start justify-center w-fit">
                         <span className="text-white text-lg font-semibold mt-2">{item.subject}</span>

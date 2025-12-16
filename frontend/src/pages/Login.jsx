@@ -133,7 +133,7 @@ const Login = () => {
   return (
     <div
       className="min-h-screen flex items-center justify-center bg-blue-950 bg-no-repeat bg-cover bg-center font-titilliumWeb-regular"
-      style={{ backgroundImage: "url('/assets/LoginBackground.svg')" }}
+      style={{ backgroundImage: "url('/assets/LoginBG.svg')" }}
     >
       <div className="w-[450px] mx-auto mt-10 p-10 bg-blue-200 rounded-xl shadow-md">
         <form onSubmit={loginWithEmail}>
