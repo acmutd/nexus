@@ -191,14 +191,51 @@ function extractTranscriptData(transcriptText) {
       let grade = 'In Progress';
       let instructor = null;
       
-      // Check next line for instructor
-      if (i + 1 < lines.length) {
-        const nextLine = lines[i + 1].trim();
+      // Check following lines for instructor(s)
+      let j = i + 1;
+      const instructors = [];
+
+      while (j < lines.length) {
+        const nextLine = lines[j].trim();
+        
+        // Check for "Instructor:" line
         const instructorMatch = nextLine.match(/^Instructor:\s*(.+)$/);
         if (instructorMatch) {
-          instructor = instructorMatch[1].trim();
+          instructors.push(instructorMatch[1].trim());
+          j++;
+          
+          // Continue checking subsequent lines for additional instructors (indented names)
+          while (j < lines.length) {
+            const additionalLine = lines[j].trim();
+            
+            // If line appears to be a continuation (name-like pattern) and not a new section
+            if (additionalLine && 
+                !additionalLine.match(/^[A-Z]{2,4}\s+\d{4}/) && // Not a new course
+                !additionalLine.match(/^\d{4}\s+(Fall|Spring|Summer)/) && // Not a semester
+                !additionalLine.startsWith('Instructor:') && // Not a new instructor line
+                !additionalLine.startsWith('Req Designation:') && // Not req designation
+                additionalLine.match(/^[A-Z][a-z]+(\s+[A-Z][a-z]+)*$/)) { // Looks like a name
+              instructors.push(additionalLine);
+              j++;
+            } else {
+              break;
+            }
+          }
+          break;
         }
+        
+        // Stop if we hit another course or section
+        if (nextLine.match(/^[A-Z]{2,4}\s+\d{4}/) || 
+            nextLine.match(/^\d{4}\s+(Fall|Spring|Summer)/)) {
+          break;
+        }
+        
+        j++;
+        if (j > i + 5) break; // Don't search too far
       }
+
+      // Use the first instructor if multiple are listed
+      instructor = instructors.length > 0 ? instructors[0] : null;
       
       const course = {
         course_code: courseCode,
@@ -240,17 +277,24 @@ function extractCurrentSemesterCourses(transcriptData) {
     return [];
   }
 
-  // Get ONLY the most recent semester
+  // Get the most recent semester
   const mostRecentSemester = semesters[0];
   const courses = utdClasses[mostRecentSemester] || [];
 
   // Convert to the format expected by the frontend with instructors
   return courses.map(course => {
     const courseCode = course.course_code.replace(' ', '-');
-    const instructor = course.instructor ? `-${course.instructor}` : '';
+    
+    // Extract last name from instructor
+    let instructorSuffix = '';
+    if (course.instructor) {
+      const nameParts = course.instructor.trim().split(/\s+/);
+      const lastName = nameParts[nameParts.length - 1];
+      instructorSuffix = `-${lastName}`;
+    }
     
     return {
-      course_id: `${courseCode}${instructor}`,
+      course_id: `${courseCode}${instructorSuffix}`,
       course_name: course.course_name,
       grade: course.grade,
       credits: course.credits_earned
