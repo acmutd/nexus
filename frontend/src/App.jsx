@@ -16,6 +16,7 @@ import Settings from './pages/settings';
 import CourseList from './pages/courseList';
 import Home from './pages/home';
 import CourseEntry from './pages/courseEntryWithTranscript';
+import Login_pipeline from './pages/login_pipeline';
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
           <Route path="/upload" element={<Upload />}/>
           <Route path="/courselist" element={<CourseList />}/>
           <Route path="/home" element={<Home />}/>
+          <Route path="/login_pipeline" element={<Login_pipeline />}/>
         </Routes>
 
       </div>
