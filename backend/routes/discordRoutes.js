@@ -7,7 +7,7 @@ require('dotenv').config();
 const {
   DISCORD_CLIENT_ID,
   DISCORD_CLIENT_SECRET,
-  DISCORD_REDIRECT_URI,
+  DISCORD_BOT_URL,
   GOOGLE_APPLICATION_CREDENTIALS,
   FIREBASE_PROJECT_ID
 } = process.env;
@@ -58,7 +58,7 @@ const getDiscordToken = async (code, retries = 3) => {
           client_secret: DISCORD_CLIENT_SECRET,
           code,
           grant_type: 'authorization_code',
-          redirect_uri: DISCORD_REDIRECT_URI
+          redirect_uri: 'http://localhost:3000/api/discord/callback'
         }).toString(),
         { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
       );
@@ -112,7 +112,7 @@ router.post('/unlink', async (req, res) => {
     if (discordId) {
       try {
         console.log(`Removing channel access for Discord ID: ${discordId}`);
-        const botResponse = await axios.post('http://localhost:3001/api/discord/remove-access', {
+        const botResponse = await axios.post(`${DISCORD_BOT_URL}/api/discord/remove-access`, {
           discordId: discordId
         });
         console.log('Bot access removal response:', botResponse.data);
@@ -163,7 +163,7 @@ router.get('/auth', (req, res) => {
 
   const params = new URLSearchParams({
     client_id: DISCORD_CLIENT_ID,
-    redirect_uri: DISCORD_REDIRECT_URI,
+    redirect_uri: 'http://localhost:3000/api/discord/callback',
     response_type: 'code',
     scope: 'identify', // request only what we need; add 'email' if you truly need it
     state: uid
@@ -230,7 +230,7 @@ router.get('/callback', async (req, res) => {
         console.log('User has courses, calling bot grant-access API:', userCourses);
         
         // Call the Discord bot's grant-access endpoint
-        const botResponse = await axios.post('http://localhost:3001/api/discord/grant-access', {
+        const botResponse = await axios.post(`${DISCORD_BOT_URL}/api/discord/grant-access`, {
           discordId: d.id,
           courses: userCourses
         }, {
