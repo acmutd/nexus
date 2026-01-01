@@ -175,7 +175,7 @@ const GradeHistory = () => {
                   {histories.map((history, index) => (
                     <li 
                       key={history.id || `history-${index}`}
-                      className={`p-3 rounded cursor-pointer transition-colors relative ${
+                      className={`p-3 rounded cursor-pointer transition-colors ${
                         selectedHistoryDetails?.id === history.id 
                           ? 'bg-nexus700 text-white' 
                           : 'bg-nexus800 text-nexus300 hover:bg-nexus700 hover:text-white'
@@ -195,7 +195,7 @@ const GradeHistory = () => {
                               e.stopPropagation();
                               setConfirmDelete(history.id || `history-${index}`);
                             }}
-                            className="text-nexus300 hover:text-red-400"
+                            className="text-nexus300 hover:text-red-400 cursor-pointer"
                           >
                             <HiTrash size={18} />
                           </button>
@@ -203,27 +203,29 @@ const GradeHistory = () => {
                       </div>
                       
                       {confirmDelete === (history.id || `history-${index}`) && (
-                        <div className="absolute top-full left-0 mt-2 p-2 bg-nexus600 rounded shadow-lg z-10">
-                          <p className="text-white text-sm mb-2">Delete this history?</p>
-                          <div className="flex space-x-2">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteHistory(history.id || `history-${index}`);
-                              }}
-                              className="bg-red-700 text-white text-xs py-1 px-2 rounded transition duration-200 hover:bg-red-800"
-                            >
-                              Delete
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setConfirmDelete(null);
-                              }}
-                              className="bg-nexus300 text-white text-xs py-1 px-2 rounded transition duration-300 hover:bg-nexus400"
-                            >
-                              Cancel
-                            </button>
+                        <div className="fixed flex flex-col inset-0 backdrop-brightness-50 z-10 items-center justify-center cursor-default">
+                          <div className="mt-2 p-8 bg-gradient-to-b from-nexus900 to-nexus700 border-nexus600 border-2 rounded shadow-lg z-10 w-fit">
+                            <p className="text-white text-lg mb-2">Delete this history?</p>
+                            <div className="flex justify-between">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteHistory(history.id || `history-${index}`);
+                                }}
+                                className="cursor-pointer bg-red-700 text-white text-md py-1 px-2 rounded transition duration-200 hover:bg-red-800"
+                              >
+                                Delete
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setConfirmDelete(null);
+                                }}
+                                className="cursor-pointer bg-nexus300 text-white text-md py-1 px-2 rounded transition duration-300 hover:bg-nexus400"
+                              >
+                                Cancel
+                              </button>
+                            </div>
                           </div>
                         </div>
                       )}

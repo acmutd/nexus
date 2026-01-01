@@ -36,10 +36,10 @@ const ServerCard = ({title, link, banner, icon, description, members}) => {
 function CourseList() {
   const isMed = useMediaQuery({ query: '(max-width: 800px)' })
 
-  const servers = [{title: "School of Engineering and Computer Science", link: "Some Discord Link", banner:"url('/assets/DiscordServerAssets/ECSBanner.png')", icon:"/assets/DiscordServerAssets/ECSIcon.png", description: 'Grind away on coding and engineering problems with your fellow classmates!', members: 225},
-                   {title: "School of Economic, Political and Policy Sciences", link: "Some Discord Link", banner:"url('/assets/DiscordServerAssets/EPSBanner.png')", icon:"/assets/DiscordServerAssets/EPSIcon.png", description: 'Discuss the socio-economic state of the world with other like-minded students!', members: 155},
-                   {title: "School of Management", link: "Some Discord Link", banner:"url('/assets/DiscordServerAssets/MGTBanner.png')", icon:"/assets/DiscordServerAssets/MGTIcon.png", description: 'Network with prospective talented executives and business analysts right here!', members: 121},
-                   {title: "School of Natural Sciences and Mathematics", link: "Some Discord Link", banner:"url('/assets/DiscordServerAssets/NSMBanner.png')", icon:"/assets/DiscordServerAssets/NSMIcon.png", description: 'Chip away at complex formulas and equations with other mathematicians and scientists!', members: 167},
+  const servers = [{title: "School of Engineering and Computer Science", link: "https://discord.gg/Svq4wby5me", banner:"url('/assets/DiscordServerAssets/ECSBanner.png')", icon:"/assets/DiscordServerAssets/ECSIcon.png", description: 'Grind away on coding and engineering problems with your fellow classmates!', members: 225},
+                   {title: "School of Economic, Political and Policy Sciences", link: "https://discord.gg/6hcENFx68V", banner:"url('/assets/DiscordServerAssets/EPSBanner.png')", icon:"/assets/DiscordServerAssets/EPSIcon.png", description: 'Discuss the socio-economic state of the world with other like-minded students!', members: 155},
+                   {title: "School of Management", link: "https://discord.gg/N3mggKBa96", banner:"url('/assets/DiscordServerAssets/MGTBanner.png')", icon:"/assets/DiscordServerAssets/MGTIcon.png", description: 'Network with prospective talented executives and business analysts right here!', members: 121},
+                   {title: "School of Natural Sciences and Mathematics", link: "https://discord.gg/kbSrzGYEYu", banner:"url('/assets/DiscordServerAssets/NSMBanner.png')", icon:"/assets/DiscordServerAssets/NSMIcon.png", description: 'Chip away at complex formulas and equations with other mathematicians and scientists!', members: 167},
   ]
   
   return (
@@ -61,7 +61,7 @@ function CourseList() {
           <div className="grid grid-cols-2 mt-4 gap-6 w-full h-full items-center justify-center overflow-hidden">
             {servers.map((item, index) => (
               <div className="flex w-full h-full">
-                <ServerCard title={item.title} banner={item.banner} icon={item.icon} description={item.description} members={item.members}/>
+                <ServerCard link={item.link} title={item.title} banner={item.banner} icon={item.icon} description={item.description} members={item.members}/>
               </div>
             ))}
           </div>
