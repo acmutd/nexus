@@ -117,7 +117,7 @@ export default function AvatarMenu({
               <HiX size={25} opacity={.7} />
             </div> 
             { /* ----------------------------- AVATAR + EMAIL ------------------------------------ */}
-            <div className="flex justify-center items-center py-4 border-b-2 border-nexus700 flex-col">
+            <div className="flex min-w-[200px] justify-center items-center py-4 border-b-2 border-nexus700 flex-col">
               {avatarUrl ? (
                 <img src={avatarUrl} alt="Discord avatar" className="rounded-full h-20 w-20 object-cover" referrerPolicy="no-referrer"/>
                 ) : (
@@ -137,7 +137,7 @@ export default function AvatarMenu({
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="w-full text-left mt-2 px-2 py-2 text-sm hover:bg-nexus700"
+                className="w-full text-left mt-2 px-2 py-2 text-sm hover:bg-nexus700 cursor-pointer"
                 role="menuitem"
               >
                 Settings
@@ -149,7 +149,7 @@ export default function AvatarMenu({
             <button
               type="button"
               onClick={handleLogout}
-              className="w-full text-left mb-2 px-2 py-2 text-sm hover:bg-nexus700"
+              className="w-full text-left mb-2 px-2 py-2 text-sm hover:bg-nexus700 cursor-pointer"
               role="menuitem"
               style={{cursor: 'pointer'}}
             >
