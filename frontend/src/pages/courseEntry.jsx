@@ -255,7 +255,7 @@ function CourseEntry() {
         },
         { merge: true }
       );
-      navigate('/superdoc');
+      navigate('/home');
     } catch (e) {
       console.error('Save courses error:', e);
       setError('Failed to save courses. Please try again.');
