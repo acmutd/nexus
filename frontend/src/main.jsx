@@ -1,8 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
+import './App.css'
 import App from './App.jsx'
 import { initFirebase } from './firebase.js'
+import { MobileProvider } from './context/mobileContext.jsx'
 
 async function bootstrap() {
   try {
@@ -14,7 +16,9 @@ async function bootstrap() {
 
   createRoot(document.getElementById('root')).render(
     <StrictMode>
-      <App />
+      <MobileProvider>
+        <App />
+      </MobileProvider>
     </StrictMode>,
   )
 }

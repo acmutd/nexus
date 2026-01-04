@@ -14,7 +14,7 @@ import SuperDoc from './pages/superdoc';
 import Upload from './pages/upload';
 import Settings from './pages/settings';
 import CourseList from './pages/courseList';
-import Home from './pages/home';
+import Home from './pages/Home';
 import CourseEntry from './pages/courseEntryWithTranscript';
 import Login_pipeline from './pages/login_pipeline';
 

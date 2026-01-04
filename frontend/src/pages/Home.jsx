@@ -81,7 +81,7 @@ const Home = () => {
   }
 
   return (
-    <div className="flex w-full h-full">
+    <div className="flex w-full h-full bg-nexus900">
       {/* -------------------------------------- BACKGROUND -------------------------------------------*/}
       <div className="flex h-full w-full bg-no-repeat bg-center bg-cover fixed z-0" style={{ backgroundImage: "url('/assets/HomeBG.svg')"}}/>
       
