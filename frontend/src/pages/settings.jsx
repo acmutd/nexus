@@ -373,7 +373,7 @@ function Settings() {
   return (
     <div
       className="flex min-h-screen bg-cover max-w-screen bg-gradient-to-b from-nexus700 to-nexus900 relative overflow-hidden"
-      style={{ backgroundImage: "url(/assets/AccountSettingsBackground.svg)" }}
+      style={{ backgroundImage: "url(/assets/AccountSettingsBG.svg)" }}
     >
       {/* Sidebar */}
       <motion.aside
@@ -429,7 +429,7 @@ function Settings() {
       >
         {/* Account tab */}
         {isSelected === 1 && (
-          <div className="ml-40 flex bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 w-[30%] h-[60%] z-40 rounded-lg">
+          <div className="ml-40 flex bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 w-[30%] h-fit z-40 rounded-lg">
             <AnimatePresence>
               <motion.div
                 className="w-full flex"
@@ -437,8 +437,8 @@ function Settings() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <div className="flex w-full p-4 flex-col">
-                  <h1 className="flex text-nexus100 text-3xl" style={{ fontFamily: 'titilliumWeb-bold' }}>
+                <div className="flex w-full p-6 flex-col">
+                  <h1 className="flex text-nexus100 headingText" style={{ fontFamily: 'titilliumWeb-bold' }}>
                     Account Settings
                   </h1>
 
@@ -485,14 +485,14 @@ function Settings() {
 
                   {/* Delete Account Button */}
                   <div className="mt-8 pt-6 border-t border-gray-600">
-                    <h2 className="text-nexus100 text-xl mb-2" style={{ fontFamily: 'titilliumWeb-bold' }}>
+                    <h2 className="text-nexus100 bodyText" style={{ fontFamily: 'titilliumWeb-bold' }}>
                       Account Deletion
                     </h2>
-                    <span className="text-gray-400 font-titilliumWeb-regular text-sm">
+                    <span className="text-gray-400 font-titilliumWeb-regular tinyText">
                       Permanently delete your account and all associated data.
                     </span>
                     <button
-                      className="mt-3 w-full h-12 bg-red-600 rounded-md items-center shadow-2xl hover:bg-red-700 transition flex justify-center"
+                      className="cursor-pointer mt-3 w-full h-12 bg-red-600 rounded-md items-center shadow-2xl hover:bg-red-700 transition flex justify-center"
                       onClick={() => setShowDeleteModal(true)}
                       disabled={actionBusy}
                     >
@@ -528,7 +528,7 @@ function Settings() {
 
         <iframe
           src="/assets/Windmill.html"
-          className="fixed h-200 w-150 -right-40 top-40 z-10 scale-110"
+          className="absolute h-200 w-150 -right-40 top-40 z-10 scale-110"
           title="decorative-windmill"
         />
       </motion.h1>

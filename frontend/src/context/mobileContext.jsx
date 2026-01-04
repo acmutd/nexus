@@ -1,38 +1,38 @@
 import { createContext, useState, useEffect, useContext } from "react";
 
-export const MobileContext = createContext();
+export const MobileContext = createContext()
 
-export function MobileProvider({ children }) {
-  const [isMobile, setIsMobile] = useState(false);
-  const [isSmallMobile, setIsSmallMobile] = useState(false);
+export function MobileProvider({children}) {
+  const [isMobile, setIsMobile] = useState(false)
+  const [isSmallMobile, setIsSmallMobile] = useState(false)
 
   useEffect(() => {
-    // Check if user is on mobile device
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-	  setIsSmallMobile(window.innerWidth <= 400)
-    };
+      setIsMobile(window.innerWidth <= 768)
+      setIsSmallMobile(window.innerWidth <= 400)
+    }
 
-    checkMobile();
+    checkMobile()
 
-    // Re-check on window resize
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+    window.addEventListener('resize', checkMobile)
+
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   return (
     <MobileContext.Provider value={{ isMobile, isSmallMobile }}>
       {children}
     </MobileContext.Provider>
-  );
+  )
 }
 
 export function useMobile() {
-  const context = useContext(MobileContext);
-  if (!context) {
-    throw new Error("useMobile must be used within MobileProvider");
+  const context = useContext(MobileContext)   
+
+  if(!context) {
+    throw new Error('useMobile must be used within MobileProvider')
   }
+
   return context;
 }
-
 

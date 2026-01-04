@@ -33,7 +33,7 @@ const ServerCard = ({title, link, banner, icon, description, members}) => {
   )
 }
 
-function CourseList() {
+function DiscordServers() {
   const isMed = useMediaQuery({ query: '(max-width: 800px)' })
 
   const servers = [{title: "School of Engineering and Computer Science", link: "https://discord.gg/Svq4wby5me", banner:"url('/assets/DiscordServerAssets/ECSBanner.png')", icon:"/assets/DiscordServerAssets/ECSIcon.png", description: 'Grind away on coding and engineering problems with your fellow classmates!', members: 225},
@@ -73,4 +73,4 @@ function CourseList() {
   )
 }
 
-export default CourseList
+export default DiscordServers

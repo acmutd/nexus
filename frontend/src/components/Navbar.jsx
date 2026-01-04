@@ -112,7 +112,7 @@ const Navbar = () => {
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
             </Link>
 
-            <Link to="/courselist" className={linkClasses}>
+            <Link to="/discordservers" className={linkClasses}>
               <HiAcademicCap className="mr-1" /> Courses
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
             </Link>

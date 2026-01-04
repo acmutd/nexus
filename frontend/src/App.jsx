@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import 'simplebar-react/dist/simplebar.min.css';
 import LandingPage from "./pages/landingpage"
-import AccessRequest from './pages/accessrequest';
+import AccessRequest from './pages/AccessRequest';
 //import CourseEntry from './pages/courseEntry';
 import DiscordLogin from './pages/discordlogin';
 import Navbar from "./components/Navbar"
@@ -10,13 +10,13 @@ import LoginWithNetID from "./pages/LoginWithNetID";
 import Signup from './pages/Signup';
 import GradeCalculator from './pages/GradeCalculator';
 import GradeHistory from './pages/GradeHistory';
-import SuperDoc from './pages/superdoc';
-import Upload from './pages/upload';
+import SuperDoc from './pages/SuperDoc';
+import SuperDocUpload from './pages/SuperDocUpload';
 import Settings from './pages/settings';
-import CourseList from './pages/courseList';
+import DiscordServers from './pages/DiscordServers';
 import Home from './pages/Home';
 import CourseEntry from './pages/courseEntryWithTranscript';
-import Login_pipeline from './pages/login_pipeline';
+import AccessRequestContinue from './pages/AccessRequestContinue';
 
 
 function App() {
@@ -30,7 +30,7 @@ function App() {
             <LandingPage/>
           }/>
           <Route path="/accessrequest" element={<AccessRequest />}/>
-          <Route path="/courseEntry" element={<CourseEntry />}/>
+          <Route path="/courseentry" element={<CourseEntry />}/>
           <Route path="/settings" element={<Settings/>} />
           <Route path="/grade-calculator" element={<GradeCalculator />} />
           <Route path="/grade-history" element={<GradeHistory />} />
@@ -40,10 +40,10 @@ function App() {
           <Route path="/LoginWithNetID" element={<LoginWithNetID />}/>
           <Route path="/signup" element={<Signup />}/>
           <Route path="/superdoc" element={<SuperDoc />}/>
-          <Route path="/upload" element={<Upload />}/>
-          <Route path="/courselist" element={<CourseList />}/>
+          <Route path="/superdocupload" element={<SuperDocUpload />}/>
+          <Route path="/discordservers" element={<DiscordServers />}/>
           <Route path="/home" element={<Home />}/>
-          <Route path="/login_pipeline" element={<Login_pipeline />}/>
+          <Route path="/accessrequestcontinue" element={<AccessRequestContinue />}/>
         </Routes>
 
       </div>

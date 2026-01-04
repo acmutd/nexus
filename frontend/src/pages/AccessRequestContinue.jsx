@@ -1,12 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
+import Button from '../components/Button';
 
-export default function login_pipeline() {
+export default function AccessRequestContinue() {
   const isMed = useMediaQuery({ query: '(max-width: 800px)' });
   const navigate = useNavigate();
-
-  const nexusBlue = '#01579b';
 
   const shadowAccentColor = 'bg-gray-400'; 
 
@@ -19,54 +18,42 @@ export default function login_pipeline() {
       <div
         className={`absolute inset-0 rounded-lg ${shadowAccentColor} shadow-md`}
         style={{ transform: 'translate(6px, 6px)', zIndex: 0 }}
-      ></div>
-
+      />
 
       <div
-  className="flex flex-col items-start bg-white rounded-lg p-6 border border-gray-200 
-             transition duration-300 ease-in-out cursor-pointer relative z-10
-             font-titilliumWeb"
-  style={{ height: '100%', width: '100%' }} 
-  onClick={onClick}
+        className="flex flex-col items-start bg-white rounded-lg p-6 border border-gray-200 
+                  transition duration-300 ease-in-out relative z-10 
+                  font-titilliumWeb"
+        style={{ height: '100%', width: '100%' }} 
 >
-        <div className="text-4xl text-blue-600 mb-4 self-start">{icon}</div> 
-        <h3 className="font-bold text-xl text-gray-800 mb-2 text-left w-full">{title}</h3> 
-        <p className="text-blue-900 text-left text-sm mb-4 flex-1 w-full"> 
+        <div className="mb-4 self-start">{icon}</div> 
+        <h3 className="font-bold bodyText text-gray-800 mb-2 text-left w-full">{title}</h3> 
+        <p className="text-blue-900 text-left tinyText mb-2 flex-1 w-full"> 
           {description}
         </p>
-        <ul className="list-disc list-inside text-sm text-left text-blue-900 w-full mb-6 pl-4">
+        <ul className="list-disc list-inside tinyText text-left text-blue-900 w-full mb-6 pl-4">
           {details.map((detail, index) => (
             <li key={index} className="mb-1">{detail}</li>
           ))}
         </ul>
-        <button
-          className="w-full py-2 rounded-lg font-bold text-white transition duration-300"
-          style={{ backgroundColor: nexusBlue }} 
-          onClick={(e) => {
-            e.stopPropagation();
-            onClick();
-          }}
-        >
-          {buttonText}
-        </button>
+        <Button text={buttonText} onClick={onClick} />
       </div>
     </div>
   );
 
   return (
     <div
-      className="min-h-screen w-full flex flex-col items-center bg-blue-950 bg-cover bg-center pt-20 pb-16"
+      className="min-h-screen w-full flex flex-col items-center bg-blue-950 bg-cover bg-center pt-16 pb-6"
       style={{
         backgroundImage: isMed
           ? "url('/assets/AccessRequestBGLong.svg')"
           : "url('/assets/AccessRequestBG.svg')",
       }}
     >
-      <div className="flex items-center justify-center flex-col">
+      <div className="flex items-center justify-center flex-col scale-90">
         
-
         <h1
-          className="font-titilliumWeb-bold text-white text-4xl mb-4"
+          className="font-titilliumWeb-bold text-white headingText mb-2"
           style={{ zIndex: 1 }}
         >
           Before We Begin:
@@ -83,16 +70,16 @@ export default function login_pipeline() {
         >
 
           <div className="text-center mb-6">
-            <p className="text-lg font-semibold text-blue-800 mb-2">
+            <p className="headingText font-titilliumWeb-bold text-nexus900 mb-2">
               Nexus Needs Access to your Courses:
             </p>
-            <p className="text-md text-blue-600">
+            <p className="bodyText font-titilliumWeb-regular text-nexus800 mb-2">
               Login Through eLearning and let Nexus' Web Scraper do the Rest.
             </p>
-            <p className="text-md font-bold text-blue-800 mt-3 mb-4">
+            <p className="bodyText font-titilliumWeb-bold text-nexus900 mb-2">
               OR
             </p>
-            <p className="text-md text-blue-600">
+            <p className="bodyText font-titilliumWeb-regular text-nexus800">
               Upload Your Transcript for Automatic Parsing
             </p>
           </div>
@@ -133,7 +120,7 @@ export default function login_pipeline() {
             />
 
           </div>
-          <p className="text-blue-900 text-center mt-6" style={{ zIndex: 1 }}>
+          <p className="text-nexus900 text-center mt-6" style={{ zIndex: 1 }}>
           Don't worry, your data is secure and we only access schedule-related info.
         </p>
         </div>

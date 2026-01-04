@@ -10,11 +10,11 @@ function AccessRequest() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-nexus800 bg-cover bg-center"
       style={{ backgroundImage: isMed ? "url('/assets/AccessRequestBGLong.svg')" : "url('/assets/AccessRequestBG.svg')" }}>
         {/* --------------------------------- HEADER --------------------------------- */}
-        <h1 className="font-titilliumWeb-bold text-white text-4xl mt-20" style={{ zIndex: 1 }}>
+        <h1 className="font-titilliumWeb-bold text-white text-4xl mt-21" style={{ zIndex: 1 }}>
           Before We Begin:
         </h1>
         {/* --------------------------------- DISCLAIMER BOX --------------------------------- */}
-        <div className="flex flex-col w-2/5 max-h-4/6 bg-gradient-to-b from-nexus100 from-10% to-white to-90% rounded-xl mt-2 p-6" style={{ zIndex: 2 }}>
+        <div className="flex flex-col w-2/5 scale-90 bg-gradient-to-b from-nexus100 from-10% to-white to-90% rounded-xl p-6" style={{ zIndex: 2 }}>
           <div className="items-center justify-center flex flex-row">
             <img src="/assets/Logo.svg" style={{ scale: isMed ? .6 : 1, marginInline: isMed ? -12 : 24 }} />
             <img src="/assets/UTDLogo.svg" style={{ scale: isMed ? .6 : 1, marginInline: isMed ? -12 : 24 }} />
@@ -54,7 +54,7 @@ function AccessRequest() {
               style={{ width: isMed ? '45%' : '33.3333%' }}>
               Skip
             </Link>
-            <Link to="/LoginWithNetID" className="text-white bg-nexus500 py-3 text-xl font-titilliumWeb-bold rounded-lg mt-8 flex flex-row 
+            <Link to="/accessrequestcontinue" className="text-white bg-nexus500 py-3 text-xl font-titilliumWeb-bold rounded-lg mt-8 flex flex-row 
                         transition duration-300 hover:scale-105 drop-shadow-black items-center justify-center"
               style={{ width: isMed ? '45%' : '33.3333%' }}>
               I Agree

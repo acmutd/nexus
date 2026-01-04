@@ -66,7 +66,7 @@ const Home = () => {
   function handleButtonClick(name) {
     switch(name) {
       case "Discord": 
-        navigate('/courseList')
+        navigate('/discordservers')
         break;
       case "Superdoc":
         navigate("/superdoc")
