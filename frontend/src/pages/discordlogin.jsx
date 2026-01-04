@@ -90,7 +90,8 @@ export default function DiscordLogin() {
         linkingRef.current = false;
         navigate('/accessrequest');
       } else {
-        setError(msg.error || 'Discord link failed.');
+        // Show error as popup alert
+        alert(msg.error || 'Discord link failed.');
         setLinking(false);
         linkingRef.current = false;
       }
