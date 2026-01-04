@@ -91,9 +91,13 @@ export default function EmailVerification() {
         return;
       }
 
+      const token = await user.getIdToken();
       const res = await fetch(`${API_BASE}/api/email/send-verification`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({ 
           email: user.email,
           userId: user.uid 
@@ -140,9 +144,13 @@ export default function EmailVerification() {
       }
 
       // Verify the code with backend
+      const token = await user.getIdToken();
       const res = await fetch(`${API_BASE}/api/email/verify-code`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({ 
           userId: user.uid,
           code: verificationCode.trim()

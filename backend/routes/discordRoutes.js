@@ -165,7 +165,7 @@ router.get('/auth', (req, res) => {
     client_id: DISCORD_CLIENT_ID,
     redirect_uri: 'http://localhost:3000/api/discord/callback',
     response_type: 'code',
-    scope: 'identify', // request only what we need; add 'email' if you truly need it
+    scope: 'identify', // request only what we need; add 'email' if truly need it
     state: uid
   });
 
@@ -203,6 +203,30 @@ router.get('/callback', async (req, res) => {
     console.log('Discord user:', d);
 
     const avatarUrl = discordAvatarUrl(d.id, d.avatar);
+
+    // Check if this Discord account is already linked to a different user
+    const existingDiscordQuery = await admin.firestore()
+      .collection('users')
+      .where('discord.id', '==', d.id)
+      .get();
+
+    if (!existingDiscordQuery.empty) {
+      const existingUserId = existingDiscordQuery.docs[0].id;
+      if (existingUserId !== uid) {
+        console.log(`Discord ID ${d.id} is already linked to user ${existingUserId}`);
+        return res.status(409).send(`
+          <script>
+            try {
+              window.opener && window.opener.postMessage({
+                type: 'DISCORD_AUTH_ERROR',
+                error: 'This Discord account is already linked to another Nexus account'
+              }, '*');
+            } catch (e) {}
+            window.close();
+          </script>
+        `);
+      }
+    }
 
     const userRef = admin.firestore().collection('users').doc(uid);
     await userRef.set({

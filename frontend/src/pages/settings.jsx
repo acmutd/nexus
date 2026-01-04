@@ -274,9 +274,13 @@ function Settings() {
 
     try {
       setActionBusy(true);
+      const token = await user.getIdToken();
       const res = await fetch(`${API_BASE}/api/discord/unlink`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ uid: user.uid })
       });
       if (!res.ok) {
