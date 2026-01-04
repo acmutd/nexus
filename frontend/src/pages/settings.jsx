@@ -148,7 +148,8 @@ function Settings() {
         // Refresh Firestore user doc to get username and set linked state
         if (user?.uid) await refreshUserFirestore(user.uid);
       } else {
-        setError(msg.error || 'Discord link failed.');
+        // Show error as popup alert
+        alert(msg.error || 'Discord link failed.');
         setOkMsg('');
         linkingRef.current = false;
       }
