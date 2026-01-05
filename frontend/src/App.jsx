@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import 'simplebar-react/dist/simplebar.min.css';
 import LandingPage from "./pages/landingpage"
-import AccessRequest from './pages/AccessRequest';
+import AccessRequest from './pages/accessrequest';
 //import CourseEntry from './pages/courseEntry';
 import DiscordLogin from './pages/discordlogin';
 import Navbar from "./components/Navbar"
@@ -10,14 +10,13 @@ import LoginWithNetID from "./pages/LoginWithNetID";
 import Signup from './pages/Signup';
 import GradeCalculator from './pages/GradeCalculator';
 import GradeHistory from './pages/GradeHistory';
-import SuperDoc from './pages/SuperDoc';
+import SuperDoc from './pages/superdoc';
 import SuperDocUpload from './pages/SuperDocUpload';
 import Settings from './pages/settings';
 import DiscordServers from './pages/DiscordServers';
 import Home from './pages/Home';
 import CourseEntry from './pages/courseEntryWithTranscript';
 import AccessRequestContinue from './pages/AccessRequestContinue';
-
 
 function App() {
 
