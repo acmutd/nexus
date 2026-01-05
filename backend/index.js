@@ -6,7 +6,7 @@ require("dotenv").config();
 
 const discordRoutes = require("./routes/discordRoutes");
 const authRoutes = require("./routes/authRoutes");
-const scraperRoutes = require("./routes/scraperRoutes");   // <-- NEW
+const scraperRoutes = require("./routes/scraperRoutes");
 const gradesRoutes = require("./routes/gradesRoute");
 const transcriptRoutes = require("./routes/transcriptRoutes");
 
@@ -42,7 +42,7 @@ app.get('/api/firebase-config', (req, res) => {
 app.use("/api/discord", discordRoutes);
 
 app.use("/api/auth", authRoutes);
-app.use("/api/scraper", scraperRoutes);   // <-- NEW
+app.use("/api/scraper", scraperRoutes);
 app.use("/api/grades", gradesRoutes); 
 app.use('/api', transcriptRoutes);
 
