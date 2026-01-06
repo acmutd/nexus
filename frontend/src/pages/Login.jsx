@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { initializeApp, getApps, getApp } from "firebase/app";
 import {
   getAuth,
@@ -39,6 +39,21 @@ const Login = () => {
   const [forgotError, setForgotError] = useState("");
   const [forgotSuccess, setForgotSuccess] = useState("");
   const [forgotLoading, setForgotLoading] = useState(false);
+
+  const location = useLocation();
+
+  // Popup animation state: retrigger on every navigation to this route
+  const popupRef = React.useRef(null);
+  const [popupVisible, setPopupVisible] = useState(false);
+  useEffect(() => {
+    setPopupVisible(false);
+    const t = setTimeout(() => {
+      // Force reflow so transition runs reliably
+      if (popupRef.current) popupRef.current.offsetHeight;
+      setPopupVisible(true);
+    }, 60);
+    return () => clearTimeout(t);
+  }, [location.pathname, location.key]);
 
   useEffect(() => {
     let unsub = () => {};
@@ -110,7 +125,7 @@ const Login = () => {
     setForgotLoading(true);
       try {
         await sendPasswordResetEmail(auth, forgotEmail.trim());
-        setForgotSuccess("If an account exists for this email, a password reset link has been sent.");
+        setForgotSuccess("If an account exists for this email, a password reset link has been sent to your spam/inbox.");
     } catch (e) {
       setForgotError(e?.message?.replace("Firebase: ", "") || "Failed to send email.");
     } finally {
@@ -125,7 +140,11 @@ const Login = () => {
       className="flex flex-col items-center justify-center min-h-screen bg-blue-950 font-titilliumWeb-regular bg-no-repeat bg-cover bg-center"
       style={{ backgroundImage: "url('/assets/LoginBG.svg')" }}
     >
-      <div className="bg-blue-200 rounded-lg shadow-lg p-8 w-full max-w-md overflow-hidden relative">
+      <div
+        ref={popupRef}
+        className={`bg-blue-200 rounded-lg shadow-lg p-8 w-full max-w-md overflow-hidden relative transition-all duration-500 transform
+          ${popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
+      >
         <div className={`transition-all duration-500 ${showForgot ? "opacity-0 pointer-events-none -translate-x-full absolute" : "opacity-100"}`}>
           <h2 className="text-2xl mb-1 text-gray-800 font-titilliumWeb-bold">Login to Nexus</h2>
           <p className="text-blue-900 mb-6 text-base font-titilliumWeb-bold">Enter your email below to login</p>

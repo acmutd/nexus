@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
@@ -23,6 +23,21 @@ export default function Signup() {
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
   const [error, setError] = useState("");
+
+  const location = useLocation();
+
+  // Popup animation state: retrigger on every navigation to this route
+  const popupRef = React.useRef(null);
+  const [popupVisible, setPopupVisible] = useState(false);
+  useEffect(() => {
+    setPopupVisible(false);
+    const t = setTimeout(() => {
+      // Force reflow so transition runs reliably
+      if (popupRef.current) popupRef.current.offsetHeight;
+      setPopupVisible(true);
+    }, 60);
+    return () => clearTimeout(t);
+  }, [location.pathname, location.key]);
 
 
   useEffect(() => {
@@ -143,7 +158,11 @@ export default function Signup() {
         backgroundPosition: 'center'
       }}
     >
-      <div className="bg-blue-200 rounded-lg shadow-lg p-8 w-full max-w-md">
+      <div
+        ref={popupRef}
+        className={`bg-blue-200 rounded-lg shadow-lg p-8 w-full max-w-md transition-all duration-500 transform
+          ${popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
+      >
         <h2 className="text-2xl mb-1 text-gray-800 font-titilliumWeb-bold">Sign up for Nexus</h2>
         <p className="text-blue-900 mb-6 text-base font-titilliumWeb-bold">Create an account to get started</p>
         
