@@ -4,6 +4,7 @@ import LandingPage from "./pages/landingpage"
 import AccessRequest from './pages/accessrequest';
 //import CourseEntry from './pages/courseEntry';
 import DiscordLogin from './pages/discordlogin';
+import { RequireAuth } from './context/authContext';
 import Navbar from "./components/Navbar"
 import Login from './pages/Login';
 import LoginWithNetID from "./pages/LoginWithNetID";
@@ -29,21 +30,21 @@ function App() {
           <Route path="/" element={
             <LandingPage/>
           }/>
-          <Route path="/accessrequest" element={<AccessRequest />}/>
-          <Route path="/courseentry" element={<CourseEntry />}/>
-          <Route path="/settings" element={<Settings/>} />
-          <Route path="/grade-calculator" element={<GradeCalculator />} />
-          <Route path="/grade-history" element={<GradeHistory />} />
-          <Route path="/grade-history/:courseId" element={<GradeHistory />} />
-          <Route path="/discordlogin" element={<DiscordLogin />}/>
+          <Route path="/accessrequest" element={<RequireAuth><AccessRequest /></RequireAuth>} />
+          <Route path="/courseentry" element={<RequireAuth><CourseEntry /></RequireAuth>} />
+          <Route path="/settings" element={<RequireAuth><Settings/></RequireAuth>} />
+          <Route path="/grade-calculator" element={<RequireAuth><GradeCalculator /></RequireAuth>} />
+          <Route path="/grade-history" element={<RequireAuth><GradeHistory /></RequireAuth>} />
+          <Route path="/grade-history/:courseId" element={<RequireAuth><GradeHistory /></RequireAuth>} />
+          <Route path="/discordlogin" element={<RequireAuth><DiscordLogin /></RequireAuth>} />
           <Route path="/login" element={<Login />}/>
           <Route path="/LoginWithNetID" element={<LoginWithNetID />}/>
           <Route path="/signup" element={<Signup />}/>
-          <Route path="/superdoc" element={<SuperDoc />}/>
-          <Route path="/superdocupload" element={<SuperDocUpload />}/>
-          <Route path="/discordservers" element={<DiscordServers />}/>
-          <Route path="/home" element={<Home />}/>
-          <Route path="/accessrequestcontinue" element={<AccessRequestContinue />}/>
+          <Route path="/superdoc" element={<RequireAuth><SuperDoc /></RequireAuth>} />
+          <Route path="/superdocupload" element={<RequireAuth><SuperDocUpload /></RequireAuth>} />
+          <Route path="/discordservers" element={<RequireAuth><DiscordServers /></RequireAuth>} />
+          <Route path="/home" element={<RequireAuth><Home /></RequireAuth>} />
+          <Route path="/accessrequestcontinue" element={<RequireAuth><AccessRequestContinue /></RequireAuth>} />
           <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
 

@@ -71,7 +71,14 @@ const Login = () => {
           authInstance = getAuth(app);
         }
         setAuth(authInstance);
-        unsub = onAuthStateChanged(authInstance, (u) => u && navigate("/"));
+        unsub = onAuthStateChanged(authInstance, (u) => {
+        if (u) {
+          const stored = sessionStorage.getItem('postAuthRedirect');
+          const dest = location?.state?.from?.pathname || stored || "/home";
+          if (stored) sessionStorage.removeItem('postAuthRedirect');
+          navigate(dest, { replace: true });
+        }
+      });
       } catch (e) {
         console.error("Init error:", e);
         setError(String(e?.message || e));
@@ -97,6 +104,9 @@ const Login = () => {
     setError("");
     if (!auth) return setError("App not initialized.");
     try {
+      // set a session flag so the post-auth listener can redirect newly-signed-up Google users
+      sessionStorage.setItem('postAuthRedirect', '/discordlogin');
+
       const provider = new GoogleAuthProvider();
       const cred = await signInWithPopup(auth, provider);
       const user = cred.user;
@@ -113,6 +123,8 @@ const Login = () => {
         });
       }
     } catch (e) {
+      // clear our flag if login failed so it doesn't persist
+      try { sessionStorage.removeItem('postAuthRedirect'); } catch (err) {}
       setError(e?.message?.replace("Firebase: ", "") || "Google login failed");
     }
   };

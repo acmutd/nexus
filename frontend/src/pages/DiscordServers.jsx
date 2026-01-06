@@ -41,6 +41,29 @@ function DiscordServers() {
                    {title: "School of Management", link: "https://discord.gg/RDwdNrGwse", banner:"url('/assets/DiscordServerAssets/MGTBanner.png')", icon:"/assets/DiscordServerAssets/MGTIcon.png", description: 'Network with prospective talented executives and business analysts right here!', members: 121},
                    {title: "School of Natural Sciences and Mathematics", link: "https://discord.gg/BxfHe9JGwc", banner:"url('/assets/DiscordServerAssets/NSMBanner.png')", icon:"/assets/DiscordServerAssets/NSMIcon.png", description: 'Chip away at complex formulas and equations with other mathematicians and scientists!', members: 167},
   ]
+
+  const [liveCounts, setLiveCounts] = useState({});
+  const [loadingCounts, setLoadingCounts] = useState({});
+
+  useEffect(() => {
+    // For each server, extract invite code and request invite info from backend
+    servers.forEach((s, idx) => {
+      const code = s.link.split('/').pop();
+      if (!code) return;
+
+      setLoadingCounts(prev => ({ ...prev, [idx]: true }));
+
+      fetch(`/api/discord/invite/${encodeURIComponent(code)}`)
+        .then(r => r.ok ? r.json() : Promise.reject(r))
+        .then(data => {
+          setLiveCounts(prev => ({ ...prev, [idx]: data.approximate_member_count }));
+        })
+        .catch(err => {
+          console.warn('Failed to fetch invite data for', code, err);
+        })
+        .finally(() => setLoadingCounts(prev => ({ ...prev, [idx]: false })));
+    });
+  }, []);
   
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center bg-fixed"
@@ -61,7 +84,7 @@ function DiscordServers() {
           <div className="grid grid-cols-2 mt-4 gap-6 w-full h-full items-center justify-center overflow-hidden">
             {servers.map((item, index) => (
               <div className="flex w-full h-full">
-                <ServerCard link={item.link} title={item.title} banner={item.banner} icon={item.icon} description={item.description} members={item.members}/>
+                <ServerCard link={item.link} title={item.title} banner={item.banner} icon={item.icon} description={item.description} members={item.members} liveMembers={liveCounts[index]} loadingMembers={loadingCounts[index]}/>
               </div>
             ))}
           </div>

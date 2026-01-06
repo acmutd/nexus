@@ -330,7 +330,7 @@ const GradeCalculator = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center bg-fixed overflow-x-hidden" 
-             style={{ backgroundImage: "url('/assets/GradeCalcBG.svg')", fontFamily: "titilliumWeb-Regular" }}>
+             style={{ backgroundImage: "url('/assets/GradeCalcBG.svg')", fontFamily: "titilliumWeb-regular" }}>
             <GradeCalculatorSidebar 
                 onToggle={handleSidebarToggle} 
                 onNewCalculation={handleNewCalculation}
