@@ -17,6 +17,7 @@ import DiscordServers from './pages/DiscordServers';
 import Home from './pages/Home';
 import CourseEntry from './pages/courseEntryWithTranscript';
 import AccessRequestContinue from './pages/AccessRequestContinue';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
 
@@ -43,6 +44,7 @@ function App() {
           <Route path="/discordservers" element={<DiscordServers />}/>
           <Route path="/home" element={<Home />}/>
           <Route path="/accessrequestcontinue" element={<AccessRequestContinue />}/>
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
 
       </div>

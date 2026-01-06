@@ -24,7 +24,7 @@ import {
   deleteDoc
 } from 'firebase/firestore';
 
-// Backend base (dev default points to 3000)
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 const API_ORIGIN = (() => {
   try { return new URL(API_BASE).origin; } catch { return 'http://localhost:3000'; }
@@ -511,19 +511,56 @@ function Settings() {
           </div>
         )}
 
-        {/* Security tab (placeholder) */}
+        {/* Security tab with password reset */}
         {isSelected === 2 && (
-          <div className="ml-40 flex bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 w-[30%] h-[60%] z-40 rounded-lg">
+          <div className="ml-40 flex flex-col bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 w-[30%] h-[60%] z-40 rounded-lg p-8 gap-6">
             <AnimatePresence>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <div className="flex p-4">
-                  <h1 className="flex text-nexus100 text-3xl" style={{ fontFamily: 'titilliumWeb-bold' }}>
+                <div className="flex flex-col gap-4">
+                  <h1 className="flex text-nexus100 text-3xl mb-4" style={{ fontFamily: 'titilliumWeb-bold' }}>
                     Security
                   </h1>
+                  {/* Password Reset Section */}
+                  <div className="flex flex-col gap-2 bg-nexus800 rounded-lg p-4">
+                    <label className="text-nexus100 font-semibold mb-2">Reset Password</label>
+                    <input
+                      type="email"
+                      className="bg-nexus900 text-white px-3 py-2 rounded mb-2 border border-nexus700"
+                      placeholder="Enter your email"
+                      value={user?.email || ''}
+                      readOnly
+                    />
+                    <button
+                      className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded font-titilliumWeb-semibold"
+                      disabled={actionBusy || !user?.email}
+                      onClick={async () => {
+                        setError('');
+                        setOkMsg('');
+                        setActionBusy(true);
+                        try {
+                          const authInst = auth || getAuth();
+                          await import('firebase/auth').then(({ sendPasswordResetEmail }) =>
+                            sendPasswordResetEmail(authInst, user.email, {
+                              url: window.location.origin + '/reset-password',
+                              handleCodeInApp: true
+                            })
+                          );
+                          setOkMsg('Password reset email sent! Check your spam/inbox.');
+                        } catch (e) {
+                          setError(e?.message || 'Failed to send reset email.');
+                        }
+                        setActionBusy(false);
+                      }}
+                    >
+                      {actionBusy ? 'Sending…' : 'Request Password Reset'}
+                    </button>
+                    {okMsg && <div className="text-green-400 mt-2">{okMsg}</div>}
+                    {error && <div className="text-red-400 mt-2">{error}</div>}
+                  </div>
                 </div>
               </motion.div>
             </AnimatePresence>
@@ -543,12 +580,12 @@ function Settings() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-blue-200 rounded-lg p-8 w-[450px] shadow-xl"
+            className="bg-nexus800 rounded-lg p-8 w-[450px] shadow-xl border border-nexus700"
           >
-            <h2 className="text-2xl text-gray-800 font-titilliumWeb-bold mb-2">
+            <h2 className="text-2xl text-nexus100 font-titilliumWeb-bold mb-2">
               Delete Account?
             </h2>
-            <p className="text-blue-700 mb-6">
+            <p className="text-nexus100 mb-6">
               This action cannot be undone. Please enter your password twice to confirm.
             </p>
 
@@ -556,7 +593,7 @@ function Settings() {
             <div className="mb-4 relative">
               <label
                 htmlFor="delete_password"
-                className="block text-left text-blue-700 mb-2 font-semibold"
+                className="block text-left text-nexus100 mb-2 font-semibold"
               >
                 Password
               </label>
@@ -564,7 +601,7 @@ function Settings() {
                 id="delete_password"
                 type={deletePwVisible ? "text" : "password"}
                 placeholder="Enter password"
-                className="w-full bg-white text-black px-4 py-2 border border-gray-300 rounded-md focus:outline-none placeholder-gray-400 pr-10"
+                className="w-full bg-nexus900 text-white px-4 py-2 border border-nexus700 rounded-md focus:outline-none placeholder-gray-400 pr-10"
                 value={deletePassword}
                 onChange={(e) => setDeletePassword(e.target.value)}
                 autoComplete="current-password"
@@ -573,7 +610,7 @@ function Settings() {
               <button
                 type="button"
                 onClick={() => setDeletePwVisible((v) => !v)}
-                className="absolute top-13 right-4 -translate-y-1/2 text-gray-600 cursor-pointer"
+                className="absolute top-13 right-4 -translate-y-1/2 text-nexus300 cursor-pointer"
                 aria-label={deletePwVisible ? "Hide password" : "Show password"}
                 disabled={actionBusy}
               >
@@ -585,7 +622,7 @@ function Settings() {
             <div className="mb-4 relative">
               <label
                 htmlFor="delete_password2"
-                className="block text-left text-blue-700 mb-2 font-semibold"
+                className="block text-left text-nexus100 mb-2 font-semibold"
               >
                 Confirm Password
               </label>
@@ -593,7 +630,7 @@ function Settings() {
                 id="delete_password2"
                 type={deletePw2Visible ? "text" : "password"}
                 placeholder="Confirm password"
-                className="w-full bg-white text-black px-4 py-2 border border-gray-300 rounded-md focus:outline-none placeholder-gray-400 pr-10"
+                className="w-full bg-nexus900 text-white px-4 py-2 border border-nexus700 rounded-md focus:outline-none placeholder-gray-400 pr-10"
                 value={deletePassword2}
                 onChange={(e) => setDeletePassword2(e.target.value)}
                 autoComplete="current-password"
@@ -602,7 +639,7 @@ function Settings() {
               <button
                 type="button"
                 onClick={() => setDeletePw2Visible((v) => !v)}
-                className="absolute top-13 right-4 -translate-y-1/2 text-gray-600 cursor-pointer"
+                className="absolute top-13 right-4 -translate-y-1/2 text-nexus300 cursor-pointer"
                 aria-label={deletePw2Visible ? "Hide confirm password" : "Show confirm password"}
                 disabled={actionBusy}
               >
@@ -611,7 +648,7 @@ function Settings() {
             </div>
 
             {deleteError && (
-              <div className="mb-4 text-red-600 text-sm">{deleteError}</div>
+              <div className="mb-4 text-red-400 text-sm">{deleteError}</div>
             )}
 
             <div className="flex gap-3">
@@ -624,14 +661,16 @@ function Settings() {
                   setDeletePwVisible(false);
                   setDeletePw2Visible(false);
                 }}
-                className="flex-1 bg-gray-400 hover:bg-gray-500 text-white py-2 px-4 rounded transition font-titilliumWeb-semibold"
+                className="flex-1 bg-gray-500 text-white py-2 font-titilliumWeb-semibold rounded-lg mt-0 flex flex-row transition duration-300 hover:scale-105 drop-shadow-black items-center justify-center"
+                style={{ width: '100%' }}
                 disabled={actionBusy}
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteAccount}
-                className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded transition font-titilliumWeb-semibold"
+                className="flex-1 bg-red-600 text-white py-2 font-titilliumWeb-semibold rounded-lg mt-0 flex flex-row transition duration-300 hover:scale-105 drop-shadow-black items-center justify-center"
+                style={{ width: '100%' }}
                 disabled={actionBusy}
               >
                 {actionBusy ? 'Deleting...' : 'Delete Account'}
