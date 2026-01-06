@@ -8,10 +8,7 @@ import { useMobile } from '../context/mobileContext';
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import {
   getAuth,
-  onAuthStateChanged,
-  unlink,
-  GoogleAuthProvider,
-  linkWithPopup
+  onAuthStateChanged
 } from 'firebase/auth';
 
 import {

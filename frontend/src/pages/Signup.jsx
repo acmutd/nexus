@@ -2,11 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
-import { FaGoogle } from "react-icons/fa";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 
@@ -109,43 +108,7 @@ export default function Signup() {
   };
 
 
-  const signupWithGoogle = async () => {
-    setError("");
-    if (!auth) {
-      setError("App not initialized yet. Please try again in a moment.");
-      return;
-    }
 
-    try {
-      const provider = new GoogleAuthProvider();
-      const userCred = await signInWithPopup(auth, provider);
-      const user = userCred.user;
-
-      const app = getApps().length ? getApp() : null;
-      const db = app ? getFirestore(app) : getFirestore();
-      const userRef = doc(db, "users", user.uid);
-      const snap = await getDoc(userRef);
-      if (!snap.exists()) {
-        await setDoc(
-          userRef,
-          {
-            uid: user.uid,
-            email: user.email ?? null,
-            servers: [],
-            courses: [],
-            createdAt: new Date().toISOString(),
-          },
-          { merge: true }
-        );
-      }
-
-      navigate("/discordlogin");
-    } catch (e) {
-      console.error("Error with Google signup:", e);
-      const msg = (e?.message || "Google signup failed").replace("Firebase: ", "");
-      setError(msg);
-    }
-  };
 
   if (loading) return <div className="flex items-center justify-center min-h-screen bg-blue-950 text-blue-200 font-titilliumWeb-regular">Loading…</div>;
 
@@ -225,13 +188,7 @@ export default function Signup() {
             Sign Up
           </button>
 
-          <button
-            type="button"
-            onClick={signupWithGoogle}
-            className="w-full bg-white font-titilliumWeb-bold text-blue-900 border border-blue-300 py-2 rounded font-semibold transition flex items-center justify-center hover:bg-blue-100 mb-4"
-          >
-            <FaGoogle className="mr-2" /> Sign up with Google
-          </button>
+
         </form>
 
         <div className="text-center text-sm text-gray-700 font-titilliumWeb-bold">

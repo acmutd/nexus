@@ -5,22 +5,10 @@ import {
   getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-} from "firebase/firestore";
+
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
-import { FaGoogle } from "react-icons/fa";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 
@@ -100,34 +88,7 @@ const Login = () => {
     }
   };
 
-  const loginWithGoogle = async () => {
-    setError("");
-    if (!auth) return setError("App not initialized.");
-    try {
-      // set a session flag so the post-auth listener can redirect newly-signed-up Google users
-      sessionStorage.setItem('postAuthRedirect', '/discordlogin');
 
-      const provider = new GoogleAuthProvider();
-      const cred = await signInWithPopup(auth, provider);
-      const user = cred.user;
-      const db = getFirestore();
-      const ref = doc(db, "users", user.uid);
-      const snap = await getDoc(ref);
-      if (!snap.exists()) {
-        await setDoc(ref, {
-          uid: user.uid,
-          email: user.email ?? null,
-          servers: [],
-          courses: [],
-          createdAt: new Date().toISOString(),
-        });
-      }
-    } catch (e) {
-      // clear our flag if login failed so it doesn't persist
-      try { sessionStorage.removeItem('postAuthRedirect'); } catch (err) {}
-      setError(e?.message?.replace("Firebase: ", "") || "Google login failed");
-    }
-  };
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
@@ -185,17 +146,14 @@ const Login = () => {
               </button>
             </div>
             {error && <div className="text-red-600 mb-4 text-sm font-medium">{error}</div>}
-            <button type="submit" className="w-full font-titilliumWeb-bold bg-nexus600 text-white py-2 rounded transition transform hover:bg-nexus700 mb-3">Login</button>
-            <button type="button" onClick={loginWithGoogle} className="w-full bg-white font-titilliumWeb-bold text-blue-900 border border-blue-300 py-2 rounded transition flex items-center justify-center hover:bg-blue-100 mb-4">
-              <FaGoogle className="mr-2" /> Login with Google
-            </button>
+            <button type="submit" className="w-full font-titilliumWeb-bold bg-nexus600 text-white py-2 rounded transition transform hover:bg-nexus700">Login</button>
           </form>
           
           <div className="text-center text-sm text-gray-700 font-titilliumWeb-bold mt-4">
             Don’t have an account? <Link to="/signup" className="font-bold text-blue-900 hover:underline">Signup here</Link>
           </div>
           
-          <div className="text-center mt-2 font-titilliumWeb-bold">
+          <div className="text-center mt-1 font-titilliumWeb-bold">
             <button type="button" className="text-sm font-bold text-blue-900 hover:underline cursor-pointer" onClick={() => setShowForgot(true)}>Forgot password?</button>
           </div>
         </div>

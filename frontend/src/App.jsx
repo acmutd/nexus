@@ -5,7 +5,7 @@ import AccessRequest from './pages/accessrequest';
 //import CourseEntry from './pages/courseEntry';
 import DiscordLogin from './pages/discordlogin';
 import { RequireAuth } from './context/authContext';
-import Navbar from "./components/Navbar"
+import Navbar from "./components/Navbar";
 import Login from './pages/Login';
 import LoginWithNetID from "./pages/LoginWithNetID";
 import Signup from './pages/Signup';
