@@ -585,10 +585,6 @@ function Settings() {
             <h2 className="text-2xl text-nexus100 font-titilliumWeb-bold mb-2">
               Delete Account?
             </h2>
-            <p className="text-nexus100 mb-3">
-              Note: If you signed up through Google, please reset your password first via the Security tab to delete your account.
-            </p>
-
             <p className="text-nexus100 mb-2">
             This action cannot be undone. Please enter your password twice to confirm.
             </p>
