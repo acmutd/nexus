@@ -181,7 +181,7 @@ function extractTranscriptData(transcriptText) {
 
     // Match course line: "CS 3162PROF RESPONSIBILITY IN CS & SE1.0000.0000.000"
     // Format: [PREFIX] [NUMBER][DESCRIPTION][ATTEMPTED][EARNED][POINTS]
-    const courseMatch = line.match(/^([A-Z]{2,4})\s+(\d{4})(.+?)([\d\.]+)([\d\.]+)(?:([\d\.]+))?$/);
+    const courseMatch = line.match(/^([A-Z]{2,4})\s+(\d[A-Z\d]{3})(.+?)([\d\.]+)([\d\.]+)(?:([\d\.]+))?$/);
     if (courseMatch && currentSection === 'utd_classes' && currentSemester) {
       const courseCode = `${courseMatch[1]} ${courseMatch[2]}`;
       let courseName = courseMatch[3].trim();
@@ -211,9 +211,11 @@ function extractTranscriptData(transcriptText) {
             // If line appears to be a continuation (name-like pattern) and not a new section
             if (additionalLine && 
                 !additionalLine.match(/^[A-Z]{2,4}\s+\d{4}/) && // Not a new course
+                !additionalLine.match(/^[A-Z]{2,4}\s+\d[A-Z\d]{3}/) && // Not a new course w letter
                 !additionalLine.match(/^\d{4}\s+(Fall|Spring|Summer)/) && // Not a semester
                 !additionalLine.startsWith('Instructor:') && // Not a new instructor line
                 !additionalLine.startsWith('Req Designation:') && // Not req designation
+                !additionalLine.startsWith('Course Topic:') && // Not course topic
                 additionalLine.match(/^[A-Z][a-z]+(\s+[A-Z][a-z]+)*$/)) { // Looks like a name
               instructors.push(additionalLine);
               j++;
@@ -225,8 +227,8 @@ function extractTranscriptData(transcriptText) {
         }
         
         // Stop if we hit another course or section
-        if (nextLine.match(/^[A-Z]{2,4}\s+\d{4}/) || 
-            nextLine.match(/^\d{4}\s+(Fall|Spring|Summer)/)) {
+       if (nextLine.match(/^[A-Z]{2,4}\s+\d[A-Z\d]{3}/) || 
+          nextLine.match(/^\d{4}\s+(Fall|Spring|Summer)/)) {
           break;
         }
         
