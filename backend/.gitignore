@@ -5,3 +5,4 @@ dist/
 node_modules
 backend/
 service-account.json
+package-lock.json

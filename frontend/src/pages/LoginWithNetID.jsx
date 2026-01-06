@@ -78,9 +78,13 @@ export default function LoginWithNetID() {
       const data = snap.data() || {};
       const { discordId, servers } = data;
       if (discordId && Array.isArray(servers) && servers.length > 0) {
+        const token = await auth.currentUser.getIdToken();
         const res = await fetch(`${DISCORD_BASE}/discord/allocate`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
           body: JSON.stringify({ discordId, servers, courses }),
         });
         if (!res.ok) {
@@ -109,9 +113,13 @@ export default function LoginWithNetID() {
     setSubmitting(true);
     try {
       // 1) Scrape
+      const token = await auth.currentUser.getIdToken();
       const res = await fetch(`${API_BASE}/api/scraper/query`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({ netid: netId, password: elearnPw }),
       });
       const data = await res.json();

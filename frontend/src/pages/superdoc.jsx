@@ -77,11 +77,12 @@ function SuperDoc() {
   }
     
   return (
-    <div className="min-h-screen max-w-screen overflow-x-hidden justify-center">
-      <div className="fixed inset-0 z-0 bg-gradient-to-b from-nexus700 to-nexus900">
+    <div className="min-h-screen max-w-screen bg-cover bg-center overflow-x-hidden justify-center bg-gradient-to-b from-nexus700 to-nexus900"
+         style={{backgroundImage: "url('/assets/SuperdocBG.svg')"}}>
+      <div className="fixed inset-0 z-0">
 
       </div>
-      <img className="absolute top-17" src='/assets/SuperDocClouds.svg' />
+      <img className="absolute top-25" src='/assets/SuperDocClouds.svg' />
       <motion.div 
           initial={{translateX: 0}} 
           animate={{translateX: isMed ? 400 : 700}}
@@ -90,7 +91,7 @@ function SuperDoc() {
                         type: "spring",
                         bounce: .4
                       }}>
-        <img className="absolute top-15" src='/assets/SuperDocPigeon.svg'/>
+        <img className="absolute top-20 left-10 scale-90" src='/assets/SuperDocPigeon.svg'/>
       </motion.div>
       { /* ------------------------------- DOC SIDE BAR ------------------------------------ */}
       <motion.aside

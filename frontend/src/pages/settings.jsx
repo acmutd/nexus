@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from "framer-motion";
 import { HiCog, HiUserCircle, HiLockClosed } from 'react-icons/hi';
 import { BsChevronRight } from "react-icons/bs";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import {
@@ -9,22 +11,27 @@ import {
   onAuthStateChanged,
   unlink,
   GoogleAuthProvider,
-  linkWithPopup
+  linkWithPopup,
+  deleteUser,
+  EmailAuthProvider,
+  reauthenticateWithCredential
 } from 'firebase/auth';
 
 import {
   getFirestore,
   doc,
-  getDoc
+  getDoc,
+  deleteDoc
 } from 'firebase/firestore';
 
-// Backend base (dev default points to 3000)
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 const API_ORIGIN = (() => {
   try { return new URL(API_BASE).origin; } catch { return 'http://localhost:3000'; }
 })();
 
 function Settings() {
+  const navigate = useNavigate();
   const [isSelected, setSelected] = useState(1); // 1 = Account, 2 = Security
 
   // Firebase handles
@@ -45,6 +52,12 @@ function Settings() {
   const [actionBusy, setActionBusy] = useState(false);
   const [error, setError] = useState('');
   const [okMsg, setOkMsg] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletePassword, setDeletePassword] = useState('');
+  const [deletePassword2, setDeletePassword2] = useState('');
+  const [deletePwVisible, setDeletePwVisible] = useState(false);
+  const [deletePw2Visible, setDeletePw2Visible] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
 
   // Discord popup orchestration
   const popupRef = useRef(null);
@@ -135,7 +148,8 @@ function Settings() {
         // Refresh Firestore user doc to get username and set linked state
         if (user?.uid) await refreshUserFirestore(user.uid);
       } else {
-        setError(msg.error || 'Discord link failed.');
+        // Show error as popup alert
+        alert(msg.error || 'Discord link failed.');
         setOkMsg('');
         linkingRef.current = false;
       }
@@ -260,9 +274,13 @@ function Settings() {
 
     try {
       setActionBusy(true);
+      const token = await user.getIdToken();
       const res = await fetch(`${API_BASE}/api/discord/unlink`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ uid: user.uid })
       });
       if (!res.ok) {
@@ -288,10 +306,59 @@ function Settings() {
     }
   };
 
+  // Delete account (Firestore + Auth)
+  const handleDeleteAccount = async () => {
+    if (!user) {
+      alert('You must be signed in.');
+      return;
+    }
+    
+    setDeleteError('');
+    
+    // Validate password fields
+    if (!deletePassword || !deletePassword2) {
+      setDeleteError('Please enter your password in both fields.');
+      return;
+    }
+    
+    if (deletePassword !== deletePassword2) {
+      setDeleteError('Passwords do not match.');
+      return;
+    }
+
+    try {
+      setActionBusy(true);
+      
+      // Re-authenticate user with their password
+      const credential = EmailAuthProvider.credential(user.email, deletePassword);
+      await reauthenticateWithCredential(user, credential);
+      
+      // Delete Firestore document
+      const db = dbRef.current || getFirestore();
+      const userRef = doc(db, 'users', user.uid);
+      await deleteDoc(userRef);
+      
+      // Delete Firebase Auth user
+      await deleteUser(user);
+      
+      // Navigate to landing page
+      navigate('/');
+    } catch (e) {
+      console.error('Delete account error:', e);
+      const msg = (e?.message || 'Failed to delete account').replace('Firebase: ', '');
+      if (msg.includes('wrong-password') || msg.includes('invalid-credential')) {
+        setDeleteError('Incorrect password. Please try again.');
+      } else {
+        setDeleteError(msg);
+      }
+      setActionBusy(false);
+    }
+  };
+
   if (initLoading) {
     return (
       <div className="bg-gradient-to-b from-nexus900 to-nexus700 min-h-screen flex items-center justify-center">
-        <div className="text-white/80">Loading…</div>
+        <div className="text-white/80">Loading</div>
       </div>
     );
   }
@@ -310,7 +377,7 @@ function Settings() {
   return (
     <div
       className="flex min-h-screen bg-cover max-w-screen bg-gradient-to-b from-nexus700 to-nexus900 relative overflow-hidden"
-      style={{ backgroundImage: "url(/assets/AccountSettingsBackground.svg)" }}
+      style={{ backgroundImage: "url(/assets/AccountSettingsBG.svg)" }}
     >
       {/* Sidebar */}
       <motion.aside
@@ -366,7 +433,7 @@ function Settings() {
       >
         {/* Account tab */}
         {isSelected === 1 && (
-          <div className="ml-40 flex bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 w-[30%] h-[60%] z-40 rounded-lg">
+          <div className="ml-40 flex bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 w-[30%] h-fit z-40 rounded-lg">
             <AnimatePresence>
               <motion.div
                 className="w-full flex"
@@ -374,8 +441,8 @@ function Settings() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <div className="flex w-full p-4 flex-col">
-                  <h1 className="flex text-nexus100 text-3xl" style={{ fontFamily: 'titilliumWeb-bold' }}>
+                <div className="flex w-full p-6 flex-col">
+                  <h1 className="flex text-nexus100 headingText" style={{ fontFamily: 'titilliumWeb-bold' }}>
                     Account Settings
                   </h1>
 
@@ -394,7 +461,7 @@ function Settings() {
                     <BsChevronRight className="flex items-center justify-center" size={30} color="#CCE0FF" />
                   </div>
 
-                  {/* Discord Link/Unlink — username inline when linked */}
+                  {/* Discord Link/Unlink  username inline when linked */}
                   <div
                     className={`flex w-full h-12 bg-nexus700 mt-4 rounded-md items-center shadow-2xl ${actionBusy ? '' : 'hover:bg-nexus500'}`}
                     style={{ cursor: 'pointer' }}
@@ -419,25 +486,81 @@ function Settings() {
                       {okMsg}
                     </div>
                   )}
+
+                  {/* Delete Account Button */}
+                  <div className="mt-8 pt-6 border-t border-gray-600">
+                    <h2 className="text-nexus100 bodyText" style={{ fontFamily: 'titilliumWeb-bold' }}>
+                      Account Deletion
+                    </h2>
+                    <span className="text-gray-400 font-titilliumWeb-regular tinyText">
+                      Permanently delete your account and all associated data.
+                    </span>
+                    <button
+                      className="cursor-pointer mt-3 w-full h-12 bg-red-600 rounded-md items-center shadow-2xl hover:bg-red-700 transition flex justify-center"
+                      onClick={() => setShowDeleteModal(true)}
+                      disabled={actionBusy}
+                    >
+                      <h1 className="text-white font-titilliumWeb-semibold">
+                        Delete Account
+                      </h1>
+                    </button>
+                  </div>
                 </div>
               </motion.div>
             </AnimatePresence>
           </div>
         )}
 
-        {/* Security tab (placeholder) */}
+        {/* Security tab with password reset */}
         {isSelected === 2 && (
-          <div className="ml-40 flex bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 w-[30%] h-[60%] z-40 rounded-lg">
+          <div className="ml-40 flex flex-col bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 w-[30%] h-[60%] z-40 rounded-lg p-8 gap-6">
             <AnimatePresence>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <div className="flex p-4">
-                  <h1 className="flex text-nexus100 text-3xl" style={{ fontFamily: 'titilliumWeb-bold' }}>
+                <div className="flex flex-col gap-4">
+                  <h1 className="flex text-nexus100 text-3xl mb-4" style={{ fontFamily: 'titilliumWeb-bold' }}>
                     Security
                   </h1>
+                  {/* Password Reset Section */}
+                  <div className="flex flex-col gap-2 bg-nexus800 rounded-lg p-4">
+                    <label className="text-nexus100 font-semibold mb-2">Reset Password</label>
+                    <input
+                      type="email"
+                      className="bg-nexus900 text-white px-3 py-2 rounded mb-2 border border-nexus700"
+                      placeholder="Enter your email"
+                      value={user?.email || ''}
+                      readOnly
+                    />
+                    <button
+                      className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded font-titilliumWeb-semibold"
+                      disabled={actionBusy || !user?.email}
+                      onClick={async () => {
+                        setError('');
+                        setOkMsg('');
+                        setActionBusy(true);
+                        try {
+                          const authInst = auth || getAuth();
+                          await import('firebase/auth').then(({ sendPasswordResetEmail }) =>
+                            sendPasswordResetEmail(authInst, user.email, {
+                              url: window.location.origin + '/reset-password',
+                              handleCodeInApp: true
+                            })
+                          );
+                          setOkMsg('Password reset email sent! Check your spam/inbox.');
+                        } catch (e) {
+                          setError(e?.message || 'Failed to send reset email.');
+                        }
+                        setActionBusy(false);
+                      }}
+                    >
+                      {actionBusy ? 'Sending…' : 'Request Password Reset'}
+                    </button>
+                    {okMsg && <div className="text-green-400 mt-2">{okMsg}</div>}
+                    {error && <div className="text-red-400 mt-2">{error}</div>}
+                  </div>
                 </div>
               </motion.div>
             </AnimatePresence>
@@ -446,10 +569,116 @@ function Settings() {
 
         <iframe
           src="/assets/Windmill.html"
-          className="fixed h-200 w-150 -right-40 top-40 z-10 scale-110"
+          className="absolute h-200 w-150 -right-40 top-40 z-10 scale-110"
           title="decorative-windmill"
         />
       </motion.h1>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (                                                                               
+        <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(0, 13, 33, .9)' }}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-nexus800 rounded-lg p-8 w-[450px] shadow-xl border border-nexus700"
+          >
+            <h2 className="text-2xl text-nexus100 font-titilliumWeb-bold mb-2">
+              Delete Account?
+            </h2>
+            <p className="text-nexus100 mb-2">
+            This action cannot be undone. Please enter your password twice to confirm.
+            </p>
+
+            {/* Password Field */}
+            <div className="mb-4 relative">
+              <label
+                htmlFor="delete_password"
+                className="block text-left text-nexus100 mb-2 font-semibold"
+              >
+                Password
+              </label>
+              <input
+                id="delete_password"
+                type={deletePwVisible ? "text" : "password"}
+                placeholder="Enter password"
+                className="w-full bg-nexus900 text-white px-4 py-2 border border-nexus700 rounded-md focus:outline-none placeholder-gray-400 pr-10"
+                value={deletePassword}
+                onChange={(e) => setDeletePassword(e.target.value)}
+                autoComplete="current-password"
+                disabled={actionBusy}
+              />
+              <button
+                type="button"
+                onClick={() => setDeletePwVisible((v) => !v)}
+                className="absolute top-13 right-4 -translate-y-1/2 text-nexus300 cursor-pointer"
+                aria-label={deletePwVisible ? "Hide password" : "Show password"}
+                disabled={actionBusy}
+              >
+                {deletePwVisible ? <IoMdEye /> : <IoMdEyeOff />}
+              </button>
+            </div>
+
+            {/* Confirm Password Field */}
+            <div className="mb-4 relative">
+              <label
+                htmlFor="delete_password2"
+                className="block text-left text-nexus100 mb-2 font-semibold"
+              >
+                Confirm Password
+              </label>
+              <input
+                id="delete_password2"
+                type={deletePw2Visible ? "text" : "password"}
+                placeholder="Confirm password"
+                className="w-full bg-nexus900 text-white px-4 py-2 border border-nexus700 rounded-md focus:outline-none placeholder-gray-400 pr-10"
+                value={deletePassword2}
+                onChange={(e) => setDeletePassword2(e.target.value)}
+                autoComplete="current-password"
+                disabled={actionBusy}
+              />
+              <button
+                type="button"
+                onClick={() => setDeletePw2Visible((v) => !v)}
+                className="absolute top-13 right-4 -translate-y-1/2 text-nexus300 cursor-pointer"
+                aria-label={deletePw2Visible ? "Hide confirm password" : "Show confirm password"}
+                disabled={actionBusy}
+              >
+                {deletePw2Visible ? <IoMdEye /> : <IoMdEyeOff />}
+              </button>
+            </div>
+
+            {deleteError && (
+              <div className="mb-4 text-red-400 text-sm">{deleteError}</div>
+            )}
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setDeletePassword('');
+                  setDeletePassword2('');
+                  setDeleteError('');
+                  setDeletePwVisible(false);
+                  setDeletePw2Visible(false);
+                }}
+                className="flex-1 bg-gray-500 text-white py-2 font-titilliumWeb-semibold rounded-lg mt-0 flex flex-row transition duration-300 hover:scale-105 drop-shadow-black items-center justify-center"
+                style={{ width: '100%' }}
+                disabled={actionBusy}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                className="flex-1 bg-red-600 text-white py-2 font-titilliumWeb-semibold rounded-lg mt-0 flex flex-row transition duration-300 hover:scale-105 drop-shadow-black items-center justify-center"
+                style={{ width: '100%' }}
+                disabled={actionBusy}
+              >
+                {actionBusy ? 'Deleting...' : 'Delete Account'}
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,11 +1,5 @@
 @import "tailwindcss";
 
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
 
 .logo {
   height: 6em;
@@ -18,6 +12,21 @@
 }
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+.tinyText {
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
+}
+.bodyText {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  line-height: 1.15; 
+}
+.headingText {
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  line-height: 1.15; 
+}
+.titleText {
+  font-size: clamp(2.2rem, 3vw, 3rem);
 }
 
 @keyframes logo-spin {

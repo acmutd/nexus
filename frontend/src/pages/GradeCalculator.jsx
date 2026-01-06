@@ -330,7 +330,7 @@ const GradeCalculator = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center bg-fixed overflow-x-hidden" 
-             style={{ backgroundImage: "url('/assets/GradeCalcBG.svg')", fontFamily: "titilliumWeb-Regular" }}>
+             style={{ backgroundImage: "url('/assets/GradeCalcBG.svg')", fontFamily: "titilliumWeb-regular" }}>
             <GradeCalculatorSidebar 
                 onToggle={handleSidebarToggle} 
                 onNewCalculation={handleNewCalculation}
@@ -486,11 +486,11 @@ const GradeCalculator = () => {
                             transition={{ duration: 0.5, delay: 1.5 }}
                         >
                             <div className="flex flex-row justify-center items-center gap-8">
-                                <h1 className="text-xl text-nexus200"><strong>Current Grade: </strong> {overallGrade}%</h1>
-                                <h1 className="text-xl text-nexus200"><strong>Remaining Assignment Weight:</strong> {remainingWeight}%</h1>
+                                <h1 className="text-xl text-nexus50"><strong>Current Grade: </strong> {overallGrade}%</h1>
+                                <h1 className="text-xl text-nexus50"><strong>Remaining Assignment Weight:</strong> {remainingWeight}%</h1>
                             </div>
                             <div className="flex flex-col items-center">
-                                <h1 className="text-3xl text-nexus200"><strong>Desired Class Grade:</strong></h1>
+                                <h1 className="text-3xl text-nexus50"><strong>Desired Class Grade:</strong></h1>
                                 <input
                                     id="classGrade"
                                     className="mt-1 block text-center w-[20%] bg-nexus50 rounded-md border-gray-300 shadow-sm focus:border-nexus300 focus:outline-none focus:ring-nexus200 focus:ring-opacity-50 text-nexus800 p-1"

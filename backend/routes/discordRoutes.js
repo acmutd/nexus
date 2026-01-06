@@ -83,10 +83,17 @@ const getDiscordToken = async (code, retries = 3) => {
 router.post('/unlink', async (req, res) => {
   try {
     const { uid } = req.body;
+    const authHeader = req.headers.authorization;
     console.log(`Unlink request for UID: ${uid}`);
 
     if (!uid) {
       return res.status(400).json({ error: 'Missing UID' });
+    }
+
+    // Extract ID token from Authorization header
+    const idToken = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;
+    if (!idToken) {
+      return res.status(401).json({ error: 'Missing authorization token' });
     }
 
     const userRef = admin.firestore().collection('users').doc(uid);
@@ -112,8 +119,14 @@ router.post('/unlink', async (req, res) => {
     if (discordId) {
       try {
         console.log(`Removing channel access for Discord ID: ${discordId}`);
+        // Forward the ID token to the bot API
         const botResponse = await axios.post(`${DISCORD_BOT_URL}/api/discord/remove-access`, {
           discordId: discordId
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${idToken}`
+          }
         });
         console.log('Bot access removal response:', botResponse.data);
       } catch (botError) {
@@ -165,7 +178,7 @@ router.get('/auth', (req, res) => {
     client_id: DISCORD_CLIENT_ID,
     redirect_uri: 'http://localhost:3000/api/discord/callback',
     response_type: 'code',
-    scope: 'identify', // request only what we need; add 'email' if you truly need it
+    scope: 'identify', // request only what we need; add 'email' if truly need it
     state: uid
   });
 
@@ -204,6 +217,30 @@ router.get('/callback', async (req, res) => {
 
     const avatarUrl = discordAvatarUrl(d.id, d.avatar);
 
+    // Check if this Discord account is already linked to a different user
+    const existingDiscordQuery = await admin.firestore()
+      .collection('users')
+      .where('discord.id', '==', d.id)
+      .get();
+
+    if (!existingDiscordQuery.empty) {
+      const existingUserId = existingDiscordQuery.docs[0].id;
+      if (existingUserId !== uid) {
+        console.log(`Discord ID ${d.id} is already linked to user ${existingUserId}`);
+        return res.status(409).send(`
+          <script>
+            try {
+              window.opener && window.opener.postMessage({
+                type: 'DISCORD_AUTH_ERROR',
+                error: 'This Discord account is already linked to another Nexus account'
+              }, '*');
+            } catch (e) {}
+            window.close();
+          </script>
+        `);
+      }
+    }
+
     const userRef = admin.firestore().collection('users').doc(uid);
     await userRef.set({
       discord: {
@@ -229,14 +266,16 @@ router.get('/callback', async (req, res) => {
       if (userCourses.length > 0) {
         console.log('User has courses, calling bot grant-access API:', userCourses);
         
-        // Call the Discord bot's grant-access endpoint
+        // Call the Discord bot's grant-access endpoint with API key for backend-to-backend auth
         const botResponse = await axios.post(`${DISCORD_BOT_URL}/api/discord/grant-access`, {
           discordId: d.id,
-          courses: userCourses
+          courses: userCourses,
+          uid: uid
         }, {
           timeout: 10000,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-API-Key': process.env.BOT_API_KEY || 'your-shared-secret-key'
           }
         });
         

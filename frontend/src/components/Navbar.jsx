@@ -1,18 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { HiAcademicCap, HiCalculator, HiUserCircle, HiDocumentText } from 'react-icons/hi';
-
-import { getApps, getApp } from 'firebase/app';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { useAuth } from '../context/authContext';
+import { getAuth, signOut } from 'firebase/auth';
+import { getApp } from 'firebase/app';
 
 // import the avatar menu
 import AvatarMenu from './AvatarMenu';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [user, setUser] = useState(null);
-  const [authReady, setAuthReady] = useState(false);
-  const unsubRef = useRef(null);
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,44 +19,6 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Attach Firebase auth listener when the app becomes available
-  useEffect(() => {
-    let cancelled = false;
-
-    const attach = () => {
-      try {
-        if (!getApps().length) return false; // Firebase not initialized yet
-        const auth = getAuth(getApp());
-        unsubRef.current = onAuthStateChanged(auth, (u) => {
-          if (!cancelled) setUser(u);
-        });
-        setAuthReady(true);
-        return true;
-      } catch {
-        return false;
-      }
-    };
-
-    // Try immediately, if not ready, poll briefly
-    if (!attach()) {
-      const t = setInterval(() => {
-        if (attach()) {
-          clearInterval(t);
-        }
-      }, 150);
-
-      return () => {
-        cancelled = true;
-        clearInterval(t);
-        if (unsubRef.current) unsubRef.current();
-      };
-    }
-
-    return () => {
-      cancelled = true;
-      if (unsubRef.current) unsubRef.current();
-    };
-  }, []);
 
   const handleLogout = async () => {
     try {
@@ -108,40 +68,35 @@ const Navbar = () => {
           </button>
 
           <div className="flex space-x-6 items-center">
-            <Link to="/bbauth" className={linkClasses}>
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
-            </Link>
+            <>
+              <Link to="/discordservers" className={linkClasses}>
+                <HiAcademicCap className="mr-1" /> Courses
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
+              </Link>
 
-            <Link to="/courselist" className={linkClasses}>
-              <HiAcademicCap className="mr-1" /> Courses
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
-            </Link>
+              <Link to="/grade-calculator" className={linkClasses}>
+                <HiCalculator className="mr-1" /> Grade Calculator
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
+              </Link>
 
-            <Link to="/grade-calculator" className={linkClasses}>
-              <HiCalculator className="mr-1" /> Grade Calculator
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
-            </Link>
-
-            <button onClick={handleSuperdocClick} className={linkClasses}>
-              <HiDocumentText className="mr-1" /> Superdoc
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
-            </button>
+              <button onClick={handleSuperdocClick} className={linkClasses}>
+                <HiDocumentText className="mr-1" /> Superdoc
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
+              </button>
+            </>
 
             {/* Auth-aware area */}
-            {authReady ? (
-              user ? (
-                // Avatar dropdown 
-                <AvatarMenu
-                  redirectOnLogout="/login"
-                  buttonTone={isScrolled ? 'dark' : 'light'}
-                />
-              ) : (
-                <Link to="/login" className={buttonClasses} aria-label="Login">
-                  <HiUserCircle className="mr-1" /> Login
-                </Link>
-              )
-            ) : (
+            {loading ? (
               <div className="h-10 w-10 rounded-full bg-white/40 animate-pulse" />
+            ) : user ? (
+              <AvatarMenu
+                redirectOnLogout="/login"
+                buttonTone={isScrolled ? 'dark' : 'light'}
+              />
+            ) : (
+              <Link to="/login" className={buttonClasses} aria-label="Login">
+                <HiUserCircle className="mr-1" /> Login
+              </Link>
             )}
           </div>
         </div>
