@@ -12,8 +12,8 @@ router.post("/saveGrades", async (req, res) => {
             return res.status(400).json({ error: "Required fields missing." });
         }
 
-        const docId = `${uid}_${courseId}`;
         const newGradeEntry = {
+            courseId,
             saveTitle,
             categories: categories.map((category) => ({
                 categoryName: category.categoryName,
@@ -33,7 +33,7 @@ router.post("/saveGrades", async (req, res) => {
         };
 
         try {
-            const docRef = db.collection("courseGrades").doc(docId);
+            const docRef = db.collection("courseGrades").doc(uid);
             const doc = await docRef.get();
             
             if (doc.exists) {
@@ -44,7 +44,6 @@ router.post("/saveGrades", async (req, res) => {
             } else {
                 await docRef.set({
                     uid,
-                    courseId,
                     gradeHistories: [newGradeEntry],
                     createdAt: Date.now(),
                     lastUpdated: Date.now()
@@ -74,19 +73,21 @@ router.get("/getGradesByCourse/:uid/:courseId", async (req, res) => {
             return res.status(400).json({ error: "User ID and Course ID are required" });
         }
 
-        const docId = `${uid}_${courseId}`;
-        const doc = await db.collection("courseGrades").doc(docId).get();
+        const doc = await db.collection("courseGrades").doc(uid).get();
         
         if (!doc.exists) {
             return res.status(200).json([]);
         }
         
         const data = doc.data();
-        const gradeHistories = data.gradeHistories || [];
+        const allHistories = data.gradeHistories || [];
         
-        gradeHistories.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        const courseHistories = allHistories.filter(grade => grade.courseId === courseId);
         
-        res.status(200).json(gradeHistories);
+        // Sort by timestamp
+        courseHistories.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        
+        res.status(200).json(courseHistories);
     } catch (error) {
         console.error("Error fetching grades:", error);
         res.status(500).json({ error: error.message });
@@ -101,19 +102,31 @@ router.get("/getUserCourses/:uid", async (req, res) => {
             return res.status(400).json({ error: "User ID is required" });
         }
 
-        const snapshot = await db.collection("courseGrades")
-            .where("uid", "==", uid)
-            .get();
+        const doc = await db.collection("courseGrades").doc(uid).get();
         
-        const courses = [];
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            courses.push({
-                courseId: data.courseId,
-                gradeCount: data.gradeHistories ? data.gradeHistories.length : 0,
-                lastUpdated: data.lastUpdated
-            });
+        if (!doc.exists) {
+            return res.status(200).json([]);
+        }
+        
+        const data = doc.data();
+        const allHistories = data.gradeHistories || [];
+        
+        const coursesMap = {};
+        allHistories.forEach((grade) => {
+            if (!coursesMap[grade.courseId]) {
+                coursesMap[grade.courseId] = {
+                    courseId: grade.courseId,
+                    gradeCount: 0,
+                    lastUpdated: grade.timestamp
+                };
+            }
+            coursesMap[grade.courseId].gradeCount++;
+            if (grade.timestamp > coursesMap[grade.courseId].lastUpdated) {
+                coursesMap[grade.courseId].lastUpdated = grade.timestamp;
+            }
         });
+        
+        const courses = Object.values(coursesMap);
         
         res.status(200).json(courses);
     } catch (error) {
@@ -130,8 +143,7 @@ router.delete("/deleteGrade/:uid/:courseId/:gradeId", async (req, res) => {
             return res.status(400).json({ error: "UID, Course ID, and Grade ID are required" });
         }
 
-        const docId = `${uid}_${courseId}`;
-        const docRef = db.collection("courseGrades").doc(docId);
+        const docRef = db.collection("courseGrades").doc(uid);
         const doc = await docRef.get();
         
         if (!doc.exists) {
