@@ -138,7 +138,6 @@ export default function CourseLinking() {
                   transition duration-300 ease-in-out relative z-10 
                   font-titilliumWeb"
         style={{ height: '100%', width: '100%' }} 
-        onClick={onClick}
       >
         <div className="mb-4 self-start">{icon}</div> 
         <h3 className="font-bold bodyText text-gray-800 mb-2 text-left w-full">{title}</h3> 

@@ -23,7 +23,7 @@ import {
   getDoc,
   deleteDoc
 } from 'firebase/firestore';
-
+import Button from '../components/Button';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 const API_ORIGIN = (() => {
@@ -53,6 +53,7 @@ function Settings() {
   const [error, setError] = useState('');
   const [okMsg, setOkMsg] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showPWResetModal, setShowPWResetModal] = useState(false);
   const [deletePassword, setDeletePassword] = useState('');
   const [deletePassword2, setDeletePassword2] = useState('');
   const [deletePwVisible, setDeletePwVisible] = useState(false);
@@ -157,8 +158,20 @@ function Settings() {
     };
 
     window.addEventListener('message', onMessage);
-    return () => window.removeEventListener('message', onMessage);
+    return () => {window.removeEventListener('message', onMessage)};
   }, [user]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if(popupRef.current && !popupRef.current.contains(event.target)) {
+        setShowDeleteModal(false)
+        setShowPWResetModal(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {document.removeEventListener('mousedown', handleClickOutside)}
+  })
 
   // Helper: Refresh user doc from Firestore
   const refreshUserFirestore = async (uid) => {
@@ -433,7 +446,7 @@ function Settings() {
       >
         {/* Account tab */}
         {isSelected === 1 && (
-          <div className="ml-40 flex bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 w-[30%] h-fit z-40 rounded-lg">
+          <div className="ml-40 flex bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 w-[35%] h-[70%] z-40 rounded-lg">
             <AnimatePresence>
               <motion.div
                 className="w-full flex"
@@ -442,12 +455,11 @@ function Settings() {
                 transition={{ duration: 0.5 }}
               >
                 <div className="flex w-full p-6 flex-col">
-                  <h1 className="flex text-nexus100 headingText" style={{ fontFamily: 'titilliumWeb-bold' }}>
-                    Account Settings
-                  </h1>
-
+                  <h2 className="text-nexus100 bodyText" style={{ fontFamily: 'titilliumWeb-bold' }}>
+                    Account Linking
+                  </h2>
                   {/* Google Link/Unlink */}
-                  <span className=" text-gray-400 font-titilliumWeb-regular my-2">
+                  <span className=" text-gray-400 font-titilliumWeb-regular my-2 tinyText">
                     You'll need to Link a Google Account to be able to contribute to the SuperDoc!
                   </span>
                   <div
@@ -488,22 +500,24 @@ function Settings() {
                   )}
 
                   {/* Delete Account Button */}
-                  <div className="mt-8 pt-6 border-t border-gray-600">
+                  <div className="flex flex-col pt-6">
                     <h2 className="text-nexus100 bodyText" style={{ fontFamily: 'titilliumWeb-bold' }}>
                       Account Deletion
                     </h2>
-                    <span className="text-gray-400 font-titilliumWeb-regular tinyText">
+                    <span className="text-gray-400 font-titilliumWeb-regular tinyText my-2">
                       Permanently delete your account and all associated data.
                     </span>
-                    <button
-                      className="cursor-pointer mt-3 w-full h-12 bg-red-600 rounded-md items-center shadow-2xl hover:bg-red-700 transition flex justify-center"
+                    <div
+                      className={`flex w-full h-12 bg-nexus700 rounded-md items-center shadow-2xl ${actionBusy ? '' : 'hover:bg-nexus500'}`}
+                      style={{ cursor: 'pointer' }}
                       onClick={() => setShowDeleteModal(true)}
                       disabled={actionBusy}
                     >
-                      <h1 className="text-white font-titilliumWeb-semibold">
+                      <h1 className="flex w-full items-center pl-2 text-nexus100">
                         Delete Account
                       </h1>
-                    </button>
+                      <BsChevronRight className="flex items-center justify-center" size={30} color="#CCE0FF" />
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -513,54 +527,31 @@ function Settings() {
 
         {/* Security tab with password reset */}
         {isSelected === 2 && (
-          <div className="ml-40 flex flex-col bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 w-[30%] h-[60%] z-40 rounded-lg p-8 gap-6">
+          <div className="ml-40 flex bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 w-[35%] h-[70%] z-40 rounded-lg">
             <AnimatePresence>
               <motion.div
+                className="w-full flex p-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <div className="flex flex-col gap-4">
-                  <h1 className="flex text-nexus100 text-3xl mb-4" style={{ fontFamily: 'titilliumWeb-bold' }}>
-                    Security
-                  </h1>
-                  {/* Password Reset Section */}
-                  <div className="flex flex-col gap-2 bg-nexus800 rounded-lg p-4">
-                    <label className="text-nexus100 font-semibold mb-2">Reset Password</label>
-                    <input
-                      type="email"
-                      className="bg-nexus900 text-white px-3 py-2 rounded mb-2 border border-nexus700"
-                      placeholder="Enter your email"
-                      value={user?.email || ''}
-                      readOnly
-                    />
-                    <button
-                      className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded font-titilliumWeb-semibold"
-                      disabled={actionBusy || !user?.email}
-                      onClick={async () => {
-                        setError('');
-                        setOkMsg('');
-                        setActionBusy(true);
-                        try {
-                          const authInst = auth || getAuth();
-                          await import('firebase/auth').then(({ sendPasswordResetEmail }) =>
-                            sendPasswordResetEmail(authInst, user.email, {
-                              url: window.location.origin + '/reset-password',
-                              handleCodeInApp: true
-                            })
-                          );
-                          setOkMsg('Password reset email sent! Check your spam/inbox.');
-                        } catch (e) {
-                          setError(e?.message || 'Failed to send reset email.');
-                        }
-                        setActionBusy(false);
-                      }}
-                    >
-                      {actionBusy ? 'Sending…' : 'Request Password Reset'}
-                    </button>
-                    {okMsg && <div className="text-green-400 mt-2">{okMsg}</div>}
-                    {error && <div className="text-red-400 mt-2">{error}</div>}
+                <div className="flex flex-col gap-4 w-full">
+                  <h2 className="text-nexus100 bodyText" style={{ fontFamily: 'titilliumWeb-bold' }}>
+                    Password Reset
+                  </h2>
+                  <div
+                    className={`flex w-full h-12 bg-nexus700 rounded-md items-center shadow-2xl ${actionBusy ? '' : 'hover:bg-nexus500'}`}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => setShowDeleteModal(true)}
+                    disabled={actionBusy}>
+
+                    <h1 className="flex w-full items-center pl-2 text-nexus100">
+                      Reset Password
+                    </h1>
+                    <BsChevronRight className="flex items-center justify-center" size={30} color="#CCE0FF" />
+                  
                   </div>
+
                 </div>
               </motion.div>
             </AnimatePresence>
@@ -574,13 +565,68 @@ function Settings() {
         />
       </motion.h1>
 
+      {/* Reset Password Modal */}
+      {showPWResetModal && (
+      <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(0, 13, 33, .9)'}}>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{opacity: 0, scale: 0.9}}
+          transition={{duration: 0.3}}
+          className="flex flex-col bg-nexus800 rounded-lg p-8 w-[450px] shadow-xl border border-nexus700"
+          ref={popupRef}
+        >
+          <h2 className="text-2xl text-nexus100 font-titilliumWeb-bold my-2">
+            Reset Password
+          </h2>
+          <label className="text-nexus100 font-semibold my-2">Reset Password</label>
+          <input
+            type="email"
+            className="bg-nexus900 text-white px-3 py-2 rounded mb-2 border border-nexus700"
+            placeholder="Enter your email"
+            value={user?.email || ''}
+            readOnly
+          />
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded font-titilliumWeb-semibold my-2"
+            disabled={actionBusy || !user?.email}
+            onClick={async () => {
+              setError('');
+              setOkMsg('');
+              setActionBusy(true);
+              try {
+                const authInst = auth || getAuth();
+                await import('firebase/auth').then(({ sendPasswordResetEmail }) =>
+                  sendPasswordResetEmail(authInst, user.email, {
+                    url: window.location.origin + '/reset-password',
+                    handleCodeInApp: true
+                  })
+                );
+                setOkMsg('Password reset email sent! Check your spam/inbox.');
+              } catch (e) {
+                setError(e?.message || 'Failed to send reset email.');
+              }
+              setActionBusy(false);
+            }}
+          >
+            {actionBusy ? 'Sending…' : 'Request Password Reset'}
+          </button>
+          {okMsg && <div className="text-green-400 mt-2">{okMsg}</div>}
+          {error && <div className="text-red-400 mt-2">{error}</div>}
+        </motion.div>
+      </div>
+      )}
+
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (                                                                               
-        <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(0, 13, 33, .9)' }}>
+        <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(0, 13, 33, .9)'}}>
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
+            exit={{opacity: 0, scale: 0.9}}
+            transition={{duration: 0.3}}
             className="bg-nexus800 rounded-lg p-8 w-[450px] shadow-xl border border-nexus700"
+            ref={popupRef}
           >
             <h2 className="text-2xl text-nexus100 font-titilliumWeb-bold mb-2">
               Delete Account?

@@ -15,11 +15,6 @@ function SuperDoc() {
   const [selectedUnit, setSelectedUnit] = useState('');
 
   /* -------------------------- SIDEBAR STUFF -------------------------------*/
-
-  const handleUploadClick = () => {
-    navigate('/upload');
-  };
-
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
@@ -147,7 +142,7 @@ function SuperDoc() {
           transition={{ duration: 0.3 }}
         >
           <Link
-            to="/upload"
+            to="/superdocupload"
             className="flex items-center justify-center w-full bg-nexus600 text-white py-2 px-4 rounded-md hover:bg-nexus500
                        hover:scale-105 duration-300 transition">
             <HiUpload className="mr-2" size={20}/>
@@ -211,7 +206,7 @@ function SuperDoc() {
             </h1>
             <Link className="flex w-2/5 h-[50px] bg-nexus600 hover:bg-nexus500 mb-10 items-center justify-center rounded-md hover:scale-105 duration-300 transition
                              text-center text-xl font-titilliumWeb-semibold text-nexus50"
-                  to="/upload">
+                  to="/superdocupload">
                 <HiOutlineUpload className="" size={25}/>
                 Upload Document
             </Link>

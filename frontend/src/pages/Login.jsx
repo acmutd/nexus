@@ -119,10 +119,13 @@ const Login = () => {
           ${popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
       >
         <div className={`transition-all duration-500 ${showForgot ? "opacity-0 pointer-events-none -translate-x-full absolute" : "opacity-100"}`}>
-          <h2 className="text-2xl mb-1 text-gray-800 font-titilliumWeb-bold">Login to Nexus</h2>
-          <p className="text-blue-900 mb-6 text-base font-titilliumWeb-bold">Enter your email below to login</p>
+          <h2 className="bodyText mb-1 text-nexus900 font-titilliumWeb-bold">Login to Nexus</h2>
+          <p className="text-nexus700 mb-2 tinyText font-titilliumWeb-bold">Enter your email and password below to login</p>
           <form onSubmit={loginWithEmail}>
-            <div className="mb-4 font-titilliumWeb-bold">
+            <div className="mb-4 font-titilliumWeb-semibold">
+              <h1 className="tinyText font-titilliumWeb-semibold text-nexus700">
+                Email
+              </h1>
               <input
                 type="email"
                 placeholder="Email"
@@ -133,20 +136,25 @@ const Login = () => {
               />
             </div>
             <div className="mb-4 relative font-titilliumWeb-bold">
-              <input
-                type={pwVisible ? "text" : "password"}
-                placeholder="Password"
-                className="w-full px-4 py-2 border border-gray-300 rounded pr-10 focus:outline-none bg-white text-black"
-                value={pw}
-                onChange={(e) => setPw(e.target.value)}
-                required
-              />
-              <button type="button" onClick={() => setPwVisible(!pwVisible)} className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-600">
-                {pwVisible ? <IoMdEye /> : <IoMdEyeOff />}
-              </button>
+              <h1 className="tinyText font-titilliumWeb-semibold text-nexus700">
+                Password
+              </h1>
+              <div className="flex relative items-center">
+                <input
+                  type={pwVisible ? "text" : "password"}
+                  placeholder="Password"
+                  className="w-full px-4 py-2 border border-gray-300 rounded pr-10 focus:outline-none bg-white text-black"
+                  value={pw}
+                  onChange={(e) => setPw(e.target.value)}
+                  required
+                />
+                <button type="button" onClick={() => setPwVisible(!pwVisible)} className="cursor-pointer absolute right-3 text-gray-600">
+                  {pwVisible ? <IoMdEye /> : <IoMdEyeOff />}
+                </button>
+              </div>
             </div>
             {error && <div className="text-red-600 mb-4 text-sm font-medium">{error}</div>}
-            <button type="submit" className="w-full font-titilliumWeb-bold bg-nexus600 text-white py-2 rounded transition transform hover:bg-nexus700">Login</button>
+            <button type="submit" className="w-full cursor-pointer font-titilliumWeb-bold bg-nexus600 text-white py-2 rounded transition transform hover:bg-nexus700">Login</button>
           </form>
           
           <div className="text-center text-sm text-gray-700 font-titilliumWeb-bold mt-4">

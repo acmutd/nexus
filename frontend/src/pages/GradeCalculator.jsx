@@ -330,7 +330,7 @@ const GradeCalculator = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center bg-fixed overflow-x-hidden" 
-             style={{ backgroundImage: "url('/assets/GradeCalcBG.svg')", fontFamily: "titilliumWeb-regular" }}>
+             style={{ backgroundImage: "url('/assets/GradeCalcBG.svg')", fontFamily: "titilliumWeb-semibold" }}>
             <GradeCalculatorSidebar 
                 onToggle={handleSidebarToggle} 
                 onNewCalculation={handleNewCalculation}
@@ -377,7 +377,7 @@ const GradeCalculator = () => {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: -20, transition: { duration: 0.18 } }}
-                                        className={`rounded-[20px] p-6 bg-gradient-to-br from-nexus800 via-nexus900 to-nexus700 border-2 border-nexus400 category relative w-full`}
+                                        className={`rounded-[20px] p-6 bg-gradient-to-br from-nexus800 via-nexus900 to-nexus700 category relative w-full`}
                                     >
                                         {categories.length > 1 && (
                                             <button
@@ -469,7 +469,7 @@ const GradeCalculator = () => {
                                             <button
                                                 type="button"
                                                 onClick={() => addAssignmentRow(categoryIndex)}
-                                                className="mt-4 px-4 py-2 bg-nexus300 text-white text-sm font-semibold rounded-md transition duration-300 hover:bg-nexus400"
+                                                className="mt-4 px-4 py-2 bg-nexus500 text-white text-sm font-semibold rounded-md transition duration-300 hover:bg-nexus600 cursor-pointer"
                                             >
                                                 Add Assignment
                                             </button>
