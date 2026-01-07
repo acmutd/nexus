@@ -176,3 +176,6 @@ cython_debug/
 .pypirc
 backend/service-account.json
 package-lock.json
+
+#scraper
+/scraper/
