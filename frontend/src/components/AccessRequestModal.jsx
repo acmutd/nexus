@@ -13,15 +13,14 @@ export default function AccessRequestModal({ isOpen, onClose, onAgree }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 flex items-center justify-center z-50"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+          className="fixed inset-0 flex items-center justify-center z-50 backdrop-brightness-50"
           onClick={() => onClose && onClose()}
         >
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
-            className="bg-white rounded-xl p-6 w-full max-w-2xl mx-4"
+            className="bg-nexus50 rounded-xl p-6 w-[40%] mx-4"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-col items-center justify-center">
@@ -37,7 +36,7 @@ export default function AccessRequestModal({ isOpen, onClose, onAgree }) {
                 Would like to access your UTD data
               </h2>
 
-              <div className="flex flex-col bg-nexus50 rounded-xl items-center text-center justify-center p-4 mb-6">
+              <div className="flex flex-col bg-white rounded-xl items-center text-center justify-center p-4 mb-6">
                 <h1 className="font-titilliumWeb-bold text-nexus800 text-2xl pt-2">
                   This allows Nexus to:
                 </h1>
@@ -51,13 +50,13 @@ export default function AccessRequestModal({ isOpen, onClose, onAgree }) {
 
               <div className="flex w-full gap-4">
                 <button
-                  className="flex-1 text-white bg-gray-500 py-3 text-lg font-titilliumWeb-bold rounded-lg transition duration-200 hover:bg-gray-600"
+                  className="cursor-pointer flex-1 text-white bg-gray-500 py-3 text-lg font-titilliumWeb-bold rounded-lg transition duration-200 hover:bg-gray-600"
                   onClick={() => onClose && onClose()}
                 >
                   Cancel
                 </button>
                 <button
-                  className="flex-1 text-white bg-nexus500 py-3 text-lg font-titilliumWeb-bold rounded-lg transition duration-200 hover:bg-nexus600"
+                  className="cursor-pointer flex-1 text-white bg-nexus500 py-3 text-lg font-titilliumWeb-bold rounded-lg transition duration-200 hover:bg-nexus600"
                   onClick={() => {
                     if (onAgree) onAgree();
                     if (onClose) onClose();

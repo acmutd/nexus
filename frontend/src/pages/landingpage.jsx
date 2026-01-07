@@ -118,7 +118,7 @@ function LandingPage() {
           </div>
         </div>
         {/* --------------------------------- MEGAPHONE BOX --------------------------------- */}
-        <div className="min-w-[300px] w-[53%] bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row mt-20 relative">
+        <div className="min-w-[300px] w-[53%] bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row mt-20 relative items-center justify-center">
           {!isMobile && <motion.ul whileHover={{rotate: -12, scale: 1.1}} 
                     transition={{type: "spring", visualDuration: .25, bounce: .2}}
                     className="w-full">

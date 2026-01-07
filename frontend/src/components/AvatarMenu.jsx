@@ -95,7 +95,7 @@ export default function AvatarMenu({
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
-        className={`h-10 w-10 rounded-full overflow-hidden flex items-center justify-center ${ringTone} ring-1`}
+        className={`h-10 w-10 rounded-full cursor-pointer overflow-hidden flex items-center justify-center ${ringTone} ring-1`}
       >
         {avatarUrl ? (
           <img src={avatarUrl} alt="Discord avatar" className="h-full w-full object-cover" referrerPolicy="no-referrer"/>
