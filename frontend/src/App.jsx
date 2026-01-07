@@ -1,13 +1,10 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import 'simplebar-react/dist/simplebar.min.css';
 import LandingPage from "./pages/landingpage"
-import AccessRequest from './pages/accessrequest';
-//import CourseEntry from './pages/courseEntry';
 import DiscordLogin from './pages/discordlogin';
 import { RequireAuth } from './context/authContext';
 import Navbar from "./components/Navbar";
 import Login from './pages/Login';
-import LoginWithNetID from "./pages/LoginWithNetID";
 import Signup from './pages/Signup';
 import GradeCalculator from './pages/GradeCalculator';
 import GradeHistory from './pages/GradeHistory';
@@ -16,8 +13,7 @@ import SuperDocUpload from './pages/SuperDocUpload';
 import Settings from './pages/settings';
 import DiscordServers from './pages/DiscordServers';
 import Home from './pages/Home';
-import CourseEntry from './pages/courseEntryWithTranscript';
-import AccessRequestContinue from './pages/AccessRequestContinue';
+import CourseLinking from './pages/CourseLinking';
 import ResetPassword from './pages/ResetPassword';
 
 function App() {
@@ -30,21 +26,19 @@ function App() {
           <Route path="/" element={
             <LandingPage/>
           }/>
-          <Route path="/accessrequest" element={<RequireAuth><AccessRequest /></RequireAuth>} />
-          <Route path="/courseentry" element={<RequireAuth><CourseEntry /></RequireAuth>} />
+
           <Route path="/settings" element={<RequireAuth><Settings/></RequireAuth>} />
           <Route path="/grade-calculator" element={<RequireAuth><GradeCalculator /></RequireAuth>} />
           <Route path="/grade-history" element={<RequireAuth><GradeHistory /></RequireAuth>} />
           <Route path="/grade-history/:courseId" element={<RequireAuth><GradeHistory /></RequireAuth>} />
           <Route path="/discordlogin" element={<RequireAuth><DiscordLogin /></RequireAuth>} />
           <Route path="/login" element={<Login />}/>
-          <Route path="/LoginWithNetID" element={<LoginWithNetID />}/>
           <Route path="/signup" element={<Signup />}/>
           <Route path="/superdoc" element={<RequireAuth><SuperDoc /></RequireAuth>} />
           <Route path="/superdocupload" element={<RequireAuth><SuperDocUpload /></RequireAuth>} />
           <Route path="/discordservers" element={<RequireAuth><DiscordServers /></RequireAuth>} />
           <Route path="/home" element={<RequireAuth><Home /></RequireAuth>} />
-          <Route path="/accessrequestcontinue" element={<RequireAuth><AccessRequestContinue /></RequireAuth>} />
+          <Route path="/CourseLinking" element={<RequireAuth><CourseLinking /></RequireAuth>} />
           <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
 

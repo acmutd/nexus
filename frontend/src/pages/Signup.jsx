@@ -99,16 +99,13 @@ export default function Signup() {
         { merge: true }
       );
 
-      navigate("/discordlogin");
+      navigate("/CourseLinking");
     } catch (e) {
       console.error("Signup error:", e);
       const msg = (e?.message || "Signup failed").replace("Firebase: ", "");
       setError(msg);
     }
   };
-
-
-
 
   if (loading) return <div className="flex items-center justify-center min-h-screen bg-blue-950 text-blue-200 font-titilliumWeb-regular">Loading…</div>;
 

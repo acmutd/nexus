@@ -88,7 +88,7 @@ export default function DiscordLogin() {
         setOkMsg('Discord linked successfully.');
         setLinking(false);
         linkingRef.current = false;
-        navigate('/accessrequestcontinue');
+        navigate('/CourseLinking');
       } else {
         // Show error as popup alert
         alert(msg.error || 'Discord link failed.');
@@ -216,13 +216,14 @@ export default function DiscordLogin() {
             {/* Skip button */}
             <div className="flex flex-row w-full justify-center items-center mt-4">
               <button
-                onClick={() => navigate('/accessrequestcontinue')}
+                onClick={() => navigate('/CourseLinking')} // Added )} here
                 className="text-white bg-gray-500 py-3 text-xl font-titilliumWeb-bold rounded-lg 
                           transition duration-300 hover:scale-105 drop-shadow-black"
                 style={{ width: isMed ? '90%' : '80%' }}
               >
-                Skip
+                Button Text
               </button>
+                Skip
             </div>
           </div>
 
