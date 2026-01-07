@@ -1,6 +1,9 @@
 # Use official Node.js image
 FROM node:20-slim
 
+# Install AWS Lambda Adapter
+COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:0.8.4 /lambda-adapter /opt/extensions/lambda-adapter
+
 
 # Set environment variables
 ENV NODE_ENV=production
@@ -43,6 +46,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxtst6 \
     lsb-release \
     wget \
+    curl \
+    unzip \
+    libdrm2 \
     xdg-utils \
     && rm -rf /var/lib/apt/lists/*
 
@@ -50,7 +56,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 # Copy package files first for better caching
-COPY package.json package-lock.json ./
+COPY package.json ./
+COPY package-lock.json* ./
 
 # Install Node.js dependencies
 RUN npm install --production

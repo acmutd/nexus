@@ -1,4 +1,0 @@
-1. Send an early response when the wrong password has been inputted 
-2. If a course says that it has multiple instructors, figure out how to extract at least one of those instructors 
-3*. Add proper error handeling and return habits 
-4. Check  for multiple terms(possibly via multithreading-Upcoming Courses, Current-Courses, 2025-Fall Regular)
