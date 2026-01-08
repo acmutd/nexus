@@ -88,7 +88,7 @@ const Home = () => {
       {/* -------------------------------------- CONTENT -------------------------------------------*/}
       <motion.div className="flex flex-col w-full h-full items-center justify-center mt-35 mb-15 z-1" initial={{opacity:0, y:20}} animate={{opacity: 1, y:0}} transition={{duration: 0.7}}>
         <h1 className="text-white text-4xl font-bold text-center mb-5">
-          Welcome Back, {' '} <span className="text-blue-400">[STUDENT NAME]</span>!
+          Welcome Back! We're Glad You're Here.
         </h1>
         <div className="bg-gradient-to-b from-nexus800 via-nexus900 to-nexus800 p-12 w-3/5 max-w-5xl flex flex-col items-center overflow-y-auto rounded-2xl">
           <h2 className="text-white text-3xl font-titilliumWeb-semibold mb-6 w-full">
