@@ -126,13 +126,11 @@ export default function CourseLinking() {
   const OptionBox = ({ icon, title, description, details, buttonText, onClick }) => (
     <div
       className="relative"
-      style={{ width: isMed ? "100%" : "45%", minHeight: "300px" }}
     >
       <div
         className={`absolute inset-0 rounded-lg ${shadowAccentColor} shadow-md`}
         style={{ transform: 'translate(6px, 6px)', zIndex: 0 }}
       />
-
       <div
         className="flex flex-col items-start bg-white rounded-lg p-6 border border-gray-200 
                   transition duration-300 ease-in-out relative z-10 
@@ -156,106 +154,31 @@ export default function CourseLinking() {
 
   return (
     <div
-      className="min-h-screen w-full flex flex-col items-center bg-blue-950 bg-cover bg-center pt-16 pb-6"
+      className="min-h-screen w-full flex flex-col items-center bg-blue-950 bg-cover bg-center pt-16 pb-6 "
       style={{
         backgroundImage: isMed
           ? "url('/assets/AccessRequestBGLong.svg')"
           : "url('/assets/AccessRequestBG.svg')",
       }}
     >
+    <AnimatePresence>
+      <AccessRequestModal
+        isOpen={showAccessRequestModal}
+        onClose={() => setShowAccessRequestModal(false)}
+        onAgree={() => {
+          // close access request and open the standalone login modal
+          setShowAccessRequestModal(false);
+          setShowLoginNetIDModal(true);
+        }}/>
 
-    <AccessRequestModal
-      isOpen={showAccessRequestModal}
-      onClose={() => setShowAccessRequestModal(false)}
-      onAgree={() => {
-        // close access request and open the standalone login modal
-        setShowAccessRequestModal(false);
-        setShowLoginNetIDModal(true);
-      }}/>
-
-    <LoginWithNetIDModal
-      isOpen={showLoginNetIDModal}
-      onClose={() => setShowLoginNetIDModal(false)}
-      onSuccess={(courses) => {
-        setParsedCourses(courses || []);
-        setTranscriptSuccess(true);
-        setShowTranscriptModal(true);
-        setShowLoginNetIDModal(false);
-      }}
-    />
-
-      <div className="flex items-center justify-center flex-col scale-90">
-        <h1
-          className="font-titilliumWeb-bold text-white headingText mb-2"
-          style={{ zIndex: 1 }}
-        >
-          Course Linking
-        </h1>
-
-        <div
-          className="flex flex-col bg-blue-100 rounded-xl shadow-2xl p-8"
-          style={{
-            zIndex: 2,
-            width: isMed ? "90%" : "50rem",
-            minHeight: isMed ? "auto" : "28rem",
-          }}
-        >
-          <div className="text-center mb-6">
-            <p className="headingText font-titilliumWeb-bold text-nexus900 mb-2">
-              Nexus Needs Access to your Courses:
-            </p>
-            <p className="bodyText font-titilliumWeb-regular text-nexus800 mb-2">
-              Login Through eLearning and let Nexus' Web Scraper do the Rest.
-            </p>
-            <p className="bodyText font-titilliumWeb-bold text-nexus900 mb-2">
-              OR
-            </p>
-            <p className="bodyText font-titilliumWeb-regular text-nexus800">
-              Upload Your Transcript for Automatic Parsing
-            </p>
-          </div>
-
-
-          <div
-            className={`flex ${isMed ? "flex-col" : "flex-row"} w-full h-full gap-8 justify-center items-stretch`}
-          >
-            <OptionBox
-              icon={
-                <img
-                  src="/assets/loginIcon.svg"
-                  alt="Login"
-                  className="w-10 h-10"
-                />
-              }
-              title="Login via eLearning"
-              description="Allow Nexus to directly access your courses in eLearning via our Web Scraper."
-              details={["Quick Login", "Real-Time Sync"]}
-              buttonText="Click to Login"
-              onClick={() => setShowAccessRequestModal(true)}
-            />
-
-
-            <OptionBox
-              icon={
-                <img
-                  src="/assets/uploadIcon.svg"
-                  alt="Upload"
-                  className="w-10 h-10"
-                />
-              }
-              title="Upload Transcript"
-              description="Directly upload your latest transcript and let Nexus parse your courses."
-              details={["Quick Upload", "No Login"]}
-              buttonText="Click to Upload"
-              onClick={() => setShowTranscriptModal(true)}
-            />
-          </div>
-          <p className="text-nexus900 text-center mt-6" style={{ zIndex: 1 }}>
-            Don't worry, your data is secure and we only access schedule-related info.
-          </p>
-        </div>
-      </div>
-
+      <LoginWithNetIDModal
+        isOpen={showLoginNetIDModal}
+        onClose={() => setShowLoginNetIDModal(false)}
+        onSuccess={(courses) => {
+          setParsedCourses(courses || []);
+          setShowLoginNetIDModal(false);
+        }}
+      />
 
       <TranscriptModal
         isOpen={showTranscriptModal}
@@ -275,8 +198,80 @@ export default function CourseLinking() {
           setTranscriptError('');
         }}
       />
+    </AnimatePresence>
+
+    <div className="flex items-center justify-center flex-col scale-90 mt-4">
+      <h1
+        className="font-titilliumWeb-bold text-white headingText mb-2"
+        style={{ zIndex: 1 }}
+      >
+        Course Linking
+      </h1>
+
+      <div
+        className="flex flex-col bg-blue-100 rounded-xl shadow-2xl p-6"
+        style={{
+          zIndex: 2,
+          width: isMed ? "90%" : "50rem",
+          minHeight: isMed ? "auto" : "28rem",
+        }}
+      >
+        <div className="text-center mb-6">
+          <p className="headingText font-titilliumWeb-bold text-nexus900 mb-2">
+            Nexus Needs Access to your Courses:
+          </p>
+          <p className="bodyText font-titilliumWeb-regular text-nexus800 mb-2">
+            Login Through eLearning and let Nexus' Web Scraper do the Rest.
+          </p>
+          <p className="bodyText font-titilliumWeb-bold text-nexus900 mb-2">
+            OR
+          </p>
+          <p className="bodyText font-titilliumWeb-regular text-nexus800">
+            Upload Your Transcript for Automatic Parsing
+          </p>
+        </div>
 
 
+        <div
+          className={`flex ${isMed ? "flex-col" : "flex-row"} w-full h-full gap-8 justify-center items-stretch`}
+        >
+          <OptionBox
+            icon={
+              <img
+                src="/assets/loginIcon.svg"
+                alt="Login"
+                className="w-10 h-10"
+              />
+            }
+            title="Login via eLearning"
+            description="Allow Nexus to directly access your courses in eLearning via our Web Scraper."
+            details={["Quick Login", "Real-Time Sync"]}
+            buttonText="Click to Login"
+            onClick={() => setShowAccessRequestModal(true)}
+          />
+
+
+          <OptionBox
+            icon={
+              <img
+                src="/assets/uploadIcon.svg"
+                alt="Upload"
+                className="w-10 h-10"
+              />
+            }
+            title="Upload Transcript"
+            description="Directly upload your latest transcript and let Nexus parse your courses."
+            details={["Quick Upload", "No Login"]}
+            buttonText="Click to Upload"
+            onClick={() => setShowTranscriptModal(true)}
+          />
+        </div>
+        <p className="text-nexus900 text-center mt-6" style={{ zIndex: 1 }}>
+          Don't worry, your data is secure and we only access schedule-related info.
+        </p>
+      </div>
     </div>
+
+  </div>
   );
 }

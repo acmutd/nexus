@@ -1,6 +1,7 @@
 import React from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { HiUpload, HiOutlineX } from 'react-icons/hi'
+import Button from './Button';
 
 export default function TranscriptModal({
   isOpen,
@@ -22,7 +23,7 @@ export default function TranscriptModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 flex items-center justify-center z-50"
+          className="fixed inset-0 flex items-center justify-center z-50 "
           style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
           onClick={() => !uploadingTranscript && !transcriptSuccess && onClose && onClose()}
         >
@@ -30,15 +31,17 @@ export default function TranscriptModal({
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto shadow-2xl"
+            className="bg-nexus50 rounded-lg p-8 max-w-2xl w-[35%] mx-4 min-w-[300px] overflow-y-auto shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-800">Upload Transcript</h2>
+            <div className="flex flex-col justify-center items-center mb-4 relative">
+              <img src='assets/uploadIcon.svg' className='w-[10%] min-w-[50px]'/>
+              <h2 className="mt-4 mb-2 headingText font-titilliumWeb-bold text-nexus900">Upload Transcript</h2>
+              <h3 className='tinyText text-center font-titilliumWeb-semibold text-nexus900'> Directly upload your latest transcript and let Nexus parse your courses. </h3>
               {!uploadingTranscript && !transcriptSuccess && (
                 <button
                   onClick={() => onClose && onClose()}
-                  className="text-gray-500 hover:text-gray-700"
+                  className="text-gray-500 hover:text-gray-700 cursor-pointer absolute right-0 top-0"
                 >
                   <HiOutlineX size={24} />
                 </button>
@@ -68,10 +71,10 @@ export default function TranscriptModal({
                 >
                   <HiUpload size={32} className={uploadingTranscript ? 'text-gray-400' : 'text-blue-600'} />
                   <div className="text-center">
-                    <span className={`block font-semibold ${uploadingTranscript ? 'text-gray-400' : 'text-blue-700'}`}>
+                    <span className={`block bodyText font-titilliumWeb-semibold ${uploadingTranscript ? 'text-gray-400' : 'text-blue-700'}`}>
                       {uploadingTranscript ? 'Processing Transcript...' : 'Click to Upload PDF'}
                     </span>
-                    <span className="block text-sm text-gray-500 mt-1">
+                    <span className="block tinyText font-titilliumWeb-regular text-gray-500 mt-1">
                       Max file size: 0.5MB
                     </span>
                   </div>
@@ -84,7 +87,7 @@ export default function TranscriptModal({
                 )}
               </div>
 
-              <div className="text-sm text-gray-600">
+              <div className="tinyText font-titilliumWeb-regular text-gray-600">
                 <p className="mb-2">• Upload your unofficial UTD transcript</p>
                 <p className="mb-2">• PDF format only, max 0.5MB</p>
                 <p>• We'll automatically extract your current semester courses</p>
@@ -118,9 +121,7 @@ export default function TranscriptModal({
                           animate={{ scale: 1, opacity: 1 }}
                           exit={{ scale: 0, opacity: 0 }}
                           transition={{ duration: 0.2 }}
-                          className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full font-semibold 
-                                     border border-blue-300 transition duration-200 hover:scale-105
-                                     flex items-center gap-2"
+                          className="px-3 py-1 w-fit text-sm bg-blue-100 text-blue-800 rounded-full font-semibold border border-blue-300 flex items-center justify-between gap-2"
                         >
                           <span>{course.course_id}</span>
                           <HiOutlineX
@@ -134,31 +135,25 @@ export default function TranscriptModal({
                   )}
                 </div>
                 {parsedCourses.length > 0 && (
-                  <p className="text-sm text-gray-500 text-center mt-3">
+                  <p className="tinyText font-titilliumWeb-regular text-gray-500 text-center mt-3">
                     Click the X to remove any courses you don't want to include
                   </p>
                 )}
               </div>
 
-              <div className="flex gap-4">
-                <button
+              <div className="flex flex-col gap-4">
+                <Button
                   onClick={() => onContinue && onContinue()}
                   disabled={parsedCourses.length === 0}
-                  className={`flex-1 py-3 px-6 font-bold rounded-lg transition duration-200
-                             ${parsedCourses.length === 0 
-                               ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
-                               : 'bg-blue-600 text-white hover:bg-blue-700'
-                             }`}
-                >
-                  Continue to Home {parsedCourses.length > 0 && `(${parsedCourses.length})`}
-                </button>
-                <button
-                  onClick={() => onCancel && onCancel()}
-                  className="py-3 px-6 bg-gray-200 text-gray-700 font-bold rounded-lg 
-                             hover:bg-gray-300 transition duration-200"
-                >
-                  Cancel
-                </button>
+                  text={"Continue"}
+                />
+              <Button
+                onClick={() => {
+                  onCancel && onCancel()
+                }}
+                className={"bg-gray-500"}
+                text={"Cancel"}
+              />
               </div>
             </div>
           </motion.div>

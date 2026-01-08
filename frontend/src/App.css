@@ -16,17 +16,19 @@
 
 .tinyText {
   font-size: clamp(0.8rem, 2vw, 1rem);
+  line-height: 1.15; 
 }
 .bodyText {
-  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-size: clamp(1rem, 2vw, 1.4rem);
   line-height: 1.15; 
 }
 .headingText {
-  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-size: clamp(1.5rem, 3vw, 2rem);
   line-height: 1.15; 
 }
 .titleText {
   font-size: clamp(2.2rem, 3vw, 3rem);
+  line-height: 1.15; 
 }
 
 @keyframes logo-spin {

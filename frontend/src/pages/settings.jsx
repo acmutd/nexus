@@ -542,7 +542,7 @@ function Settings() {
                   <div
                     className={`flex w-full h-12 bg-nexus700 rounded-md items-center shadow-2xl ${actionBusy ? '' : 'hover:bg-nexus500'}`}
                     style={{ cursor: 'pointer' }}
-                    onClick={() => setShowDeleteModal(true)}
+                    onClick={() => setShowPWResetModal(true)}
                     disabled={actionBusy}>
 
                     <h1 className="flex w-full items-center pl-2 text-nexus100">
@@ -566,56 +566,58 @@ function Settings() {
       </motion.h1>
 
       {/* Reset Password Modal */}
-      {showPWResetModal && (
-      <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(0, 13, 33, .9)'}}>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{opacity: 0, scale: 0.9}}
-          transition={{duration: 0.3}}
-          className="flex flex-col bg-nexus800 rounded-lg p-8 w-[450px] shadow-xl border border-nexus700"
-          ref={popupRef}
-        >
-          <h2 className="text-2xl text-nexus100 font-titilliumWeb-bold my-2">
-            Reset Password
-          </h2>
-          <label className="text-nexus100 font-semibold my-2">Reset Password</label>
-          <input
-            type="email"
-            className="bg-nexus900 text-white px-3 py-2 rounded mb-2 border border-nexus700"
-            placeholder="Enter your email"
-            value={user?.email || ''}
-            readOnly
-          />
-          <button
-            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded font-titilliumWeb-semibold my-2"
-            disabled={actionBusy || !user?.email}
-            onClick={async () => {
-              setError('');
-              setOkMsg('');
-              setActionBusy(true);
-              try {
-                const authInst = auth || getAuth();
-                await import('firebase/auth').then(({ sendPasswordResetEmail }) =>
-                  sendPasswordResetEmail(authInst, user.email, {
-                    url: window.location.origin + '/reset-password',
-                    handleCodeInApp: true
-                  })
-                );
-                setOkMsg('Password reset email sent! Check your spam/inbox.');
-              } catch (e) {
-                setError(e?.message || 'Failed to send reset email.');
-              }
-              setActionBusy(false);
-            }}
-          >
-            {actionBusy ? 'Sending…' : 'Request Password Reset'}
-          </button>
-          {okMsg && <div className="text-green-400 mt-2">{okMsg}</div>}
-          {error && <div className="text-red-400 mt-2">{error}</div>}
+      <AnimatePresence>
+        {showPWResetModal && (
+        <motion.div 
+          className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(0, 13, 33, .9)'}}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{opacity: 0, scale: 0.9}}
+              className="flex flex-col bg-nexus800 rounded-lg p-8 w-[450px] shadow-xl border border-nexus700"
+              ref={popupRef}
+            >
+              <h2 className="text-2xl text-nexus100 font-titilliumWeb-bold my-2">
+                Reset Password
+              </h2>
+              <label className="text-nexus100 font-semibold my-2">Reset Password</label>
+              <input
+                type="email"
+                className="bg-nexus900 text-white px-3 py-2 rounded mb-2 border border-nexus700"
+                placeholder="Enter your email"
+                value={user?.email || ''}
+                readOnly
+              />
+              <button
+                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded font-titilliumWeb-semibold my-2"
+                disabled={actionBusy || !user?.email}
+                onClick={async () => {
+                  setError('');
+                  setOkMsg('');
+                  setActionBusy(true);
+                  try {
+                    const authInst = auth || getAuth();
+                    await import('firebase/auth').then(({ sendPasswordResetEmail }) =>
+                      sendPasswordResetEmail(authInst, user.email, {
+                        url: window.location.origin + '/reset-password',
+                        handleCodeInApp: true
+                      })
+                    );
+                    setOkMsg('Password reset email sent! Check your spam/inbox.');
+                  } catch (e) {
+                    setError(e?.message || 'Failed to send reset email.');
+                  }
+                  setActionBusy(false);
+                }}
+              >
+                {actionBusy ? 'Sending…' : 'Request Password Reset'}
+              </button>
+              {okMsg && <div className="text-green-400 mt-2">{okMsg}</div>}
+              {error && <div className="text-red-400 mt-2">{error}</div>}
+            </motion.div>
         </motion.div>
-      </div>
-      )}
+        )}
+      </AnimatePresence>
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (                                                                               
