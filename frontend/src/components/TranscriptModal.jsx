@@ -10,6 +10,7 @@ export default function TranscriptModal({
   onFileChange,
   uploadingTranscript,
   transcriptSuccess,
+  savingTranscript,
   transcriptError,
   parsedCourses,
   onRemoveCourse,
@@ -144,8 +145,8 @@ export default function TranscriptModal({
               <div className="flex flex-col gap-4">
                 <Button
                   onClick={() => onContinue && onContinue()}
-                  disabled={parsedCourses.length === 0}
-                  text={"Continue"}
+                  disabled={parsedCourses.length === 0 || (typeof savingTranscript !== 'undefined' && savingTranscript)}
+                  text={typeof savingTranscript !== 'undefined' && savingTranscript ? "Saving..." : "Continue"}
                 />
               <Button
                 onClick={() => {

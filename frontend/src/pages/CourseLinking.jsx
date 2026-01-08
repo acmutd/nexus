@@ -23,7 +23,9 @@ export default function CourseLinking() {
   const [uploadingTranscript, setUploadingTranscript] = useState(false);
   const [transcriptError, setTranscriptError] = useState('');
   const [transcriptSuccess, setTranscriptSuccess] = useState(false);
+  const [savingTranscript, setSavingTranscript] = useState(false);
   const [parsedCourses, setParsedCourses] = useState([]);
+  const [parsedMeta, setParsedMeta] = useState(null);
 
   // Access Request Modal state
   const [showAccessRequestModal, setShowAccessRequestModal] = useState(false);
@@ -123,6 +125,45 @@ export default function CourseLinking() {
     }
   };
 
+  // Save parsed courses when user clicks "Continue"
+  const handleConfirmAndContinue = async (coursesArg = null, metaArg = null) => {
+    setSavingTranscript(true);
+    setTranscriptError('');
+
+    const coursesToSave = Array.isArray(coursesArg) ? coursesArg : parsedCourses;
+    const metaToSave = metaArg || parsedMeta;
+
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (!user) {
+        setTranscriptError('Please log in first');
+        setSavingTranscript(false);
+        return;
+      }
+
+      const token = await user.getIdToken();
+
+      const response = await fetch(`${API_BASE}/api/confirm-transcript`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: user.uid, token, courses: coursesToSave, meta: metaToSave })
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.error || 'Failed to save transcript');
+
+      // Navigate on success
+      navigate('/home');
+    } catch (error) {
+      console.error('Confirm transcript error:', error);
+      setTranscriptError(error.message || 'Failed to save transcript');
+    } finally {
+      setSavingTranscript(false);
+    }
+  };
+
   const OptionBox = ({ icon, title, description, details, buttonText, onClick }) => (
     <div
       className="relative"
@@ -174,9 +215,14 @@ export default function CourseLinking() {
     <LoginWithNetIDModal
       isOpen={showLoginNetIDModal}
       onClose={() => setShowLoginNetIDModal(false)}
-      onSuccess={(courses) => {
+      onSuccess={(courses, meta) => {
         setParsedCourses(courses || []);
+        setParsedMeta(meta || null);
         setShowLoginNetIDModal(false);
+        // If login modal requested auto-save, save immediately
+        if (meta && meta.autoSave) {
+          handleConfirmAndContinue(courses || [], meta || null);
+        }
       }}
     />
 
@@ -187,10 +233,11 @@ export default function CourseLinking() {
       onFileChange={handleTranscriptUpload}
       uploadingTranscript={uploadingTranscript}
       transcriptSuccess={transcriptSuccess}
+      savingTranscript={savingTranscript}
       transcriptError={transcriptError}
       parsedCourses={parsedCourses}
       onRemoveCourse={handleRemoveCourse}
-      onContinue={() => navigate('/home')}
+      onContinue={handleConfirmAndContinue}
       onCancel={() => {
         setShowTranscriptModal(false);
         setTranscriptSuccess(false);

@@ -136,32 +136,28 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
 
       const raw = data.courses || [];
       const courses = raw.map((c) => {
+        // If backend returned an enriched object, preserve all useful fields
         if (typeof c === 'object' && c?.course_id) {
-          return { course_id: String(c.course_id).toUpperCase() };
+          return {
+            course_id: String(c.course_id).toUpperCase(),
+            course_name: c.course_name || null,
+            credits: typeof c.credits === 'number' ? c.credits : (c.credits ? Number(c.credits) : 0),
+            grade: c.grade || 'In Progress',
+          };
         }
+
+        // If we got a plain string, try to parse it into a course_id as before
         const s = String(c);
         const m = s.match(/^([A-Za-z]{2,4})\s*-?\s*(\d{4})(?:\s*[- ]\s*([A-Za-z][A-Za-z\-']+))?/);
-        if (!m) return { course_id: s.toUpperCase() };
+        if (!m) return { course_id: s.toUpperCase(), course_name: null, credits: 0, grade: 'In Progress' };
         const prefix = m[1].toUpperCase();
         const number = m[2];
         const prof = m[3] ? titleCaseOne(m[3]) : '';
         const code = `${prefix}-${number}`;
-        return { course_id: buildCourseId(code, prof) };
+        return { course_id: buildCourseId(code, prof), course_name: null, credits: 0, grade: 'In Progress' };
       });
 
-      const userDocRef = doc(dbRef.current, 'users', user.uid);
-      await setDoc(
-        userDocRef,
-        {
-          uid: user.uid,
-          email: user.email || null,
-          netId,
-          courses,
-          lastUpdated: new Date().toISOString(),
-        },
-        { merge: true }
-      );
-
+      // Do not persist to Firestore here; let the parent confirm+save on Continue
       setParsedCourses(courses);
       setParsedSuccess(true);
     } catch (e) {
@@ -226,7 +222,8 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
             <div className="flex flex-col w-full gap-4">
               <Button
                 onClick={() => {
-                  if (onSuccess) onSuccess(parsedCourses);
+                  // pass autoSave=true so parent can immediately confirm+save
+                  if (onSuccess) onSuccess(parsedCourses, { netId, autoSave: true });
                   setParsedSuccess(false);
                   setParsedCourses([]);
                   if (onClose) onClose();
