@@ -161,44 +161,43 @@ export default function CourseLinking() {
           : "url('/assets/AccessRequestBG.svg')",
       }}
     >
-    <AnimatePresence>
-      <AccessRequestModal
-        isOpen={showAccessRequestModal}
-        onClose={() => setShowAccessRequestModal(false)}
-        onAgree={() => {
-          // close access request and open the standalone login modal
-          setShowAccessRequestModal(false);
-          setShowLoginNetIDModal(true);
-        }}/>
 
-      <LoginWithNetIDModal
-        isOpen={showLoginNetIDModal}
-        onClose={() => setShowLoginNetIDModal(false)}
-        onSuccess={(courses) => {
-          setParsedCourses(courses || []);
-          setShowLoginNetIDModal(false);
-        }}
-      />
+    <AccessRequestModal
+      isOpen={showAccessRequestModal}
+      onClose={() => setShowAccessRequestModal(false)}
+      onAgree={() => {
+        // close access request and open the standalone login modal
+        setShowAccessRequestModal(false);
+        setShowLoginNetIDModal(true);
+      }}/>
 
-      <TranscriptModal
-        isOpen={showTranscriptModal}
-        onClose={() => setShowTranscriptModal(false)}
-        fileInputRef={fileInputRef}
-        onFileChange={handleTranscriptUpload}
-        uploadingTranscript={uploadingTranscript}
-        transcriptSuccess={transcriptSuccess}
-        transcriptError={transcriptError}
-        parsedCourses={parsedCourses}
-        onRemoveCourse={handleRemoveCourse}
-        onContinue={() => navigate('/home')}
-        onCancel={() => {
-          setShowTranscriptModal(false);
-          setTranscriptSuccess(false);
-          setParsedCourses([]);
-          setTranscriptError('');
-        }}
-      />
-    </AnimatePresence>
+    <LoginWithNetIDModal
+      isOpen={showLoginNetIDModal}
+      onClose={() => setShowLoginNetIDModal(false)}
+      onSuccess={(courses) => {
+        setParsedCourses(courses || []);
+        setShowLoginNetIDModal(false);
+      }}
+    />
+
+    <TranscriptModal
+      isOpen={showTranscriptModal}
+      onClose={() => setShowTranscriptModal(false)}
+      fileInputRef={fileInputRef}
+      onFileChange={handleTranscriptUpload}
+      uploadingTranscript={uploadingTranscript}
+      transcriptSuccess={transcriptSuccess}
+      transcriptError={transcriptError}
+      parsedCourses={parsedCourses}
+      onRemoveCourse={handleRemoveCourse}
+      onContinue={() => navigate('/home')}
+      onCancel={() => {
+        setShowTranscriptModal(false);
+        setTranscriptSuccess(false);
+        setParsedCourses([]);
+        setTranscriptError('');
+      }}
+    />
 
     <div className="flex items-center justify-center flex-col scale-90 mt-4">
       <h1
@@ -230,7 +229,6 @@ export default function CourseLinking() {
             Upload Your Transcript for Automatic Parsing
           </p>
         </div>
-
 
         <div
           className={`flex ${isMed ? "flex-col" : "flex-row"} w-full h-full gap-8 justify-center items-stretch`}
@@ -271,7 +269,6 @@ export default function CourseLinking() {
         </p>
       </div>
     </div>
-
   </div>
   );
 }

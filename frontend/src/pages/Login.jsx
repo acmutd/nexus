@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
+import Button from "../components/Button";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 
@@ -115,35 +116,35 @@ const Login = () => {
     >
       <div
         ref={popupRef}
-        className={`bg-blue-200 rounded-lg shadow-lg p-8 w-full max-w-md overflow-hidden relative transition-all duration-500 transform
+        className={`bg-nexus100 rounded-lg shadow-lg p-8 w-[30%] min-w-[300px] overflow-hidden relative transition-all duration-500 transform
           ${popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
       >
         <div className={`transition-all duration-500 ${showForgot ? "opacity-0 pointer-events-none -translate-x-full absolute" : "opacity-100"}`}>
           <h2 className="bodyText mb-1 text-nexus900 font-titilliumWeb-bold">Login to Nexus</h2>
-          <p className="text-nexus700 mb-2 tinyText font-titilliumWeb-bold">Enter your email and password below to login</p>
+          <p className="text-nexus700 mb-4 tinyText font-titilliumWeb-bold">Enter your email and password below to login</p>
           <form onSubmit={loginWithEmail}>
-            <div className="mb-4 font-titilliumWeb-semibold">
-              <h1 className="tinyText font-titilliumWeb-semibold text-nexus700">
+            <div className="mb-4 font-titilliumWeb-semibold tinyText">
+              <h1 className="tinyText font-titilliumWeb-semibold text-nexus700 mb-2">
                 Email
               </h1>
               <input
                 type="email"
                 placeholder="Email"
-                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none bg-white text-black"
+                className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none bg-white text-black"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
-            <div className="mb-4 relative font-titilliumWeb-bold">
-              <h1 className="tinyText font-titilliumWeb-semibold text-nexus700">
+            <div className="mb-4 relative font-titilliumWeb-semibold">
+              <h1 className="tinyText font-titilliumWeb-semibold text-nexus700 mb-2">
                 Password
               </h1>
-              <div className="flex relative items-center">
+              <div className="flex relative items-center tinyText">
                 <input
                   type={pwVisible ? "text" : "password"}
                   placeholder="Password"
-                  className="w-full px-4 py-2 border border-gray-300 rounded pr-10 focus:outline-none bg-white text-black"
+                  className="w-full px-4 py-3 border border-gray-300 rounded pr-10 focus:outline-none bg-white text-black"
                   value={pw}
                   onChange={(e) => setPw(e.target.value)}
                   required
@@ -153,16 +154,16 @@ const Login = () => {
                 </button>
               </div>
             </div>
-            {error && <div className="text-red-600 mb-4 text-sm font-medium">{error}</div>}
-            <button type="submit" className="w-full cursor-pointer font-titilliumWeb-bold bg-nexus600 text-white py-2 rounded transition transform hover:bg-nexus700">Login</button>
+            {error && <div className="text-red-600 mb-4 tinyText font-medium">{error}</div>}
+            <Button text={"Login"} type="submit"/>
           </form>
           
-          <div className="text-center text-sm text-gray-700 font-titilliumWeb-bold mt-4">
+          <div className="text-center tinyText text-gray-700 font-titilliumWeb-bold mt-4">
             Don’t have an account? <Link to="/signup" className="font-bold text-blue-900 hover:underline">Signup here</Link>
           </div>
           
           <div className="text-center mt-1 font-titilliumWeb-bold">
-            <button type="button" className="text-sm font-bold text-blue-900 hover:underline cursor-pointer" onClick={() => setShowForgot(true)}>Forgot password?</button>
+            <button type="button" className="tinyText font-bold text-blue-900 hover:underline cursor-pointer" onClick={() => setShowForgot(true)}>Forgot password?</button>
           </div>
         </div>
 
@@ -174,19 +175,19 @@ const Login = () => {
               <input
                 type="email"
                 placeholder="email@example.com"
-                className="w-full bg-white text-black px-4 py-2 border border-gray-300 rounded focus:outline-none"
+                className="w-full bg-white text-black px-4 py-3 border border-gray-300 rounded focus:outline-none"
                 value={forgotEmail}
                 onChange={(e) => setForgotEmail(e.target.value)}
                 required
               />
             </div>
-            {forgotError && <div className="mb-3 text-red-600 text-sm font-bold">{forgotError}</div>}
-            {forgotSuccess && <div className="mb-3 text-green-600 text-sm font-titilliumWeb-bold">{forgotSuccess}</div>}
-            <button type="submit" className="w-full bg-nexus600 text-white rounded py-2 transition hover:bg-nexus800 font-titilliumWeb-bold" disabled={forgotLoading}>
+            {forgotError && <div className="mb-3 text-red-600 tinyText font-bold">{forgotError}</div>}
+            {forgotSuccess && <div className="mb-3 text-green-600 tinyText font-titilliumWeb-bold">{forgotSuccess}</div>}
+            <button type="submit" className="w-full bg-nexus600 text-white rounded py-3 transition hover:bg-nexus800 font-titilliumWeb-bold" disabled={forgotLoading}>
               {forgotLoading ? "Sending..." : "Send Reset Email"}
             </button>
             <div className="text-center mt-4 font-titilliumWeb-bold ">
-              <button type="button" className="text-blue-900 hover:underline text-sm font-titilliumWeb-bold cursor-pointer" onClick={() => { setShowForgot(false); setForgotError(""); setForgotSuccess(""); }}>Back to login</button>
+              <button type="button" className="text-blue-900 hover:underline tinyText font-titilliumWeb-bold cursor-pointer" onClick={() => { setShowForgot(false); setForgotError(""); setForgotSuccess(""); }}>Back to login</button>
             </div>
           </form>
         </div>

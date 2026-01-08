@@ -24,7 +24,7 @@ const Button = ({text, icon, onClick, href, className, disabled}) => {
       className={`${className} flex bg-nexus600 w-full h-[40px] rounded-md items-center justify-center 
                  transition duration-300 ${disabled ? "opacity-50" : "hover:scale-105 cursor-pointer"}`}
     >
-      <h1 className='font-titilliumWeb-regular text-white text-lg'>
+      <h1 className='font-titilliumWeb-bold tinyText text-white text-lg'>
         {text}
       </h1>
       {icon}

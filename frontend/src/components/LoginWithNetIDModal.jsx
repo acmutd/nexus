@@ -286,11 +286,13 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
             <form onSubmit={onSubmit}>
               <div className='bg-white p-4 rounded-xl mb-4'>
                 <div className="mb-4">
-                  <label className="block text-left text-blue-700 mb-2 font-semibold">NetID</label>
+                  <h1 className="tinyText font-titilliumWeb-semibold text-nexus700 mb-2">
+                    NetID
+                  </h1> 
                   <input
                     type="text"
                     placeholder="Enter NetID"
-                    className="w-full bg-white px-4 py-2 border placeholder-gray-400 rounded-md focus:outline-none"
+                    className="font-titilliumWeb-semibold w-full px-4 py-3 border border-gray-300 rounded pr-10 focus:outline-none bg-white text-black placeholder-gray-400"
                     value={netId}
                     onChange={(e) => setNetId(e.target.value)}
                     autoComplete="username"
@@ -299,12 +301,14 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
                 </div>
 
                 <div className="mb-4">
-                  <label className="block text-left text-blue-700 mb-2 font-semibold">eLearning Password</label>
+                  <h1 className="tinyText font-titilliumWeb-semibold text-nexus700 mb-2">
+                    eLearning Password
+                  </h1> 
                   <div className="relative flex items-center">
                     <input
                       type={elearnPwVisible ? 'text' : 'password'}
                       placeholder="Enter Password"
-                      className="w-full bg-white px-4 py-2 border placeholder-gray-400 rounded-md focus:outline-none pr-12"
+                      className="font-titilliumWeb-semibold w-full px-4 py-3 border border-gray-300 rounded pr-10 focus:outline-none bg-white text-black placeholder-gray-400"
                       value={elearnPw}
                       onChange={(e) => setElearnPw(e.target.value)}
                       autoComplete="current-password"
