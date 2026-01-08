@@ -264,16 +264,16 @@ export default function CourseLinking() {
       >
         <div className="text-center mb-6">
           <p className="headingText font-titilliumWeb-bold text-nexus900 mb-2">
-            Nexus Needs Access to your Courses:
+            Nexus Needs Access to Your Courses:
           </p>
           <p className="bodyText font-titilliumWeb-regular text-nexus800 mb-2">
-            Login Through eLearning and let Nexus' Web Scraper do the Rest.
+            Login through eLearning and let Nexus' Web Scraper do the rest
           </p>
           <p className="bodyText font-titilliumWeb-bold text-nexus900 mb-2">
             OR
           </p>
           <p className="bodyText font-titilliumWeb-regular text-nexus800">
-            Upload Your Transcript for Automatic Parsing
+            Upload your transcript for automatic parsing
           </p>
         </div>
 
