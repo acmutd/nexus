@@ -6,6 +6,7 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
+import Button from "../components/Button";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 
@@ -120,18 +121,21 @@ export default function Signup() {
     >
       <div
         ref={popupRef}
-        className={`bg-blue-200 rounded-lg shadow-lg p-8 w-full max-w-md transition-all duration-500 transform
+        className={`bg-nexus100 rounded-lg shadow-lg p-8 w-full max-w-md transition-all duration-500 transform mt-15
           ${popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
       >
-        <h2 className="text-2xl mb-1 text-gray-800 font-titilliumWeb-bold">Sign up for Nexus</h2>
-        <p className="text-blue-900 mb-6 text-base font-titilliumWeb-bold">Create an account to get started</p>
+        <h2 className="bodyText mb-1 text-gray-800 font-titilliumWeb-bold">Sign up for Nexus</h2>
+        <p className="text-blue-900 mb-6 tinyText font-titilliumWeb-bold">Create an account to get started</p>
         
         <form onSubmit={onSubmit}>
-          <div className="mb-4 font-titilliumWeb-bold">
+          <div className="mb-4 font-titilliumWeb-semibold tinyText">
+            <h1 className="tinyText font-titilliumWeb-semibold text-nexus700 mb-2">
+              Email
+            </h1>
             <input
               type="email"
               placeholder="Email"
-              className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none bg-white text-black placeholder-gray-400"
+              className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none bg-white text-black placeholder-gray-400"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -139,56 +143,65 @@ export default function Signup() {
           </div>
 
           <div className="mb-4 relative font-titilliumWeb-bold">
-            <input
-              type={pwVisible ? "text" : "password"}
-              placeholder="Password"
-              className="w-full px-4 py-2 border border-gray-300 rounded pr-10 focus:outline-none bg-white text-black placeholder-gray-400"
-              value={pw}
-              onChange={(e) => setPw(e.target.value)}
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setPwVisible(v => !v)}
-              className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-600"
-              tabIndex={-1}
-            >
-              {pwVisible ? <IoMdEye /> : <IoMdEyeOff />}
-            </button>
+            <h1 className="tinyText font-titilliumWeb-semibold text-nexus700 mb-2">
+              Password
+            </h1>            
+            <div className="flex relative tinyText">
+              <input
+                type={pwVisible ? "text" : "password"}
+                placeholder="Password"
+                className="w-full px-4 py-3 border border-gray-300 rounded pr-10 focus:outline-none bg-white text-black placeholder-gray-400"
+                value={pw}
+                onChange={(e) => setPw(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setPwVisible(v => !v)}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-600 cursor-pointer"
+                tabIndex={-1}
+              >
+                {pwVisible ? <IoMdEye /> : <IoMdEyeOff />}
+              </button>
+            </div>      
           </div>
 
           <div className="mb-4 relative font-titilliumWeb-bold">
-            <input
-              type={pw2Visible ? "text" : "password"}
-              placeholder="Confirm Password"
-              className="w-full px-4 py-2 border border-gray-300 rounded pr-10 focus:outline-none bg-white text-black placeholder-gray-400"
-              value={pw2}
-              onChange={(e) => setPw2(e.target.value)}
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setPw2Visible(v => !v)}
-              className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-600"
-              tabIndex={-1}
-            >
-              {pw2Visible ? <IoMdEye /> : <IoMdEyeOff />}
-            </button>
+            <h1 className="tinyText font-titilliumWeb-semibold text-nexus700 mb-2 ">
+              Confirm Password
+            </h1>    
+            <div className="flex relative tinyText">
+              <input
+                type={pw2Visible ? "text" : "password"}
+                placeholder="Confirm Password"
+                className="w-full px-4 py-3 border border-gray-300 rounded pr-10 focus:outline-none bg-white text-black placeholder-gray-400"
+                value={pw2}
+                onChange={(e) => setPw2(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setPw2Visible(v => !v)}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-600 cursor-pointer"
+                tabIndex={-1}
+              >
+                {pw2Visible ? <IoMdEye /> : <IoMdEyeOff />}
+              </button>
+            </div>        
           </div>
 
           {error && <div className="text-red-600 mb-4 text-sm font-medium">{error}</div>}
 
-          <button
+          <Button
             type="submit"
-            className="w-full font-titilliumWeb-bold bg-nexus600 text-white py-2 rounded font-semibold transition transform hover:bg-nexus700 mb-3"
-          >
-            Sign Up
-          </button>
+            className={"mb-2"}
+            text={"Sign Up"}
+          />
 
 
         </form>
 
-        <div className="text-center text-sm text-gray-700 font-titilliumWeb-bold">
+        <div className="text-center tinyText text-gray-700 font-titilliumWeb-bold">
           Already have an account?{" "}
           <Link to="/login" className="font-bold text-blue-900 hover:underline">
             Login here
