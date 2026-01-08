@@ -140,6 +140,13 @@ function choosePrimaryInstructor({ term, prefix, number, transcriptInstructors, 
     console.log('choosePrimaryInstructor called with', meta);
   }
 
+  // If transcript provided only one instructor, return it directly (skip coursebook matching)
+  if (Array.isArray(transcriptInstructors) && transcriptInstructors.length === 1) {
+    const single = String(transcriptInstructors[0] || '').trim();
+    if (shouldLog) console.log(`choosePrimaryInstructor: single transcript instructor provided, returning "${single}" (skipping coursebook matching)`);
+    return single || null;
+  }
+
   const t = (term || '').toLowerCase();
   const p = (prefix || '').toLowerCase();
   const n = String(number || '').trim();
@@ -274,29 +281,36 @@ router.post('/parse-transcript', async (req, res) => {
       });
     }
 
-    try {
-      const userRef = admin.firestore().collection('users').doc(id);
+    // If the client requested immediate save (save=true), write to Firestore now.
+    const shouldSave = req.body.save === true || req.body.save === 'true';
 
-      await userRef.set(
-        {
-          lastTranscriptUpload: new Date().toISOString(),
-          courses: currentSemesterCourses
-        },
-        { merge: true }
-      );
-    } catch (firestoreError) {
-      console.error('Error saving to Firestore:', firestoreError);
-      return res.status(500).json({
-        success: false,
-        error: 'Failed to save transcript data'
-      });
+    if (shouldSave) {
+      try {
+        const userRef = admin.firestore().collection('users').doc(id);
+
+        await userRef.set(
+          {
+            lastTranscriptUpload: new Date().toISOString(),
+            courses: currentSemesterCourses
+          },
+          { merge: true }
+        );
+      } catch (firestoreError) {
+        console.error('Error saving to Firestore:', firestoreError);
+        return res.status(500).json({
+          success: false,
+          error: 'Failed to save transcript data'
+        });
+      }
     }
 
+    // Return parsed data (client can choose to call /confirm-transcript to save later)
     return res.status(200).json({
       success: true,
       message: 'Transcript parsed successfully',
       transcript_data: transcriptData,
-      current_semester_courses: currentSemesterCourses
+      current_semester_courses: currentSemesterCourses,
+      saved: shouldSave
     });
   } catch (error) {
     console.error('Error in /api/parse-transcript:', error);
@@ -503,5 +517,51 @@ function extractCurrentSemesterCourses(transcriptData) {
     };
   });
 }
+
+
+// Endpoint to save previously-parsed courses (call this when user clicks "Continue")
+router.post('/confirm-transcript', async (req, res) => {
+  try {
+    const { id, token, courses, meta } = req.body;
+
+    if (!id || !token || !Array.isArray(courses)) {
+      return res.status(400).json({ success: false, error: 'Missing required fields: id, token, or courses' });
+    }
+
+    let decodedToken;
+    try {
+      decodedToken = await admin.auth().verifyIdToken(token);
+    } catch (error) {
+      console.error('Token verification failed:', error);
+      return res.status(403).json({ success: false, error: 'Invalid or expired authentication token' });
+    }
+
+    if (decodedToken.uid !== id) {
+      return res.status(403).json({ success: false, error: 'Token does not match user ID' });
+    }
+
+    try {
+      const userRef = admin.firestore().collection('users').doc(id);
+      const payload = {
+        lastTranscriptUpload: new Date().toISOString(),
+        courses
+      };
+      // allow optional meta: { netId }
+      if (meta && typeof meta === 'object') {
+        if (meta.netId) payload.netId = meta.netId;
+      }
+
+      await userRef.set(payload, { merge: true });
+    } catch (firestoreError) {
+      console.error('Error saving to Firestore:', firestoreError);
+      return res.status(500).json({ success: false, error: 'Failed to save transcript data' });
+    }
+
+    return res.status(200).json({ success: true, message: 'Transcript saved' });
+  } catch (error) {
+    console.error('Error in /api/confirm-transcript:', error);
+    return res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+});
 
 module.exports = router;
