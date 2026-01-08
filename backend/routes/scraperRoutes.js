@@ -73,9 +73,15 @@ router.post('/query', async (req, res) => {
         if (r && r.title) course_name = String(r.title).trim();
       }
 
+      // Format course_name as ALL CAPS
+      const finalCourseName = course_name ? String(course_name).toUpperCase() : null;
+
+      // Use the raw course_id returned by the scraper/lambda when available (preserve case)
+      const finalCourseId = course_id;
+
       return {
-        course_id: String(course_id).toUpperCase(),
-        course_name: course_name || null,
+        course_id: finalCourseId,
+        course_name: finalCourseName,
         credits: 0,
         grade: 'In Progress',
       };
