@@ -139,7 +139,7 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
         // If backend returned an enriched object, preserve all useful fields
         if (typeof c === 'object' && c?.course_id) {
           return {
-            course_id: String(c.course_id).toUpperCase(),
+            course_id: String(c.course_id),
             course_name: c.course_name || null,
             credits: typeof c.credits === 'number' ? c.credits : (c.credits ? Number(c.credits) : 0),
             grade: c.grade || 'In Progress',
