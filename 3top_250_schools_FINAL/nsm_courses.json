@@ -1,0 +1,5031 @@
+[
+    {
+        "course_number": "1312",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "701"
+        ],
+        "title": "General Chemistry II",
+        "instructors": [
+            "Gregg Dieckmann",
+            "Fadwa Anka",
+            "Stephanie Taylor",
+            "Nimali Abeykoon"
+        ],
+        "class_numbers": [
+            21729
+        ],
+        "enrolled_current": 1262,
+        "enrolled_max": 1350,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2325",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "701"
+        ],
+        "title": "Introductory Organic Chemistry II",
+        "instructors": [
+            "Sergio Cortes",
+            "Daniel Tran",
+            "Jung-Mo Ahn",
+            "Nimanka Panapitiya",
+            "Christina Thompson"
+        ],
+        "class_numbers": [
+            21732
+        ],
+        "enrolled_current": 869,
+        "enrolled_max": 870,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2414",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "701"
+        ],
+        "title": "Integral Calculus",
+        "instructors": [
+            "Kelly Aman"
+        ],
+        "class_numbers": [
+            21934
+        ],
+        "enrolled_current": 758,
+        "enrolled_max": 960,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2418",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "701"
+        ],
+        "title": "Linear Algebra",
+        "instructors": [
+            "Anani Komla Adabrah"
+        ],
+        "class_numbers": [
+            21944
+        ],
+        "enrolled_current": 465,
+        "enrolled_max": 670,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "1325",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "701"
+        ],
+        "title": "Applied Calculus I",
+        "instructors": [
+            "Jigarkumar Patel"
+        ],
+        "class_numbers": [
+            21910
+        ],
+        "enrolled_current": 403,
+        "enrolled_max": 448,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2233",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Introductory Organic Chemistry Laboratory",
+        "instructors": [],
+        "class_numbers": [
+            21809
+        ],
+        "enrolled_current": 394,
+        "enrolled_max": 395,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "1311",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "7w1"
+        ],
+        "title": "General Chemistry I",
+        "instructors": [
+            "Saba Khan",
+            "Amandeep Sra"
+        ],
+        "class_numbers": [
+            21728
+        ],
+        "enrolled_current": 344,
+        "enrolled_max": 420,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2367",
+        "course_prefixes": [
+            "isns"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "The Oceans",
+        "instructors": [
+            "Ignacio Pujana",
+            "William Griffin"
+        ],
+        "class_numbers": [
+            22603
+        ],
+        "enrolled_current": 299,
+        "enrolled_max": 300,
+        "assistants": [],
+        "dept": "nsmtgeos"
+    },
+    {
+        "course_number": "2112",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Introduction to Modern Biology Workshop II",
+        "instructors": [
+            "Michelle Wilson"
+        ],
+        "class_numbers": [
+            22356
+        ],
+        "enrolled_current": 290,
+        "enrolled_max": 280,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2312",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Introduction to Modern Biology II",
+        "instructors": [
+            "Michelle Wilson"
+        ],
+        "class_numbers": [
+            22357
+        ],
+        "enrolled_current": 290,
+        "enrolled_max": 280,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2323",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "701"
+        ],
+        "title": "Introductory Organic Chemistry I",
+        "instructors": [
+            "Jing Ge",
+            "Bruce Novak"
+        ],
+        "class_numbers": [
+            21731
+        ],
+        "enrolled_current": 290,
+        "enrolled_max": 300,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2112",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "502"
+        ],
+        "title": "Introduction to Modern Biology Workshop II",
+        "instructors": [
+            "Ramesh Padmanabhan"
+        ],
+        "class_numbers": [
+            22893
+        ],
+        "enrolled_current": 289,
+        "enrolled_max": 280,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2112",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "503"
+        ],
+        "title": "Introduction to Modern Biology Workshop II",
+        "instructors": [
+            "Simbarashe Mazambani"
+        ],
+        "class_numbers": [
+            23033
+        ],
+        "enrolled_current": 289,
+        "enrolled_max": 280,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2281",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Introductory Biology Laboratory",
+        "instructors": [
+            "Yi Huang",
+            "Anne Davenport",
+            "Elizabeth Pickett",
+            "Narges Salamat",
+            "Matthew Esparza",
+            "Iti Mehta"
+        ],
+        "class_numbers": [
+            22882
+        ],
+        "enrolled_current": 289,
+        "enrolled_max": 290,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2312",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Introduction to Modern Biology II",
+        "instructors": [
+            "Ramesh Padmanabhan"
+        ],
+        "class_numbers": [
+            22358
+        ],
+        "enrolled_current": 289,
+        "enrolled_max": 280,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2312",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Introduction to Modern Biology II",
+        "instructors": [
+            "Simbarashe Mazambani"
+        ],
+        "class_numbers": [
+            22935
+        ],
+        "enrolled_current": 289,
+        "enrolled_max": 280,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "3401",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Genetics",
+        "instructors": [
+            "Jing Pan",
+            "Uma Srikanth"
+        ],
+        "class_numbers": [
+            23078
+        ],
+        "enrolled_current": 283,
+        "enrolled_max": 283,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "3401",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "201"
+        ],
+        "title": "Genetics",
+        "instructors": [
+            "Jing Pan",
+            "Uma Srikanth"
+        ],
+        "class_numbers": [
+            23084
+        ],
+        "enrolled_current": 283,
+        "enrolled_max": 283,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2281",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Introductory Biology Laboratory",
+        "instructors": [
+            "Anne Davenport",
+            "Yi Huang",
+            "Elizabeth Pickett",
+            "Narges Salamat",
+            "Iti Mehta",
+            "Matthew Esparza"
+        ],
+        "class_numbers": [
+            22374
+        ],
+        "enrolled_current": 280,
+        "enrolled_max": 290,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2413",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "701"
+        ],
+        "title": "Differential Calculus",
+        "instructors": [
+            "Rabin Dahal"
+        ],
+        "class_numbers": [
+            21919
+        ],
+        "enrolled_current": 274,
+        "enrolled_max": 447,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "1312",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "General Chemistry II",
+        "instructors": [
+            "Nimali Abeykoon"
+        ],
+        "class_numbers": [
+            21710
+        ],
+        "enrolled_current": 270,
+        "enrolled_max": 270,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "1312",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "005"
+        ],
+        "title": "General Chemistry II",
+        "instructors": [
+            "Stephanie Taylor"
+        ],
+        "class_numbers": [
+            27759
+        ],
+        "enrolled_current": 270,
+        "enrolled_max": 270,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2415",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "701"
+        ],
+        "title": "Calculus of Several Variables",
+        "instructors": [
+            "Baris Coskunuzer"
+        ],
+        "class_numbers": [
+            21937
+        ],
+        "enrolled_current": 268,
+        "enrolled_max": 290,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "1312",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "General Chemistry II",
+        "instructors": [
+            "Fadwa Anka"
+        ],
+        "class_numbers": [
+            21709
+        ],
+        "enrolled_current": 266,
+        "enrolled_max": 270,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2359",
+        "course_prefixes": [
+            "isns"
+        ],
+        "sections": [
+            "0w4"
+        ],
+        "title": "Earthquakes and Volcanoes",
+        "instructors": [
+            "Steven Pirouz"
+        ],
+        "class_numbers": [
+            29243
+        ],
+        "enrolled_current": 250,
+        "enrolled_max": 250,
+        "assistants": [],
+        "dept": "nsmtgeos"
+    },
+    {
+        "course_number": "2367",
+        "course_prefixes": [
+            "isns"
+        ],
+        "sections": [
+            "0w4"
+        ],
+        "title": "The Oceans",
+        "instructors": [
+            "Ignacio Pujana"
+        ],
+        "class_numbers": [
+            29242
+        ],
+        "enrolled_current": 249,
+        "enrolled_max": 250,
+        "assistants": [],
+        "dept": "nsmtgeos"
+    },
+    {
+        "course_number": "1312",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "General Chemistry II",
+        "instructors": [
+            "Gregg Dieckmann"
+        ],
+        "class_numbers": [
+            21733
+        ],
+        "enrolled_current": 246,
+        "enrolled_max": 270,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2325",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Mechanics",
+        "instructors": [
+            "Lloyd Lumata"
+        ],
+        "class_numbers": [
+            22613
+        ],
+        "enrolled_current": 244,
+        "enrolled_max": 250,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "2325",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Mechanics",
+        "instructors": [
+            "Lamya Saleh"
+        ],
+        "class_numbers": [
+            22702
+        ],
+        "enrolled_current": 243,
+        "enrolled_max": 250,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "2384",
+        "course_prefixes": [
+            "hist"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "U S  Women from Settlement to Present",
+        "instructors": [
+            "Anne Fischer"
+        ],
+        "class_numbers": [
+            27678
+        ],
+        "enrolled_current": 240,
+        "enrolled_max": 240,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "1301",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "College Physics I",
+        "instructors": [
+            "Amena Khan"
+        ],
+        "class_numbers": [
+            22633
+        ],
+        "enrolled_current": 240,
+        "enrolled_max": 240,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "1301",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "701"
+        ],
+        "title": "College Physics I",
+        "instructors": [
+            "Paul Macalevey"
+        ],
+        "class_numbers": [
+            22737
+        ],
+        "enrolled_current": 240,
+        "enrolled_max": 240,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "1311",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "General Chemistry I",
+        "instructors": [
+            "Amandeep Sra"
+        ],
+        "class_numbers": [
+            21708
+        ],
+        "enrolled_current": 224,
+        "enrolled_max": 300,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "1312",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "General Chemistry II",
+        "instructors": [
+            "Gregg Dieckmann"
+        ],
+        "class_numbers": [
+            21724
+        ],
+        "enrolled_current": 210,
+        "enrolled_max": 270,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2309",
+        "course_prefixes": [
+            "angm"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Drawing for Animation",
+        "instructors": [
+            "Todd Fechter"
+        ],
+        "class_numbers": [
+            27501
+        ],
+        "enrolled_current": 200,
+        "enrolled_max": 200,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "1303",
+        "course_prefixes": [
+            "geos"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Physical Geology",
+        "instructors": [
+            "Ignacio Pujana",
+            "William Griffin"
+        ],
+        "class_numbers": [
+            22216
+        ],
+        "enrolled_current": 200,
+        "enrolled_max": 200,
+        "assistants": [],
+        "dept": "nsmtgeos"
+    },
+    {
+        "course_number": "3462",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Biochemistry II",
+        "instructors": [
+            "Mehmet Candas",
+            "Lawrence Reitzer"
+        ],
+        "class_numbers": [
+            23083
+        ],
+        "enrolled_current": 199,
+        "enrolled_max": 230,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "3462",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "201"
+        ],
+        "title": "Biochemistry II",
+        "instructors": [
+            "Mehmet Candas",
+            "Lawrence Reitzer"
+        ],
+        "class_numbers": [
+            23091
+        ],
+        "enrolled_current": 199,
+        "enrolled_max": 230,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2326",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Electromagnetism and Waves",
+        "instructors": [
+            "Austen Adams"
+        ],
+        "class_numbers": [
+            22616
+        ],
+        "enrolled_current": 193,
+        "enrolled_max": 250,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "2326",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "703"
+        ],
+        "title": "Electromagnetism and Waves",
+        "instructors": [
+            "Paul Macalevey"
+        ],
+        "class_numbers": [
+            22790
+        ],
+        "enrolled_current": 193,
+        "enrolled_max": 255,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "2359",
+        "course_prefixes": [
+            "isns"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Earthquakes and Volcanoes",
+        "instructors": [
+            "Steven Pirouz"
+        ],
+        "class_numbers": [
+            22600
+        ],
+        "enrolled_current": 191,
+        "enrolled_max": 250,
+        "assistants": [],
+        "dept": "nsmtgeos"
+    },
+    {
+        "course_number": "2420",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "701"
+        ],
+        "title": "Differential Equations with Applications",
+        "instructors": [
+            "Saikat Biswas"
+        ],
+        "class_numbers": [
+            21951
+        ],
+        "enrolled_current": 190,
+        "enrolled_max": 200,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "3456",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Human Anatomy and Physiology with Lab II",
+        "instructors": [
+            "Wen Yu",
+            "Subha Sarcar"
+        ],
+        "class_numbers": [
+            22360
+        ],
+        "enrolled_current": 188,
+        "enrolled_max": 200,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2367",
+        "course_prefixes": [
+            "isns"
+        ],
+        "sections": [
+            "0w3"
+        ],
+        "title": "The Oceans",
+        "instructors": [
+            "Ignacio Pujana",
+            "William Griffin"
+        ],
+        "class_numbers": [
+            23170
+        ],
+        "enrolled_current": 184,
+        "enrolled_max": 250,
+        "assistants": [],
+        "dept": "nsmtgeos"
+    },
+    {
+        "course_number": "1301",
+        "course_prefixes": [
+            "hist"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "U S  History Survey to Civil War",
+        "instructors": [
+            "Jeffrey Schulze"
+        ],
+        "class_numbers": [
+            27649
+        ],
+        "enrolled_current": 180,
+        "enrolled_max": 180,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "1302",
+        "course_prefixes": [
+            "hist"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "U S  History Survey from Civil War",
+        "instructors": [
+            "Jeffrey Schulze"
+        ],
+        "class_numbers": [
+            20006
+        ],
+        "enrolled_current": 180,
+        "enrolled_max": 180,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2330",
+        "course_prefixes": [
+            "hist"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Themes and Ideas in American History",
+        "instructors": [
+            "Kevin Waite"
+        ],
+        "class_numbers": [
+            27664
+        ],
+        "enrolled_current": 180,
+        "enrolled_max": 180,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2419",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "701"
+        ],
+        "title": "Calculus II",
+        "instructors": [
+            "Anatoly Eydelzon"
+        ],
+        "class_numbers": [
+            21947
+        ],
+        "enrolled_current": 180,
+        "enrolled_max": 200,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2325",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Mechanics",
+        "instructors": [
+            "Ivan Vasko"
+        ],
+        "class_numbers": [
+            22614
+        ],
+        "enrolled_current": 175,
+        "enrolled_max": 250,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "2367",
+        "course_prefixes": [
+            "isns"
+        ],
+        "sections": [
+            "0w2"
+        ],
+        "title": "The Oceans",
+        "instructors": [
+            "Robert Stern"
+        ],
+        "class_numbers": [
+            22604
+        ],
+        "enrolled_current": 172,
+        "enrolled_max": 250,
+        "assistants": [],
+        "dept": "nsmtgeos"
+    },
+    {
+        "course_number": "3380",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Biochemistry Laboratory",
+        "instructors": [
+            "Jing Pan",
+            "Simbarashe Mazambani",
+            "Ritu Mishra"
+        ],
+        "class_numbers": [
+            22429
+        ],
+        "enrolled_current": 166,
+        "enrolled_max": 176,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2305",
+        "course_prefixes": [
+            "angm"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Programming for Digital Arts",
+        "instructors": [
+            "Nelson Lim"
+        ],
+        "class_numbers": [
+            27594
+        ],
+        "enrolled_current": 150,
+        "enrolled_max": 150,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2325",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "005"
+        ],
+        "title": "Mechanics",
+        "instructors": [
+            "Bing Lv"
+        ],
+        "class_numbers": [
+            22787
+        ],
+        "enrolled_current": 150,
+        "enrolled_max": 150,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "2326",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Electromagnetism and Waves",
+        "instructors": [
+            "Fabiano Da Silveira Rodrigues"
+        ],
+        "class_numbers": [
+            22615
+        ],
+        "enrolled_current": 150,
+        "enrolled_max": 150,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "2326",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "701"
+        ],
+        "title": "Electromagnetism and Waves",
+        "instructors": [
+            "Paul Macalevey"
+        ],
+        "class_numbers": [
+            22683
+        ],
+        "enrolled_current": 150,
+        "enrolled_max": 160,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "1302",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "College Physics II",
+        "instructors": [
+            "Roger Kadala"
+        ],
+        "class_numbers": [
+            22785
+        ],
+        "enrolled_current": 149,
+        "enrolled_max": 150,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "1302",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "702"
+        ],
+        "title": "College Physics II",
+        "instructors": [
+            "Paul Macalevey"
+        ],
+        "class_numbers": [
+            22786
+        ],
+        "enrolled_current": 149,
+        "enrolled_max": 160,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "2111",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Introduction to Modern Biology Workshop I",
+        "instructors": [
+            "Uma Srikanth"
+        ],
+        "class_numbers": [
+            22355
+        ],
+        "enrolled_current": 148,
+        "enrolled_max": 150,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2311",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Introduction to Modern Biology I",
+        "instructors": [
+            "Uma Srikanth"
+        ],
+        "class_numbers": [
+            22362
+        ],
+        "enrolled_current": 148,
+        "enrolled_max": 150,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2326",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Electromagnetism and Waves",
+        "instructors": [
+            "Qingyu Zhu"
+        ],
+        "class_numbers": [
+            22789
+        ],
+        "enrolled_current": 147,
+        "enrolled_max": 150,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "2326",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "702"
+        ],
+        "title": "Electromagnetism and Waves",
+        "instructors": [
+            "Paul Macalevey"
+        ],
+        "class_numbers": [
+            22684
+        ],
+        "enrolled_current": 147,
+        "enrolled_max": 150,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "2323",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Introductory Organic Chemistry I",
+        "instructors": [
+            "Bruce Novak"
+        ],
+        "class_numbers": [
+            21738
+        ],
+        "enrolled_current": 145,
+        "enrolled_max": 145,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2323",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Introductory Organic Chemistry I",
+        "instructors": [
+            "Jing Ge"
+        ],
+        "class_numbers": [
+            21713
+        ],
+        "enrolled_current": 145,
+        "enrolled_max": 145,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2325",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Introductory Organic Chemistry II",
+        "instructors": [
+            "Nimanka Panapitiya"
+        ],
+        "class_numbers": [
+            21714
+        ],
+        "enrolled_current": 145,
+        "enrolled_max": 145,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2325",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Introductory Organic Chemistry II",
+        "instructors": [
+            "Daniel Tran"
+        ],
+        "class_numbers": [
+            21715
+        ],
+        "enrolled_current": 145,
+        "enrolled_max": 145,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2325",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Introductory Organic Chemistry II",
+        "instructors": [
+            "Nimanka Panapitiya"
+        ],
+        "class_numbers": [
+            21726
+        ],
+        "enrolled_current": 145,
+        "enrolled_max": 145,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2325",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Introductory Organic Chemistry II",
+        "instructors": [
+            "Jung-Mo Ahn"
+        ],
+        "class_numbers": [
+            21739
+        ],
+        "enrolled_current": 145,
+        "enrolled_max": 145,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2325",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "006"
+        ],
+        "title": "Introductory Organic Chemistry II",
+        "instructors": [
+            "Sergio Cortes"
+        ],
+        "class_numbers": [
+            27760
+        ],
+        "enrolled_current": 145,
+        "enrolled_max": 145,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "3455",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Human Anatomy and Physiology with Lab I",
+        "instructors": [
+            "Zhuoru Wu",
+            "Meenakshi Maitra"
+        ],
+        "class_numbers": [
+            22883
+        ],
+        "enrolled_current": 144,
+        "enrolled_max": 144,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2233",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Introductory Organic Chemistry Laboratory",
+        "instructors": [],
+        "class_numbers": [
+            21779
+        ],
+        "enrolled_current": 144,
+        "enrolled_max": 145,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2325",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "005"
+        ],
+        "title": "Introductory Organic Chemistry II",
+        "instructors": [
+            "Christina Thompson"
+        ],
+        "class_numbers": [
+            21744
+        ],
+        "enrolled_current": 144,
+        "enrolled_max": 145,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "3455",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Human Anatomy and Physiology with Lab I",
+        "instructors": [
+            "Andy Cheshire",
+            "Ramesh Padmanabhan"
+        ],
+        "class_numbers": [
+            22436
+        ],
+        "enrolled_current": 143,
+        "enrolled_max": 144,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2233",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Introductory Organic Chemistry Laboratory",
+        "instructors": [],
+        "class_numbers": [
+            21778
+        ],
+        "enrolled_current": 143,
+        "enrolled_max": 145,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2233",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Introductory Organic Chemistry Laboratory",
+        "instructors": [],
+        "class_numbers": [
+            21780
+        ],
+        "enrolled_current": 142,
+        "enrolled_max": 145,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2325",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "006"
+        ],
+        "title": "Mechanics",
+        "instructors": [
+            "Xiaojia Zhang"
+        ],
+        "class_numbers": [
+            22724
+        ],
+        "enrolled_current": 142,
+        "enrolled_max": 150,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "1301",
+        "course_prefixes": [
+            "arts"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Exploration of the Arts",
+        "instructors": [
+            "Jason Bennett"
+        ],
+        "class_numbers": [
+            20020
+        ],
+        "enrolled_current": 140,
+        "enrolled_max": 140,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "3402",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Molecular and Cell Biology",
+        "instructors": [
+            "Purna Joshi",
+            "Darshan Sapkota"
+        ],
+        "class_numbers": [
+            23079
+        ],
+        "enrolled_current": 140,
+        "enrolled_max": 205,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "3402",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "201"
+        ],
+        "title": "Molecular and Cell Biology",
+        "instructors": [
+            "Purna Joshi",
+            "Darshan Sapkota"
+        ],
+        "class_numbers": [
+            23085
+        ],
+        "enrolled_current": 140,
+        "enrolled_max": 205,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "1306",
+        "course_prefixes": [
+            "musi"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Understanding Music",
+        "instructors": [
+            "Jason Bennett"
+        ],
+        "class_numbers": [
+            20250
+        ],
+        "enrolled_current": 140,
+        "enrolled_max": 140,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "1301",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "College Physics I",
+        "instructors": [
+            "Kaloyan Penev"
+        ],
+        "class_numbers": [
+            22783
+        ],
+        "enrolled_current": 133,
+        "enrolled_max": 150,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "1301",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "702"
+        ],
+        "title": "College Physics I",
+        "instructors": [
+            "Paul Macalevey"
+        ],
+        "class_numbers": [
+            22784
+        ],
+        "enrolled_current": 133,
+        "enrolled_max": 150,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "3303",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Introduction to Microbiology",
+        "instructors": [
+            "Matthew Esparza"
+        ],
+        "class_numbers": [
+            23151
+        ],
+        "enrolled_current": 130,
+        "enrolled_max": 130,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "3303",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Introduction to Microbiology",
+        "instructors": [
+            "Jon Sin"
+        ],
+        "class_numbers": [
+            22908
+        ],
+        "enrolled_current": 120,
+        "enrolled_max": 120,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "1311",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "General Chemistry I",
+        "instructors": [
+            "Saba Khan"
+        ],
+        "class_numbers": [
+            29058
+        ],
+        "enrolled_current": 120,
+        "enrolled_max": 120,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2330",
+        "course_prefixes": [
+            "hist"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Themes and Ideas in American History",
+        "instructors": [
+            "Natalie Ring"
+        ],
+        "class_numbers": [
+            27669
+        ],
+        "enrolled_current": 120,
+        "enrolled_max": 120,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "1301",
+        "course_prefixes": [
+            "lit"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Introduction to Literature",
+        "instructors": [
+            "Peter Ingrao"
+        ],
+        "class_numbers": [
+            20208
+        ],
+        "enrolled_current": 120,
+        "enrolled_max": 120,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2417",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "701"
+        ],
+        "title": "Calculus I",
+        "instructors": [
+            "Diarisoa Mihaja Andriamanisa Rakotomalala"
+        ],
+        "class_numbers": [
+            21940
+        ],
+        "enrolled_current": 119,
+        "enrolled_max": 120,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "1301",
+        "course_prefixes": [
+            "lit"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Introduction to Literature",
+        "instructors": [
+            "Peter Ingrao"
+        ],
+        "class_numbers": [
+            27744
+        ],
+        "enrolled_current": 118,
+        "enrolled_max": 120,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2359",
+        "course_prefixes": [
+            "isns"
+        ],
+        "sections": [
+            "0w3"
+        ],
+        "title": "Earthquakes and Volcanoes",
+        "instructors": [
+            "Steven Pirouz",
+            "Siloa Willis"
+        ],
+        "class_numbers": [
+            23178
+        ],
+        "enrolled_current": 117,
+        "enrolled_max": 250,
+        "assistants": [],
+        "dept": "nsmtgeos"
+    },
+    {
+        "course_number": "4380",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Cell and Molecular Biology Laboratory",
+        "instructors": [
+            "Eva Sadat",
+            "Amy Jo Gomez"
+        ],
+        "class_numbers": [
+            22364
+        ],
+        "enrolled_current": 115,
+        "enrolled_max": 115,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "4345",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Immunobiology",
+        "instructors": [
+            "Michelle Wilson"
+        ],
+        "class_numbers": [
+            22361
+        ],
+        "enrolled_current": 110,
+        "enrolled_max": 110,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2310",
+        "course_prefixes": [
+            "angm"
+        ],
+        "sections": [
+            "0h1"
+        ],
+        "title": "Animation and Game Fundamentals",
+        "instructors": [
+            "Timothy Lewis"
+        ],
+        "class_numbers": [
+            27499
+        ],
+        "enrolled_current": 106,
+        "enrolled_max": 150,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "3318",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Forensic Biology",
+        "instructors": [
+            "Kathleen Barber"
+        ],
+        "class_numbers": [
+            22416
+        ],
+        "enrolled_current": 105,
+        "enrolled_max": 105,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "6100",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Chemistry Department Seminar",
+        "instructors": [
+            "Connor Delaney"
+        ],
+        "class_numbers": [
+            21725
+        ],
+        "enrolled_current": 105,
+        "enrolled_max": 130,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "2303",
+        "course_prefixes": [
+            "angm"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Project Management for Arts  Technology  and Emerging Communication I",
+        "instructors": [
+            "Joanna Cade"
+        ],
+        "class_numbers": [
+            27497
+        ],
+        "enrolled_current": 100,
+        "enrolled_max": 100,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2325",
+        "course_prefixes": [
+            "angm"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "History of Visual Effects",
+        "instructors": [
+            "Bryon Caldwell"
+        ],
+        "class_numbers": [
+            27545
+        ],
+        "enrolled_current": 100,
+        "enrolled_max": 100,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2375",
+        "course_prefixes": [
+            "angm"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "History of Games",
+        "instructors": [
+            "Monica Evans"
+        ],
+        "class_numbers": [
+            27500
+        ],
+        "enrolled_current": 100,
+        "enrolled_max": 100,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2340",
+        "course_prefixes": [
+            "atcm"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Visual Communication",
+        "instructors": [
+            "Janet Johnson"
+        ],
+        "class_numbers": [
+            20599
+        ],
+        "enrolled_current": 100,
+        "enrolled_max": 100,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "1306",
+        "course_prefixes": [
+            "musi"
+        ],
+        "sections": [
+            "0w2"
+        ],
+        "title": "Understanding Music",
+        "instructors": [
+            "Kelly Durbin"
+        ],
+        "class_numbers": [
+            28265
+        ],
+        "enrolled_current": 100,
+        "enrolled_max": 100,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "3461",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Biochemistry I",
+        "instructors": [
+            "Sandhya Gavva"
+        ],
+        "class_numbers": [
+            23080
+        ],
+        "enrolled_current": 94,
+        "enrolled_max": 125,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "1303",
+        "course_prefixes": [
+            "ahst"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Survey of Western Art History  Ancient to Medieval",
+        "instructors": [
+            "Jacquelyn McDonald"
+        ],
+        "class_numbers": [
+            20018
+        ],
+        "enrolled_current": 90,
+        "enrolled_max": 115,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "1302",
+        "course_prefixes": [
+            "hist"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "U S  History Survey from Civil War",
+        "instructors": [
+            "Kristin Bocchine"
+        ],
+        "class_numbers": [
+            28755
+        ],
+        "enrolled_current": 90,
+        "enrolled_max": 90,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "4360",
+        "course_prefixes": [
+            "stat"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Introduction to Statistical Learning",
+        "instructors": [
+            "Jiayi Wang"
+        ],
+        "class_numbers": [
+            22930
+        ],
+        "enrolled_current": 85,
+        "enrolled_max": 90,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2312",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "701"
+        ],
+        "title": "Precalculus",
+        "instructors": [
+            "Irina Martynova"
+        ],
+        "class_numbers": [
+            21914
+        ],
+        "enrolled_current": 84,
+        "enrolled_max": 140,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "1302",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "College Physics II",
+        "instructors": [
+            "Yves Hon Kwan"
+        ],
+        "class_numbers": [
+            22609
+        ],
+        "enrolled_current": 84,
+        "enrolled_max": 230,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "1305",
+        "course_prefixes": [
+            "phil"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Introduction to Philosophy of Religion",
+        "instructors": [
+            "Lawrence Amato"
+        ],
+        "class_numbers": [
+            20671
+        ],
+        "enrolled_current": 82,
+        "enrolled_max": 120,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2359",
+        "course_prefixes": [
+            "isns"
+        ],
+        "sections": [
+            "0w2"
+        ],
+        "title": "Earthquakes and Volcanoes",
+        "instructors": [
+            "Nicholas Mueller"
+        ],
+        "class_numbers": [
+            22601
+        ],
+        "enrolled_current": 81,
+        "enrolled_max": 250,
+        "assistants": [],
+        "dept": "nsmtgeos"
+    },
+    {
+        "course_number": "3355",
+        "course_prefixes": [
+            "stat"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Introduction to Data Analysis",
+        "instructors": [
+            "Octavious Smiley"
+        ],
+        "class_numbers": [
+            22251
+        ],
+        "enrolled_current": 80,
+        "enrolled_max": 85,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "3461",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Biochemistry I",
+        "instructors": [
+            "Sheel Dodani",
+            "Sandhya Gavva"
+        ],
+        "class_numbers": [
+            23081
+        ],
+        "enrolled_current": 78,
+        "enrolled_max": 120,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "3332",
+        "course_prefixes": [
+            "stat"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Statistics for Life Sciences",
+        "instructors": [
+            "Shengjie Jiang"
+        ],
+        "class_numbers": [
+            27713
+        ],
+        "enrolled_current": 78,
+        "enrolled_max": 88,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "3332",
+        "course_prefixes": [
+            "stat"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Statistics for Life Sciences",
+        "instructors": [
+            "Shengjie Jiang"
+        ],
+        "class_numbers": [
+            27714
+        ],
+        "enrolled_current": 77,
+        "enrolled_max": 88,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "4351",
+        "course_prefixes": [
+            "stat"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Probability",
+        "instructors": [
+            "Yuly Koshevnik"
+        ],
+        "class_numbers": [
+            22929
+        ],
+        "enrolled_current": 74,
+        "enrolled_max": 90,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "1302",
+        "course_prefixes": [
+            "hist"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "U S  History Survey from Civil War",
+        "instructors": [
+            "Ryan Pettengill"
+        ],
+        "class_numbers": [
+            27663
+        ],
+        "enrolled_current": 70,
+        "enrolled_max": 70,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "3332",
+        "course_prefixes": [
+            "stat"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Statistics for Life Sciences",
+        "instructors": [
+            "Kemelli Estacio-Hiroms"
+        ],
+        "class_numbers": [
+            27712
+        ],
+        "enrolled_current": 70,
+        "enrolled_max": 70,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "1311",
+        "course_prefixes": [
+            "lit"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "The Art of Fiction",
+        "instructors": [
+            "Negeen Nikravesh"
+        ],
+        "class_numbers": [
+            27745
+        ],
+        "enrolled_current": 69,
+        "enrolled_max": 70,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "3332",
+        "course_prefixes": [
+            "stat"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Statistics for Life Sciences",
+        "instructors": [
+            "Shengjie Jiang"
+        ],
+        "class_numbers": [
+            27711
+        ],
+        "enrolled_current": 69,
+        "enrolled_max": 70,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2325",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Mechanics",
+        "instructors": [
+            "Anvar Zakhidov"
+        ],
+        "class_numbers": [
+            22749
+        ],
+        "enrolled_current": 68,
+        "enrolled_max": 200,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "1314",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "701"
+        ],
+        "title": "College Algebra",
+        "instructors": [
+            "Iris Alvarado"
+        ],
+        "class_numbers": [
+            21907
+        ],
+        "enrolled_current": 67,
+        "enrolled_max": 90,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "3461",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Biochemistry I",
+        "instructors": [
+            "Stefanie Boyd"
+        ],
+        "class_numbers": [
+            23082
+        ],
+        "enrolled_current": 66,
+        "enrolled_max": 75,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "3461",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "205"
+        ],
+        "title": "Biochemistry I",
+        "instructors": [
+            "Stefanie Boyd"
+        ],
+        "class_numbers": [
+            23090
+        ],
+        "enrolled_current": 66,
+        "enrolled_max": 75,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2415",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Calculus of Several Variables",
+        "instructors": [
+            "Baris Coskunuzer"
+        ],
+        "class_numbers": [
+            22047
+        ],
+        "enrolled_current": 65,
+        "enrolled_max": 70,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2415",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Calculus of Several Variables",
+        "instructors": [
+            "Rizwanur Khan"
+        ],
+        "class_numbers": [
+            21935
+        ],
+        "enrolled_current": 64,
+        "enrolled_max": 70,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "1303",
+        "course_prefixes": [
+            "ahst"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Survey of Western Art History  Ancient to Medieval",
+        "instructors": [
+            "Jacquelyn McDonald"
+        ],
+        "class_numbers": [
+            20151
+        ],
+        "enrolled_current": 62,
+        "enrolled_max": 115,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "3127",
+        "course_prefixes": [
+            "musi"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "University Choir",
+        "instructors": [
+            "Jonathan Palant"
+        ],
+        "class_numbers": [
+            28272
+        ],
+        "enrolled_current": 62,
+        "enrolled_max": 70,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "3325",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Drug Development to Clinical Trials",
+        "instructors": [
+            "Subha Sarcar"
+        ],
+        "class_numbers": [
+            23001
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "4352",
+        "course_prefixes": [
+            "stat"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Mathematical Statistics",
+        "instructors": [
+            "Yun Wei"
+        ],
+        "class_numbers": [
+            22878
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 70,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "4354",
+        "course_prefixes": [
+            "stat"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Numerical and Statistical Computing",
+        "instructors": [
+            "Huizhen Guo"
+        ],
+        "class_numbers": [
+            22264
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 72,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2303",
+        "course_prefixes": [
+            "angm"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Project Management for Arts  Technology  and Emerging Communication I",
+        "instructors": [
+            "Charlotte Spivey"
+        ],
+        "class_numbers": [
+            27498
+        ],
+        "enrolled_current": 59,
+        "enrolled_max": 100,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "4118",
+        "course_prefixes": [
+            "musi"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "String Orchestra III",
+        "instructors": [
+            "Adron Ming"
+        ],
+        "class_numbers": [
+            20500
+        ],
+        "enrolled_current": 59,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2360",
+        "course_prefixes": [
+            "atcm"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Design Histories",
+        "instructors": [
+            "Norman Cox"
+        ],
+        "class_numbers": [
+            20627
+        ],
+        "enrolled_current": 58,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "4355",
+        "course_prefixes": [
+            "stat"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Applied Linear Models",
+        "instructors": [
+            "Chuan-Fa Tang"
+        ],
+        "class_numbers": [
+            22263
+        ],
+        "enrolled_current": 58,
+        "enrolled_max": 72,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "1301",
+        "course_prefixes": [
+            "lit"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Introduction to Literature",
+        "instructors": [
+            "Peter Ingrao"
+        ],
+        "class_numbers": [
+            20220
+        ],
+        "enrolled_current": 57,
+        "enrolled_max": 120,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "1342",
+        "course_prefixes": [
+            "stat"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Statistical Decision Making",
+        "instructors": [
+            "Yuly Koshevnik"
+        ],
+        "class_numbers": [
+            22839
+        ],
+        "enrolled_current": 57,
+        "enrolled_max": 70,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2324",
+        "course_prefixes": [
+            "chem"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Introductory Organic Chemistry for Engineers",
+        "instructors": [
+            "Sumudu Wijenayake"
+        ],
+        "class_numbers": [
+            21749
+        ],
+        "enrolled_current": 56,
+        "enrolled_max": 72,
+        "assistants": [],
+        "dept": "nsmtchem"
+    },
+    {
+        "course_number": "3370",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Exercise Physiology",
+        "instructors": [
+            "Zhuoru Wu"
+        ],
+        "class_numbers": [
+            22359
+        ],
+        "enrolled_current": 55,
+        "enrolled_max": 55,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2418",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Linear Algebra",
+        "instructors": [
+            "Anani Komla Adabrah"
+        ],
+        "class_numbers": [
+            22062
+        ],
+        "enrolled_current": 55,
+        "enrolled_max": 55,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2418",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "006"
+        ],
+        "title": "Linear Algebra",
+        "instructors": [
+            "Cheyu Wu"
+        ],
+        "class_numbers": [
+            22084
+        ],
+        "enrolled_current": 55,
+        "enrolled_max": 55,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2418",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "007"
+        ],
+        "title": "Linear Algebra",
+        "instructors": [
+            "Adrian Murza"
+        ],
+        "class_numbers": [
+            22095
+        ],
+        "enrolled_current": 55,
+        "enrolled_max": 55,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2418",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "009"
+        ],
+        "title": "Linear Algebra",
+        "instructors": [
+            "Adrian Murza"
+        ],
+        "class_numbers": [
+            27727
+        ],
+        "enrolled_current": 55,
+        "enrolled_max": 55,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "1301",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "College Physics I",
+        "instructors": [
+            "Ming Xie"
+        ],
+        "class_numbers": [
+            28774
+        ],
+        "enrolled_current": 55,
+        "enrolled_max": 150,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "1301",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "703"
+        ],
+        "title": "College Physics I",
+        "instructors": [
+            "Paul Macalevey"
+        ],
+        "class_numbers": [
+            28775
+        ],
+        "enrolled_current": 55,
+        "enrolled_max": 130,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "2418",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "010"
+        ],
+        "title": "Linear Algebra",
+        "instructors": [
+            "Cheyu Wu"
+        ],
+        "class_numbers": [
+            27728
+        ],
+        "enrolled_current": 54,
+        "enrolled_max": 55,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "3351",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Advanced Calculus",
+        "instructors": [
+            "Saikat Biswas"
+        ],
+        "class_numbers": [
+            22094
+        ],
+        "enrolled_current": 54,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "4120",
+        "course_prefixes": [
+            "musi"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Wind Ensemble III",
+        "instructors": [
+            "Robert Lapinski"
+        ],
+        "class_numbers": [
+            20498
+        ],
+        "enrolled_current": 53,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "1311",
+        "course_prefixes": [
+            "comm"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Introduction to Communication Studies",
+        "instructors": [
+            "Patricia Totusek"
+        ],
+        "class_numbers": [
+            20137
+        ],
+        "enrolled_current": 52,
+        "enrolled_max": 80,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Theoretical Concepts of Calculus",
+        "instructors": [
+            "Malgorzata Dabkowska"
+        ],
+        "class_numbers": [
+            22005
+        ],
+        "enrolled_current": 51,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "6312",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Combinatorics and Graph Theory",
+        "instructors": [
+            "Theodosios Douvropoulos"
+        ],
+        "class_numbers": [
+            22146
+        ],
+        "enrolled_current": 51,
+        "enrolled_max": 72,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2418",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Linear Algebra",
+        "instructors": [
+            "Cheyu Wu"
+        ],
+        "class_numbers": [
+            21941
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2419",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Calculus II",
+        "instructors": [
+            "Mohammad Ahsan"
+        ],
+        "class_numbers": [
+            22082
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2420",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Differential Equations with Applications",
+        "instructors": [
+            "Adrian Murza"
+        ],
+        "class_numbers": [
+            21948
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2420",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Differential Equations with Applications",
+        "instructors": [
+            "Adrian Murza"
+        ],
+        "class_numbers": [
+            21949
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2420",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Differential Equations with Applications",
+        "instructors": [
+            "Saikat Biswas"
+        ],
+        "class_numbers": [
+            22033
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "4352",
+        "course_prefixes": [
+            "stat"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Mathematical Statistics",
+        "instructors": [],
+        "class_numbers": [
+            22972
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "1310",
+        "course_prefixes": [
+            "danc"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Understanding Dance",
+        "instructors": [
+            "Hayley Duplantier"
+        ],
+        "class_numbers": [
+            28070
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "1303",
+        "course_prefixes": [
+            "film"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Transnational Film and Video",
+        "instructors": [
+            "Jason Bennett"
+        ],
+        "class_numbers": [
+            20243
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "1303",
+        "course_prefixes": [
+            "film"
+        ],
+        "sections": [
+            "0w3"
+        ],
+        "title": "Transnational Film and Video",
+        "instructors": [
+            "Angelica Martinez Ochoa"
+        ],
+        "class_numbers": [
+            28982
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2332",
+        "course_prefixes": [
+            "film"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Understanding Film",
+        "instructors": [
+            "Tinamarie Ivey"
+        ],
+        "class_numbers": [
+            28083
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2332",
+        "course_prefixes": [
+            "film"
+        ],
+        "sections": [
+            "0w2"
+        ],
+        "title": "Understanding Film",
+        "instructors": [
+            "Dalton Cooper"
+        ],
+        "class_numbers": [
+            28084
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2332",
+        "course_prefixes": [
+            "film"
+        ],
+        "sections": [
+            "0w3"
+        ],
+        "title": "Understanding Film",
+        "instructors": [
+            "Stephanie Oliver"
+        ],
+        "class_numbers": [
+            28082
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2332",
+        "course_prefixes": [
+            "film"
+        ],
+        "sections": [
+            "0w5"
+        ],
+        "title": "Understanding Film",
+        "instructors": [
+            "Stephanie Oliver"
+        ],
+        "class_numbers": [
+            29606
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "1316",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "701"
+        ],
+        "title": "Trigonometry",
+        "instructors": [
+            "Julie Sutton"
+        ],
+        "class_numbers": [
+            22147
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 80,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "3351",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Advanced Calculus",
+        "instructors": [
+            "Saikat Biswas"
+        ],
+        "class_numbers": [
+            22093
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2350",
+        "course_prefixes": [
+            "angm"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Story",
+        "instructors": [
+            "Troy Griffin"
+        ],
+        "class_numbers": [
+            27595
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "3461",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "203"
+        ],
+        "title": "Biochemistry I",
+        "instructors": [
+            "Sandhya Gavva"
+        ],
+        "class_numbers": [
+            23088
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 62,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "1310",
+        "course_prefixes": [
+            "danc"
+        ],
+        "sections": [
+            "0h2"
+        ],
+        "title": "Understanding Dance",
+        "instructors": [
+            "Melissa Johnson"
+        ],
+        "class_numbers": [
+            20494
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2332",
+        "course_prefixes": [
+            "film"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Understanding Film",
+        "instructors": [
+            "Gregory Shows"
+        ],
+        "class_numbers": [
+            20178
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2332",
+        "course_prefixes": [
+            "film"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Understanding Film",
+        "instructors": [
+            "Rachel Catlett"
+        ],
+        "class_numbers": [
+            20475
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2332",
+        "course_prefixes": [
+            "film"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Understanding Film",
+        "instructors": [
+            "Ahmad Khoshniat"
+        ],
+        "class_numbers": [
+            20476
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2332",
+        "course_prefixes": [
+            "film"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Understanding Film",
+        "instructors": [
+            "Brecken Wellborn"
+        ],
+        "class_numbers": [
+            28081
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2310",
+        "course_prefixes": [
+            "geos"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Environmental Geology",
+        "instructors": [
+            "Inessa Yurchenko"
+        ],
+        "class_numbers": [
+            22220
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 100,
+        "assistants": [],
+        "dept": "nsmtgeos"
+    },
+    {
+        "course_number": "2415",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Calculus of Several Variables",
+        "instructors": [
+            "Mohammad Ahsan"
+        ],
+        "class_numbers": [
+            22068
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2321",
+        "course_prefixes": [
+            "musi"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Music Cultures of the World",
+        "instructors": [
+            "Yuxin Mei"
+        ],
+        "class_numbers": [
+            20223
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "3355",
+        "course_prefixes": [
+            "stat"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Introduction to Data Analysis",
+        "instructors": [
+            "Octavious Smiley"
+        ],
+        "class_numbers": [
+            23004
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2415",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "005"
+        ],
+        "title": "Calculus of Several Variables",
+        "instructors": [
+            "Mohammad Ahsan"
+        ],
+        "class_numbers": [
+            27725
+        ],
+        "enrolled_current": 47,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "3315",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Discrete Mathematics and Combinatorics",
+        "instructors": [
+            "Nathan Williams"
+        ],
+        "class_numbers": [
+            22083
+        ],
+        "enrolled_current": 47,
+        "enrolled_max": 70,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "3461",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "201"
+        ],
+        "title": "Biochemistry I",
+        "instructors": [
+            "Sandhya Gavva"
+        ],
+        "class_numbers": [
+            23086
+        ],
+        "enrolled_current": 46,
+        "enrolled_max": 63,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2359",
+        "course_prefixes": [
+            "isns"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Earthquakes and Volcanoes",
+        "instructors": [
+            "William Griffin"
+        ],
+        "class_numbers": [
+            22602
+        ],
+        "enrolled_current": 46,
+        "enrolled_max": 80,
+        "assistants": [],
+        "dept": "nsmtgeos"
+    },
+    {
+        "course_number": "1315",
+        "course_prefixes": [
+            "lit"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "The Art of Poetry",
+        "instructors": [
+            "Charles Hatfield"
+        ],
+        "class_numbers": [
+            27746
+        ],
+        "enrolled_current": 46,
+        "enrolled_max": 70,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Theoretical Concepts of Calculus",
+        "instructors": [
+            "Malgorzata Dabkowska"
+        ],
+        "class_numbers": [
+            21893
+        ],
+        "enrolled_current": 46,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "4310",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Cellular Microbiology",
+        "instructors": [
+            "Mehmet Candas"
+        ],
+        "class_numbers": [
+            22409
+        ],
+        "enrolled_current": 45,
+        "enrolled_max": 75,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "5410",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Biochemistry",
+        "instructors": [
+            "Nicholas Dillon",
+            "Sankalp Shukla"
+        ],
+        "class_numbers": [
+            22421
+        ],
+        "enrolled_current": 45,
+        "enrolled_max": 72,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "2419",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Calculus II",
+        "instructors": [
+            "Anatoly Eydelzon"
+        ],
+        "class_numbers": [
+            21945
+        ],
+        "enrolled_current": 45,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2413",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Differential Calculus",
+        "instructors": [
+            "Adannah Duruoha"
+        ],
+        "class_numbers": [
+            22123
+        ],
+        "enrolled_current": 44,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2413",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Differential Calculus",
+        "instructors": [
+            "Rabin Dahal"
+        ],
+        "class_numbers": [
+            21968
+        ],
+        "enrolled_current": 44,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2413",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "005"
+        ],
+        "title": "Differential Calculus",
+        "instructors": [
+            "Rabin Dahal"
+        ],
+        "class_numbers": [
+            22124
+        ],
+        "enrolled_current": 44,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2413",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "006"
+        ],
+        "title": "Differential Calculus",
+        "instructors": [
+            "Rabin Dahal"
+        ],
+        "class_numbers": [
+            22103
+        ],
+        "enrolled_current": 44,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2414",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "005"
+        ],
+        "title": "Integral Calculus",
+        "instructors": [
+            "Nasrin Sultana"
+        ],
+        "class_numbers": [
+            21923
+        ],
+        "enrolled_current": 44,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2414",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "009"
+        ],
+        "title": "Integral Calculus",
+        "instructors": [
+            "Bentley Garrett"
+        ],
+        "class_numbers": [
+            21970
+        ],
+        "enrolled_current": 44,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2414",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "011"
+        ],
+        "title": "Integral Calculus",
+        "instructors": [
+            "Kelly Aman"
+        ],
+        "class_numbers": [
+            21993
+        ],
+        "enrolled_current": 44,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2414",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "012"
+        ],
+        "title": "Integral Calculus",
+        "instructors": [
+            "Mylinh Nguyen"
+        ],
+        "class_numbers": [
+            22002
+        ],
+        "enrolled_current": 44,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2414",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "015"
+        ],
+        "title": "Integral Calculus",
+        "instructors": [
+            "Adannah Duruoha"
+        ],
+        "class_numbers": [
+            22037
+        ],
+        "enrolled_current": 44,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2414",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "019"
+        ],
+        "title": "Integral Calculus",
+        "instructors": [
+            "Mylinh Nguyen"
+        ],
+        "class_numbers": [
+            22131
+        ],
+        "enrolled_current": 44,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2415",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Calculus of Several Variables",
+        "instructors": [
+            "Mohammad Ahsan"
+        ],
+        "class_numbers": [
+            21936
+        ],
+        "enrolled_current": 44,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2419",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Calculus II",
+        "instructors": [
+            "Anatoly Eydelzon"
+        ],
+        "class_numbers": [
+            22081
+        ],
+        "enrolled_current": 44,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "4302",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Mathematical Analysis II",
+        "instructors": [
+            "Mieczyslaw Dabkowski"
+        ],
+        "class_numbers": [
+            21897
+        ],
+        "enrolled_current": 44,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2414",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Integral Calculus",
+        "instructors": [
+            "Nasrin Sultana"
+        ],
+        "class_numbers": [
+            21921
+        ],
+        "enrolled_current": 43,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2414",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "006"
+        ],
+        "title": "Integral Calculus",
+        "instructors": [
+            "Nasrin Sultana"
+        ],
+        "class_numbers": [
+            21956
+        ],
+        "enrolled_current": 43,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2414",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "008"
+        ],
+        "title": "Integral Calculus",
+        "instructors": [
+            "Bentley Garrett"
+        ],
+        "class_numbers": [
+            21969
+        ],
+        "enrolled_current": 43,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2414",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "013"
+        ],
+        "title": "Integral Calculus",
+        "instructors": [
+            "Nasrin Sultana"
+        ],
+        "class_numbers": [
+            22130
+        ],
+        "enrolled_current": 43,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2414",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "020"
+        ],
+        "title": "Integral Calculus",
+        "instructors": [
+            "Adannah Duruoha"
+        ],
+        "class_numbers": [
+            22071
+        ],
+        "enrolled_current": 43,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2418",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Linear Algebra",
+        "instructors": [
+            "Hui Ding"
+        ],
+        "class_numbers": [
+            22140
+        ],
+        "enrolled_current": 43,
+        "enrolled_max": 55,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2414",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "014"
+        ],
+        "title": "Integral Calculus",
+        "instructors": [
+            "Kelly Aman"
+        ],
+        "class_numbers": [
+            22027
+        ],
+        "enrolled_current": 42,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "4382",
+        "course_prefixes": [
+            "stat"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Stochastic Processes",
+        "instructors": [
+            "Yuly Koshevnik"
+        ],
+        "class_numbers": [
+            22242
+        ],
+        "enrolled_current": 42,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2419",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Calculus II",
+        "instructors": [
+            "Anatoly Eydelzon"
+        ],
+        "class_numbers": [
+            21946
+        ],
+        "enrolled_current": 41,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2322",
+        "course_prefixes": [
+            "atcm"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Media Histories",
+        "instructors": [
+            "Hong An Wu"
+        ],
+        "class_numbers": [
+            20672
+        ],
+        "enrolled_current": 40,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "4384",
+        "course_prefixes": [
+            "atcm"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Ethics in New Media  Technology  and Communication",
+        "instructors": [
+            "Janet Johnson"
+        ],
+        "class_numbers": [
+            20606
+        ],
+        "enrolled_current": 40,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "1303",
+        "course_prefixes": [
+            "film"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Transnational Film and Video",
+        "instructors": [
+            "Amine Faali"
+        ],
+        "class_numbers": [
+            20255
+        ],
+        "enrolled_current": 40,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "1303",
+        "course_prefixes": [
+            "film"
+        ],
+        "sections": [
+            "0w2"
+        ],
+        "title": "Transnational Film and Video",
+        "instructors": [
+            "Angelica Martinez Ochoa"
+        ],
+        "class_numbers": [
+            28080
+        ],
+        "enrolled_current": 40,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "1303",
+        "course_prefixes": [
+            "film"
+        ],
+        "sections": [
+            "0w4"
+        ],
+        "title": "Transnational Film and Video",
+        "instructors": [
+            "Kasif Rahman"
+        ],
+        "class_numbers": [
+            28993
+        ],
+        "enrolled_current": 40,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2332",
+        "course_prefixes": [
+            "film"
+        ],
+        "sections": [
+            "005"
+        ],
+        "title": "Understanding Film",
+        "instructors": [
+            "Hanno Berger"
+        ],
+        "class_numbers": [
+            29134
+        ],
+        "enrolled_current": 40,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2332",
+        "course_prefixes": [
+            "film"
+        ],
+        "sections": [
+            "0w4"
+        ],
+        "title": "Understanding Film",
+        "instructors": [
+            "Sabine Sassner"
+        ],
+        "class_numbers": [
+            29064
+        ],
+        "enrolled_current": 40,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "1302",
+        "course_prefixes": [
+            "hist"
+        ],
+        "sections": [
+            "502"
+        ],
+        "title": "U S  History Survey from Civil War",
+        "instructors": [
+            "Ryan Pettengill"
+        ],
+        "class_numbers": [
+            29207
+        ],
+        "enrolled_current": 40,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "1325",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Applied Calculus I",
+        "instructors": [
+            "Manjula Foley"
+        ],
+        "class_numbers": [
+            21908
+        ],
+        "enrolled_current": 40,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "1325",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Applied Calculus I",
+        "instructors": [
+            "Derege Mussa"
+        ],
+        "class_numbers": [
+            21909
+        ],
+        "enrolled_current": 40,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "1325",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Applied Calculus I",
+        "instructors": [
+            "Jigarkumar Patel"
+        ],
+        "class_numbers": [
+            22121
+        ],
+        "enrolled_current": 40,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "1325",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "005"
+        ],
+        "title": "Applied Calculus I",
+        "instructors": [
+            "Derege Mussa"
+        ],
+        "class_numbers": [
+            21997
+        ],
+        "enrolled_current": 40,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "1325",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "006"
+        ],
+        "title": "Applied Calculus I",
+        "instructors": [
+            "Jigarkumar Patel"
+        ],
+        "class_numbers": [
+            22151
+        ],
+        "enrolled_current": 40,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "1325",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "009"
+        ],
+        "title": "Applied Calculus I",
+        "instructors": [
+            "Joselle Kehoe"
+        ],
+        "class_numbers": [
+            27719
+        ],
+        "enrolled_current": 40,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "1325",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "010"
+        ],
+        "title": "Applied Calculus I",
+        "instructors": [
+            "Joselle Kehoe"
+        ],
+        "class_numbers": [
+            22164
+        ],
+        "enrolled_current": 40,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2420",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Differential Equations with Applications",
+        "instructors": [
+            "Saikat Biswas"
+        ],
+        "class_numbers": [
+            22004
+        ],
+        "enrolled_current": 40,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "3427",
+        "course_prefixes": [
+            "phys"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Electronics with Laboratory",
+        "instructors": [
+            "Matthew Goeckner"
+        ],
+        "class_numbers": [
+            22766
+        ],
+        "enrolled_current": 40,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "1310",
+        "course_prefixes": [
+            "thea"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Understanding Theatre",
+        "instructors": [
+            "Shahrzad Hamzeh"
+        ],
+        "class_numbers": [
+            20183
+        ],
+        "enrolled_current": 40,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "3461",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "202"
+        ],
+        "title": "Biochemistry I",
+        "instructors": [
+            "Sheel Dodani",
+            "Sandhya Gavva"
+        ],
+        "class_numbers": [
+            23087
+        ],
+        "enrolled_current": 39,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "3461",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "204"
+        ],
+        "title": "Biochemistry I",
+        "instructors": [
+            "Sheel Dodani",
+            "Sandhya Gavva"
+        ],
+        "class_numbers": [
+            23089
+        ],
+        "enrolled_current": 39,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "1305",
+        "course_prefixes": [
+            "danc"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Introduction to World Dance Forms",
+        "instructors": [
+            "Hayley Duplantier"
+        ],
+        "class_numbers": [
+            28068
+        ],
+        "enrolled_current": 39,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2368",
+        "course_prefixes": [
+            "isns"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Weather and Climate",
+        "instructors": [
+            "Steven McCauley"
+        ],
+        "class_numbers": [
+            22605
+        ],
+        "enrolled_current": 39,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "nsmtphys"
+    },
+    {
+        "course_number": "1325",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "007"
+        ],
+        "title": "Applied Calculus I",
+        "instructors": [
+            "Jigarkumar Patel"
+        ],
+        "class_numbers": [
+            22150
+        ],
+        "enrolled_current": 39,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2414",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "007"
+        ],
+        "title": "Integral Calculus",
+        "instructors": [
+            "Mylinh Nguyen"
+        ],
+        "class_numbers": [
+            22107
+        ],
+        "enrolled_current": 39,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2414",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "017"
+        ],
+        "title": "Integral Calculus",
+        "instructors": [],
+        "class_numbers": [
+            22069
+        ],
+        "enrolled_current": 39,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2414",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "021"
+        ],
+        "title": "Integral Calculus",
+        "instructors": [
+            "Kelly Aman"
+        ],
+        "class_numbers": [
+            22149
+        ],
+        "enrolled_current": 39,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "5381",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Genomics",
+        "instructors": [
+            "Tae Hoon Kim"
+        ],
+        "class_numbers": [
+            22387
+        ],
+        "enrolled_current": 38,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "1325",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "008"
+        ],
+        "title": "Applied Calculus I",
+        "instructors": [
+            "Neha Makhijani"
+        ],
+        "class_numbers": [
+            27718
+        ],
+        "enrolled_current": 38,
+        "enrolled_max": 38,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "2341",
+        "course_prefixes": [
+            "hist"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "East Asian Civilizations",
+        "instructors": [
+            "J Michael Farmer"
+        ],
+        "class_numbers": [
+            20200
+        ],
+        "enrolled_current": 37,
+        "enrolled_max": 80,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2414",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Integral Calculus",
+        "instructors": [
+            "Irina Martynova"
+        ],
+        "class_numbers": [
+            21922
+        ],
+        "enrolled_current": 37,
+        "enrolled_max": 44,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "3455",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "303"
+        ],
+        "title": "Human Anatomy and Physiology with Lab I",
+        "instructors": [
+            "Andy Cheshire"
+        ],
+        "class_numbers": [
+            22367
+        ],
+        "enrolled_current": 36,
+        "enrolled_max": 36,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "3455",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "304"
+        ],
+        "title": "Human Anatomy and Physiology with Lab I",
+        "instructors": [
+            "Andy Cheshire"
+        ],
+        "class_numbers": [
+            22565
+        ],
+        "enrolled_current": 36,
+        "enrolled_max": 36,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "3455",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "305"
+        ],
+        "title": "Human Anatomy and Physiology with Lab I",
+        "instructors": [
+            "Meenakshi Maitra"
+        ],
+        "class_numbers": [
+            22525
+        ],
+        "enrolled_current": 36,
+        "enrolled_max": 36,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "3455",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "306"
+        ],
+        "title": "Human Anatomy and Physiology with Lab I",
+        "instructors": [
+            "Andy Cheshire"
+        ],
+        "class_numbers": [
+            22368
+        ],
+        "enrolled_current": 36,
+        "enrolled_max": 36,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "3455",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "307"
+        ],
+        "title": "Human Anatomy and Physiology with Lab I",
+        "instructors": [
+            "Meenakshi Maitra"
+        ],
+        "class_numbers": [
+            29171
+        ],
+        "enrolled_current": 36,
+        "enrolled_max": 36,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "3455",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "308"
+        ],
+        "title": "Human Anatomy and Physiology with Lab I",
+        "instructors": [
+            "Zhuoru Wu",
+            "Meenakshi Maitra"
+        ],
+        "class_numbers": [
+            29172
+        ],
+        "enrolled_current": 36,
+        "enrolled_max": 36,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "3455",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "802"
+        ],
+        "title": "Human Anatomy and Physiology with Lab I",
+        "instructors": [
+            "Zhuoru Wu"
+        ],
+        "class_numbers": [
+            22843
+        ],
+        "enrolled_current": 36,
+        "enrolled_max": 36,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "3456",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "301"
+        ],
+        "title": "Human Anatomy and Physiology with Lab II",
+        "instructors": [
+            "Wen Yu"
+        ],
+        "class_numbers": [
+            22408
+        ],
+        "enrolled_current": 36,
+        "enrolled_max": 36,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "3456",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "303"
+        ],
+        "title": "Human Anatomy and Physiology with Lab II",
+        "instructors": [
+            "Wen Yu"
+        ],
+        "class_numbers": [
+            22369
+        ],
+        "enrolled_current": 36,
+        "enrolled_max": 36,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "3456",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "304"
+        ],
+        "title": "Human Anatomy and Physiology with Lab II",
+        "instructors": [
+            "Wen Yu"
+        ],
+        "class_numbers": [
+            22557
+        ],
+        "enrolled_current": 36,
+        "enrolled_max": 36,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "3456",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "801"
+        ],
+        "title": "Human Anatomy and Physiology with Lab II",
+        "instructors": [
+            "Subha Sarcar"
+        ],
+        "class_numbers": [
+            22841
+        ],
+        "enrolled_current": 36,
+        "enrolled_max": 36,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "4385",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Oral Histology and Embryology",
+        "instructors": [
+            "David Murchison"
+        ],
+        "class_numbers": [
+            22447
+        ],
+        "enrolled_current": 36,
+        "enrolled_max": 36,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "5440",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Cell Biology",
+        "instructors": [
+            "Yuki Shindo",
+            "Zhao Sun"
+        ],
+        "class_numbers": [
+            22539
+        ],
+        "enrolled_current": 36,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    },
+    {
+        "course_number": "1303",
+        "course_prefixes": [
+            "film"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Transnational Film and Video",
+        "instructors": [
+            "Maureen Okwulogu"
+        ],
+        "class_numbers": [
+            20477
+        ],
+        "enrolled_current": 36,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "ahtc"
+    },
+    {
+        "course_number": "2414",
+        "course_prefixes": [
+            "math"
+        ],
+        "sections": [
+            "018"
+        ],
+        "title": "Integral Calculus",
+        "instructors": [
+            "Adannah Duruoha"
+        ],
+        "class_numbers": [
+            22070
+        ],
+        "enrolled_current": 36,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "nsmtmath"
+    },
+    {
+        "course_number": "1318",
+        "course_prefixes": [
+            "biol"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Human Genetics",
+        "instructors": [
+            "Meenakshi Maitra"
+        ],
+        "class_numbers": [
+            22566
+        ],
+        "enrolled_current": 35,
+        "enrolled_max": 35,
+        "assistants": [],
+        "dept": "nsmtbiol"
+    }
+]

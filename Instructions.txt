@@ -1,0 +1,9 @@
+Put the all courses json for whatever current semester wanting to filter into the 1all_classes folder
+then run the python script the final schools (top250) should be in the 3top_250_schools_FINAL folder based
+on enrollment count
+
+change CLASSES_PATH = os.path.join(BASE_DIR, '1all_classes', 'classes_25f.json')
+to change the filename for different json names
+
+to run script:
+    python3 split_and_filter_courses.py

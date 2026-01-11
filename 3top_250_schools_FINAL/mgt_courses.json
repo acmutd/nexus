@@ -1,0 +1,5035 @@
+[
+    {
+        "course_number": "4340",
+        "course_prefixes": [
+            "entp"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Social Sector Entrepreneurship and Community Engagement",
+        "instructors": [
+            "Robert Wright",
+            "Mary Fickel"
+        ],
+        "class_numbers": [
+            26365
+        ],
+        "enrolled_current": 117,
+        "enrolled_max": 150,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6332",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Spreadsheet Modeling and Analytics",
+        "instructors": [
+            "Ignacio Rios Uribe"
+        ],
+        "class_numbers": [
+            28956
+        ],
+        "enrolled_current": 83,
+        "enrolled_max": 85,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2301",
+        "course_prefixes": [
+            "blaw"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Business and Public Law",
+        "instructors": [
+            "Matthew Polze"
+        ],
+        "class_numbers": [
+            26420
+        ],
+        "enrolled_current": 75,
+        "enrolled_max": 75,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2301",
+        "course_prefixes": [
+            "blaw"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Business and Public Law",
+        "instructors": [
+            "Matthew Polze"
+        ],
+        "class_numbers": [
+            26209
+        ],
+        "enrolled_current": 75,
+        "enrolled_max": 75,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2301",
+        "course_prefixes": [
+            "blaw"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Business and Public Law",
+        "instructors": [
+            "Matthew Polze"
+        ],
+        "class_numbers": [
+            26356
+        ],
+        "enrolled_current": 75,
+        "enrolled_max": 75,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2301",
+        "course_prefixes": [
+            "blaw"
+        ],
+        "sections": [
+            "502"
+        ],
+        "title": "Business and Public Law",
+        "instructors": [
+            "Christina Betanzos"
+        ],
+        "class_numbers": [
+            27054
+        ],
+        "enrolled_current": 75,
+        "enrolled_max": 75,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3330",
+        "course_prefixes": [
+            "obhr"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Human Resource Management in Business",
+        "instructors": [
+            "Rhonda Green"
+        ],
+        "class_numbers": [
+            26589
+        ],
+        "enrolled_current": 75,
+        "enrolled_max": 75,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2301",
+        "course_prefixes": [
+            "blaw"
+        ],
+        "sections": [
+            "503"
+        ],
+        "title": "Business and Public Law",
+        "instructors": [
+            "Christina Betanzos"
+        ],
+        "class_numbers": [
+            27111
+        ],
+        "enrolled_current": 70,
+        "enrolled_max": 70,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4356",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Data Governance",
+        "instructors": [
+            "Atanas Hansen"
+        ],
+        "class_numbers": [
+            27355
+        ],
+        "enrolled_current": 69,
+        "enrolled_max": 70,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2301",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Introductory Financial Accounting",
+        "instructors": [
+            "Naim Bugra Ozel",
+            "Jieying Zhang"
+        ],
+        "class_numbers": [
+            27101
+        ],
+        "enrolled_current": 68,
+        "enrolled_max": 68,
+        "assistants": [
+            "Galymzhan Tazhibayev",
+            "Zhe Han"
+        ],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3332",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Intermediate Financial Accounting II",
+        "instructors": [
+            "Tiffany Bortz"
+        ],
+        "class_numbers": [
+            26260
+        ],
+        "enrolled_current": 68,
+        "enrolled_max": 68,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3360",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Managerial Methods in Decision Making Under Uncertainty",
+        "instructors": [
+            "Aysegul Toptal"
+        ],
+        "class_numbers": [
+            26636
+        ],
+        "enrolled_current": 68,
+        "enrolled_max": 68,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3360",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Managerial Methods in Decision Making Under Uncertainty",
+        "instructors": [
+            "Aysegul Toptal"
+        ],
+        "class_numbers": [
+            26779
+        ],
+        "enrolled_current": 68,
+        "enrolled_max": 68,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3360",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "005"
+        ],
+        "title": "Managerial Methods in Decision Making Under Uncertainty",
+        "instructors": [
+            "Ahmet Simsek"
+        ],
+        "class_numbers": [
+            26253
+        ],
+        "enrolled_current": 68,
+        "enrolled_max": 68,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3360",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "006"
+        ],
+        "title": "Managerial Methods in Decision Making Under Uncertainty",
+        "instructors": [
+            "Jiarui Wei"
+        ],
+        "class_numbers": [
+            26254
+        ],
+        "enrolled_current": 68,
+        "enrolled_max": 68,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3360",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "007"
+        ],
+        "title": "Managerial Methods in Decision Making Under Uncertainty",
+        "instructors": [
+            "Mingliu Chen"
+        ],
+        "class_numbers": [
+            26780
+        ],
+        "enrolled_current": 68,
+        "enrolled_max": 68,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3360",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "010"
+        ],
+        "title": "Managerial Methods in Decision Making Under Uncertainty",
+        "instructors": [
+            "Maya Balakrishnan"
+        ],
+        "class_numbers": [
+            27387
+        ],
+        "enrolled_current": 68,
+        "enrolled_max": 68,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3360",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Managerial Methods in Decision Making Under Uncertainty",
+        "instructors": [
+            "Monica Brussolo"
+        ],
+        "class_numbers": [
+            26643
+        ],
+        "enrolled_current": 68,
+        "enrolled_max": 68,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3360",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "0w2"
+        ],
+        "title": "Managerial Methods in Decision Making Under Uncertainty",
+        "instructors": [
+            "Khatereh Ahadi"
+        ],
+        "class_numbers": [
+            27251
+        ],
+        "enrolled_current": 68,
+        "enrolled_max": 68,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2301",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Introductory Financial Accounting",
+        "instructors": [
+            "Jieying Zhang",
+            "Naim Bugra Ozel"
+        ],
+        "class_numbers": [
+            26161
+        ],
+        "enrolled_current": 67,
+        "enrolled_max": 68,
+        "assistants": [
+            "Galymzhan Tazhibayev",
+            "Zhe Han"
+        ],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2301",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Introductory Financial Accounting",
+        "instructors": [
+            "Naim Bugra Ozel",
+            "Jieying Zhang"
+        ],
+        "class_numbers": [
+            27103
+        ],
+        "enrolled_current": 67,
+        "enrolled_max": 68,
+        "assistants": [
+            "Galymzhan Tazhibayev",
+            "Zhe Han"
+        ],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2301",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "005"
+        ],
+        "title": "Introductory Financial Accounting",
+        "instructors": [
+            "Naim Bugra Ozel",
+            "Jieying Zhang"
+        ],
+        "class_numbers": [
+            26768
+        ],
+        "enrolled_current": 67,
+        "enrolled_max": 68,
+        "assistants": [
+            "Galymzhan Tazhibayev",
+            "Zhe Han"
+        ],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2301",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "006"
+        ],
+        "title": "Introductory Financial Accounting",
+        "instructors": [
+            "Naim Bugra Ozel",
+            "Jieying Zhang"
+        ],
+        "class_numbers": [
+            26957
+        ],
+        "enrolled_current": 67,
+        "enrolled_max": 68,
+        "assistants": [
+            "Galymzhan Tazhibayev",
+            "Zhe Han"
+        ],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2301",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "502"
+        ],
+        "title": "Introductory Financial Accounting",
+        "instructors": [
+            "Naim Bugra Ozel",
+            "Jieying Zhang"
+        ],
+        "class_numbers": [
+            28730
+        ],
+        "enrolled_current": 67,
+        "enrolled_max": 68,
+        "assistants": [
+            "Galymzhan Tazhibayev",
+            "Zhe Han"
+        ],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3360",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Managerial Methods in Decision Making Under Uncertainty",
+        "instructors": [
+            "Mohammad Amin Farzaneh"
+        ],
+        "class_numbers": [
+            26252
+        ],
+        "enrolled_current": 67,
+        "enrolled_max": 68,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2301",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Introductory Financial Accounting",
+        "instructors": [
+            "Dongdi Gu"
+        ],
+        "class_numbers": [
+            26425
+        ],
+        "enrolled_current": 66,
+        "enrolled_max": 68,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2301",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Introductory Financial Accounting",
+        "instructors": [
+            "Stanimir Markov"
+        ],
+        "class_numbers": [
+            26160
+        ],
+        "enrolled_current": 65,
+        "enrolled_max": 68,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2301",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "007"
+        ],
+        "title": "Introductory Financial Accounting",
+        "instructors": [
+            "Stanimir Markov"
+        ],
+        "class_numbers": [
+            27112
+        ],
+        "enrolled_current": 65,
+        "enrolled_max": 68,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2301",
+        "course_prefixes": [
+            "blaw"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Business and Public Law",
+        "instructors": [
+            "Walter Sutton"
+        ],
+        "class_numbers": [
+            26601
+        ],
+        "enrolled_current": 65,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2301",
+        "course_prefixes": [
+            "blaw"
+        ],
+        "sections": [
+            "005"
+        ],
+        "title": "Business and Public Law",
+        "instructors": [
+            "Frederick Barrow"
+        ],
+        "class_numbers": [
+            26529
+        ],
+        "enrolled_current": 65,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Information Technology for Business",
+        "instructors": [
+            "Prakash Shrivastava"
+        ],
+        "class_numbers": [
+            26372
+        ],
+        "enrolled_current": 65,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "503"
+        ],
+        "title": "Information Technology for Business",
+        "instructors": [
+            "Atanas Hansen"
+        ],
+        "class_numbers": [
+            26811
+        ],
+        "enrolled_current": 65,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Supply Chain and Operations Management",
+        "instructors": [
+            "Sarmann Kennedyd"
+        ],
+        "class_numbers": [
+            26775
+        ],
+        "enrolled_current": 65,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Supply Chain and Operations Management",
+        "instructors": [
+            "Sarmann Kennedyd"
+        ],
+        "class_numbers": [
+            26329
+        ],
+        "enrolled_current": 65,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Supply Chain and Operations Management",
+        "instructors": [
+            "Ashwin Venkataraman"
+        ],
+        "class_numbers": [
+            26570
+        ],
+        "enrolled_current": 65,
+        "enrolled_max": 65,
+        "assistants": [
+            "Rahul Sharma"
+        ],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "005"
+        ],
+        "title": "Supply Chain and Operations Management",
+        "instructors": [
+            "Ignacio Rios Uribe"
+        ],
+        "class_numbers": [
+            26776
+        ],
+        "enrolled_current": 65,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "007"
+        ],
+        "title": "Supply Chain and Operations Management",
+        "instructors": [
+            "Mengxin Wang"
+        ],
+        "class_numbers": [
+            26571
+        ],
+        "enrolled_current": 65,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Supply Chain and Operations Management",
+        "instructors": [
+            "Shawn Alborz"
+        ],
+        "class_numbers": [
+            27153
+        ],
+        "enrolled_current": 65,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "0w2"
+        ],
+        "title": "Supply Chain and Operations Management",
+        "instructors": [
+            "Ramesh Subramoniam"
+        ],
+        "class_numbers": [
+            27249
+        ],
+        "enrolled_current": 65,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "0w3"
+        ],
+        "title": "Supply Chain and Operations Management",
+        "instructors": [
+            "Shawn Alborz"
+        ],
+        "class_numbers": [
+            29670
+        ],
+        "enrolled_current": 65,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Supply Chain and Operations Management",
+        "instructors": [
+            "Naireet Ghosh"
+        ],
+        "class_numbers": [
+            26369
+        ],
+        "enrolled_current": 65,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3330",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Project Management",
+        "instructors": [
+            "Sarmann Kennedyd"
+        ],
+        "class_numbers": [
+            28917
+        ],
+        "enrolled_current": 65,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3330",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Project Management",
+        "instructors": [
+            "Shawn Alborz"
+        ],
+        "class_numbers": [
+            27114
+        ],
+        "enrolled_current": 65,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2301",
+        "course_prefixes": [
+            "blaw"
+        ],
+        "sections": [
+            "006"
+        ],
+        "title": "Business and Public Law",
+        "instructors": [
+            "Mirna Baloul"
+        ],
+        "class_numbers": [
+            27283
+        ],
+        "enrolled_current": 64,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "507"
+        ],
+        "title": "Information Technology for Business",
+        "instructors": [
+            "Paul Ceverha"
+        ],
+        "class_numbers": [
+            27058
+        ],
+        "enrolled_current": 64,
+        "enrolled_max": 64,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3311",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Introduction to Programming",
+        "instructors": [
+            "Ozgur Aksoy"
+        ],
+        "class_numbers": [
+            26528
+        ],
+        "enrolled_current": 64,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3311",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Introduction to Programming",
+        "instructors": [
+            "Ozgur Aksoy"
+        ],
+        "class_numbers": [
+            26813
+        ],
+        "enrolled_current": 64,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6374",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Advanced Data Analytics and AI for Accountants and Auditors",
+        "instructors": [
+            "Matthew Paske"
+        ],
+        "class_numbers": [
+            26939
+        ],
+        "enrolled_current": 63,
+        "enrolled_max": 63,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "007"
+        ],
+        "title": "Information Technology for Business",
+        "instructors": [
+            "Sharmin Hanifiafshar"
+        ],
+        "class_numbers": [
+            26639
+        ],
+        "enrolled_current": 63,
+        "enrolled_max": 63,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "008"
+        ],
+        "title": "Information Technology for Business",
+        "instructors": [
+            "Shawn Alborz"
+        ],
+        "class_numbers": [
+            29414
+        ],
+        "enrolled_current": 63,
+        "enrolled_max": 63,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Information Technology for Business",
+        "instructors": [
+            "John Young"
+        ],
+        "class_numbers": [
+            26923
+        ],
+        "enrolled_current": 63,
+        "enrolled_max": 63,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4300",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Database Fundamentals",
+        "instructors": [
+            "Paul Ceverha"
+        ],
+        "class_numbers": [
+            26582
+        ],
+        "enrolled_current": 63,
+        "enrolled_max": 55,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4330",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Systems Analysis and Design",
+        "instructors": [
+            "Juveria Baig"
+        ],
+        "class_numbers": [
+            26586
+        ],
+        "enrolled_current": 63,
+        "enrolled_max": 63,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4330",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Systems Analysis and Design",
+        "instructors": [
+            "Juveria Baig"
+        ],
+        "class_numbers": [
+            26581
+        ],
+        "enrolled_current": 63,
+        "enrolled_max": 63,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4360",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Network and Information Security",
+        "instructors": [],
+        "class_numbers": [
+            26924
+        ],
+        "enrolled_current": 63,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4361",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Information Technology Cybersecurity",
+        "instructors": [
+            "Taimur Khan"
+        ],
+        "class_numbers": [
+            27356
+        ],
+        "enrolled_current": 63,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3333",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Quantitative Business Analysis",
+        "instructors": [
+            "Negin Enayaty Ahangar"
+        ],
+        "class_numbers": [
+            26251
+        ],
+        "enrolled_current": 63,
+        "enrolled_max": 63,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3333",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Quantitative Business Analysis",
+        "instructors": [
+            "Negin Enayaty Ahangar"
+        ],
+        "class_numbers": [
+            26304
+        ],
+        "enrolled_current": 63,
+        "enrolled_max": 63,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3333",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Quantitative Business Analysis",
+        "instructors": [
+            "Tristan Whalen"
+        ],
+        "class_numbers": [
+            26344
+        ],
+        "enrolled_current": 63,
+        "enrolled_max": 63,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3333",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "005"
+        ],
+        "title": "Quantitative Business Analysis",
+        "instructors": [
+            "Hien Nguyen"
+        ],
+        "class_numbers": [
+            27819
+        ],
+        "enrolled_current": 63,
+        "enrolled_max": 63,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3333",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "006"
+        ],
+        "title": "Quantitative Business Analysis",
+        "instructors": [
+            "Khatereh Ahadi"
+        ],
+        "class_numbers": [
+            27165
+        ],
+        "enrolled_current": 63,
+        "enrolled_max": 63,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3333",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "007"
+        ],
+        "title": "Quantitative Business Analysis",
+        "instructors": [
+            "Hien Nguyen"
+        ],
+        "class_numbers": [
+            27194
+        ],
+        "enrolled_current": 63,
+        "enrolled_max": 63,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3312",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Fundamentals of Accounting Analytics",
+        "instructors": [
+            "Jedson Pinto"
+        ],
+        "class_numbers": [
+            29180
+        ],
+        "enrolled_current": 62,
+        "enrolled_max": 62,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6301",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Financial Management",
+        "instructors": [
+            "Hirofumi Nishi"
+        ],
+        "class_numbers": [
+            26219
+        ],
+        "enrolled_current": 62,
+        "enrolled_max": 62,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Information Technology for Business",
+        "instructors": [
+            "Robert Franson"
+        ],
+        "class_numbers": [
+            26375
+        ],
+        "enrolled_current": 62,
+        "enrolled_max": 62,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Information Technology for Business",
+        "instructors": [
+            "Prakash Shrivastava"
+        ],
+        "class_numbers": [
+            26371
+        ],
+        "enrolled_current": 62,
+        "enrolled_max": 62,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "006"
+        ],
+        "title": "Information Technology for Business",
+        "instructors": [
+            "Nan Wang"
+        ],
+        "class_numbers": [
+            26987
+        ],
+        "enrolled_current": 62,
+        "enrolled_max": 62,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "504"
+        ],
+        "title": "Information Technology for Business",
+        "instructors": [
+            "Masudal Khan"
+        ],
+        "class_numbers": [
+            26812
+        ],
+        "enrolled_current": 62,
+        "enrolled_max": 62,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "505"
+        ],
+        "title": "Information Technology for Business",
+        "instructors": [
+            "Francisco Martinez"
+        ],
+        "class_numbers": [
+            26505
+        ],
+        "enrolled_current": 62,
+        "enrolled_max": 62,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4330",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Systems Analysis and Design",
+        "instructors": [
+            "Jeffrey Baker"
+        ],
+        "class_numbers": [
+            27166
+        ],
+        "enrolled_current": 62,
+        "enrolled_max": 63,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6370",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Global Logistics and Transportation",
+        "instructors": [
+            "Andrew Frazelle"
+        ],
+        "class_numbers": [
+            26663
+        ],
+        "enrolled_current": 62,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2302",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Introductory Management Accounting",
+        "instructors": [
+            "Kirti Sinha"
+        ],
+        "class_numbers": [
+            26938
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2302",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Introductory Management Accounting",
+        "instructors": [
+            "Kirti Sinha"
+        ],
+        "class_numbers": [
+            27102
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2302",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Introductory Management Accounting",
+        "instructors": [
+            "Kirti Sinha"
+        ],
+        "class_numbers": [
+            26769
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2302",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Introductory Management Accounting",
+        "instructors": [
+            "Ying Huang"
+        ],
+        "class_numbers": [
+            27244
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2302",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "005"
+        ],
+        "title": "Introductory Management Accounting",
+        "instructors": [
+            "Ying Huang"
+        ],
+        "class_numbers": [
+            26346
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2302",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "007"
+        ],
+        "title": "Introductory Management Accounting",
+        "instructors": [
+            "Ying Huang"
+        ],
+        "class_numbers": [
+            26573
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2302",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "008"
+        ],
+        "title": "Introductory Management Accounting",
+        "instructors": [
+            "Christopher Hes"
+        ],
+        "class_numbers": [
+            27240
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2302",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "010"
+        ],
+        "title": "Introductory Management Accounting",
+        "instructors": [
+            "Christopher Hes"
+        ],
+        "class_numbers": [
+            28741
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2302",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Introductory Management Accounting",
+        "instructors": [
+            "Kathy Zolton"
+        ],
+        "class_numbers": [
+            26205
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3341",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Cost Management Systems",
+        "instructors": [
+            "Gil Sadka"
+        ],
+        "class_numbers": [
+            26206
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "1310",
+        "course_prefixes": [
+            "ba"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Making Choices in Free Market Systems",
+        "instructors": [
+            "Kyle Hyndman"
+        ],
+        "class_numbers": [
+            26983
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "1310",
+        "course_prefixes": [
+            "ba"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Making Choices in Free Market Systems",
+        "instructors": [
+            "Kyle Hyndman"
+        ],
+        "class_numbers": [
+            26699
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "1310",
+        "course_prefixes": [
+            "ba"
+        ],
+        "sections": [
+            "005"
+        ],
+        "title": "Making Choices in Free Market Systems",
+        "instructors": [
+            "Mouli Modak"
+        ],
+        "class_numbers": [
+            28928
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "1310",
+        "course_prefixes": [
+            "ba"
+        ],
+        "sections": [
+            "008"
+        ],
+        "title": "Making Choices in Free Market Systems",
+        "instructors": [
+            "Xiaodan Zhao"
+        ],
+        "class_numbers": [
+            29230
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "1310",
+        "course_prefixes": [
+            "ba"
+        ],
+        "sections": [
+            "009"
+        ],
+        "title": "Making Choices in Free Market Systems",
+        "instructors": [
+            "Xiaodan Zhao"
+        ],
+        "class_numbers": [
+            29232
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "1320",
+        "course_prefixes": [
+            "ba"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Business in a Global World",
+        "instructors": [
+            "Moran Blueshtein"
+        ],
+        "class_numbers": [
+            28905
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "1320",
+        "course_prefixes": [
+            "ba"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Business in a Global World",
+        "instructors": [
+            "Peter Lewin"
+        ],
+        "class_numbers": [
+            26956
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "1320",
+        "course_prefixes": [
+            "ba"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Business in a Global World",
+        "instructors": [
+            "Moran Blueshtein"
+        ],
+        "class_numbers": [
+            27397
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "1320",
+        "course_prefixes": [
+            "ba"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Business in a Global World",
+        "instructors": [
+            "Peter Lewin"
+        ],
+        "class_numbers": [
+            26700
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2301",
+        "course_prefixes": [
+            "blaw"
+        ],
+        "sections": [
+            "504"
+        ],
+        "title": "Business and Public Law",
+        "instructors": [
+            "Frederick Barrow"
+        ],
+        "class_numbers": [
+            28736
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3301",
+        "course_prefixes": [
+            "buan"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "AI in Business",
+        "instructors": [
+            "Ashim Bose"
+        ],
+        "class_numbers": [
+            28930
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3301",
+        "course_prefixes": [
+            "buan"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "AI in Business",
+        "instructors": [
+            "Subrahmanyam Aditya Karanam"
+        ],
+        "class_numbers": [
+            28931
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3301",
+        "course_prefixes": [
+            "buan"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "AI in Business",
+        "instructors": [
+            "Subrahmanyam Aditya Karanam"
+        ],
+        "class_numbers": [
+            28932
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3301",
+        "course_prefixes": [
+            "buan"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "AI in Business",
+        "instructors": [
+            "Ashim Bose"
+        ],
+        "class_numbers": [
+            28961
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3301",
+        "course_prefixes": [
+            "buan"
+        ],
+        "sections": [
+            "005"
+        ],
+        "title": "AI in Business",
+        "instructors": [
+            "Jeffrey Baker"
+        ],
+        "class_numbers": [
+            28960
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3301",
+        "course_prefixes": [
+            "buan"
+        ],
+        "sections": [
+            "006"
+        ],
+        "title": "AI in Business",
+        "instructors": [
+            "Prajakti Akarte"
+        ],
+        "class_numbers": [
+            29181
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3301",
+        "course_prefixes": [
+            "buan"
+        ],
+        "sections": [
+            "502"
+        ],
+        "title": "AI in Business",
+        "instructors": [
+            "Ashim Bose"
+        ],
+        "class_numbers": [
+            28959
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3301",
+        "course_prefixes": [
+            "buan"
+        ],
+        "sections": [
+            "503"
+        ],
+        "title": "AI in Business",
+        "instructors": [
+            "Ramesh Lakshmanan"
+        ],
+        "class_numbers": [
+            29271
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3301",
+        "course_prefixes": [
+            "buan"
+        ],
+        "sections": [
+            "504"
+        ],
+        "title": "AI in Business",
+        "instructors": [
+            "Ramesh Lakshmanan"
+        ],
+        "class_numbers": [
+            29272
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6398",
+        "course_prefixes": [
+            "buan"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Prescriptive Analytics",
+        "instructors": [
+            "Tristan Whalen"
+        ],
+        "class_numbers": [
+            26786
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 70,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Personal Finance",
+        "instructors": [
+            "Julie Lynch"
+        ],
+        "class_numbers": [
+            27096
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3320",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Business Finance",
+        "instructors": [
+            "Christopher Mace"
+        ],
+        "class_numbers": [
+            26641
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3320",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "005"
+        ],
+        "title": "Business Finance",
+        "instructors": [
+            "Umit Kurucak"
+        ],
+        "class_numbers": [
+            27082
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3320",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "016"
+        ],
+        "title": "Business Finance",
+        "instructors": [
+            "Girish Bachani"
+        ],
+        "class_numbers": [
+            27118
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3320",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "502"
+        ],
+        "title": "Business Finance",
+        "instructors": [
+            "Christopher Mace"
+        ],
+        "class_numbers": [
+            28745
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3395",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Financial Modeling and Valuation",
+        "instructors": [
+            "Jeff Noland"
+        ],
+        "class_numbers": [
+            28158
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4300",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Investment Management",
+        "instructors": [
+            "Xiaoxiao Tang"
+        ],
+        "class_numbers": [
+            26569
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4300",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Investment Management",
+        "instructors": [
+            "Revansiddha Khanapure"
+        ],
+        "class_numbers": [
+            26921
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [
+            "Huzeifa Mustafa"
+        ],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4300",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Investment Management",
+        "instructors": [
+            "Xiaoxiao Tang"
+        ],
+        "class_numbers": [
+            28157
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4305",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Fixed Income Securities Analysis",
+        "instructors": [
+            "Kannoo Ravindran"
+        ],
+        "class_numbers": [
+            28872
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "ho1"
+        ],
+        "title": "Information Technology for Business",
+        "instructors": [
+            "Timothy Stephens"
+        ],
+        "class_numbers": [
+            26374
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4370",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Information Technology Infrastructure",
+        "instructors": [
+            "Masudal Khan"
+        ],
+        "class_numbers": [
+            26382
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6349",
+        "course_prefixes": [
+            "mis"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Digital Consulting Project",
+        "instructors": [
+            "Florence Lowe"
+        ],
+        "class_numbers": [
+            27142
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6363",
+        "course_prefixes": [
+            "mis"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Cloud Computing Fundamentals",
+        "instructors": [
+            "Liugen Song"
+        ],
+        "class_numbers": [
+            26951
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Principles of Marketing",
+        "instructors": [
+            "Tongil Kim"
+        ],
+        "class_numbers": [
+            26235
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "008"
+        ],
+        "title": "Principles of Marketing",
+        "instructors": [],
+        "class_numbers": [
+            26305
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "009"
+        ],
+        "title": "Principles of Marketing",
+        "instructors": [
+            "Nanda Kumar"
+        ],
+        "class_numbers": [
+            26338
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "013"
+        ],
+        "title": "Principles of Marketing",
+        "instructors": [
+            "Taewook Lim"
+        ],
+        "class_numbers": [
+            26339
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4360",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Social Impact Marketing",
+        "instructors": [
+            "David Matthews"
+        ],
+        "class_numbers": [
+            26774
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "obhr"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Organizational Behavior",
+        "instructors": [
+            "Karren Knowlton"
+        ],
+        "class_numbers": [
+            27089
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "obhr"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Organizational Behavior",
+        "instructors": [
+            "Karren Knowlton"
+        ],
+        "class_numbers": [
+            26516
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "obhr"
+        ],
+        "sections": [
+            "007"
+        ],
+        "title": "Organizational Behavior",
+        "instructors": [
+            "Karren Knowlton"
+        ],
+        "class_numbers": [
+            27088
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "obhr"
+        ],
+        "sections": [
+            "008"
+        ],
+        "title": "Organizational Behavior",
+        "instructors": [
+            "Hwayoung Kim"
+        ],
+        "class_numbers": [
+            29257
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "obhr"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Organizational Behavior",
+        "instructors": [
+            "Barbara Lee"
+        ],
+        "class_numbers": [
+            27342
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3330",
+        "course_prefixes": [
+            "obhr"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Human Resource Management in Business",
+        "instructors": [
+            "Rhonda Green"
+        ],
+        "class_numbers": [
+            26648
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "008"
+        ],
+        "title": "Supply Chain and Operations Management",
+        "instructors": [
+            "Parisa Shahsavand"
+        ],
+        "class_numbers": [
+            28933
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3333",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "008"
+        ],
+        "title": "Quantitative Business Analysis",
+        "instructors": [
+            "Khatereh Ahadi"
+        ],
+        "class_numbers": [
+            29532
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3333",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Quantitative Business Analysis",
+        "instructors": [
+            "Negin Enayaty Ahangar"
+        ],
+        "class_numbers": [
+            27189
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3333",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "0w2"
+        ],
+        "title": "Quantitative Business Analysis",
+        "instructors": [
+            "Khatereh Ahadi"
+        ],
+        "class_numbers": [
+            27362
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3340",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Advanced Quantitative Business Methods",
+        "instructors": [
+            "Tristan Whalen"
+        ],
+        "class_numbers": [
+            27250
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3360",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Managerial Methods in Decision Making Under Uncertainty",
+        "instructors": [
+            "Anyan Qi"
+        ],
+        "class_numbers": [
+            26628
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3360",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "008"
+        ],
+        "title": "Managerial Methods in Decision Making Under Uncertainty",
+        "instructors": [
+            "Anyan Qi"
+        ],
+        "class_numbers": [
+            27188
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3360",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "009"
+        ],
+        "title": "Managerial Methods in Decision Making Under Uncertainty",
+        "instructors": [
+            "Yining Wang"
+        ],
+        "class_numbers": [
+            27282
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3360",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "011"
+        ],
+        "title": "Managerial Methods in Decision Making Under Uncertainty",
+        "instructors": [
+            "Like Bu"
+        ],
+        "class_numbers": [
+            26595
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6379",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Product Lifecycle Management",
+        "instructors": [
+            "Divakar Rajamani"
+        ],
+        "class_numbers": [
+            26401
+        ],
+        "enrolled_current": 60,
+        "enrolled_max": 60,
+        "assistants": [
+            "Tianyu Yan"
+        ],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3312",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Fundamentals of Accounting Analytics",
+        "instructors": [
+            "Mary Beth Goodrich"
+        ],
+        "class_numbers": [
+            29053
+        ],
+        "enrolled_current": 59,
+        "enrolled_max": 62,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4336",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Financial Statement Analysis",
+        "instructors": [
+            "Steven Solcher"
+        ],
+        "class_numbers": [
+            28728
+        ],
+        "enrolled_current": 59,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6320",
+        "course_prefixes": [
+            "buan"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Database Foundations for Business Analytics",
+        "instructors": [
+            "K. Srikanth"
+        ],
+        "class_numbers": [
+            26397
+        ],
+        "enrolled_current": 59,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4300",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Investment Management",
+        "instructors": [
+            "Xiaoxiao Tang"
+        ],
+        "class_numbers": [
+            26856
+        ],
+        "enrolled_current": 59,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6353",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Financial Modeling for Investment Analysis",
+        "instructors": [
+            "Huibing Zhang"
+        ],
+        "class_numbers": [
+            27185
+        ],
+        "enrolled_current": 59,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4362",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Cybersecurity Governance",
+        "instructors": [
+            "Taimur Khan"
+        ],
+        "class_numbers": [
+            26734
+        ],
+        "enrolled_current": 59,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6313",
+        "course_prefixes": [
+            "mis"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Managing IT in the Analytics Age",
+        "instructors": [
+            "Sumit Sarkar"
+        ],
+        "class_numbers": [
+            26868
+        ],
+        "enrolled_current": 59,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6360",
+        "course_prefixes": [
+            "mis"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Agile Project Management",
+        "instructors": [
+            "Mark Thouin"
+        ],
+        "class_numbers": [
+            26857
+        ],
+        "enrolled_current": 59,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Principles of Marketing",
+        "instructors": [
+            "Tongil Kim"
+        ],
+        "class_numbers": [
+            26842
+        ],
+        "enrolled_current": 59,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "009"
+        ],
+        "title": "Supply Chain and Operations Management",
+        "instructors": [
+            "Vaidyanathan (Vaidy) Jayaraman"
+        ],
+        "class_numbers": [
+            28934
+        ],
+        "enrolled_current": 59,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3333",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Quantitative Business Analysis",
+        "instructors": [
+            "Neslihan Oguzman"
+        ],
+        "class_numbers": [
+            26778
+        ],
+        "enrolled_current": 59,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3360",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Managerial Methods in Decision Making Under Uncertainty",
+        "instructors": [
+            "Ahmet Simsek"
+        ],
+        "class_numbers": [
+            26563
+        ],
+        "enrolled_current": 59,
+        "enrolled_max": 63,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4320",
+        "course_prefixes": [
+            "entp"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Small Business Management",
+        "instructors": [
+            "Kimberly Wright"
+        ],
+        "class_numbers": [
+            26364
+        ],
+        "enrolled_current": 58,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3340",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Regulation of Business and Financial Markets",
+        "instructors": [
+            "Peter Lewin"
+        ],
+        "class_numbers": [
+            26216
+        ],
+        "enrolled_current": 58,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4360",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Network and Information Security",
+        "instructors": [
+            "Rostislav Ginevich"
+        ],
+        "class_numbers": [
+            26502
+        ],
+        "enrolled_current": 58,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6335",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Ethics for Professional Accountants",
+        "instructors": [
+            "Tiffany Bortz"
+        ],
+        "class_numbers": [
+            26652
+        ],
+        "enrolled_current": 57,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4352",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Introduction to Web Analytics",
+        "instructors": [
+            "Vatsal Maru"
+        ],
+        "class_numbers": [
+            26545
+        ],
+        "enrolled_current": 57,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4360",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "502"
+        ],
+        "title": "Network and Information Security",
+        "instructors": [
+            "Satish More"
+        ],
+        "class_numbers": [
+            27193
+        ],
+        "enrolled_current": 57,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4334",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Social Media Marketing",
+        "instructors": [
+            "Parneet Pahwa"
+        ],
+        "class_numbers": [
+            26296
+        ],
+        "enrolled_current": 57,
+        "enrolled_max": 58,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4340",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Purchasing and Sourcing Management",
+        "instructors": [
+            "Bin Hu"
+        ],
+        "class_numbers": [
+            27814
+        ],
+        "enrolled_current": 57,
+        "enrolled_max": 60,
+        "assistants": [
+            "Mohammed Zumar Ali Hassan"
+        ],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4311",
+        "course_prefixes": [
+            "entp"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Entrepreneurial Strategy and Business Models",
+        "instructors": [
+            "Carol Marcus-Rehtmeyer"
+        ],
+        "class_numbers": [
+            26363
+        ],
+        "enrolled_current": 56,
+        "enrolled_max": 56,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3320",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Business Finance",
+        "instructors": [
+            "Revansiddha Khanapure"
+        ],
+        "class_numbers": [
+            26576
+        ],
+        "enrolled_current": 56,
+        "enrolled_max": 56,
+        "assistants": [
+            "Huzeifa Mustafa"
+        ],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3320",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Business Finance",
+        "instructors": [
+            "Pingle Wang"
+        ],
+        "class_numbers": [
+            26759
+        ],
+        "enrolled_current": 56,
+        "enrolled_max": 56,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3320",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "006"
+        ],
+        "title": "Business Finance",
+        "instructors": [
+            "Revansiddha Khanapure"
+        ],
+        "class_numbers": [
+            26360
+        ],
+        "enrolled_current": 56,
+        "enrolled_max": 56,
+        "assistants": [
+            "Huzeifa Mustafa"
+        ],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3320",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "015"
+        ],
+        "title": "Business Finance",
+        "instructors": [
+            "Christopher Mace"
+        ],
+        "class_numbers": [
+            26958
+        ],
+        "enrolled_current": 56,
+        "enrolled_max": 56,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3350",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Financial Markets and Institutions",
+        "instructors": [
+            "Han (Victor) Xia"
+        ],
+        "class_numbers": [
+            26362
+        ],
+        "enrolled_current": 56,
+        "enrolled_max": 56,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Information Technology for Business",
+        "instructors": [
+            "Prakash Shrivastava"
+        ],
+        "class_numbers": [
+            26373
+        ],
+        "enrolled_current": 56,
+        "enrolled_max": 56,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4370",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "502"
+        ],
+        "title": "Information Technology Infrastructure",
+        "instructors": [
+            "Aparna Godbole"
+        ],
+        "class_numbers": [
+            26922
+        ],
+        "enrolled_current": 56,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6303",
+        "course_prefixes": [
+            "meco"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Business Economics",
+        "instructors": [
+            "Peter Lewin"
+        ],
+        "class_numbers": [
+            26202
+        ],
+        "enrolled_current": 56,
+        "enrolled_max": 57,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Principles of Marketing",
+        "instructors": [
+            "Jin Miao"
+        ],
+        "class_numbers": [
+            26841
+        ],
+        "enrolled_current": 56,
+        "enrolled_max": 56,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "502"
+        ],
+        "title": "Principles of Marketing",
+        "instructors": [
+            "Khai Chiong"
+        ],
+        "class_numbers": [
+            27290
+        ],
+        "enrolled_current": 56,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4330",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Digital and Internet Marketing",
+        "instructors": [
+            "Wesley Durow"
+        ],
+        "class_numbers": [
+            29076
+        ],
+        "enrolled_current": 56,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4336",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "E-Retailing",
+        "instructors": [
+            "Wesley Durow"
+        ],
+        "class_numbers": [
+            26511
+        ],
+        "enrolled_current": 56,
+        "enrolled_max": 56,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3320",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Integrated Supply Chain Management",
+        "instructors": [
+            "Soraya Fatehi"
+        ],
+        "class_numbers": [
+            26972
+        ],
+        "enrolled_current": 56,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4310",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Lean and Six Sigma Processes",
+        "instructors": [
+            "Kannan Ramanathan"
+        ],
+        "class_numbers": [
+            26599
+        ],
+        "enrolled_current": 56,
+        "enrolled_max": 56,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3322",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Accounting Transaction Processing and Control",
+        "instructors": [
+            "Mary Beth Goodrich"
+        ],
+        "class_numbers": [
+            26162
+        ],
+        "enrolled_current": 55,
+        "enrolled_max": 56,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6301",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Financial Accounting",
+        "instructors": [
+            "Ashiq Ali"
+        ],
+        "class_numbers": [
+            27291
+        ],
+        "enrolled_current": 55,
+        "enrolled_max": 55,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4310",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Intermediate Financial Management",
+        "instructors": [
+            "Frank Anderson"
+        ],
+        "class_numbers": [
+            28994
+        ],
+        "enrolled_current": 55,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3311",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Introduction to Programming",
+        "instructors": [
+            "Rabih Neouchi"
+        ],
+        "class_numbers": [
+            27161
+        ],
+        "enrolled_current": 55,
+        "enrolled_max": 56,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6333",
+        "course_prefixes": [
+            "mis"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Digital Forensics and Incident Management",
+        "instructors": [
+            "Tejas Shroff"
+        ],
+        "class_numbers": [
+            26518
+        ],
+        "enrolled_current": 55,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "hon"
+        ],
+        "title": "Principles of Marketing",
+        "instructors": [
+            "Rita Egeland"
+        ],
+        "class_numbers": [
+            27299
+        ],
+        "enrolled_current": 55,
+        "enrolled_max": 63,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6301",
+        "course_prefixes": [
+            "ob"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Organizational Behavior",
+        "instructors": [
+            "Maria Hasenhuttl"
+        ],
+        "class_numbers": [
+            26199
+        ],
+        "enrolled_current": 55,
+        "enrolled_max": 55,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6301",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Statistics and Data Analysis",
+        "instructors": [
+            "Sonia Leach"
+        ],
+        "class_numbers": [
+            26781
+        ],
+        "enrolled_current": 55,
+        "enrolled_max": 57,
+        "assistants": [
+            "Ranjani Kalyanasundaram"
+        ],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6332",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Spreadsheet Modeling and Analytics",
+        "instructors": [
+            "Kannan Ramanathan"
+        ],
+        "class_numbers": [
+            26387
+        ],
+        "enrolled_current": 55,
+        "enrolled_max": 55,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6344",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Financial Statement Analysis",
+        "instructors": [
+            "Umit Gurun"
+        ],
+        "class_numbers": [
+            27241
+        ],
+        "enrolled_current": 54,
+        "enrolled_max": 65,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4380",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Advanced Database Management",
+        "instructors": [
+            "Timothy Stephens"
+        ],
+        "class_numbers": [
+            26456
+        ],
+        "enrolled_current": 54,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3330",
+        "course_prefixes": [
+            "obhr"
+        ],
+        "sections": [
+            "006"
+        ],
+        "title": "Human Resource Management in Business",
+        "instructors": [
+            "Riki Takeuchi"
+        ],
+        "class_numbers": [
+            26869
+        ],
+        "enrolled_current": 54,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3333",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Quantitative Business Analysis",
+        "instructors": [
+            "Malgorzata Woldu"
+        ],
+        "class_numbers": [
+            26777
+        ],
+        "enrolled_current": 54,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6301",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Financial Accounting",
+        "instructors": [
+            "Samuel Cheng"
+        ],
+        "class_numbers": [
+            26514
+        ],
+        "enrolled_current": 53,
+        "enrolled_max": 63,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "ba"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Advanced Topics in Capitalism  Ideas and Challenges That Shape Our World",
+        "instructors": [
+            "Yingzhi Liang"
+        ],
+        "class_numbers": [
+            27270
+        ],
+        "enrolled_current": 53,
+        "enrolled_max": 56,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6301",
+        "course_prefixes": [
+            "ob"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Organizational Behavior",
+        "instructors": [
+            "Jeffrey Hicks"
+        ],
+        "class_numbers": [
+            26551
+        ],
+        "enrolled_current": 53,
+        "enrolled_max": 55,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4320",
+        "course_prefixes": [
+            "buan"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Database Fundamentals for Analytics",
+        "instructors": [
+            "Thiru Pandian"
+        ],
+        "class_numbers": [
+            27289
+        ],
+        "enrolled_current": 52,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6320",
+        "course_prefixes": [
+            "buan"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Database Foundations for Business Analytics",
+        "instructors": [
+            "K. Srikanth"
+        ],
+        "class_numbers": [
+            26398
+        ],
+        "enrolled_current": 52,
+        "enrolled_max": 63,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6335",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Energy Finance",
+        "instructors": [
+            "Daniel Sibley"
+        ],
+        "class_numbers": [
+            29075
+        ],
+        "enrolled_current": 52,
+        "enrolled_max": 52,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4300",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Database Fundamentals",
+        "instructors": [
+            "Naser Islam"
+        ],
+        "class_numbers": [
+            26378
+        ],
+        "enrolled_current": 52,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4301",
+        "course_prefixes": [
+            "blaw"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "International Law",
+        "instructors": [
+            "Walter Sutton"
+        ],
+        "class_numbers": [
+            27120
+        ],
+        "enrolled_current": 51,
+        "enrolled_max": 56,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "010"
+        ],
+        "title": "Information Technology for Business",
+        "instructors": [
+            "Alison Bodeker"
+        ],
+        "class_numbers": [
+            29697
+        ],
+        "enrolled_current": 51,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4351",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "502"
+        ],
+        "title": "Foundations of Business Intelligence",
+        "instructors": [
+            "Cuneyd Kaya"
+        ],
+        "class_numbers": [
+            27160
+        ],
+        "enrolled_current": 51,
+        "enrolled_max": 52,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "503"
+        ],
+        "title": "Principles of Marketing",
+        "instructors": [
+            "Taewook Lim"
+        ],
+        "class_numbers": [
+            28857
+        ],
+        "enrolled_current": 51,
+        "enrolled_max": 56,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4330",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Digital and Internet Marketing",
+        "instructors": [
+            "Alexander Edsel"
+        ],
+        "class_numbers": [
+            26386
+        ],
+        "enrolled_current": 51,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4330",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Global Logistics and Inventory Management",
+        "instructors": [
+            "Chonghuan Wang"
+        ],
+        "class_numbers": [
+            29323
+        ],
+        "enrolled_current": 51,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4337",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Business Valuation",
+        "instructors": [
+            "Gregory Ballew"
+        ],
+        "class_numbers": [
+            26702
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4395",
+        "course_prefixes": [
+            "bps"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Capstone Senior Project - Business",
+        "instructors": [
+            "Ali Kheirandish"
+        ],
+        "class_numbers": [
+            26861
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4395",
+        "course_prefixes": [
+            "bps"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Capstone Senior Project - Business",
+        "instructors": [
+            "David Parks"
+        ],
+        "class_numbers": [
+            26863
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4395",
+        "course_prefixes": [
+            "bps"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Capstone Senior Project - Business",
+        "instructors": [
+            "Arun Kumar"
+        ],
+        "class_numbers": [
+            26999
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4395",
+        "course_prefixes": [
+            "bps"
+        ],
+        "sections": [
+            "006"
+        ],
+        "title": "Capstone Senior Project - Business",
+        "instructors": [
+            "Senthilnatha Velayudham"
+        ],
+        "class_numbers": [
+            27195
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4395",
+        "course_prefixes": [
+            "bps"
+        ],
+        "sections": [
+            "007"
+        ],
+        "title": "Capstone Senior Project - Business",
+        "instructors": [
+            "Maria Albrecht"
+        ],
+        "class_numbers": [
+            27158
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4395",
+        "course_prefixes": [
+            "bps"
+        ],
+        "sections": [
+            "008"
+        ],
+        "title": "Capstone Senior Project - Business",
+        "instructors": [
+            "Adrian Terry"
+        ],
+        "class_numbers": [
+            27178
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4395",
+        "course_prefixes": [
+            "bps"
+        ],
+        "sections": [
+            "009"
+        ],
+        "title": "Capstone Senior Project - Business",
+        "instructors": [
+            "Tom Henderson"
+        ],
+        "class_numbers": [
+            27239
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4395",
+        "course_prefixes": [
+            "bps"
+        ],
+        "sections": [
+            "010"
+        ],
+        "title": "Capstone Senior Project - Business",
+        "instructors": [
+            "Aaron Galloway"
+        ],
+        "class_numbers": [
+            29151
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4395",
+        "course_prefixes": [
+            "bps"
+        ],
+        "sections": [
+            "502"
+        ],
+        "title": "Capstone Senior Project - Business",
+        "instructors": [
+            "Jon Segelhorst"
+        ],
+        "class_numbers": [
+            27017
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4351",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Foundations of Business Intelligence",
+        "instructors": [
+            "Timothy Stephens"
+        ],
+        "class_numbers": [
+            26577
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4351",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Foundations of Business Intelligence",
+        "instructors": [
+            "Thiru Pandian"
+        ],
+        "class_numbers": [
+            26748
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4351",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Foundations of Business Intelligence",
+        "instructors": [
+            "Thiru Pandian"
+        ],
+        "class_numbers": [
+            27400
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4370",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Information Technology Infrastructure",
+        "instructors": [
+            "Sumit Majumdar"
+        ],
+        "class_numbers": [
+            27331
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4370",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "0w2"
+        ],
+        "title": "Information Technology Infrastructure",
+        "instructors": [
+            "Sumit Majumdar"
+        ],
+        "class_numbers": [
+            27335
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4395",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Capstone Senior Project - Information Systems",
+        "instructors": [
+            "Robert Stogsdill"
+        ],
+        "class_numbers": [
+            26986
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Principles of Marketing",
+        "instructors": [
+            "Parneet Pahwa"
+        ],
+        "class_numbers": [
+            26441
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "0w2"
+        ],
+        "title": "Principles of Marketing",
+        "instructors": [
+            "Fang Wu"
+        ],
+        "class_numbers": [
+            26642
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4395",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Capstone Senior Project - Marketing",
+        "instructors": [
+            "Wesley Durow"
+        ],
+        "class_numbers": [
+            26297
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6366",
+        "course_prefixes": [
+            "opre"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "Global Supply Chain Management",
+        "instructors": [
+            "Metin Cakanyildirim"
+        ],
+        "class_numbers": [
+            26871
+        ],
+        "enrolled_current": 50,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "2302",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "006"
+        ],
+        "title": "Introductory Management Accounting",
+        "instructors": [
+            "Christopher Hes"
+        ],
+        "class_numbers": [
+            28721
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3341",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Cost Management Systems",
+        "instructors": [
+            "Kathy Zolton"
+        ],
+        "class_numbers": [
+            29178
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6332",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Intermediate Financial Accounting II",
+        "instructors": [
+            "Kathy Zolton"
+        ],
+        "class_numbers": [
+            26602
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "ba"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Advanced Topics in Capitalism  Ideas and Challenges That Shape Our World",
+        "instructors": [
+            "Simon Siegenthaler"
+        ],
+        "class_numbers": [
+            27269
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3301",
+        "course_prefixes": [
+            "buan"
+        ],
+        "sections": [
+            "505"
+        ],
+        "title": "AI in Business",
+        "instructors": [],
+        "class_numbers": [
+            29654
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4373",
+        "course_prefixes": [
+            "buan"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Data Science for Business Applications",
+        "instructors": [
+            "Rasoul Ramezani"
+        ],
+        "class_numbers": [
+            29217
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 56,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Personal Finance",
+        "instructors": [
+            "Luis Felipe Varas Greene"
+        ],
+        "class_numbers": [
+            27381
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3390",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Introduction to Financial Modeling",
+        "instructors": [
+            "Hirofumi Nishi"
+        ],
+        "class_numbers": [
+            26962
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3390",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Introduction to Financial Modeling",
+        "instructors": [
+            "Hirofumi Nishi"
+        ],
+        "class_numbers": [
+            26964
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4395",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Capstone Senior Project - Finance",
+        "instructors": [
+            "Frank Anderson"
+        ],
+        "class_numbers": [
+            29116
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 30,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4362",
+        "course_prefixes": [
+            "itss"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Cybersecurity Governance",
+        "instructors": [
+            "Steven Haynes"
+        ],
+        "class_numbers": [
+            28848
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6308",
+        "course_prefixes": [
+            "mis"
+        ],
+        "sections": [
+            "0w1"
+        ],
+        "title": "System Analysis and Project Management",
+        "instructors": [
+            "Srinivasan Raghunathan"
+        ],
+        "class_numbers": [
+            26991
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 50,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "010"
+        ],
+        "title": "Principles of Marketing",
+        "instructors": [
+            "Khai Chiong"
+        ],
+        "class_numbers": [
+            26385
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3320",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Product and Brand Management",
+        "instructors": [
+            "Fang Wu"
+        ],
+        "class_numbers": [
+            26982
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4330",
+        "course_prefixes": [
+            "mkt"
+        ],
+        "sections": [
+            "0w2"
+        ],
+        "title": "Digital and Internet Marketing",
+        "instructors": [
+            "Alexander Edsel"
+        ],
+        "class_numbers": [
+            26839
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 60,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "obhr"
+        ],
+        "sections": [
+            "003"
+        ],
+        "title": "Organizational Behavior",
+        "instructors": [
+            "Ning Li"
+        ],
+        "class_numbers": [
+            26828
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "obhr"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Organizational Behavior",
+        "instructors": [
+            "Ning Li"
+        ],
+        "class_numbers": [
+            26829
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "obhr"
+        ],
+        "sections": [
+            "005"
+        ],
+        "title": "Organizational Behavior",
+        "instructors": [
+            "Constance An"
+        ],
+        "class_numbers": [
+            27149
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3310",
+        "course_prefixes": [
+            "obhr"
+        ],
+        "sections": [
+            "006"
+        ],
+        "title": "Organizational Behavior",
+        "instructors": [
+            "Constance An"
+        ],
+        "class_numbers": [
+            27090
+        ],
+        "enrolled_current": 49,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3331",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Intermediate Financial Accounting I",
+        "instructors": [
+            "Junyoung Jeong"
+        ],
+        "class_numbers": [
+            26163
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4334",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "501"
+        ],
+        "title": "Auditing",
+        "instructors": [
+            "Matthew Paske"
+        ],
+        "class_numbers": [
+            26166
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "6331",
+        "course_prefixes": [
+            "acct"
+        ],
+        "sections": [
+            "5w1"
+        ],
+        "title": "Cost Accounting with Integrated Data Analytics",
+        "instructors": [
+            "Surya Janakiraman"
+        ],
+        "class_numbers": [
+            26574
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "ba"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Advanced Topics in Capitalism  Ideas and Challenges That Shape Our World",
+        "instructors": [
+            "Yingzhi Liang"
+        ],
+        "class_numbers": [
+            27268
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3300",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Personal Finance",
+        "instructors": [
+            "Luis Felipe Varas Greene"
+        ],
+        "class_numbers": [
+            28159
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3320",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "004"
+        ],
+        "title": "Business Finance",
+        "instructors": [
+            "Christopher Reilly"
+        ],
+        "class_numbers": [
+            26640
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3320",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "007"
+        ],
+        "title": "Business Finance",
+        "instructors": [
+            "James Richards"
+        ],
+        "class_numbers": [
+            26575
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3320",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "008"
+        ],
+        "title": "Business Finance",
+        "instructors": [
+            "Serena Xiao"
+        ],
+        "class_numbers": [
+            26959
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3320",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "009"
+        ],
+        "title": "Business Finance",
+        "instructors": [
+            "Jun Li"
+        ],
+        "class_numbers": [
+            26808
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3320",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "010"
+        ],
+        "title": "Business Finance",
+        "instructors": [
+            "Jiawei Hu"
+        ],
+        "class_numbers": [
+            28885
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3320",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "014"
+        ],
+        "title": "Business Finance",
+        "instructors": [
+            "Jun Li"
+        ],
+        "class_numbers": [
+            27272
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3320",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "019"
+        ],
+        "title": "Business Finance",
+        "instructors": [
+            "Umit Kurucak"
+        ],
+        "class_numbers": [
+            28995
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 48,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "3390",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "002"
+        ],
+        "title": "Introduction to Financial Modeling",
+        "instructors": [
+            "Dupinderjeet Kaur"
+        ],
+        "class_numbers": [
+            27079
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 40,
+        "assistants": [],
+        "dept": "mgmt"
+    },
+    {
+        "course_number": "4307",
+        "course_prefixes": [
+            "fin"
+        ],
+        "sections": [
+            "001"
+        ],
+        "title": "Private Equity",
+        "instructors": [
+            "Serena Xiao"
+        ],
+        "class_numbers": [
+            26854
+        ],
+        "enrolled_current": 48,
+        "enrolled_max": 49,
+        "assistants": [],
+        "dept": "mgmt"
+    }
+]
