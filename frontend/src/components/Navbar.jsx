@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { HiAcademicCap, HiCalculator, HiUserCircle, HiDocumentText } from 'react-icons/hi';
+import { HiUserCircle, HiDocumentText } from 'react-icons/hi';
+import { FaCalculator } from "react-icons/fa";
+import { AiFillDiscord } from "react-icons/ai";
 import { useAuth } from '../context/authContext';
 import { getAuth, signOut } from 'firebase/auth';
 import { getApp } from 'firebase/app';
@@ -56,7 +58,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={navbarClasses}>
+    <nav className={`${navbarClasses} font-titilliumWeb-semibold`}>
       <div className="container mx-auto ">
         <div className="flex justify-between items-center py-4 navbar-content">
           <button
@@ -70,17 +72,17 @@ const Navbar = () => {
           <div className="flex space-x-6 items-center">
             <>
               <Link to="/discordservers" className={linkClasses}>
-                <HiAcademicCap className="mr-1" /> Servers
+                <AiFillDiscord className="mr-1 text-xl" /> Discord Servers
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
               </Link>
 
               <Link to="/grade-calculator" className={linkClasses}>
-                <HiCalculator className="mr-1" /> Grade Calculator
+                <FaCalculator className="mr-1" /> Grade Calculator
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
               </Link>
 
               <button onClick={handleSuperdocClick} className={linkClasses}>
-                <HiDocumentText className="mr-1" /> Superdoc
+                <HiDocumentText className="mr-1 text-xl" /> Superdoc
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
               </button>
             </>

@@ -6,6 +6,9 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  setPersistence,
+  browserSessionPersistence,
+  browserLocalPersistence,
 } from "firebase/auth";
 
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
@@ -22,6 +25,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [error, setError] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
 
   const [showForgot, setShowForgot] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
@@ -83,6 +87,8 @@ const Login = () => {
     setError("");
     if (!auth) return setError("App not initialized.");
     try {
+      // Set persistence according to "Remember me"
+      await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
       await signInWithEmailAndPassword(auth, email.trim(), pw);
     } catch (e) {
       setError(e?.message?.replace("Firebase: ", "") || "Login failed");
@@ -154,6 +160,15 @@ const Login = () => {
                 </button>
               </div>
             </div>
+            <label className="flex items-center gap-2 mb-4 tinyText font-titilliumWeb-semibold">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="w-4 h-4"
+              />
+              <span>Remember me</span>
+            </label>
             {error && <div className="text-red-600 mb-4 tinyText font-medium">{error}</div>}
             <Button text={"Login"} type="submit"/>
           </form>
