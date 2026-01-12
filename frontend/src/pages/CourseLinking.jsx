@@ -255,7 +255,7 @@ export default function CourseLinking() {
       </h1>
 
       <div
-        className="flex flex-col bg-blue-100 rounded-xl shadow-2xl p-6"
+        className="flex flex-col bg-nexus50 rounded-xl shadow-2xl p-6"
         style={{
           zIndex: 2,
           width: isMed ? "90%" : "50rem",

@@ -14,6 +14,7 @@ import Settings from './pages/settings';
 import DiscordServers from './pages/DiscordServers';
 import Home from './pages/Home';
 import CourseLinking from './pages/CourseLinking';
+import AccountLinking from './pages/AccountLinking';
 import ResetPassword from './pages/ResetPassword';
 
 function App() {
@@ -23,10 +24,7 @@ function App() {
       <div>
         <Navbar />
         <Routes>
-          <Route path="/" element={
-            <LandingPage/>
-          }/>
-
+          <Route path="/" element={<LandingPage/>}/>
           <Route path="/settings" element={<RequireAuth><Settings/></RequireAuth>} />
           <Route path="/grade-calculator" element={<RequireAuth><GradeCalculator /></RequireAuth>} />
           <Route path="/grade-history" element={<RequireAuth><GradeHistory /></RequireAuth>} />
@@ -39,6 +37,7 @@ function App() {
           <Route path="/discordservers" element={<RequireAuth><DiscordServers /></RequireAuth>} />
           <Route path="/home" element={<RequireAuth><Home /></RequireAuth>} />
           <Route path="/CourseLinking" element={<RequireAuth><CourseLinking /></RequireAuth>} />
+          <Route path="/accountlinking" element={<RequireAuth><AccountLinking /></RequireAuth>} />
           <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
 
