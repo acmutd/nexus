@@ -154,8 +154,8 @@ export default function CourseLinking() {
       const data = await response.json();
       if (!response.ok || !data.success) throw new Error(data.error || 'Failed to save transcript');
 
-      // Navigate on success
-      navigate('/home');
+      // Navigate on success -> go to account linking
+      navigate('/accountlinking');
     } catch (error) {
       console.error('Confirm transcript error:', error);
       setTranscriptError(error.message || 'Failed to save transcript');
