@@ -5,6 +5,7 @@ import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { AnimatePresence, motion } from 'framer-motion';
 import { getFirestore, doc, onSnapshot } from 'firebase/firestore';
 import { HiX } from 'react-icons/hi';
+import pfp from '../assets/default_pfp.svg';
 
 export default function AvatarMenu({
   settingsOnClick,
@@ -100,11 +101,7 @@ export default function AvatarMenu({
         {avatarUrl ? (
           <img src={avatarUrl} alt="Discord avatar" className="h-full w-full object-cover" referrerPolicy="no-referrer"/>
         ) : (
-          <div className="h-full w-full flex items-center justify-center bg-nexus100" style={{cursor: 'pointer'}}>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 opacity-60" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 12c2.761 0 5-2.69 5-6s-2.239-6-5-6-5 2.69-5 6 2.239 6 5 6zm0 2c-4.418 0-8 2.91-8 6.5V23h16v-2.5C20 16.91 16.418 14 12 14z"/>
-            </svg>
-          </div>
+          <img src={pfp} alt="Default avatar" className="h-full w-full object-cover" />
         )}
       </button>
 
@@ -121,11 +118,7 @@ export default function AvatarMenu({
               {avatarUrl ? (
                 <img src={avatarUrl} alt="Discord avatar" className="rounded-full h-20 w-20 object-cover" referrerPolicy="no-referrer"/>
                 ) : (
-                <div className="border-4 border-nexus400 rounded-full h-20 w-20 flex items-center justify-center bg-nexus100" style={{cursor: 'pointer'}}>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 opacity-60" viewBox="0 0 24 24" fill="black">
-                    <path d="M12 12c2.761 0 5-2.69 5-6s-2.239-6-5-6-5 2.69-5 6 2.239 6 5 6zm0 2c-4.418 0-8 2.91-8 6.5V23h16v-2.5C20 16.91 16.418 14 12 14z"/>
-                  </svg>
-                </div>
+                <img src={pfp} alt="Default avatar" className="rounded-full h-20 w-20 object-cover" />
                 )}
                 <div className="pt-4 px-2">
                   {user.email}
