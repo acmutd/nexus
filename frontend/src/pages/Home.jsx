@@ -3,12 +3,8 @@ import { motion } from 'framer-motion';
 
 const gradesData = [
   { subject: 'Math', homework: 92, exam: 88, weights: { homework: 0.4, exam: 0.6 } },
-  { subject: 'Science', homework: 85, exam: 94, weights: { homework: 0.5, exam: 0.5 } },
   { subject: 'History', homework: 90, exam: 86, weights: { homework: 0.3, exam: 0.7 } },
-  { subject: 'English', homework: 96, exam: 89, weights: { homework: 0.5, exam: 0.5 } },
   { subject: 'Computer Science', homework: 99, exam: 97, weights: { homework: 0.4, exam: 0.6 } },
-  { subject: 'Art', homework: 95, exam: 91, weights: { homework: 0.6, exam: 0.4 } },
-  { subject: 'Music', homework: 94, exam: 98, weights: { homework: 0.5, exam: 0.5 } },
 ];
 
 const calculateWeightedGrade = (homework, exam, weights) => {
@@ -71,7 +67,7 @@ const Home = () => {
       case "Superdoc":
         navigate("/superdoc")
         break;
-      case "Grade Calc":
+      case "GradeCalc":
         navigate("/grade-calculator")
         break;
       case "Settings":
@@ -97,11 +93,11 @@ const Home = () => {
 
           {/* ----------------------- BUTTONS --------------------------------*/}
           <div className="flex flex-wrap justify-center gap-12 mb-10">
-            {['Discord', 'Superdoc', 'Grade Calc', 'Settings'].map((name) => (
+            {['Discord', 'Superdoc', 'GradeCalc', 'Settings'].map((name) => (
               <div key={name} className="flex flex-col items-center">
                 <div
                   className="rounded-xl p-6 w-36 h-36 hover:scale-110 transition cursor-pointer bg-cover bg-center"
-                  style={{ backgroundImage: `url('/assets/${name} Button.svg')` }} 
+                  style={{ backgroundImage: `url('/assets/${name}Button.svg')` }} 
                   onClick={() => handleButtonClick(name)}
                 />
                 <span className="text-white text-sm font-semibold mt-2">
@@ -112,16 +108,14 @@ const Home = () => {
           </div>
 
           {/* Recent Activity*/}
-          <div className="bg-nexus800 rounded-xl p-6 w-full text-white mb-4">
+          <div className="bg-nexus800 rounded-xl p-6 w-full text-white mb-4 relative">
             <h3 className="text-2xl font-titilliumWeb-semibold mb-1">Recent Activity</h3>
             <ul className="text-nexus300 text-lg space-y-1 font-titilliumWeb-regular ">
-              <li>Logged in</li>
-              <li>Viewed Superdoc</li>
             </ul>
           </div>
 
           {/*Grades */}
-          <div className="flex bg-nexus800 rounded-xl p-6 w-full h-full text-white">
+          <div className="flex bg-nexus800 rounded-xl p-6 w-full h-full text-white relative">
             {/* -------------------- CONTENT ------------------------ */}
             <div className="flex flex-wrap w-full h-fit justify-center items-center">
               <h3 className="flex w-full text-2xl font-titilliumWeb-semibold mb-4">Grades</h3>

@@ -37,7 +37,7 @@ const DocSideBar = () => {
    >
      <button
        onClick={toggleSidebar}
-       className="absolute top-20 -right-6 bg-nexus600 text-white p-2 rounded-r-md z-50 shadow-md"
+       className="absolute top-20 -right-6 bg-nexus600 text-white p-2 rounded-r-md z-50 shadow-md cursor-pointer"
      >
        {isCollapsed ? <HiChevronRight size={20} /> : <HiChevronLeft size={20} />}
      </button>
