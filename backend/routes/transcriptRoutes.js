@@ -7,7 +7,18 @@ const path = require('path');
 
 const router = express.Router();
 const PARSE_SEMESTER = '2025 Fall'; // e.g. "2025 Fall" "2026 Spring"
-const IGNORE_ACTIVITY_FILTER = true; // for enabling/disabling lecture/lab filtering, true means disabled activity filter
+
+const EXCLUDED_ACTIVITY_TYPES = new Set([
+  'Laboratory',
+  'Laboratory - No Lab Fee',
+  'Common Exam',
+  'Dissertation',
+  'Independent Study',
+  'Internship',
+  "Master's Thesis",
+  'Practicum',
+  'Research',
+]);
 
 // response helpers
 const fail = (res, code, error, extra = {}) => res.status(code).json({ success: false, error, ...extra });
@@ -121,11 +132,15 @@ function courseHasAllowedActivity({ term, prefix, number }) {
   const set = activityByCourseKey.get(key);
   if (!set || set.size === 0) return false;
 
+  // If any activity for the course is in the excluded list, mark the course as disallowed
+  const excludedLower = new Set(Array.from(EXCLUDED_ACTIVITY_TYPES).map((s) => String(s).toLowerCase()));
   for (const act of set) {
     const a = String(act || '').trim().toLowerCase();
-    if (a === 'lecture' || a === 'combined lec/lab no fee') return true;
+    if (excludedLower.has(a)) return false;
   }
-  return false;
+
+  // If none of the course's activity types are excluded, allow the course
+  return true;
 }
 
 // transcript parsing
@@ -369,8 +384,8 @@ const Transcript = (() => {
       }
 
       const term = semesterToTermCode(currentSemester); // "25f"
-      // ignore labs / non-lecture-like
-      if (!IGNORE_ACTIVITY_FILTER && !courseHasAllowedActivity({ term, prefix, number })) continue;
+      // filter out courses with excluded activity types
+      if (!courseHasAllowedActivity({ term, prefix, number })) continue;
 
       const instructor = choosePrimaryInstructor({
         term, prefix, number, transcriptInstructors: instructors
