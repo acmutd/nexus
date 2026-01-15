@@ -8,7 +8,7 @@ const path = require('path');
 const router = express.Router();
 
 // Set PARSE_SEMESTER to semester wanting to parse (ex, '2024 Fall', '2025 Spring, 2025 Fall, 2025 Spring', etc).
-const PARSE_SEMESTER = '2025 Spring';
+const PARSE_SEMESTER = '2025 Fall';
 
 /**
  * Expected file(s) ex:
