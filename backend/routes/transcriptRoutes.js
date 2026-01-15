@@ -8,7 +8,7 @@ const path = require('path');
 const router = express.Router();
 
 // Set PARSE_SEMESTER to semester wanting to parse (ex, '2024 Fall', '2025 Spring, 2025 Fall, 2025 Spring', etc).
-const PARSE_SEMESTER = '2025 Fall';
+const PARSE_SEMESTER = '2025 Spring';
 
 /**
  * Expected file(s) ex:
@@ -48,22 +48,33 @@ function loadCoursebookTerm(term) {
 
   // Build: key = `${term}|${prefix}|${number}` -> Set(professor full names)
   const byCourseKey = new Map();
+  const activityByCourseKey = new Map();
 
   for (const r of rows) {
     const t = String(r.term || '').trim().toLowerCase();
     const prefix = String(r.course_prefix || '').trim().toLowerCase();
     const num = String(r.course_number || '').trim();
     const prof = String(r.instructors || '').trim();
+    const activity = String(r.activity_type || '').trim();
 
-    if (!t || !prefix || !num || !prof) continue;
+    // Require term/prefix/number; professor/activity are optional
+    if (!t || !prefix || !num) continue;
     if (t !== term.toLowerCase()) continue;
 
     const key = `${t}|${prefix}|${num}`;
-    if (!byCourseKey.has(key)) byCourseKey.set(key, new Set());
-    byCourseKey.get(key).add(prof);
+
+    if (prof) {
+      if (!byCourseKey.has(key)) byCourseKey.set(key, new Set());
+      byCourseKey.get(key).add(prof);
+    }
+
+    if (activity) {
+      if (!activityByCourseKey.has(key)) activityByCourseKey.set(key, new Set());
+      activityByCourseKey.get(key).add(activity);
+    }
   }
 
-  const payload = { byCourseKey };
+  const payload = { byCourseKey, activityByCourseKey };
   coursebookCache.terms.set(term, payload);
   return payload;
 }
@@ -194,6 +205,25 @@ function choosePrimaryInstructor({ term, prefix, number, transcriptInstructors, 
   }
 
   return transcriptInstructors[transcriptInstructors.length - 1] || null;
+}
+
+// Returns true iff the course (term/prefix/number) has at least one section whose
+// activity_type is an allowed lecture-like type. If no coursebook data is found
+// for the course, this returns false (conservative: exclude unknown activity types).
+function courseHasAllowedActivity({ term, prefix, number }) {
+  if (!term || !prefix || !number) return false;
+  const { activityByCourseKey } = loadCoursebookTerm(term) || {};
+  if (!activityByCourseKey) return false;
+  const key = `${String(term).toLowerCase()}|${String(prefix).toLowerCase()}|${String(number).trim()}`;
+  const set = activityByCourseKey.get(key);
+  if (!set || set.size === 0) return false;
+
+  for (const act of set) {
+    const a = String(act || '').trim().toLowerCase();
+    if (a === 'lecture' || a === 'combined lec/lab no fee') return true;
+  }
+
+  return false;
 }
 
 router.post('/parse-transcript', async (req, res) => {
@@ -454,6 +484,13 @@ function extractTranscriptData(transcriptText) {
       // Only process courses when we're collecting (target semester) and in utd_classes
       if (collecting && currentSection === 'utd_classes') {
         const term = semesterToTermCode(currentSemester); // e.g., 25f
+
+        // Exclude non-lecture classes (only allow Lecture or Combined Lec/Lab no Fee)
+        if (!courseHasAllowedActivity({ term, prefix, number })) {
+          if (collecting) console.log(`Skipping ${prefix} ${number} - activity_type not allowed or missing`);
+          continue;
+        }
+
         const chosenInstructor =
           choosePrimaryInstructor({
             term,
