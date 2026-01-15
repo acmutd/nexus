@@ -7,12 +7,10 @@ import { getFirebaseAuth, getFirebaseFirestore } from '../firebase.js';
 import { doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import GradeCalculatorSidebar from '../components/GradeCalculatorSidebar.jsx'
-import { HiTrash } from 'react-icons/hi'; 
+import { HiTrash, HiCheckCircle } from 'react-icons/hi'; 
 import Fade from "@mui/material/Fade";
 
 const GradeCalculator = () => {
-    // Whenever a new category is added, it will have a stable id tied to it so React Motion will
-    // know which specific one to remove
     const makeCategory = () => ({
         id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`,
         name: "",
@@ -35,6 +33,11 @@ const GradeCalculator = () => {
     const [currentUser, setCurrentUser] = useState(null);
 
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [editingGradeId, setEditingGradeId] = useState(null);
+    
+    const [showSuccessNotification, setShowSuccessNotification] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
 
     const handleSidebarToggle = (collapsed) => {
         setSidebarCollapsed(collapsed);
@@ -52,6 +55,51 @@ const GradeCalculator = () => {
 
         return () => unsubscribe();
     }, []);
+
+    useEffect(() => {
+        const loadEditData = async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const gradeId = urlParams.get('edit');
+            const courseId = urlParams.get('courseId');
+            
+            if (gradeId && courseId && currentUser) {
+                try {
+                    const response = await axios.get(
+                        `http://localhost:3000/api/grades/getGradesByCourse/${currentUser.uid}/${courseId}`
+                    );
+                    
+                    const gradeToEdit = response.data.find(g => g.id === gradeId);
+                    
+                    if (gradeToEdit) {
+                        setEditMode(true);
+                        setEditingGradeId(gradeId);
+                        setSelectedCourseForSave(courseId);
+                        setSaveTitle(gradeToEdit.saveTitle);
+                        setClassGrade(gradeToEdit.desiredGrade);
+                        
+                        // Reconstruct categories with proper structure
+                        const loadedCategories = gradeToEdit.categories.map(cat => ({
+                            id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`,
+                            name: cat.categoryName,
+                            weight: cat.categoryWeight,
+                            assignments: cat.assignments.map(asn => ({
+                                assignment: asn.assignmentName,
+                                grade: asn.grade,
+                                weight: asn.weight
+                            }))
+                        }));
+                        
+                        setCategories(loadedCategories);
+                    }
+                } catch (error) {
+                    console.error('Error loading grade for editing:', error);
+                    setError('Failed to load grade data for editing');
+                }
+            }
+        };
+        
+        loadEditData();
+    }, [currentUser]);
 
     const fetchUserCourses = async (uid) => {
         try {
@@ -284,15 +332,42 @@ const GradeCalculator = () => {
                 desiredGrade: classGrade
             };
             
-            const response = await axios.post('http://localhost:3000/api/grades/saveGrades', gradeHistoryData);
+            let response;
+            let message = '';
+            
+            if (editMode && editingGradeId) {
+                // update existing grade
+                response = await axios.put(
+                    `http://localhost:3000/api/grades/updateGrade/${user.uid}/${editingGradeId}`,
+                    gradeHistoryData
+                );
+                message = 'Grade updated successfully!';
+            } else {
+                // create new grade
+                response = await axios.post(
+                    'http://localhost:3000/api/grades/saveGrades',
+                    gradeHistoryData
+                );
+                message = 'Grades saved successfully!';
+            }
             
             console.log('Grade history saved:', response.data);
             setSaveDialogOpen(false);
-            setSaveTitle('');
-            setSelectedCourseForSave('');
             setError('');
             
-            alert('Grades saved successfully!');
+            setEditMode(false);
+            setEditingGradeId(null);
+            
+            window.history.replaceState({}, '', window.location.pathname);
+            
+            resetCalculator();
+            
+            setSuccessMessage(message);
+            setShowSuccessNotification(true);
+            
+            setTimeout(() => {
+                setShowSuccessNotification(false);
+            }, 3000);
             
         } catch (error) {
             console.error('Error saving grade history:', error);
@@ -326,6 +401,9 @@ const GradeCalculator = () => {
         setError('');
         setSaveTitle('');
         setSelectedCourseForSave('');
+        setEditMode(false);
+        setEditingGradeId(null);
+        window.history.replaceState({}, '', window.location.pathname);
     };
 
     return (
@@ -336,6 +414,22 @@ const GradeCalculator = () => {
                 onNewCalculation={handleNewCalculation}
                 userCourses={courses}
             />
+            
+
+            <AnimatePresence>
+                {showSuccessNotification && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -50 }}
+                        className="fixed top-20 right-8 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2"
+                    >
+                        <HiCheckCircle className="text-2xl" />
+                        <span className="font-semibold">{successMessage}</span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+            
             <div className={`flex-1 text-white transition-all duration-300 ${sidebarCollapsed ? 'ml-16' : 'ml-64'}`}
                  >
                     <div className="flex flex-col justify-center items-center text-2xl">
@@ -347,7 +441,7 @@ const GradeCalculator = () => {
                         >
                             Enter the name and weight of each category, as well as the desired final grade in the class.
                             <br />
-                            Press "Save" to save your inputs to a class.
+                            Press "{editMode ? 'Update' : 'Save'}" to {editMode ? 'update' : 'save'} your inputs to a class.
                         </motion.h1>
                         <motion.h1 
                             className="pt-5 pr-6 pl-7 rounded-md text-xl text-white text-center"
@@ -519,7 +613,7 @@ const GradeCalculator = () => {
                             className="px-4 py-2 bg-[#0D6EFD] text-white text-lg font-semibold rounded-md transition duration-300 hover:bg-nexus400"
                             onClick={() => setSaveDialogOpen(true)}
                         >
-                            Save
+                            {editMode ? 'Update' : 'Save'}
                         </button>
                         
                         <Modal
@@ -531,7 +625,9 @@ const GradeCalculator = () => {
 
                                 <div className="fixed inset-0  flex items-center justify-center z-50">
                                     <div className="bg-gradient-to-br from-nexus800 via-nexus900 to-nexus700 p-6 rounded-lg shadow-lg border-2 border-nexus400 w-96">
-                                        <h2 className="text-xl text-white font-bold mb-4">Save Grade History</h2>
+                                        <h2 className="text-xl text-white font-bold mb-4">
+                                            {editMode ? 'Update Grade History' : 'Save Grade History'}
+                                        </h2>
                                         
                                         {error && (
                                             <div className="bg-red-500 text-white p-2 rounded mb-4 text-sm">
@@ -547,6 +643,7 @@ const GradeCalculator = () => {
                                                 value={selectedCourseForSave}
                                                 onChange={(e) => setSelectedCourseForSave(e.target.value)}
                                                 className={`w-full p-2 rounded bg-nexus50 ${selectedCourseForSave ? 'text-nexus800' : 'text-gray-400'}`}
+                                                disabled={editMode}
                                             >
                                                 <option value="" disabled className="text-gray-400">Choose a course...</option>
                                                 {courses.map((course, index) => (
@@ -576,8 +673,6 @@ const GradeCalculator = () => {
                                                 onClick={() => {
                                                     setSaveDialogOpen(false);
                                                     setError('');
-                                                    setSelectedCourseForSave('');
-                                                    setSaveTitle('');
                                                 }}
                                             >
                                                 Cancel
@@ -587,7 +682,7 @@ const GradeCalculator = () => {
                                                 onClick={handleSaveGradeHistory}
                                                 disabled={!saveTitle.trim() || !selectedCourseForSave}
                                             >
-                                                Save
+                                                {editMode ? 'Update' : 'Save'}
                                             </button>
                                         </div>
                                     </div>
