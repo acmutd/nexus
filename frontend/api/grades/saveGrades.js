@@ -1,4 +1,4 @@
-const {db} = require('../config/firebaseAdmin.cjs');
+const {db} = require('../config/firebaseAdmin.js');
 const {FieldValue} = require('firebase-admin/firestore');
 
 module.exports = async (req, res) => {
