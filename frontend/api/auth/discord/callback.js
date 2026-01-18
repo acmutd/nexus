@@ -54,6 +54,7 @@ module.exports = async (req, res) => {
         }
 
         const botResponse = await axios.post(
+            // todo - make this not localhost
             'http://localhost:3000/discord/allocateToJoinedServer',
             {discordId, servers, courses}
         );
