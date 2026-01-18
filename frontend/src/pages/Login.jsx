@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { initializeApp, getApps, getApp } from "firebase/app";
 import {
@@ -34,7 +34,7 @@ const Login = () => {
   const location = useLocation();
 
   // Popup animation state: retrigger on every navigation to this route
-  const popupRef = React.useRef(null);
+  const popupRef = useRef(null);
   const [popupVisible, setPopupVisible] = useState(false);
   useEffect(() => {
     setPopupVisible(false);

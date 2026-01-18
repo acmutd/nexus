@@ -25,7 +25,7 @@ export default function Signup() {
   const location = useLocation();
 
   // Popup animation state: retrigger on every navigation to this route
-  const popupRef = React.useRef(null);
+  const popupRef = useRef(null);
   const [popupVisible, setPopupVisible] = useState(false);
   useEffect(() => {
     setPopupVisible(false);

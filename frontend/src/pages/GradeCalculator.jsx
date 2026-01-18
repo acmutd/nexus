@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import Modal from '@mui/material/Modal';
 import Backdrop from '@mui/material/Backdrop';
 import { AnimatePresence, motion } from "framer-motion";
@@ -435,7 +435,7 @@ const GradeCalculator = () => {
                                                 <h1 className="text-white">Grade (Points)</h1>
                                                 <h1 className="text-white">Points Possible </h1>
                                                 {category.assignments.map((assignment, assignmentIndex) => (
-                                                    <React.Fragment key={assignmentIndex}>
+                                                    <Fragment key={assignmentIndex}>
                                                         <input
                                                             type="text"
                                                             className="mt-1 text-sm h-8 w-full block rounded-md bg-nexus50 border-gray-300 shadow-sm focus:border-nexus300 focus:ring focus:ring-nexus200 focus:ring-opacity-50 text-nexus800 p-1"
@@ -460,7 +460,7 @@ const GradeCalculator = () => {
                                                             placeholder="Points Possible"
                                                             required
                                                         />
-                                                    </React.Fragment>
+                                                    </Fragment>
                                                 ))}
                                             </div>
                                         </div>
