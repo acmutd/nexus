@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-require('dotenv').config();
+// require('dotenv').config();
 
 // Initialize Firebase Admin if not already initialized
 if (!admin.apps.length) {

@@ -1,6 +1,6 @@
 const axios = require('axios');
 const admin = require('firebase-admin');
-require('dotenv').config();
+// require('dotenv').config();
 
 if (!admin.apps.length) {
     // todo - this jawn needs to be put in vercel env too

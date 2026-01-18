@@ -1,6 +1,6 @@
 const admin = require('firebase-admin');
 require('./config/firebaseAdmin.js')
-require('dotenv').config();
+// require('dotenv').config();
 
 module.exports = async (req, res) => {
     if (req.method !== 'POST') {

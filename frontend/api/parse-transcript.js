@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 require('./config/firebaseAdmin.js')
 
-require('dotenv').config();
+// require('dotenv').config();
 
 // keep same constant
 const PARSE_SEMESTER = '2025 Fall';

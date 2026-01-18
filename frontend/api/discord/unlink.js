@@ -1,7 +1,7 @@
 const axios = require('axios');
 const admin = require('firebase-admin');
 
-require('dotenv').config()
+// require('dotenv').config()
 
 const {DISCORD_BOT_URL, FIREBASE_PROJECT_ID} = process.env;
 
