@@ -457,7 +457,7 @@ function Settings() {
                   </h2>
                   {/* Google Link/Unlink */}
                   <span className=" text-gray-400 font-titilliumWeb-regular my-2 tinyText">
-                    You'll need to Link a Google Account to be able to contribute to the SuperDoc!
+                    You'll need to link a Google Account to be able to contribute to the SuperDoc!
                   </span>
                   <div
                     className={`flex w-full h-12 bg-nexus700 rounded-md items-center shadow-2xl ${actionBusy ? '' : 'hover:bg-nexus500'}`}

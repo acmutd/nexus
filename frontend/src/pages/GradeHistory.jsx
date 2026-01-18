@@ -69,7 +69,7 @@ const GradeHistory = () => {
   const fetchGradeHistories = async (uid) => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:3000/api/grades/getGradesByCourse/${uid}/${courseId}`);
+      const response = await axios.get(`/api/grades/getGradesByCourse/${uid}/${courseId}`);
       setHistories(response.data);
     } catch (error) {
       console.error('Error fetching grade histories:', error);
@@ -93,7 +93,7 @@ const GradeHistory = () => {
 
   const handleDeleteHistory = async (historyId) => {
     try {
-      await axios.delete(`http://localhost:3000/api/grades/deleteGrade/${currentUser.uid}/${courseId}/${historyId}`);
+      await axios.delete(`/api/grades/deleteGrade/${currentUser.uid}/${courseId}/${historyId}`);
       
       setHistories(histories.filter(h => (h.id || `history-${histories.indexOf(h)}`) !== historyId));
       if (selectedHistoryDetails?.id === historyId) {
