@@ -8,8 +8,6 @@ import { getApps, getApp, initializeApp } from 'firebase/app'
 import LoadingScreen from './LoadingScreen'
 import Button from './Button'
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
-
 const titleCaseOne = (s) =>
   (s || '')
     .trim()
@@ -45,7 +43,7 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
         if (getApps().length) {
           app = getApp();
         } else {
-          const res = await fetch(`${API_BASE}/api/firebase-config`);
+          const res = await fetch(`/api/firebase-config`);
           if (!res.ok) throw new Error(`Config fetch failed: ${res.status} ${res.statusText}`);
           const cfg = await res.json();
           app = initializeApp(cfg);
@@ -90,7 +88,7 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
       }
 
       const token = await user.getIdToken();
-      const res = await fetch(`${API_BASE}/api/scraper/query`, {
+      const res = await fetch(`/api/scraper/query`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

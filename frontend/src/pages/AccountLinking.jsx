@@ -12,10 +12,7 @@ import {
 } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
-const API_ORIGIN = (() => {
-  try { return new URL(API_BASE).origin; } catch { return ''; }
-})();
+const API_ORIGIN = ''
 
 const AccountLinking = () => {
     const navigate = useNavigate();
@@ -49,7 +46,7 @@ const AccountLinking = () => {
           if (getApps().length) {
             app = getApp();
           } else {
-            const res = await fetch(`${API_BASE}/api/firebase-config`);
+            const res = await fetch(`/api/firebase-config`);
             if (!res.ok) throw new Error(`Config fetch failed: ${res.status} ${res.statusText}`);
             const cfg = await res.json();
             app = initializeApp(cfg);
@@ -191,7 +188,7 @@ const AccountLinking = () => {
       const top  = window.screenY + Math.max(0, (window.outerHeight - h) / 2);
       const features = `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`;
 
-      const url = `${API_BASE}/api/discord/auth?uid=${encodeURIComponent(user.uid)}`;
+      const url = `/api/discord/auth?uid=${encodeURIComponent(user.uid)}`;
 
       const popup = window.open(url, 'discord_oauth', features);
       popupRef.current = popup;
@@ -227,7 +224,7 @@ const AccountLinking = () => {
       try {
         setActionBusy(true);
         const token = await user.getIdToken();
-        const res = await fetch(`${API_BASE}/api/discord/unlink`, {
+        const res = await fetch(`/api/discord/unlink`, {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json',

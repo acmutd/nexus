@@ -44,7 +44,7 @@ function LandingPage() {
           setAuth(a);
           dbRef.current = db;
         } else {
-          const res = await fetch(`${API_BASE}/api/firebase-config`);
+          const res = await fetch(`/api/firebase-config`);
           if (!res.ok) throw new Error(`Config fetch failed: ${res.status} ${res.statusText}`);
           const cfg = await res.json();
           const app = initializeApp(cfg);

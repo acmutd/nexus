@@ -14,8 +14,6 @@ import {
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import Button from "../components/Button";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
-
 const Login = () => {
   const navigate = useNavigate();
 
@@ -57,7 +55,7 @@ const Login = () => {
           const app = getApp();
           authInstance = getAuth(app);
         } else {
-          const res = await fetch(`${API_BASE}/api/firebase-config`);
+          const res = await fetch(`/api/firebase-config`);
           if (!res.ok) throw new Error(`Config fetch failed: ${res.status}`);
           const cfg = await res.json();
           const app = initializeApp(cfg);
