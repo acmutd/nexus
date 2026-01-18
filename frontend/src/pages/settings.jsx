@@ -25,9 +25,9 @@ import {
 } from 'firebase/firestore';
 import Button from '../components/Button';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
 const API_ORIGIN = (() => {
-  try { return new URL(API_BASE).origin; } catch { return 'http://localhost:3000'; }
+  try { return new URL(API_BASE).origin; } catch { return ''; }
 })();
 
 function Settings() {

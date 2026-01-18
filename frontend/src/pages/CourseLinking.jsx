@@ -9,7 +9,7 @@ import TranscriptModal from '../components/TranscriptModal';
 import LoginWithNetIDModal from '../components/LoginWithNetIDModal';
 import Button from '../components/Button';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
 
 export default function CourseLinking() {
   const isMed = useMediaQuery({ query: '(max-width: 800px)' });

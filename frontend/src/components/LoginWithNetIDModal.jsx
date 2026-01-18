@@ -8,7 +8,7 @@ import { getApps, getApp, initializeApp } from 'firebase/app'
 import LoadingScreen from './LoadingScreen'
 import Button from './Button'
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
 
 const titleCaseOne = (s) =>
   (s || '')

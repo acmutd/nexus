@@ -14,7 +14,7 @@ import {
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import Button from "../components/Button";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
 
 const Login = () => {
   const navigate = useNavigate();
