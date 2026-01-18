@@ -1,4 +1,4 @@
-const {db} = require('../../config/firebaseAdmin.js');
+const {db} = require('../../config/firebaseAdmin.cjs');
 
 module.exports = async (req, res) => {
     if (req.method !== 'GET') {
