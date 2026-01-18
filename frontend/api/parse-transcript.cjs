@@ -2,7 +2,7 @@ const admin = require('firebase-admin');
 const pdfParse = require('pdf-parse');
 const fs = require('fs');
 const path = require('path');
-require('./config/firebaseAdmin')
+require('./config/firebaseAdmin.cjs')
 
 require('dotenv').config();
 

@@ -1,4 +1,4 @@
-const {db} = require('../../../../config/firebaseAdmin');
+const {db} = require('../../../../config/firebaseAdmin.cjs');
 
 module.exports = async (req, res) => {
     if (req.method !== 'DELETE') {
