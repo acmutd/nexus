@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-require('./config/firebaseAdmin.cjs')
+require('./config/firebaseAdmin.js')
 // require('dotenv').config();
 
 module.exports = async (req, res) => {
