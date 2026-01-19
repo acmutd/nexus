@@ -4,38 +4,45 @@ import Button from '../components/Button';
 import { HiArrowRightStartOnRectangle, HiOutlineUsers  } from "react-icons/hi2";
 import { motion } from 'framer-motion';
 
-const ServerCard = ({title, link, banner, icon, description, members}) => {
+const ServerCard = ({
+  title, link, banner, icon, description,
+  members,
+  liveMembers,
+  loadingMembers,
+}) => {
+  const shownMembers =
+    typeof liveMembers === 'number' ? liveMembers : members;
+
   return (
     <div className="flex w-full bg-nexus900 relative rounded-xl pb-6">
-      <div className="w-full h-[30%] relative bg-cover bg-center rounded-t-xl" style={{backgroundImage: banner}}>
-        {/* Server Icon */}
+      <div
+        className="w-full h-[30%] relative bg-cover bg-center rounded-t-xl"
+        style={{ backgroundImage: banner }}
+      >
         <div className="flex w-[60px] h-[60px] rounded-full bg-nexus900 ml-4 mt-8 items-center justify-center">
-          <img className="flex w-[75%] h-[75%] rounded-full" src={icon}/>
+          <img className="flex w-[75%] h-[75%] rounded-full" src={icon} />
         </div>
-        {/* Server Details */}
+
         <div className="flex flex-col justify-between px-6 ">
-          <div className='flex flex-col w-full h-full'>
-            <h1 className='font-titilliumWeb-regular text-white text-md'>
-              {title}
-            </h1>
-            <h2 className='font-titilliumWeb-regular text-gray-400 text-xs'>
-              {description}
-            </h2>
+          <div className="flex flex-col w-full h-full">
+            <h1 className="font-titilliumWeb-regular text-white text-md">{title}</h1>
+            <h2 className="font-titilliumWeb-regular text-gray-400 text-xs">{description}</h2>
           </div>
-          <div className='flex flex-col w-full h-full'>
-            <div className='flex flex-row mt-3 mb-2 font-titilliumWeb-regular text-xs text-gray-400 items-center'>
-              <HiOutlineUsers className="mr-1" color='white' size={15}/>
+
+          <div className="flex flex-col w-full h-full">
+            <div className="flex flex-row mt-3 mb-2 font-titilliumWeb-regular text-xs text-gray-400 items-center">
+              <HiOutlineUsers className="mr-1" color="white" size={15} />
               <span>
-                {members} {' '} Members
+                {loadingMembers ? 'Loading…' : shownMembers} Members
               </span>
             </div>
-            <Button className="" href={link} text={"Join Server"} icon={<HiArrowRightStartOnRectangle className="ml-2" color='white' size={20}/>}/>
-          </div>        
+            <Button href={link} text="Join Server" icon={<HiArrowRightStartOnRectangle className="ml-2" color="white" size={20} />} />
+          </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 function DiscordServers() {
   const isMed = useMediaQuery({ query: '(max-width: 800px)' })
@@ -68,9 +75,9 @@ function DiscordServers() {
         .finally(() => setLoadingCounts(prev => ({ ...prev, [idx]: false })));
     });
   }, []);
-  
+
   return (
-        <div className="min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center bg-fixed overflow-x-hidden" 
+        <div className="min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center bg-fixed overflow-x-hidden"
              style={{ backgroundImage: "url('/assets/CoursesBG.svg')", fontFamily: "titilliumWeb-semibold" }}>
     {/* ----------------------------------- MAIN CONTAINER ---------------------------------------- */}
         <motion.div className={`flex flex-col min-w-[300px] w-[70%] mt-12 items-center justify-center rounded-2xl bg-gradient-to-b from-nexus900 via-50% via-nexus800 to-90% to-nexus900 p-6 scale-90`}
