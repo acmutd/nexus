@@ -48,36 +48,36 @@ module.exports = async (req, res) => {
             upstreamMs,
         });
 
-        const VERBOSE = process.env.SCRAPER_DEBUG === 'true' || false;
-
         if (!scraperRes.ok) {
+            const contentType = scraperRes.headers.get('content-type');
+            const amazonReqId = scraperRes.headers.get('x-amzn-requestid');
+            const traceId = scraperRes.headers.get('x-amzn-trace-id');
+
             const text = await scraperRes.text();
-            console.error("Scraper Error:", scraperRes);
-            console.error('Scraper error:', scraperRes.status, text);
+            const snippet = String(text || '').slice(0, 800);
 
             let parsed = null;
-            try { parsed = JSON.parse(text); } catch (e) {}
-
-            const upstreamPayload = parsed || { raw: String(text || '').slice(0, 1000) };
-
-            if (scraperRes.status === 401 || scraperRes.status === 403) {
-                return res.status(502).json({
-                    status: 'error',
-                    message: 'Invalid Credentials',
-                    rid,
-                    upstreamStatus: scraperRes.status,
-                    upstreamStatusText: scraperRes.statusText,
-                    upstream: VERBOSE ? upstreamPayload : undefined,
-                });
+            try {
+                parsed = JSON.parse(text);
+            } catch {
             }
+
+            console.error('[scraper] upstream failed', {
+                status: scraperRes.status,
+                statusText: scraperRes.statusText,
+                contentType,
+                amazonReqId,
+                traceId,
+                snippet,
+            });
 
             return res.status(502).json({
                 status: 'error',
                 message: 'Scraper failed',
-                rid,
                 upstreamStatus: scraperRes.status,
                 upstreamStatusText: scraperRes.statusText,
-                upstream: VERBOSE ? upstreamPayload : undefined,
+                upstream: parsed || {raw: snippet},
+                amazonReqId,
             });
         }
 
@@ -104,7 +104,7 @@ module.exports = async (req, res) => {
                     }
                 }
             } catch (e) {
-                if (VERBOSE) console.error('findCourseRow error:', e);
+                console.error('findCourseRow error:', e);
             }
             return null;
         };
