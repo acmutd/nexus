@@ -25,7 +25,7 @@ import {
 } from 'firebase/firestore';
 import Button from '../components/Button';
 
-const API_ORIGIN = ''
+const API_ORIGIN = window.location.origin;
 
 function Settings() {
   const navigate = useNavigate();

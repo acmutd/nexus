@@ -12,7 +12,7 @@ import {
 } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
-const API_ORIGIN = ''
+const API_ORIGIN = window.location.origin;
 
 const AccountLinking = () => {
     const navigate = useNavigate();
@@ -84,6 +84,7 @@ const AccountLinking = () => {
     // Listen for Discord popup postMessage (SUCCESS / ERROR)
     useEffect(() => {
       const onMessage = async (ev) => {
+        if (popupRef.current && ev.source !== popupRef.current) return;
         if (ev.origin !== API_ORIGIN) return;
         const msg = ev.data || {};
         if (msg.type !== 'DISCORD_AUTH_SUCCESS' && msg.type !== 'DISCORD_AUTH_ERROR') return;
@@ -226,7 +227,7 @@ const AccountLinking = () => {
         const token = await user.getIdToken();
         const res = await fetch(`/api/discord/unlink`, {
           method: 'POST',
-          headers: { 
+          headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           },
@@ -262,16 +263,16 @@ const AccountLinking = () => {
             <div className={`absolute inset-0 rounded-lg bg-gray-400 shadow-md`}
                  style={{ transform: 'translate(6px, 6px)', zIndex: 0 }}
             />
-            
+
             <div
                 className="flex flex-col min-h-[265px] items-start bg-white rounded-lg p-6 border border-gray-200 
                         transition duration-300 ease-in-out relative z-10 
                         font-titilliumWeb"
-                style={{ height: '100%', width: '100%' }} 
+                style={{ height: '100%', width: '100%' }}
             >
-                <div className="mb-4 self-start">{icon}</div> 
-                <h3 className="font-bold bodyText text-gray-800 mb-2 text-left w-full">{title}</h3> 
-                <p className="text-nexus900 text-left tinyText mb-2 flex-1 w-full"> 
+                <div className="mb-4 self-start">{icon}</div>
+                <h3 className="font-bold bodyText text-gray-800 mb-2 text-left w-full">{title}</h3>
+                <p className="text-nexus900 text-left tinyText mb-2 flex-1 w-full">
                 {description}
                 </p>
                 <ul className="list-disc list-inside tinyText text-left text-nexus900 w-full mb-6 pl-4">
@@ -285,7 +286,7 @@ const AccountLinking = () => {
     );
 
     return (
-        <div className='min-h-screen w-full bg-center bg-cover bg-nexus900 pt-20 ' 
+        <div className='min-h-screen w-full bg-center bg-cover bg-nexus900 pt-20 '
             style={{backgroundImage: "url('/assets/AccessRequestBG.svg')"}}>
 
             <div className='flex flex-col w-full h-full items-center justify-center scale-90'>

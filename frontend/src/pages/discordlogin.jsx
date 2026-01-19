@@ -6,7 +6,7 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-const API_ORIGIN = ''
+const API_ORIGIN = window.location.origin;
 
 export default function DiscordLogin() {
   const isMed = useMediaQuery({ query: '(max-width: 800px)' });
