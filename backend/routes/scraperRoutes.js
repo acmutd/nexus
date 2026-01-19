@@ -3,23 +3,63 @@ const router = express.Router();
 
 
 router.post('/query', async (req, res) => {
+  const crypto = require('crypto');
+  const rid = (req.headers['x-request-id'] && String(req.headers['x-request-id'])) || (crypto.randomUUID ? crypto.randomUUID() : crypto.randomBytes(16).toString('hex'));
+  const startedAt = Date.now();
+
   try {
     const { netid, password } = req.body;
 
+    const netidSafe =
+      typeof netid === 'string' && netid.length
+        ? `${netid.slice(0, 2)}***${netid.slice(-1)}`
+        : String(netid || '');
+
+    console.log('[scraper/query] start', {
+      rid,
+      netid: netidSafe,
+      hasPassword: Boolean(password),
+      passwordLen: typeof password === 'string' ? password.length : null,
+      scraperUrlSet: Boolean(process.env.SCRAPER_URL),
+    });
+
     if (!netid || !password) {
+      console.warn('[scraper/query] missing netid/password', { rid, netid: netidSafe, hasPassword: Boolean(password) });
       return res.status(400).json({ status: 'error', message: 'Missing netid or password' });
     }
 
     const scraperRes = await fetch(process.env.SCRAPER_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-request-id': rid },
       body: JSON.stringify({ netid, password }),
+    });
+
+    const upstreamMs = Date.now() - startedAt;
+    const contentType = scraperRes.headers && scraperRes.headers.get ? scraperRes.headers.get('content-type') : null;
+
+    console.log('[scraper/query] upstream meta', {
+      rid,
+      ok: scraperRes.ok,
+      status: scraperRes.status,
+      statusText: scraperRes.statusText,
+      contentType,
+      upstreamMs,
     });
 
     if (!scraperRes.ok) {
       const text = await scraperRes.text();
       console.error("Scraper Error:",scraperRes);
       console.error('Scraper error:', scraperRes.status, text);
+
+      const snippet = String(text || '').slice(0, 600);
+      console.error('[scraper/query] upstream body snippet', {
+        rid,
+        status: scraperRes.status,
+        statusText: scraperRes.statusText,
+        contentType,
+        snippet,
+      });
+
       return res.status(502).json({ status: 'error', message: 'Invalid Credentials' });
     }
     console.log("ScraperRes",scraperRes)
@@ -85,6 +125,13 @@ router.post('/query', async (req, res) => {
         credits: 0,
         grade: 'In Progress',
       };
+    });
+
+    console.log('[scraper/query] success', {
+      rid,
+      coursesIn: Array.isArray(data) ? data.length : 0,
+      coursesOut: enriched.length,
+      totalMs: Date.now() - startedAt,
     });
 
     return res.json({
