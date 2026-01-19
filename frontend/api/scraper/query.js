@@ -7,24 +7,7 @@ module.exports = async (req, res) => {
     }
 
     try {
-        const crypto = require('crypto');
-        const rid = (req.headers['x-request-id'] && String(req.headers['x-request-id'])) || (crypto.randomUUID ? crypto.randomUUID() : crypto.randomBytes(16).toString('hex'));
-        const startedAt = Date.now();
-
         const {netid, password} = req.body;
-
-        const netidSafe =
-            typeof netid === 'string' && netid.length
-                ? `${netid.slice(0, 2)}***${netid.slice(-1)}`
-                : String(netid || '');
-
-        console.log('[scraper/query] start', {
-            rid,
-            netid: netidSafe,
-            hasPassword: Boolean(password),
-            passwordLen: typeof password === 'string' ? password.length : null,
-            scraperUrlSet: Boolean(process.env.SCRAPER_URL),
-        });
 
         if (!netid || !password) {
             return res.status(400).json({status: 'error', message: 'Missing netid or password'});
@@ -32,58 +15,22 @@ module.exports = async (req, res) => {
 
         const scraperRes = await fetch(process.env.SCRAPER_URL, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json', 'x-request-id': rid},
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({netid, password}),
         });
-
-        const upstreamMs = Date.now() - startedAt;
-        const contentType = scraperRes.headers && scraperRes.headers.get ? scraperRes.headers.get('content-type') : null;
-
-        console.log('[scraper/query] upstream meta', {
-            rid,
-            ok: scraperRes.ok,
-            status: scraperRes.status,
-            statusText: scraperRes.statusText,
-            contentType,
-            upstreamMs,
-        });
-
-        const VERBOSE = process.env.SCRAPER_DEBUG === 'true' || false;
 
         if (!scraperRes.ok) {
             const text = await scraperRes.text();
             console.error("Scraper Error:", scraperRes);
             console.error('Scraper error:', scraperRes.status, text);
-
-            let parsed = null;
-            try { parsed = JSON.parse(text); } catch (e) {}
-
-            const upstreamPayload = parsed || { raw: String(text || '').slice(0, 1000) };
-
-            if (scraperRes.status === 401 || scraperRes.status === 403) {
-                return res.status(502).json({
-                    status: 'error',
-                    message: 'Invalid Credentials',
-                    rid,
-                    upstreamStatus: scraperRes.status,
-                    upstreamStatusText: scraperRes.statusText,
-                    upstream: VERBOSE ? upstreamPayload : undefined,
-                });
-            }
-
-            return res.status(502).json({
-                status: 'error',
-                message: 'Scraper failed',
-                rid,
-                upstreamStatus: scraperRes.status,
-                upstreamStatusText: scraperRes.statusText,
-                upstream: VERBOSE ? upstreamPayload : undefined,
-            });
+            return res.status(502).json({status: 'error', message: 'Invalid Credentials'});
         }
 
         console.log("ScraperRes", scraperRes);
         const data = await scraperRes.json();
         console.log("Data:", data);
+
+        const VERBOSE = process.env.SCRAPER_DEBUG === 'true' || false;
 
         const dataDir = path.join(__dirname, '..', 'data');
 
@@ -134,13 +81,6 @@ module.exports = async (req, res) => {
                 credits: 0,
                 grade: 'In Progress',
             };
-        });
-
-        console.log('[scraper/query] success', {
-            rid,
-            coursesIn: Array.isArray(data) ? data.length : 0,
-            coursesOut: enriched.length,
-            totalMs: Date.now() - startedAt,
         });
 
         return res.json({
