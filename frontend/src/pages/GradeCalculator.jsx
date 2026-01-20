@@ -220,6 +220,14 @@ const GradeCalculator = () => {
         return 'N/A';
     };
 
+    const getAssignmentPercentage = (grade, weight) => {
+    const g = parseFloat(grade);
+    const w = parseFloat(weight);
+
+    if (isNaN(g) || isNaN(w) || w <= 0) return null;
+    return Math.min(100, ((g / w) * 100).toFixed(2));
+    };
+
     const calculateRequiredGrade = (currentWeightedGrade, remainingWeight, desiredGrade) => {
         if (remainingWeight <= 0) return null;
         
@@ -528,34 +536,60 @@ const GradeCalculator = () => {
                                                 <h1 className="text-white">Assignment</h1>
                                                 <h1 className="text-white">Grade (Points)</h1>
                                                 <h1 className="text-white">Points Possible </h1>
-                                                {category.assignments.map((assignment, assignmentIndex) => (
-                                                    <React.Fragment key={assignmentIndex}>
-                                                        <input
-                                                            type="text"
-                                                            className="mt-1 text-sm h-8 w-full block rounded-md bg-nexus50 border-gray-300 shadow-sm focus:border-nexus300 focus:ring focus:ring-nexus200 focus:ring-opacity-50 text-nexus800 p-1"
-                                                            value={assignment.assignment}
-                                                            onChange={(e) => handleAssignmentChange(categoryIndex, assignmentIndex, "assignment", e.target.value)}
-                                                            placeholder="Name"
-                                                            required
-                                                        />
-                                                        <input
-                                                            type="number"
-                                                            className="mt-1 text-sm h-8 w-full block rounded-md bg-nexus50 border-gray-300 shadow-sm focus:border-nexus300 focus:ring focus:ring-nexus200 focus:ring-opacity-50 text-nexus800 p-1"
-                                                            value={assignment.grade}
-                                                            onChange={(e) => handleAssignmentChange(categoryIndex, assignmentIndex, "grade", e.target.value)}
-                                                            placeholder="Grade Earned"
-                                                            required
-                                                        />
-                                                        <input
-                                                            type="number"
-                                                            className="mt-1 text-sm h-8 w-full block rounded-md bg-nexus50 border-gray-300 shadow-sm focus:border-nexus300 focus:ring focus:ring-nexus200 focus:ring-opacity-50 text-nexus800 p-1"
-                                                            value={assignment.weight}
-                                                            onChange={(e) => handleAssignmentChange(categoryIndex, assignmentIndex, "weight", e.target.value)}
-                                                            placeholder="Points Possible"
-                                                            required
-                                                        />
-                                                    </React.Fragment>
-                                                ))}
+                                                {category.assignments.map((assignment, assignmentIndex) => {
+                                                const percent = getAssignmentPercentage(
+                                                    assignment.grade,
+                                                    assignment.weight
+                                                );
+
+                                                return (
+                                                    <div key={assignmentIndex} className="col-span-3 space-y-1">
+                                                        <div className="grid grid-cols-3 gap-x-4">
+                                                            <input
+                                                                type="text"
+                                                                className="mt-1 text-sm h-8 w-full block rounded-md bg-nexus50 border-gray-300 shadow-sm text-nexus800 p-1"
+                                                                value={assignment.assignment}
+                                                                onChange={(e) =>
+                                                                    handleAssignmentChange(categoryIndex, assignmentIndex, "assignment", e.target.value)
+                                                                }
+                                                                placeholder="Name"
+                                                            />
+                                                            <input
+                                                                type="number"
+                                                                className="mt-1 text-sm h-8 w-full block rounded-md bg-nexus50 border-gray-300 shadow-sm text-nexus800 p-1"
+                                                                value={assignment.grade}
+                                                                onChange={(e) =>
+                                                                    handleAssignmentChange(categoryIndex, assignmentIndex, "grade", e.target.value)
+                                                                }
+                                                                placeholder="Grade Earned"
+                                                            />
+                                                            <input
+                                                                type="number"
+                                                                className="mt-1 text-sm h-8 w-full block rounded-md bg-nexus50 border-gray-300 shadow-sm text-nexus800 p-1"
+                                                                value={assignment.weight}
+                                                                onChange={(e) =>
+                                                                    handleAssignmentChange(categoryIndex, assignmentIndex, "weight", e.target.value)
+                                                                }
+                                                                placeholder="Points Possible"
+                                                            />
+                                                        </div>
+                                                        {percent !== null && (
+                                                            <div className="w-full h-2 bg-nexus900 rounded overflow-hidden">
+                                                                <div
+                                                                    className="h-full transition-all duration-300 bg-blue-500"
+                                                                    style={{ width: `${percent}%` }}
+                                                                />
+                                                            </div>
+                                                        )}
+                                                        {percent !== null && (
+                                                            <p className="text-xs text-nexus200 text-right">
+                                                                {percent}%
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+
                                             </div>
                                         </div>
                                         <div className="flex flex-row justify-between items-center">
