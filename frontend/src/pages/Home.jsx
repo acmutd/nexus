@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useMobile } from '../context/mobileContext';
 
 const gradesData = [
   { subject: 'Math', homework: 92, exam: 88, weights: { homework: 0.4, exam: 0.6 } },
@@ -58,7 +59,8 @@ const GradeCircle = ({ grade, index }) => {
 
 const Home = () => {
   const navigate = useNavigate()
-
+  const {isMobile} = useMobile()
+  
   function handleButtonClick(name) {
     switch(name) {
       case "Discord": 
@@ -83,25 +85,23 @@ const Home = () => {
       
       {/* -------------------------------------- CONTENT -------------------------------------------*/}
       <motion.div className="flex flex-col w-full h-full items-center justify-center mt-35 mb-15 z-1" initial={{opacity:0, y:20}} animate={{opacity: 1, y:0}} transition={{duration: 0.7}}>
-        <h1 className="text-white text-4xl font-bold text-center mb-5">
-          Welcome Back! We're Glad You're Here.
-        </h1>
-        <div className="bg-gradient-to-b from-nexus800 via-nexus900 to-nexus800 p-12 w-3/5 max-w-5xl flex flex-col items-center overflow-y-auto rounded-2xl">
-          <h2 className="text-white text-3xl font-titilliumWeb-semibold mb-6 w-full">
-            What Do You Want To Do Today?
+
+        <div className="min-w-[300px] bg-gradient-to-b from-nexus800 via-nexus900 to-nexus800 p-12 w-3/5 max-w-5xl flex flex-col items-center overflow-y-auto rounded-2xl">
+          <h2 className="text-white headingText font-titilliumWeb-semibold mb-6 w-full text-center">
+            Welcome Back! What Do You Want To Do Today?
           </h2>
 
           {/* ----------------------- BUTTONS --------------------------------*/}
-          <div className="flex flex-wrap justify-center gap-12 mb-10">
+          <div className={`${isMobile ? 'grid grid-cols-2' : 'flex flex-wrap'} justify-center gap-12 mb-10`}>
             {['Discord', 'Superdoc', 'GradeCalc', 'Settings'].map((name) => (
               <div key={name} className="flex flex-col items-center">
                 <div
-                  className="rounded-xl p-6 w-36 h-36 hover:scale-110 transition cursor-pointer bg-cover bg-center"
-                  style={{ backgroundImage: `url('/assets/${name}Button.svg')` }} 
+                  className={`rounded-xl p-6 hover:scale-110 transition cursor-pointer bg-cover bg-center`}
+                  style={{ backgroundImage: `url('/assets/${name}Button.svg')`, width: "clamp(100px, 10vw, 150px)", height: "clamp(100px, 10vw, 150px)"} }
                   onClick={() => handleButtonClick(name)}
                 />
                 <span className="text-white text-sm font-semibold mt-2">
-                  {name === 'Discord' ? 'Discord Servers' : name}
+                  {name === 'Discord' ? 'Discord Servers' :  name === 'GradeCalc' ? 'Grade Calculator' : name}
                 </span>
               </div>
             ))}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import axios from 'axios';
 import { HiChevronLeft, HiTrash, HiRefresh, HiPencil } from 'react-icons/hi';
 import { getFirebaseAuth, getFirebaseFirestore } from '../firebase';
@@ -137,7 +137,7 @@ const GradeHistory = () => {
         >
           <button
             onClick={() => navigate('/grade-calculator')}
-            className="flex items-center text-nexus200 hover:text-white mb-4"
+            className="flex items-center text-nexus200 hover:text-white mb-4 cursor-pointer"
           >
             <HiChevronLeft className="mr-1" />
             Back to Calculator
@@ -166,7 +166,7 @@ const GradeHistory = () => {
                 <h2 className="text-xl text-white font-bold">Saved Grades</h2>
                 <button 
                   onClick={() => navigate('/grade-calculator')}
-                  className="bg-nexus300 text-white py-1 px-3 rounded hover:bg-nexus400"
+                  className="bg-nexus300 text-white py-1 px-3 rounded hover:bg-nexus400 cursor-pointer"
                 >
                   New Calculation
                 </button>
@@ -181,7 +181,7 @@ const GradeHistory = () => {
                       key={history.id || `history-${index}`}
                       className={`p-3 rounded cursor-pointer transition duration-200 ${
                         selectedHistoryDetails?.id === (history.id || `history-${index}`)
-                          ? 'bg-nexus500 text-white'
+                          ? 'bg-nexus600 text-white'
                           : 'bg-nexus700 text-nexus100 hover:bg-nexus600'
                       }`}
                       onClick={() => fetchHistoryDetails(history.id || `history-${index}`)}
@@ -198,54 +198,64 @@ const GradeHistory = () => {
                         </div>
                       </div>
                       
-                      {confirmDelete === (history.id || `history-${index}`) ? (
-                        <div className="mt-2 bg-nexus800 p-2 rounded">
-                          <p className="text-sm mb-2">Are you sure you want to delete this grade history?</p>
-                          <div className="flex justify-between">
+                      <AnimatePresence>
+                        {confirmDelete === (history.id || `history-${index}`) ? (
+                          <motion.div initial={{opacity: 0}} 
+                                      animate={{opacity:1}} 
+                                      transition={{duration: 0.2}} 
+                                      exit={{opacity:0, transition: {duration: 0.2}}}
+                                      key={index}
+                                      className="mt-2 bg-nexus800 p-2 rounded cursor-default">
+                            <p className="text-sm mb-2">Are you sure you want to delete this grade history?</p>
+                            <div className="flex justify-between">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteHistory(history.id || `history-${index}`);
+                                }}
+                                className="cursor-pointer bg-red-700 text-white text-md py-1 px-2 rounded transition duration-200 hover:bg-red-800"
+                              >
+                                Delete
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setConfirmDelete(null);
+                                }}
+                                className="cursor-pointer bg-nexus300 text-white text-md py-1 px-2 rounded transition duration-300 hover:bg-nexus400"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </motion.div>
+                        ) : (
+                          <motion.div className="flex items-center space-x-2 mt-2" 
+                                      transition={{delay:0.3}}
+                                      initial={{opacity: 0}} 
+                                      animate={{opacity:1}} >
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleDeleteHistory(history.id || `history-${index}`);
+                                handleEditHistory(history.id || `history-${index}`);
                               }}
-                              className="cursor-pointer bg-red-700 text-white text-md py-1 px-2 rounded transition duration-200 hover:bg-red-800"
+                              className="cursor-pointer flex-1 bg-nexus800 text-white py-1 px-2 rounded text-sm transition duration-200 hover:bg-nexus900"
                             >
+                              <HiPencil className="inline mr-1" />
+                              Edit
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setConfirmDelete(history.id || `history-${index}`);
+                              }}
+                              className="cursor-pointer flex-1 bg-red-700 text-white py-1 px-2 rounded text-sm transition duration-200 hover:bg-red-800"
+                            >
+                              <HiTrash className="inline mr-1" />
                               Delete
                             </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setConfirmDelete(null);
-                              }}
-                              className="cursor-pointer bg-nexus300 text-white text-md py-1 px-2 rounded transition duration-300 hover:bg-nexus400"
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="flex items-center space-x-2 mt-2">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEditHistory(history.id || `history-${index}`);
-                            }}
-                            className="flex-1 bg-nexus800 text-white py-1 px-2 rounded text-sm transition duration-200 hover:bg-900"
-                          >
-                            <HiPencil className="inline mr-1" />
-                            Edit
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setConfirmDelete(history.id || `history-${index}`);
-                            }}
-                            className="flex-1 bg-red-700 text-white py-1 px-2 rounded text-sm transition duration-200 hover:bg-red-800"
-                          >
-                            <HiTrash className="inline mr-1" />
-                            Delete
-                          </button>
-                        </div>
-                      )}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </li>
                   ))}
                 </ul>
