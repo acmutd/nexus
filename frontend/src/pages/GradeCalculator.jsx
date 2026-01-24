@@ -70,7 +70,7 @@ const GradeCalculator = () => {
             if (gradeId && courseId && currentUser) {
                 try {
                     const response = await axios.get(
-                        `http://localhost:3000/api/grades/getGradesByCourse/${currentUser.uid}/${courseId}`
+                        `/api/grades/getGradesByCourse/${currentUser.uid}/${courseId}`
                     );
 
                     const gradeToEdit = response.data.find(g => g.id === gradeId);
