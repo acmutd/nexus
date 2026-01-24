@@ -9,8 +9,6 @@ import TranscriptModal from '../components/TranscriptModal';
 import LoginWithNetIDModal from '../components/LoginWithNetIDModal';
 import Button from '../components/Button';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
-
 export default function CourseLinking() {
   const isMed = useMediaQuery({ query: '(max-width: 800px)' });
   const navigate = useNavigate();
@@ -80,7 +78,7 @@ export default function CourseLinking() {
         try {
           const base64Data = reader.result.split(',')[1];
 
-          const response = await fetch(`${API_BASE}/api/parse-transcript`, {
+          const response = await fetch(`/api/parse-transcript`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -145,7 +143,7 @@ export default function CourseLinking() {
 
       const token = await user.getIdToken();
 
-      const response = await fetch(`${API_BASE}/api/confirm-transcript`, {
+      const response = await fetch(`/api/confirm-transcript`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: user.uid, token, courses: coursesToSave, meta: metaToSave })

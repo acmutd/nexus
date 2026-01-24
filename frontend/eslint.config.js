@@ -25,5 +25,11 @@ export default defineConfig([
     rules: {
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
+    overrides: [
+      {
+        "files": ["api/**/*.{js,ts}"],
+        "env": { "node": true }
+      }
+    ]
   },
 ])

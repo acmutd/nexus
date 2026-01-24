@@ -9,7 +9,7 @@ let db = null;
 export const initFirebase = async () => {
   if (!firebaseApp) {
     try {
-      const response = await fetch('http://localhost:3000/api/firebase-config');
+      const response = await fetch('/api/firebase-config');
       const firebaseConfig = await response.json();
       
       firebaseApp = initializeApp(firebaseConfig);

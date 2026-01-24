@@ -8,8 +8,6 @@ import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import Button from "../components/Button";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
-
 export default function Signup() {
   const navigate = useNavigate();
 
@@ -27,7 +25,7 @@ export default function Signup() {
   const location = useLocation();
 
   // Popup animation state: retrigger on every navigation to this route
-  const popupRef = React.useRef(null);
+  const popupRef = useRef(null);
   const [popupVisible, setPopupVisible] = useState(false);
   useEffect(() => {
     setPopupVisible(false);
@@ -48,7 +46,7 @@ export default function Signup() {
           setAuth(getAuth(app));
           firestoreRef.current = getFirestore(app);
         } else {
-          const res = await fetch(`${API_BASE}/api/firebase-config`);
+          const res = await fetch(`/api/firebase-config`);
           if (!res.ok) throw new Error(`Config fetch failed: ${res.status} ${res.statusText}`);
           const cfg = await res.json();
           if (!cfg?.apiKey) throw new Error("Config missing required keys.");

@@ -6,10 +6,7 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
-const API_ORIGIN = (() => {
-  try { return new URL(API_BASE).origin; } catch { return 'http://localhost:3000'; }
-})();
+const API_ORIGIN = window.location.origin;
 
 export default function DiscordLogin() {
   const isMed = useMediaQuery({ query: '(max-width: 800px)' });
@@ -44,7 +41,7 @@ export default function DiscordLogin() {
           dbRef.current = db;
           unsub = onAuthStateChanged(a, (u) => { if (!u) navigate('/login'); });
         } else {
-          const res = await fetch(`${API_BASE}/api/firebase-config`);
+          const res = await fetch(`/api/firebase-config`);
           if (!res.ok) throw new Error(`Config fetch failed: ${res.status} ${res.statusText}`);
           const cfg = await res.json();
           const app = initializeApp(cfg);
@@ -123,7 +120,7 @@ export default function DiscordLogin() {
     const top  = window.screenY + Math.max(0, (window.outerHeight - h) / 2);
     const features = `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`;
 
-    const url = `${API_BASE}/api/discord/auth?uid=${encodeURIComponent(user.uid)}`;
+    const url = `/api/discord/auth?uid=${encodeURIComponent(user.uid)}`;
 
     const popup = window.open(url, 'discord_oauth', features);
     popupRef.current = popup;

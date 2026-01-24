@@ -25,10 +25,7 @@ import {
 } from 'firebase/firestore';
 import Button from '../components/Button';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
-const API_ORIGIN = (() => {
-  try { return new URL(API_BASE).origin; } catch { return 'http://localhost:3000'; }
-})();
+const API_ORIGIN = window.location.origin;
 
 function Settings() {
   const navigate = useNavigate();
@@ -78,7 +75,7 @@ function Settings() {
           setAuth(a);
           dbRef.current = db;
         } else {
-          const res = await fetch(`${API_BASE}/api/firebase-config`);
+          const res = await fetch(`/api/firebase-config`);
           if (!res.ok) throw new Error(`Config fetch failed: ${res.status} ${res.statusText}`);
           const cfg = await res.json();
           const app = initializeApp(cfg);
@@ -250,7 +247,7 @@ function Settings() {
     const top  = window.screenY + Math.max(0, (window.outerHeight - h) / 2);
     const features = `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`;
 
-    const url = `${API_BASE}/api/discord/auth?uid=${encodeURIComponent(user.uid)}`;
+    const url = `/api/discord/auth?uid=${encodeURIComponent(user.uid)}`;
 
     const popup = window.open(url, 'discord_oauth', features);
     popupRef.current = popup;
@@ -288,7 +285,7 @@ function Settings() {
     try {
       setActionBusy(true);
       const token = await user.getIdToken();
-      const res = await fetch(`${API_BASE}/api/discord/unlink`, {
+      const res = await fetch(`/api/discord/unlink`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -460,7 +457,7 @@ function Settings() {
                   </h2>
                   {/* Google Link/Unlink */}
                   <span className=" text-gray-400 font-titilliumWeb-regular my-2 tinyText">
-                    You'll need to Link a Google Account to be able to contribute to the SuperDoc!
+                    You'll need to link a Google Account to be able to contribute to the SuperDoc!
                   </span>
                   <div
                     className={`flex w-full h-12 bg-nexus700 rounded-md items-center shadow-2xl ${actionBusy ? '' : 'hover:bg-nexus500'}`}
