@@ -1,51 +1,67 @@
-const admin = require('firebase-admin');
-require('./config/firebaseAdmin.js')
-// require('dotenv').config();
+const admin = require("firebase-admin");
+require("./config/firebaseAdmin.js");
 
-module.exports = async (req, res) => {
-    if (req.method !== 'POST') {
-        return res.status(405).json({success: false, error: 'Method not allowed'});
+// response helpers
+const fail = (res, code, error, extra = {}) =>
+    res.status(code).json({success: false, error, ...extra});
+const ok = (res, payload) => res.status(200).json({success: true, ...payload});
+
+async function verifyUserOrFail(req, res) {
+    const {id, token} = req.body;
+
+    if (!id || !token) {
+        return {ok: false, res: fail(res, 400, "Missing required fields: id or token")};
     }
 
     try {
-        const {id, token, courses, meta} = req.body;
+        const decoded = await admin.auth().verifyIdToken(token);
 
-        if (!id || !token || !Array.isArray(courses)) {
-            return res.status(400).json({success: false, error: 'Missing required fields: id, token, or courses'});
+        if (decoded.uid !== id) {
+            return {ok: false, res: fail(res, 403, "Token does not match user ID")};
         }
 
-        let decodedToken;
+        return {ok: true, uid: decoded.uid};
+    } catch (e) {
+        return {ok: false, res: fail(res, 403, "Invalid or expired authentication token")};
+    }
+}
+
+module.exports = async (req, res) => {
+    try {
+        if (req.method !== "POST") {
+            return fail(res, 405, "Method not allowed");
+        }
+
+        const {id, courses, meta} = req.body;
+
+        const auth = await verifyUserOrFail(req, res);
+        if (!auth.ok) return;
+
+        if (!Array.isArray(courses)) {
+            return fail(res, 400, "Missing required fields: courses");
+        }
+
         try {
-            decodedToken = await admin.auth().verifyIdToken(token);
-        } catch (error) {
-            console.error('Token verification failed:', error);
-            return res.status(403).json({success: false, error: 'Invalid or expired authentication token'});
-        }
+            const userRef = admin.firestore().collection("users").doc(id);
 
-        if (decodedToken.uid !== id) {
-            return res.status(403).json({success: false, error: 'Token does not match user ID'});
-        }
-
-        try {
-            const userRef = admin.firestore().collection('users').doc(id);
             const payload = {
                 lastTranscriptUpload: new Date().toISOString(),
-                courses
+                courses,
             };
 
-            if (meta && typeof meta === 'object') {
-                if (meta.netId) payload.netId = meta.netId;
+            if (meta && typeof meta === "object" && meta.netId) {
+                payload.netId = meta.netId;
             }
 
             await userRef.set(payload, {merge: true});
-        } catch (firestoreError) {
-            console.error('Error saving to Firestore:', firestoreError);
-            return res.status(500).json({success: false, error: 'Failed to save transcript data'});
+        } catch (e) {
+            console.error("Error saving to Firestore:", e);
+            return fail(res, 500, "Failed to save transcript data");
         }
 
-        return res.status(200).json({success: true, message: 'Transcript saved'});
-    } catch (error) {
-        console.error('Error in /api/confirm-transcript:', error);
-        return res.status(500).json({success: false, error: 'Internal server error'});
+        return ok(res, {message: "Transcript saved"});
+    } catch (e) {
+        console.error("Error in /api/confirm-transcript:", e);
+        return fail(res, 500, "Internal server error");
     }
 };
