@@ -82,6 +82,7 @@ router.get("/getGradesByCourse/:uid/:courseId", async (req, res) => {
         const data = doc.data();
         const allHistories = data.gradeHistories || [];
         
+        // Filter by courseId
         const courseHistories = allHistories.filter(grade => grade.courseId === courseId);
         
         // Sort by timestamp
@@ -111,6 +112,7 @@ router.get("/getUserCourses/:uid", async (req, res) => {
         const data = doc.data();
         const allHistories = data.gradeHistories || [];
         
+        // Group by courseId and get counts
         const coursesMap = {};
         allHistories.forEach((grade) => {
             if (!coursesMap[grade.courseId]) {
@@ -131,6 +133,67 @@ router.get("/getUserCourses/:uid", async (req, res) => {
         res.status(200).json(courses);
     } catch (error) {
         console.error("Error fetching user courses:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.put("/updateGrade/:uid/:gradeId", async (req, res) => {
+    try {
+        const { uid, gradeId } = req.params;
+        const { courseId, saveTitle, categories, requiredGrade, currentGrade, desiredGrade } = req.body;
+        
+        if (!uid || !gradeId) {
+            return res.status(400).json({ error: "User ID and Grade ID are required" });
+        }
+
+        const docRef = db.collection("courseGrades").doc(uid);
+        const doc = await docRef.get();
+        
+        if (!doc.exists) {
+            return res.status(404).json({ error: "Course grades not found" });
+        }
+        
+        const data = doc.data();
+        const gradeHistories = data.gradeHistories || [];
+        
+        const gradeIndex = gradeHistories.findIndex(grade => grade.id === gradeId);
+        
+        if (gradeIndex === -1) {
+            return res.status(404).json({ error: "Grade entry not found" });
+        }
+        
+        // Update the grade entry while preserving the original ID and timestamp
+        gradeHistories[gradeIndex] = {
+            ...gradeHistories[gradeIndex],
+            courseId,
+            saveTitle,
+            categories: categories.map((category) => ({
+                categoryName: category.categoryName,
+                categoryWeight: category.categoryWeight,
+                categoryGrade: category.categoryGrade,
+                assignments: category.assignments.map((assignment) => ({
+                    assignmentName: assignment.assignmentName,
+                    grade: assignment.grade,
+                    weight: assignment.weight
+                }))
+            })),
+            requiredGrade,
+            currentGrade,
+            desiredGrade,
+            lastModified: Date.now()
+        };
+        
+        await docRef.update({
+            gradeHistories: gradeHistories,
+            lastUpdated: Date.now()
+        });
+        
+        res.status(200).json({ 
+            message: "Grade entry updated successfully",
+            gradeId: gradeId
+        });
+    } catch (error) {
+        console.error("Error updating grade:", error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -171,6 +234,32 @@ router.delete("/deleteGrade/:uid/:courseId/:gradeId", async (req, res) => {
         res.status(200).json({ message: "Grade entry deleted successfully" });
     } catch (error) {
         console.error("Error deleting grade:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.delete("/deleteUserData/:uid", async (req, res) => {
+    try {
+        const { uid } = req.params;
+        
+        if (!uid) {
+            return res.status(400).json({ error: "User ID is required" });
+        }
+
+        // Delete user's course grades
+        const gradesDocRef = db.collection("courseGrades").doc(uid);
+        const gradesDoc = await gradesDocRef.get();
+        
+        if (gradesDoc.exists) {
+            await gradesDocRef.delete();
+        }
+        
+        res.status(200).json({ 
+            message: "User data deleted successfully",
+            deletedCollections: ["courseGrades"]
+        });
+    } catch (error) {
+        console.error("Error deleting user data:", error);
         res.status(500).json({ error: error.message });
     }
 });

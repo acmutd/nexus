@@ -162,10 +162,10 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
                       title="Grade History"
                     >
                       <HiOutlineClock size={20} />
-                      <span className="ml-2 text-sm font-medium">Calculation History</span>
+                      <span className="ml-2 text-sm font-medium cursor-pointer">Calculation History</span>
                       <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
                     </button>
-                    {isDropdownOpen ? <HiChevronUp className="text-nexus200 hover:text-white" /> : <HiChevronDown className="text-nexus200 hover:text-white" />}
+                    {isDropdownOpen ? <HiChevronUp className="cursor-pointer text-nexus200 hover:text-white" /> : <HiChevronDown className="cursor-pointer text-nexus200 hover:text-white" />}
                   </button>
                   
                   <AnimatePresence>
@@ -182,7 +182,7 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
                             <button
                               key={course.uniqueKey || `sidebar-course-${index}`}
                               onClick={() => handleCourseSelect(course.courseId)}
-                              className="w-full text-left px-3 py-2 text-sm text-white hover:bg-nexus700 hover:text-white transition-colors duration-200"
+                              className="cursor-pointer w-full text-left px-3 py-2 text-sm text-white hover:bg-nexus700 hover:text-white transition-colors duration-200"
                             >
                               {course.displayName}
                             </button>
@@ -202,7 +202,7 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
             <div className="w-[85%] absolute bottom-4">
               <button 
                 onClick={handleNewCalculationClick}
-                className="flex items-center justify-center w-full p-3 rounded-lg bg-nexus600 hover:bg-nexus500 text-white font-semibold transition-colors duration-200"
+                className="cursor-pointer flex items-center justify-center w-full p-3 rounded-lg bg-nexus600 hover:bg-nexus500 text-white font-semibold transition-colors duration-200"
               >
                 <HiCalculator className="mr-2" />
                 Add New Calculation

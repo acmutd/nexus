@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import axios from 'axios';
-import { HiChevronLeft, HiTrash, HiRefresh } from 'react-icons/hi';
+import { HiChevronLeft, HiTrash, HiRefresh, HiPencil } from 'react-icons/hi';
 import { getFirebaseAuth, getFirebaseFirestore } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -106,6 +106,10 @@ const GradeHistory = () => {
     }
   };
 
+  const handleEditHistory = (historyId) => {
+    navigate(`/grade-calculator?edit=${historyId}&courseId=${courseId}`);
+  };
+
   const loadInCalculator = (historyId) => {
     navigate(`/grade-calculator`, { 
       state: { historyId, courseId } 
@@ -133,7 +137,7 @@ const GradeHistory = () => {
         >
           <button
             onClick={() => navigate('/grade-calculator')}
-            className="flex items-center text-nexus200 hover:text-white mb-4"
+            className="flex items-center text-nexus200 hover:text-white mb-4 cursor-pointer"
           >
             <HiChevronLeft className="mr-1" />
             Back to Calculator
@@ -162,7 +166,7 @@ const GradeHistory = () => {
                 <h2 className="text-xl text-white font-bold">Saved Grades</h2>
                 <button 
                   onClick={() => navigate('/grade-calculator')}
-                  className="bg-nexus300 text-white py-1 px-3 rounded hover:bg-nexus400"
+                  className="bg-nexus300 text-white py-1 px-3 rounded hover:bg-nexus400 cursor-pointer"
                 >
                   New Calculation
                 </button>
@@ -175,37 +179,34 @@ const GradeHistory = () => {
                   {histories.map((history, index) => (
                     <li 
                       key={history.id || `history-${index}`}
-                      className={`p-3 rounded cursor-pointer transition-colors ${
-                        selectedHistoryDetails?.id === history.id 
-                          ? 'bg-nexus700 text-white' 
-                          : 'bg-nexus800 text-nexus300 hover:bg-nexus700 hover:text-white'
+                      className={`p-3 rounded cursor-pointer transition duration-200 ${
+                        selectedHistoryDetails?.id === (history.id || `history-${index}`)
+                          ? 'bg-nexus600 text-white'
+                          : 'bg-nexus700 text-nexus100 hover:bg-nexus600'
                       }`}
                       onClick={() => fetchHistoryDetails(history.id || `history-${index}`)}
                     >
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <div className="font-medium">{history.saveTitle}</div>
-                          <div className="text-sm opacity-75">
-                            {new Date(history.timestamp).toLocaleDateString()} - Grade: {history.currentGrade}%
-                          </div>
-                        </div>
-                        <div className="flex space-x-2">
-                          <button 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setConfirmDelete(history.id || `history-${index}`);
-                            }}
-                            className="text-nexus300 hover:text-red-400 cursor-pointer"
-                          >
-                            <HiTrash size={18} />
-                          </button>
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <h3 className="font-semibold">{history.saveTitle}</h3>
+                          <p className="text-sm mt-1">
+                            Current: {history.currentGrade}% | Desired: {history.desiredGrade}%
+                          </p>
+                          <p className="text-xs mt-1">
+                            {new Date(history.timestamp).toLocaleDateString()}
+                          </p>
                         </div>
                       </div>
                       
-                      {confirmDelete === (history.id || `history-${index}`) && (
-                        <div className="fixed flex flex-col inset-0 backdrop-brightness-50 z-10 items-center justify-center cursor-default">
-                          <div className="mt-2 p-8 bg-gradient-to-b from-nexus900 to-nexus700 border-nexus600 border-2 rounded shadow-lg z-10 w-fit">
-                            <p className="text-white text-lg mb-2">Delete this history?</p>
+                      <AnimatePresence>
+                        {confirmDelete === (history.id || `history-${index}`) ? (
+                          <motion.div initial={{opacity: 0}} 
+                                      animate={{opacity:1}} 
+                                      transition={{duration: 0.2}} 
+                                      exit={{opacity:0, transition: {duration: 0.2}}}
+                                      key={index}
+                                      className="mt-2 bg-nexus800 p-2 rounded cursor-default">
+                            <p className="text-sm mb-2">Are you sure you want to delete this grade history?</p>
                             <div className="flex justify-between">
                               <button
                                 onClick={(e) => {
@@ -226,9 +227,35 @@ const GradeHistory = () => {
                                 Cancel
                               </button>
                             </div>
-                          </div>
-                        </div>
-                      )}
+                          </motion.div>
+                        ) : (
+                          <motion.div className="flex items-center space-x-2 mt-2" 
+                                      transition={{delay:0.3}}
+                                      initial={{opacity: 0}} 
+                                      animate={{opacity:1}} >
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEditHistory(history.id || `history-${index}`);
+                              }}
+                              className="cursor-pointer flex-1 bg-nexus800 text-white py-1 px-2 rounded text-sm transition duration-200 hover:bg-nexus900"
+                            >
+                              <HiPencil className="inline mr-1" />
+                              Edit
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setConfirmDelete(history.id || `history-${index}`);
+                              }}
+                              className="cursor-pointer flex-1 bg-red-700 text-white py-1 px-2 rounded text-sm transition duration-200 hover:bg-red-800"
+                            >
+                              <HiTrash className="inline mr-1" />
+                              Delete
+                            </button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </li>
                   ))}
                 </ul>
@@ -269,6 +296,11 @@ const GradeHistory = () => {
                       <p className="text-white">
                         <span className="font-medium">Date Created:</span> {new Date(selectedHistoryDetails.timestamp).toLocaleString()}
                       </p>
+                      {selectedHistoryDetails.lastModified && (
+                        <p className="text-white">
+                          <span className="font-medium">Last Modified:</span> {new Date(selectedHistoryDetails.lastModified).toLocaleString()}
+                        </p>
+                      )}
                     </div>
                   </div>
                   
