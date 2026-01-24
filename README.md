@@ -4,15 +4,15 @@ Nexus is a web app created to give students an easy way to converse and study wi
 
 ## The Team 
 ### Fall 2025
-Lead: Prerita Babarjung
-Design: Tommy Nguyen
-Frontend: Humza Qureshi, Tommy Nguyen
-Full Stack: Naomi Ntuli, Thomas Le, Indrajith Thyagaraja
+Lead: Prerita Babarjung <\br>
+Design: Tommy Nguyen <\br>
+Frontend: Humza Qureshi, Tommy Nguyen <\br>
+Full Stack: Naomi Ntuli, Thomas Le, Indrajith Thyagaraja <\br>
 
 ### Spring 2025
-Lead: Prerita Babarjung
-Frontend: Humza Qureshi
-Backend: Sreevasan Sivasubramanian
-Full Stack: Naomi Ntuli, Thomas Le, Indrajith Thyagaraja
+Lead: Prerita Babarjung <\br>
+Frontend: Humza Qureshi <\br>
+Backend: Sreevasan Sivasubramanian <\br>
+Full Stack: Naomi Ntuli, Thomas Le, Indrajith Thyagaraja <\br>
 
 
