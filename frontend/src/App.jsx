@@ -16,6 +16,7 @@ import Home from './pages/Home';
 import CourseLinking from './pages/CourseLinking';
 import AccountLinking from './pages/AccountLinking';
 import ResetPassword from './pages/ResetPassword';
+import UnderConstruction from './pages/UnderConstruction';
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
       <div>
         <Navbar />
         <Routes>
+          <Route path="/underconstruction" element={<UnderConstruction/>}/>
           <Route path="/" element={<LandingPage/>}/>
           <Route path="/settings" element={<RequireAuth><Settings/></RequireAuth>} />
           <Route path="/grade-calculator" element={<RequireAuth><GradeCalculator /></RequireAuth>} />

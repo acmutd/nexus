@@ -220,4 +220,4 @@ function SuperDoc() {
   )
 }
 
-export default SuperDoc
+export default SuperDoc;
