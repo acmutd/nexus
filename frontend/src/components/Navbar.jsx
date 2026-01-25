@@ -52,7 +52,7 @@ const Navbar = () => {
   }`;
 
   const handleSuperdocClick = () => {
-    navigate('/superdoc', {
+    navigate('/underconstruction', {
       state: { fileName: 'Superdoc', documentName: 'Superdoc', selectedUnit: 'Unit 1' }
     });
   };

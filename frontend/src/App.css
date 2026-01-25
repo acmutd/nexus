@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+html, body {
+  overscroll-behavior-y: none; 
+}
 
 .logo {
   height: 6em;
@@ -29,6 +32,13 @@
 .titleText {
   font-size: clamp(2.2rem, 3vw, 3rem);
   line-height: 1.15; 
+}
+
+.custom-scrollbar .simplebar-scrollbar::before {
+  background-color: rgb(112, 112, 112);
+  margin-right: 4px;
+  margin-block: 4px;
+  width: 4px;
 }
 
 @keyframes logo-spin {

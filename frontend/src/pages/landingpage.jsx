@@ -19,7 +19,6 @@ import {
 
 function LandingPage() {
   const {isMobile} = useMobile()
-  const {isSmallMobile} = useMobile()
 
   const isMed = useMediaQuery({ query: '(max-width: 800px)' })
   const navigate = useNavigate();

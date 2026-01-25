@@ -259,7 +259,7 @@ const AccountLinking = () => {
     const canContinue = linkedCount === 2;
 
     const OptionBox = ({ icon, title, description, details, buttonText, onClick }) => (
-        <div className="relative">
+        <div className="relative w-full flex">
             <div className={`absolute inset-0 rounded-lg bg-gray-400 shadow-md`}
                  style={{ transform: 'translate(6px, 6px)', zIndex: 0 }}
             />

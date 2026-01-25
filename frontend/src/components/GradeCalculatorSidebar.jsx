@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { HiChevronLeft, HiChevronRight, HiClipboardList, HiCalculator, HiChevronDown, HiChevronUp, HiClock,HiOutlineClock ,  } from 'react-icons/hi';
+import { HiChevronLeft, HiChevronRight, HiClipboardList, HiCalculator, HiChevronDown, HiChevronUp, HiClock,HiOutlineClock, HiMenu ,  } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getFirebaseAuth, getFirebaseFirestore } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
+import { useMobile } from '../context/mobileContext';
 
 
 const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propUserCourses }) => {
@@ -13,6 +14,7 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userCourses, setUserCourses] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const {isMobile} = useMobile()
 
   const coursesToUse = propUserCourses && propUserCourses.length > 0 ? propUserCourses : userCourses;
 
@@ -124,117 +126,115 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
   };
 
   return (
-   <motion.aside
-     className="shadow-md flex flex-col h-screen fixed left-0 top-0 pt-16 overflow-visible z-40"
-     initial="expanded"
-     animate={isCollapsed ? "collapsed" : "expanded"}
-     variants={sidebarVariants}
-     transition={{ type: "tween", duration: 0.4 }}
-     style={{backgroundImage: isCollapsed ? 'linear-gradient(#002966, #002966)' : 'linear-gradient(#002966, #001433)'}}
-   >
-      <button
-        onClick={toggleSidebar}
-        className="absolute top-20 -right-6 bg-nexus600 text-white p-2 rounded-r-md z-50 shadow-md cursor-pointer"
+    <>
+      {!isCollapsed && isMobile && (
+        <div className='fixed w-screen h-screen backdrop-brightness-50 z-39 inset-0'></div>
+      )}
+        <motion.aside
+        className={`shadow-md flex flex-col h-screen fixed left-0 top-0 pt-16 overflow-visible z-40`}
+        initial="expanded"
+        animate={isCollapsed ? "collapsed" : "expanded"}
+        variants={sidebarVariants}
+        transition={{ type: "tween", duration: 0.4 }}
+        style={{backgroundImage: isMobile && isCollapsed ? 'linear-gradient(transparent)' : isCollapsed ? 'linear-gradient(#002966, #002966)' : 'linear-gradient(#002966, #001433)'}}
       >
-        {isCollapsed ? <HiChevronRight size={20} /> : <HiChevronLeft size={20} />}
-      </button>
-      
-      <AnimatePresence>
-        {!isCollapsed && (
-          <motion.div
-            className="flex flex-col flex-1 overflow-y-auto p-4 overflow-x-hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold text-nexus100 mb-4">Grade Calculator</h2>
-              
-              <div className="mb-6">
-                <div className="relative">
-                  <button 
-                    onClick={toggleDropdown}
-                    className="flex items-center justify-between w-full p-2 rounded"
-                  >
-                  <button 
-                      className="flex items-center p-3 rounded-full relative group text-nexus200 hover:text-white"
-                      title="Grade History"
-                    >
-                      <HiOutlineClock size={20} />
-                      <span className="ml-2 text-sm font-medium cursor-pointer">Calculation History</span>
-                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
-                    </button>
-                    {isDropdownOpen ? <HiChevronUp className="cursor-pointer text-nexus200 hover:text-white" /> : <HiChevronDown className="cursor-pointer text-nexus200 hover:text-white" />}
-                  </button>
-                  
-                  <AnimatePresence>
-                    {isDropdownOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="mt-1 bg-nexus600 rounded border border-nexus600 overflow-hidden text-white"
-                      >
-                        {coursesToUse.length > 0 ? (
-                          coursesToUse.map((course, index) => (
-                            <button
-                              key={course.uniqueKey || `sidebar-course-${index}`}
-                              onClick={() => handleCourseSelect(course.courseId)}
-                              className="cursor-pointer w-full text-left px-3 py-2 text-sm text-white hover:bg-nexus700 hover:text-white transition-colors duration-200"
-                            >
-                              {course.displayName}
-                            </button>
-                          ))
-                        ) : (
-                          <div className="px-3 py-2 text-sm text-nexus300">
-                            No courses found
-                          </div>
-                        )}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </div>
-            </div>
-
-            <div className="w-[85%] absolute bottom-4">
-              <button 
-                onClick={handleNewCalculationClick}
-                className="cursor-pointer flex items-center justify-center w-full p-3 rounded-lg bg-nexus600 hover:bg-nexus500 text-white font-semibold transition-colors duration-200"
+          {!isMobile && (
+            <button
+              onClick={toggleSidebar}
+              className="absolute top-24 -right-6 bg-nexus600 text-white p-2 rounded-r-md z-50 shadow-md cursor-pointer"
+            >
+              {isCollapsed ? <HiChevronRight size={20} /> : <HiChevronLeft size={20} />}
+            </button>
+          )}
+          
+          <AnimatePresence>
+            {!isCollapsed && (
+              <motion.div
+                className="flex flex-col flex-1 overflow-y-auto p-4 overflow-x-hidden"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
               >
-                <HiCalculator className="mr-2" />
-                Add New Calculation
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                <div className="flex-1">
+                  <h2 className={`text-2xl font-bold text-nexus100 ${isMobile ? 'ml-8 my-3' : 'my-4'}`}>Grade Calculator</h2>
+                  
+                  <div className="mb-6">
+                    <div className="relative">
+                      <button 
+                        onClick={toggleDropdown}
+                        className="flex items-center justify-between w-full p-2 rounded pb-4"
+                      >
+                        <button 
+                          className="flex items-center rounded-full relative group text-nexus200 hover:text-white"
+                          title="Grade History"
+                        >
+                          <HiOutlineClock size={20} />
+                          <span className="ml-2 text-sm font-medium cursor-pointer">Calculation History</span>
+                          <span className="absolute -bottom-2 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
+                        </button>
+                        {isDropdownOpen ? <HiChevronUp className="cursor-pointer text-nexus200 hover:text-white" /> : <HiChevronDown className="cursor-pointer text-nexus200 hover:text-white" />}
+                      </button>
+                      
+                      <AnimatePresence>
+                        {isDropdownOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="mt-1 bg-nexus600 rounded border border-nexus600 overflow-hidden text-white"
+                          >
+                            {coursesToUse.length > 0 ? (
+                              coursesToUse.map((course, index) => (
+                                <button
+                                  key={course.uniqueKey || `sidebar-course-${index}`}
+                                  onClick={() => handleCourseSelect(course.courseId)}
+                                  className="cursor-pointer w-full text-left px-3 py-2 text-sm text-white hover:bg-nexus700 hover:text-white transition-colors duration-200"
+                                >
+                                  {course.displayName}
+                                </button>
+                              ))
+                            ) : (
+                              <div className="px-3 py-2 text-sm text-nexus300">
+                                No courses found
+                              </div>
+                            )}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                </div>
 
-      <AnimatePresence>
-        {isCollapsed && (
-          <motion.div
-            className="flex flex-col flex-1 pt-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: .3, delay: .5 }}
-          >
-            <div className="flex-1 flex flex-col items-center pr-2">
-              <div className="relative group">
-                <button 
-                  className="p-3 rounded-full"
-                  title="Grade History"
-                >
-                  <HiClipboardList color={"#FFFFFF"} size={20} />
-                </button>
+                <div className="w-[85%] absolute bottom-4">
+                  <button 
+                    onClick={handleNewCalculationClick}
+                    className="cursor-pointer flex items-center justify-center w-full p-3 rounded-lg bg-nexus600 hover:bg-nexus500 text-white font-semibold transition-colors duration-200"
+                  >
+                    <HiCalculator className="mr-2" />
+                    Add New Calculation
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+              <div className="absolute mt-4">
+                {isMobile &&                     
+                  <button 
+                    className="p-3 rounded-full cursor-pointer"
+                    title="Grade History"
+                    onClick={() => {setIsCollapsed(!isCollapsed)}}
+                  >
+                    <HiMenu className='text-nexus100' size={30} />
+                  </button>
+                }
               </div>
-            </div>
-
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.aside>
+          </AnimatePresence>
+        </motion.aside>
+    </>
   );
 };
 

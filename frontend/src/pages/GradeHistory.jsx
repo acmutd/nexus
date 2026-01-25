@@ -118,7 +118,8 @@ const GradeHistory = () => {
 
   if (loading) {
     return (
-      <div className="h-screen flex justify-center items-center bg-gradient-to-br from-nexus800 via-nexus900 to-nexus700">
+      <div className="h-screen flex flex-col justify-center items-center bg-gradient-to-br from-nexus800 via-nexus900 to-nexus700">
+        <img src='/assets/LoadingAnimation.gif' className='w-40 h-40 flex'/>
         <div className="text-white text-xl">Loading grade histories...</div>
       </div>
     );

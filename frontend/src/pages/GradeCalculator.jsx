@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Modal from '@mui/material/Modal';
 import Backdrop from '@mui/material/Backdrop';
 import { AnimatePresence, motion } from "framer-motion";
@@ -7,14 +7,16 @@ import { getFirebaseAuth, getFirebaseFirestore } from '../firebase.js';
 import { doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import GradeCalculatorSidebar from '../components/GradeCalculatorSidebar.jsx'
-import { HiTrash, HiCheckCircle, HiX, HiChevronDown, HiPlus, HiChevronUp, HiOutlineSave } from 'react-icons/hi';
+import { HiTrash, HiCheckCircle, HiX, HiChevronDown, HiPlus, HiOutlineSave, HiQuestionMarkCircle } from 'react-icons/hi'; 
 import Fade from "@mui/material/Fade";
 import Button from "../components/Button.jsx";
 import { useMobile } from "../context/mobileContext.jsx";
+import SimpleBar from 'simplebar-react';
 
 const GradeCalculator = () => {
-    const isMobile = useMobile()
-
+    const {isScreenMedium} = useMobile()
+    const {isMobile} = useMobile()
+    
     const makeCategory = () => ({
         id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`,
         name: "",
@@ -31,8 +33,10 @@ const GradeCalculator = () => {
     const [requiredGrade, setRequiredGrade] = useState(null);
     const [error, setError] = useState('');
 
+    const [infoOpen, setInfoOpen] = useState(false)
+    const infoRef = useRef(null)
     const [saveDialogOpen, setSaveDialogOpen] = useState(false);
-    const [saveTitle, setSaveTitle] = useState('');
+    const [saveTitle, setSaveTitle] = useState('Untitled Calculation');
     const [courses, setCourses] = useState([]);
     const [selectedCourseForSave, setSelectedCourseForSave] = useState('');
     const [currentUser, setCurrentUser] = useState(null);
@@ -47,8 +51,17 @@ const GradeCalculator = () => {
     const handleSidebarToggle = (collapsed) => {
         setSidebarCollapsed(collapsed);
     };
-
     
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if(infoRef.current && !infoRef.current.contains(event.target)) {
+                setInfoOpen(false)
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => {document.removeEventListener("mousedown", handleClickOutside)}
+    }, [])
+
     useEffect(() => {
         const auth = getFirebaseAuth();
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -373,9 +386,9 @@ const GradeCalculator = () => {
             setEditingGradeId(null);
 
             window.history.replaceState({}, '', window.location.pathname);
-
-            resetCalculator();
-
+            
+            //resetCalculator();
+            
             setSuccessMessage(message);
             setShowSuccessNotification(true);
 
@@ -421,7 +434,7 @@ const GradeCalculator = () => {
     };
 
     return (
-        <motion.div className="min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center bg-fixed overflow-x-hidden"
+        <motion.div className={` min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center bg-fixed overflow-x-hidden`} 
                     style={{ backgroundImage: "url('/assets/GradeCalcBG.svg')", fontFamily: "titilliumWeb-semibold" }}
                     >
             <GradeCalculatorSidebar 
@@ -429,6 +442,57 @@ const GradeCalculator = () => {
                 onNewCalculation={handleNewCalculation}
                 userCourses={courses}
             />
+            
+            {/* INFO POP UP */}
+            <AnimatePresence>
+                {infoOpen && (
+                    <motion.div
+                        initial={{opacity: 0}}
+                        animate={{opacity:1}}
+                        exit={{opacity:0}}
+                        transition={{duration:0.25}}
+                        className="fixed inset-0 backdrop-brightness-50 flex z-50 items-center justify-center">
+
+                        <motion.div
+                            ref={infoRef}
+                            initial={{opacity: 0}}
+                            animate={{opacity:1}}
+                            exit={{opacity:0}}
+                            transition={{duration:0.25}}
+                            className="flex relative flex-col w-[clamp(300px,60vw,600px)] bg-nexus800 h-auto rounded-lg z-60 p-6 shadow-2xl">
+                            
+                            <HiX size={25} className="text-white absolute right-6 top-6 hover:text-gray-300 cursor-pointer transition duration-300" onClick={() => {setInfoOpen(false)}}/>
+                            <h1 className="text-white font-titilliumWeb-bold headingText flex items-start w-full mb-4">
+                                Welcome To Grade Calculator!
+                            </h1>
+                            <SimpleBar className="flex flex-col bg-nexus900 p-6 rounded-lg custom-scrollbar" style={{ maxHeight: 330}}>
+                                <h1 className="text-white font-titilliumWeb-bold bodyText flex items-start w-full">
+                                    What are Categories and Weight?
+                                </h1>
+                                <span className="text-white font-titilliumWeb-regular tinyText flex w-full mt-2">
+                                    From the buttons on the bottom right, add in the categories that contribute to your final grade (ex. homework, quizzes, midterms, projects), leaving out the one(s) that you have not taken or received a grade for (ex. final exam). For the ones that you’ve added, enter their weight: if homework is 25% of your grade, put 25 into the box.
+                                </span>
+                                <img src="/assets/GradeCalcGif1.gif" className="flex my-4 w-[55%]"/>
+                                <h1 className="text-white font-titilliumWeb-bold bodyText flex items-start w-full pt-4">
+                                    How Do Assignments Work?
+                                </h1>
+                                <span className="text-white font-titilliumWeb-regular tinyText flex w-full mt-2">
+                                    Once you’ve added as many categories as you need, type in the score you’ve received on each assignment in that category as a point value. For example, if you received a 25/30 on your first homework assignment, put 25 in the first box and 30 in the second. Repeat until all your graded assignments have been entered. You should be able to see the overall grade for each category.
+                                </span>
+                                <img src="/assets/GradeCalcGif2.gif" className="flex my-4 w-[55%]"/>
+                                <h1 className="text-white font-titilliumWeb-bold bodyText flex items-start w-full pt-4">
+                                    How Do Desired Grades Work?
+                                </h1>
+                                <span className="text-white font-titilliumWeb-regular tinyText flex w-full mt-2">
+                                    Now scroll down and enter the numerical value for the grade you want in the class. If you want an A and need a 94% in the class to do so, enter 94 into the box.
+                                    You should now be able to see the grade you need to achieve on the remaining tasks to earn your desired grade! Press the “Save” button to refer back to this calculation later.
+                                </span>
+                            </SimpleBar>
+
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* SAVE SUCCESS NOTIFICATION */}
             <AnimatePresence>
@@ -444,23 +508,32 @@ const GradeCalculator = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
-
-            <div className={`flex-1 text-white transition-all duration-300 ${sidebarCollapsed ? 'ml-16' : 'ml-64'}`}
+            
+            {/* CONTENT */}
+            <div className={`flex-1 text-white transition-all duration-300 ${isMobile ? 'ml-0' : sidebarCollapsed ? 'ml-16' : 'ml-64'}`}
             >
-                <div className="flex flex-col items-center headingText overflow-hidden ">
+                <div className="flex flex-col items-center headingText overflow-hidden">
+                    {/* TITLE */}
                     <motion.h1
-                        className="mt-25 text-center"
+                        className="mt-25 text-center flex flex-row flex-wrap items-center justify-center gap-1 w-[clamp(300px,70%,1000px)]"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.5 }}
                     >
                         Grade Calculator -
-                        {saveTitle ? " "+saveTitle : " Untitled Calculation"}
+                        <textarea
+                            className="focus:outline-none hover:border-gray-400 hover:border-1 focus:border-blue-500 focus:border-1 p-1 rounded-sm flex overflow-hidden field-sizing-content resize-none min-w-25" data-gramm_editor="false" data-gramm="false" data-enable-grammarly="false" spellcheck="false" autocorrect="off" autocapitalize="off"
+                            value={saveTitle}
+                            placeholder={"Untitled Calculation"}
+                            onChange={(e) => setSaveTitle(e.target.value)}
+                            title="Rename"
+                        >
+                        </textarea>
                     </motion.h1>
 
                     { /* CATGORIES */}
-                    <motion.div
-                        className={`mb-6 pt-6 ${categories.length === 1 ? 'flex w-[70%]' : 'grid grid-cols-2 gap-6 w-[70%]'} categories`}
+                    <motion.div 
+                        className={`mb-6 pt-6 w-[70%] ${categories.length === 1 ? 'flex justify-center' : isScreenMedium ? 'flex flex-wrap gap-4 justify-center' : 'grid grid-cols-2 gap-6'} categories`}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 1.0 }}
@@ -477,39 +550,38 @@ const GradeCalculator = () => {
                                 >
 
                                     {/* LIGHT BLUE TAB */}
-                                    <div className={`flex flex-row items-center bg-nexus600 rounded-t-lg justify-between px-4 py-2 font-titilliumWeb-semibold gap-4 ${categories.length > 1 ? '' : 'pr-12'}`}>
-                                        <HiChevronDown size={40} className={`cursor-pointer text-white transition duration-300 ${category.isOpen ? 'rotate-180': 'rotate-0'}`} onClick={() => {handleCategoryChange(categoryIndex, "isOpen", !category.isOpen)}}/>
-                                        {/* CATEGORY + TOTAL GRADE + WEIGHT*/}
-                                        <div className="flex flex-col w-full">
+                                    <div className={`flex flex-row items-center bg-nexus600 ${category.isOpen ? 'rounded-t-lg' : 'rounded-lg'} justify-between px-4 py-4 font-titilliumWeb-semibold gap-2 ${categories.length > 1 ? '' : 'pr-12'}`}>
+                                        {/* COLLAPSE */}
+                                        <div className="flex">
+                                            <HiChevronDown size={25} className={`flex cursor-pointer text-white transition duration-300 ${category.isOpen ? 'rotate-180': 'rotate-0'}`} onClick={() => {handleCategoryChange(categoryIndex, "isOpen", !category.isOpen)}}/>
+                                        </div>
+                                        <div className="flex w-full flex-row flex-wrap gap-2">
+
                                             {/* CATEGORY NAME */}
-                                            <input
-                                                id={`category-${categoryIndex}`}
-                                                className="py-2 bg-nexus800 bodyText text-white block rounded-md focus:border-nexus300 focus:outline-none focus:ring-nexus200 focus:ring-opacity-50 p-1"
-                                                value={category.name}
-                                                onChange={(e) => handleCategoryChange(categoryIndex, "name", e.target.value)}
-                                                autoComplete="off"
-                                                placeholder="Enter Category"
-                                                required
-                                            />
-                                            {/* TOTAL GRADE + WEIGHT */}
-                                            <div className="flex flex-row items-center justify-between mt-2 w-full">
-                                                <div className="flex flex-row items-center">
-                                                    <h1 className="flex tinyText text-white"><strong>Total Grade: {' '}</strong></h1>
-                                                    <h2 className="flex ml-1 tinyText text-white">{categoryGrades[categoryIndex] || ' N/A'}</h2>
-                                                </div>
-                                                <div className="flex flex-row items-center">
-                                                    <label htmlFor={`category-weight-${categoryIndex}`} className="pl-3 pr-1 block tinyText text-white">Weight:</label>
-                                                    <input
-                                                        type="text"
-                                                        id={`category-weight-${categoryIndex}`}
-                                                        className="bg-nexus800 tinyText w-9 text-white block rounded-md focus:border-nexus300 focus:outline-none focus:ring-nexus200 focus:ring-opacity-50 p-1"
-                                                        value={category.weight}
-                                                        onChange={(e) => handleCategoryChange(categoryIndex, "weight", e.target.value)}
-                                                        placeholder=""
-                                                        required
-                                                    />
-                                                    <h1 className="pl-1 pr-1 block tinyText text-white">%</h1>
-                                                </div>
+                                            <div className="flex flex-3">
+                                                <input
+                                                    id={`category-${categoryIndex}`}
+                                                    className="flex bg-nexus800 tinyText w-full text-white rounded-md focus:border-nexus300 focus:outline-none focus:ring-nexus200 focus:ring-opacity-50 p-1.5"
+                                                    value={category.name}
+                                                    onChange={(e) => handleCategoryChange(categoryIndex, "name", e.target.value)}
+                                                    autoComplete="off"
+                                                    placeholder="Enter Category"
+                                                    required
+                                                />
+                                            </div>
+                                            {/* WEIGHT */}
+                                            <div className="flex flex-row items-center w-auto">
+                                                <label htmlFor={`category-weight-${categoryIndex}`} className="pr-1 block tinyText text-white">Weight:</label>
+                                                <input
+                                                    type="text"
+                                                    id={`category-weight-${categoryIndex}`}
+                                                    className="bg-nexus800 tinyText w-10 text-white block rounded-md focus:border-nexus300 focus:outline-none focus:ring-nexus200 focus:ring-opacity-50 p-1.5"
+                                                    value={category.weight}
+                                                    onChange={(e) => handleCategoryChange(categoryIndex, "weight", e.target.value)}
+                                                    autoComplete="off"
+                                                    required
+                                                />
+                                                <h1 className="pl-1 pr-1 block tinyText text-white">%</h1>
                                             </div>
                                         </div>
                                         {/* DELETE CATEGORY */}
@@ -536,7 +608,7 @@ const GradeCalculator = () => {
                                                 animate={{scaleY: 1}}
                                                 exit={{scaleY: 0, originY: 0}}
                                                 transition={{duration: 0.15, type: 'tween'}}
-                                                className="flex flex-col rounded-lg relative p-4 gap-4 bg-nexus900 ">
+                                                className="flex flex-col rounded-b-lg relative p-4 gap-4 bg-nexus900 ">                             
                                                     {category.assignments.map((assignment, assignmentIndex) => {
                                                     const percent = getAssignmentPercentage(
                                                         assignment.grade,
@@ -544,14 +616,14 @@ const GradeCalculator = () => {
                                                     );
 
                                                     return (
-                                                        <div key={assignmentIndex} className="flex flex-row items-center justify-center bg-nexus800 px-4 py-2 rounded-lg h-20 w-full">
+                                                        <div key={assignmentIndex} className="flex flex-row items-center justify-center bg-nexus800 px-4 py-2 rounded-lg  w-full">
                                                             {/* NAME + POINTS + PERCENTAGE BAR */}
-                                                            <div className="flex flex-col w-full">
+                                                            <div className="flex flex-col w-full pl-2">
                                                                 {/* NAME + POINTS */}
                                                                 <div className="flex flex-row gap-2 tinyText mb-2 w-full">
                                                                     <input
                                                                         type="text"
-                                                                        className="py-2 bg-nexus900 tinyText flex-3 text-white rounded-md focus:outline-none p-1"
+                                                                        className="py-1.5 bg-nexus900 tinyText flex-3 text-white rounded-md focus:outline-none p-1"
                                                                         value={assignment.assignment}
                                                                         onChange={(e) =>
                                                                             handleAssignmentChange(categoryIndex, assignmentIndex, "assignment", e.target.value)
@@ -581,7 +653,7 @@ const GradeCalculator = () => {
 
                                                                 {/* PERCENTAGE BAR */}
                                                                 <div className="flex flex-row items-center justify-center gap-2">
-                                                                    <div className="w-full h-3 bg-nexus900 overflow-hidden rounded-full">
+                                                                    <div className="w-full h-2 bg-nexus900 overflow-hidden rounded-full">
                                                                         <div
                                                                             className="h-full transition-all duration-300 bg-blue-500"
                                                                             style={{ width: `${percent == null ? 0 : percent }%` }}
@@ -594,21 +666,29 @@ const GradeCalculator = () => {
                                                             </div>
 
                                                             {/* DELETE ASSIGNMENT */}
-                                                            <HiTrash
-                                                                className="ml-4 flex hover:scale-110 transition duration-300 text-white hover:text-red-500 cursor-pointer"
-                                                                onClick={() => {
-                                                                    if (category.assignments.length > 1) {
-                                                                        deleteAssignmentRow(categoryIndex, assignmentIndex);
-                                                                    }
-                                                                }}
-                                                                title="Delete Category"
-                                                                size={25}
-                                                            />
+                                                            <div className="flex">
+                                                                <HiTrash 
+                                                                    className="ml-4 flex hover:scale-110 transition duration-300 text-white hover:text-red-500 cursor-pointer"
+                                                                    onClick={() => {
+                                                                        if (category.assignments.length > 1) {
+                                                                            deleteAssignmentRow(categoryIndex, assignmentIndex);
+                                                                        }
+                                                                    }} 
+                                                                    title="Delete Category"
+                                                                    size={25}
+                                                                />
+                                                            </div>
                                                         </div>
                                                     );
                                                 })}
-
-                                                <Button className="h-[80px] bg-nexus800 flex w-full" onClick={() => addAssignmentRow(categoryIndex)} text={'Add Assignment'} icon={<HiPlus />}/>
+                                                
+                                                 <div className="flex flex-row items-center gap-4">
+                                                    <div className="flex flex-row flex-1 pl-4">
+                                                        <h1 className="flex tinyText text-white"><strong>Total Grade: {' '}</strong></h1> 
+                                                        <h2 className="flex ml-1 tinyText text-white">{categoryGrades[categoryIndex] || ' N/A'}</h2>
+                                                    </div>
+                                                    <Button className="bg-nexus800 flex gap-1 flex-1" onClick={() => addAssignmentRow(categoryIndex)} text={'Add Assignment'} icon={<HiPlus size={25}/>}/>
+                                                </div>
                                             </motion.div>
                                         )}
                                     </AnimatePresence>
@@ -632,30 +712,30 @@ const GradeCalculator = () => {
                             transition={{duration: 0.15, type: 'tween'}}
 
                         >
-                            <div className="flex flex-row justify-center items-center gap-8 bg-nexus600 w-full py-6 rounded-t-lg ">
-                                <h1 className="headingText text-nexus50"><strong>Overall Grade: </strong> {overallGrade}%</h1>
+                            <div className="flex flex-row justify-center items-center gap-4 bg-nexus600 w-full py-4 rounded-t-lg ">
+                                <h1 className="bodyText text-nexus50"><strong>Overall Grade: </strong> {overallGrade}%</h1>
                             </div>
-                            <div className="flex flex-row items-center justify-center bg-nexus800 w-[95%] my-6 rounded-lg py-4">
-                                <div className="flex flex-col items-center justify-center gap-2 bodyText">
-                                    <h1 className="bodyText text-nexus50"><strong>Remaining Assignment Weight:</strong> </h1>
+                            <div className={`flex flex-row items-start justify-between bg-nexus800 w-[95%] ${isMobile ? 'px-4' : 'px-12'} my-4 rounded-lg py-2 gap-6 `}>
+                                <div className="flex flex-col items-center justify-center gap-2 tinyText">
+                                    <h1 className="tinyText text-nexus50"><strong>Remaining Assignment Weight:</strong> </h1>
                                     {remainingWeight}%
                                 </div>
-                                <div className="flex flex-col items-center justify-center mt-1">
-                                    <h1 className="bodyText text-nexus50"><strong>Desired Class Grade:</strong></h1>
+                                <div className="flex flex-col items-center justify-center ">
+                                    <h1 className="tinyText text-nexus50"><strong>Desired Class Grade:</strong></h1>
                                     <input
                                         id="classGrade"
-                                        className="font-titilliumWeb-bold mt-1 block bodyText text-center w-[20%] bg-nexus50 rounded-md border-gray-300 focus:outline-none text-nexus800 p-1"
+                                        className="font-titilliumWeb-bold mt-1 block tinyText text-center min-w-10 w-[20%] bg-nexus50 rounded-md border-gray-300 focus:outline-none text-nexus800 p-1"
                                         value={classGrade}
                                         onChange={(e) => setClassGrade(e.target.value)}
                                         required
                                     />
                                 </div>
-                                <div className="flex flex-col items-center justify-center bodyText gap-2">
+                                <div className="flex flex-col items-center justify-center tinyText gap-2">
                                     <h1 className="text-nexus50">
-                                        Remaining Grade Required:
+                                        Grade Needed on Remaining Work:
                                     </h1>
-                                    {requiredGrade === null ?
-                                        "Not possible with current grades" :
+                                    {requiredGrade === null ? 
+                                        "Not Possible" : 
                                         `${requiredGrade}%`
                                     }
                                 </div>
@@ -669,16 +749,24 @@ const GradeCalculator = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 1.5 }}
-                    className="fixed bottom-6 right-8 flex flex-col gap-2"
+                    className="fixed top-24 right-8 flex flex-col gap-2 ">
+                    <HiQuestionMarkCircle className="cursor-pointer" size={25} onClick={() => setInfoOpen(true)}/>
+                </motion.div>
+
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 1.5 }}
+                    className="fixed bottom-6 right-4 flex flex-col gap-2"
                 >
                     <Button className="p-1 gap-2" text={"Add Category"} icon={<HiPlus/>} onClick={addCategory}/>
-                    <Button className="p-1 gap-2" text={editMode ? 'Update Category' : 'Save Category'} icon={<HiOutlineSave/>} onClick={() => setSaveDialogOpen(true)}/>
-
+                    <Button className="p-1 px-2 gap-2" text={editMode ? 'Update Calculation' : 'Save Calculation'} icon={<HiOutlineSave/>} onClick={() => setSaveDialogOpen(true)}/>
+                    
                     <Modal
                         open={saveDialogOpen}
                         onClose={() => setSaveDialogOpen(false)}
                         closeAfterTransition
-                        className="flex items-center justify-center"
+                        className="fixed flex items-center justify-center"
                     >
                         <Fade in={saveDialogOpen}>
 
