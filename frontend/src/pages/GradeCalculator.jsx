@@ -409,13 +409,14 @@ const GradeCalculator = () => {
             cat.assignments.some(a => a.assignment || a.grade || a.weight)
         ) || classGrade;
 
-        if (hasData) {
+        resetCalculator();
+        /*if (hasData) {
             if (window.confirm('Are you sure you want to start a new calculation? This will clear all current data.')) {
                 resetCalculator();
             }
         } else {
             resetCalculator();
-        }
+        }*/
     };
 
     const resetCalculator = () => {
@@ -501,7 +502,7 @@ const GradeCalculator = () => {
                         initial={{ opacity: 0, y: -50 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -50 }}
-                        className="fixed top-20 right-8 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2"
+                        className="fixed top-20 right-8 z-50 bg-[#5CA7BA] text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2"
                     >
                         <HiCheckCircle className="text-2xl" />
                         <span className="font-semibold">{successMessage}</span>
@@ -724,9 +725,17 @@ const GradeCalculator = () => {
                                     <h1 className="tinyText text-nexus50"><strong>Desired Class Grade:</strong></h1>
                                     <input
                                         id="classGrade"
+                                        type="text"
+                                        inputMode="numeric"  
+                                        pattern="[0-9]*"    
                                         className="font-titilliumWeb-bold mt-1 block tinyText text-center min-w-10 w-[20%] bg-nexus50 rounded-md border-gray-300 focus:outline-none text-nexus800 p-1"
                                         value={classGrade}
-                                        onChange={(e) => setClassGrade(e.target.value)}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                                                setClassGrade(value);
+                                            }
+                                        }}
                                         required
                                     />
                                 </div>
