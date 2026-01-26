@@ -1,11 +1,9 @@
-const admin = require("firebase-admin");
-const pdfParse = require("pdf-parse");
+const {admin} = require("./config/firebaseAdmin.js");
+const {PDFParse} = require("pdf-parse");
 const fs = require("fs");
 const path = require("path");
 
-require("./config/firebaseAdmin.js");
-
-const PARSE_SEMESTER = "2025 Fall";
+const PARSE_SEMESTER = "2026 Spring";
 
 const EXCLUDED_ACTIVITY_TYPES = new Set([
     "Laboratory",
@@ -51,12 +49,22 @@ async function parsePdfTextOrFail(pdf_content, res) {
         return {ok: false, res: fail(res, 400, "PDF file size exceeds 0.5MB limit")};
     }
 
+    let parser;
     try {
-        const pdfData = await pdfParse(pdfBuffer);
+        parser = new PDFParse({data: pdfBuffer});
+        const pdfData = await parser.getText();
         return {ok: true, text: pdfData.text || ""};
     } catch (e) {
         console.error("PDF parsing error:", e);
         return {ok: false, res: fail(res, 400, "Failed to parse PDF file")};
+    } finally {
+        if (parser?.destroy) {
+            try {
+                await parser.destroy();
+            } catch {
+                // ignore cleanup errors
+            }
+        }
     }
 }
 

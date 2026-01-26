@@ -16,7 +16,7 @@ function parseServiceAccount(raw) {
     try {
       return JSON.parse(candidate);
     } catch {
-      // Try next strategy.
+      // cooked
     }
   }
 
