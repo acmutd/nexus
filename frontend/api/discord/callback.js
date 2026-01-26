@@ -1,26 +1,9 @@
 const axios = require('axios');
-const admin = require('firebase-admin');
+const {admin} = require('../config/firebaseAdmin.js');
 
 // require('dotenv').config()
 
-const {
-    DISCORD_CLIENT_ID,
-    DISCORD_CLIENT_SECRET,
-    DISCORD_BOT_URL,
-    FIREBASE_PROJECT_ID,
-} = process.env;
-
-if (!admin.apps.length) {
-    // todo - this jawn needs to be put in vercel env too
-    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
-
-    admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-        projectId: FIREBASE_PROJECT_ID,
-    });
-
-    console.log('Firebase Admin initialized');
-}
+const {DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, DISCORD_BOT_URL} = process.env;
 
 const tokenRequests = new Map();
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
