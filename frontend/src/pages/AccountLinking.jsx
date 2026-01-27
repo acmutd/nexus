@@ -85,11 +85,11 @@ const AccountLinking = () => {
     useEffect(() => {
       const onMessage = async (ev) => {
         if (popupRef.current && ev.source !== popupRef.current) return;
-        if (ev.origin !== API_ORIGIN) return;
         const msg = ev.data || {};
         if (msg.type !== 'DISCORD_AUTH_SUCCESS' && msg.type !== 'DISCORD_AUTH_ERROR') return;
-
-        if (handledRef.current) return;
+        if (handledRef.current) {
+          return;
+        }
         handledRef.current = true;
 
         try { popupRef.current?.close?.(); } catch {}
@@ -127,16 +127,20 @@ const AccountLinking = () => {
           if (discord && discord.id) {
             setDiscordLinked(true);
             setDiscordUsername(discord.username ?? null);
+            return true;
           } else {
             setDiscordLinked(false);
             setDiscordUsername(null);
+            return false;
           }
         } else {
           setDiscordLinked(false);
           setDiscordUsername(null);
+          return false;
         }
       } catch (e) {
         console.error('Failed to refresh Firestore user doc:', e);
+        return false;
       }
     };
 
@@ -203,12 +207,29 @@ const AccountLinking = () => {
         if (popup.closed) {
           clearInterval(watchdogRef.current);
           watchdogRef.current = null;
+          setTimeout(async () => {
+            if (!handledRef.current) {
+              // Try refreshing user doc to see if backend already linked the Discord account
+              try {
+                const linked = await refreshUserFirestore(user.uid);
+                if (linked) {
+                  handledRef.current = true;
+                  setOkMsg('Discord linked successfully.');
+                  setError('');
+                  linkingRef.current = false;
+                  setActionBusy(false);
+                  return;
+                }
+              } catch (e) {
+                console.error('[DiscordPopup] Error refreshing user after popup close:', e);
+              }
 
-          if (!handledRef.current) {
-            setActionBusy(false);
-            linkingRef.current = false;
-            setError('Discord login was cancelled.');
-          }
+              setError('Discord login was cancelled.');
+              setOkMsg('');
+              linkingRef.current = false;
+              setActionBusy(false);
+            }
+          }, 150); // 150ms delay to allow postMessage handler to run
         }
       }, 400);
     };
