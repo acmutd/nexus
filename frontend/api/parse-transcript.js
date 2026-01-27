@@ -110,6 +110,7 @@ function loadCoursebookTerm(term) {
 
     const byCourseKey = new Map();
     const activityByCourseKey = new Map();
+    const sectionsByCourseKey = new Map();
 
     for (const r of rows) {
         const rt = String(r.term || "").trim().toLowerCase();
@@ -117,6 +118,7 @@ function loadCoursebookTerm(term) {
         const num = String(r.course_number || "").trim();
         const prof = String(r.instructors || "").trim();
         const activity = String(r.activity_type || "").trim();
+        const section = String(r.section || "").trim();
 
         if (!rt || !prefix || !num) continue;
         if (rt !== t) continue;
@@ -131,29 +133,72 @@ function loadCoursebookTerm(term) {
             if (!activityByCourseKey.has(key)) activityByCourseKey.set(key, new Set());
             activityByCourseKey.get(key).add(activity);
         }
+
+        // record section-level info for fine-grained matching (section id, activity, instructors)
+        if (!sectionsByCourseKey.has(key)) sectionsByCourseKey.set(key, []);
+        sectionsByCourseKey.get(key).push({ section: section || null, activity: activity || null, prof: prof || null });
     }
 
-    const payload = {byCourseKey, activityByCourseKey};
+    const payload = {byCourseKey, activityByCourseKey, sectionsByCourseKey};
     coursebookCache.set(t, payload);
     return payload;
 }
 
-function courseHasAllowedActivity({term, prefix, number}) {
+function courseHasAllowedActivity({term, prefix, number, transcriptInstructors = null}) {
     if (!term || !prefix || !number) return false;
 
-    const {activityByCourseKey} = loadCoursebookTerm(term);
+    const {activityByCourseKey, sectionsByCourseKey} = loadCoursebookTerm(term);
     const key = `${String(term).toLowerCase()}|${String(prefix).toLowerCase()}|${String(number).trim()}`;
-    const set = activityByCourseKey.get(key);
-    if (!set || set.size === 0) return false;
+    const set = activityByCourseKey.get(key) || new Set();
+    const sections = sectionsByCourseKey.get(key) || [];
 
-    // If any activity for the course is in the excluded list, mark disallowed
+    // If we have no activity info for the course, allow by default
+    if ((set.size === 0) && sections.length === 0) return true;
+
     const excludedLower = new Set(Array.from(EXCLUDED_ACTIVITY_TYPES).map((s) => String(s).toLowerCase()));
-    for (const act of set) {
-        const a = String(act || "").trim().toLowerCase();
-        if (excludedLower.has(a)) return false;
+
+    // If transcript instructors present, try to find a section whose prof matches transcript instructors
+    if (Array.isArray(transcriptInstructors) && transcriptInstructors.length > 0 && sections.length > 0) {
+        const profTokens = transcriptInstructors
+            .map((s) => String(s || '').toLowerCase())
+            .filter(Boolean)
+            .map((s) => s.replace(/[^a-z0-9\s]/g, ''));
+
+        const matchingSections = sections.filter((sec) => {
+            const profLower = String(sec.prof || '').toLowerCase();
+            return profTokens.some((tok) => tok && profLower.includes(tok));
+        });
+
+        if (matchingSections.length > 0) {
+            // if any matching section has a non-excluded activity, allow
+            for (const sec of matchingSections) {
+                const a = String(sec.activity || '').trim().toLowerCase();
+                if (a && !excludedLower.has(a)) {
+                    return true;
+                }
+            }
+            // matching sections found but only with excluded activities -> disallow
+            return false;
+        }
+        // no matching sections -> fall through to global activity check
     }
 
-    return true;
+    // Global check: if any section has a non-excluded activity (e.g. Lecture), allow
+    for (const sec of sections) {
+        const a = String(sec.activity || '').trim().toLowerCase();
+        if (a && !excludedLower.has(a)) {
+            return true;
+        }
+    }
+
+    // fallback: if activity set had any non-excluded item, allow
+    for (const act of set) {
+        const a = String(act || '').trim().toLowerCase();
+        if (!excludedLower.has(a)) return true;
+    }
+
+    // only excluded activities exist for this course
+    return false;
 }
 
 // transcript parsing
@@ -177,44 +222,84 @@ const Transcript = (() => {
         return semOrder[semB] - semOrder[semA];
     }
 
+    // in case of accents and stuff
+    function normalizeToken(s) {
+        const str = String(s || '');
+        try {
+            // remove non-letter characters
+            return str.toLowerCase().replace(/[^\p{L}]/gu, '');
+        } catch (e) {
+            // fallback
+            return str.toLowerCase().replace(/[^a-zA-Z\u00C0-\u024F]/g, '');
+        }
+    }
+
     function getNameParts(name) {
         const clean = normalizeSpaces(name);
-        if (!clean) return {firstInitial: "", lastLower: ""};
-        const parts = clean.split(" ");
-        const first = parts[0] || "";
-        const last = parts[parts.length - 1] || "";
-        return {firstInitial: first ? first[0].toLowerCase() : "", lastLower: last.toLowerCase()};
+        if (!clean) return {firstInitial: '', lastLower: ''};
+
+        // Use first token for first name and last token for last name
+        const parts = clean.split(' ');
+        const firstPart = parts[0] || '';
+        const lastPart = parts[parts.length - 1] || '';
+
+        const firstInitial = normalizeToken(firstPart)[0] || '';
+
+        // For last name, pick the very last name token and normalize hyphens
+        // "Razo Razo" -> "razo", "Razo-Razo" -> "razo"
+        const lastSegments = String(lastPart || '').split(/[-\s]+/).filter(Boolean);
+        const lastBaseRaw = lastSegments.length ? lastSegments[lastSegments.length - 1] : lastPart;
+        const lastLower = normalizeToken(lastBaseRaw || '');
+
+        return {firstInitial, lastLower};
     }
 
     function isSamePerson(transcriptName, coursebookName) {
         const a = getNameParts(transcriptName);
         const b = getNameParts(coursebookName);
-        if (!a.lastLower || !b.lastLower) return false;
-        if (a.lastLower !== b.lastLower) return false;
-        if (!a.firstInitial || !b.firstInitial) return true;
-        return a.firstInitial === b.firstInitial;
+
+        if (!a.lastLower || !b.lastLower) {
+            return false;
+        }
+        if (a.lastLower !== b.lastLower) {
+            return false;
+        }
+        if (!a.firstInitial || !b.firstInitial) {
+            return true;
+        }
+        const firstMatch = a.firstInitial === b.firstInitial;
+        return firstMatch;
     }
 
     function splitNames(raw) {
-        return String(raw || "")
-            .split(/[,&;]/)
-            .map((s) => s.trim())
-            .filter(Boolean);
+        return String(raw || "").split(/[,&;]/).map((s) => s.trim()).filter(Boolean);
     }
 
     function choosePrimaryInstructor({term, prefix, number, transcriptInstructors}) {
+        console.log('--- choosePrimaryInstructor ---');
+        console.log('input:', { term, prefix, number, transcriptInstructors });
+
         // no instructors listed at all
-        if (!Array.isArray(transcriptInstructors) || transcriptInstructors.length === 0) return null;
+        if (!Array.isArray(transcriptInstructors) || transcriptInstructors.length === 0) {
+            console.log('No transcript instructors provided -> returning null');
+            return null;
+        }
 
         // only one instructor on transcript
-        if (transcriptInstructors.length === 1) return normalizeSpaces(transcriptInstructors[0]) || null;
+        if (transcriptInstructors.length === 1) {
+            const single = normalizeSpaces(transcriptInstructors[0]) || null;
+            console.log('Single transcript instructor -> returning', single);
+            return single;
+        }
 
         const t = (term || "").toLowerCase();
         const p = (prefix || "").toLowerCase();
         const n = String(number || "").trim();
 
         if (!t || !p || !n) {
-            return normalizeSpaces(transcriptInstructors[transcriptInstructors.length - 1]) || null;
+            const fallback = normalizeSpaces(transcriptInstructors[transcriptInstructors.length - 1]) || null;
+            console.log('Missing term/prefix/number -> fallback to last transcript instructor:', fallback);
+            return fallback;
         }
 
         const {byCourseKey} = loadCoursebookTerm(t);
@@ -222,23 +307,37 @@ const Transcript = (() => {
         const profSet = byCourseKey.get(key);
 
         if (!profSet || profSet.size === 0) {
-            return normalizeSpaces(transcriptInstructors[transcriptInstructors.length - 1]) || null;
+            const fallback = normalizeSpaces(transcriptInstructors[transcriptInstructors.length - 1]) || null;
+            console.log(`No coursebook instructors found for ${key} -> fallback:`, fallback);
+            return fallback;
         }
 
         const coursebookProfs = [];
         for (const raw of Array.from(profSet)) {
-            coursebookProfs.push(...splitNames(raw));
+            const parts = splitNames(raw);
+            coursebookProfs.push(...parts);
         }
 
+        console.log(`Coursebook instructors for ${key}:`, coursebookProfs);
+
+        // Try to match transcript instructors to coursebook instructors
         for (let ti = 0; ti < transcriptInstructors.length; ti++) {
             const cand = transcriptInstructors[ti];
             for (let pi = 0; pi < coursebookProfs.length; pi++) {
                 const prof = coursebookProfs[pi];
-                if (isSamePerson(cand, prof)) return normalizeSpaces(cand) || null;
+                const match = isSamePerson(cand, prof);
+                console.log(`Compare transcript[${ti}]="${cand}" with coursebook[${pi}]="${prof}" -> ${match}`);
+                if (match) {
+                    const chosen = normalizeSpaces(cand) || null;
+                    console.log('Matched instructor -> returning', chosen);
+                    return chosen;
+                }
             }
         }
 
-        return normalizeSpaces(transcriptInstructors[transcriptInstructors.length - 1]) || null;
+        const fallback = normalizeSpaces(transcriptInstructors[transcriptInstructors.length - 1]) || null;
+        console.log('No instructor match found -> fallback to last transcript instructor:', fallback);
+        return fallback;
     }
 
     function extractTranscriptData(transcriptText) {
@@ -305,6 +404,8 @@ const Transcript = (() => {
             if (!courseMatch || currentSection !== "utd_classes" || !currentSemester) continue;
             if (!collecting) continue;
 
+
+
             const prefix = courseMatch[1];
             const number = courseMatch[2];
             const courseCode = `${prefix} ${number}`;
@@ -313,7 +414,7 @@ const Transcript = (() => {
             const creditsEarned = parseFloat(courseMatch[5]);
             const grade = "In Progress";
 
-            // scan next lines for instructors (bounded)
+            // scan next lines for instructors
             const instructors = [];
             for (let j = i + 1; j < Math.min(i + 8, lines.length); j++) {
                 const nextLine = lines[j].trim();
@@ -348,7 +449,16 @@ const Transcript = (() => {
             }
 
             const term = semesterToTermCode(currentSemester); // "25f"
-            if (!courseHasAllowedActivity({term, prefix, number})) continue;
+            const allowed = courseHasAllowedActivity({term, prefix, number, transcriptInstructors: instructors});
+            if (!allowed) {
+                // fetch activity info (if any) for better debugging
+                const { activityByCourseKey } = loadCoursebookTerm(term);
+                const key = `${String(term).toLowerCase()}|${String(prefix).toLowerCase()}|${String(number).trim()}`;
+                const activities = activityByCourseKey.get(key);
+                const activityList = activities ? Array.from(activities) : null;
+                console.log('Skipping course due to activity filter', { term, prefix, number, courseCode, key, activityList });
+                continue;
+            }
 
             const instructor = choosePrimaryInstructor({term, prefix, number, transcriptInstructors: instructors});
 
