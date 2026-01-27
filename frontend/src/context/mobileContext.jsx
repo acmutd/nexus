@@ -9,7 +9,7 @@ export function MobileProvider({children}) {
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768)
-      setIsScreenMedium(window.innerWidth <= 1000)
+      setIsScreenMedium(window.innerWidth <= 1100)
     }
 
     checkMobile()

@@ -307,14 +307,14 @@ const AccountLinking = () => {
     );
 
     return (
-        <div className='min-h-screen w-full bg-center bg-cover bg-nexus900 pt-20 '
+        <div className='min-h-screen w-full bg-center bg-cover bg-nexus900 pt-20 items-center justify-center flex'
             style={{backgroundImage: "url('/assets/AccessRequestBG.svg')"}}>
 
             <div className='flex flex-col w-full h-full items-center justify-center scale-90'>
                 <h1 className='headingText text-white font-titilliumWeb-bold mb-2'>
                     Account Linking
                 </h1>
-                <div className='flex flex-col bg-nexus50 p-6 rounded-xl items-center justify-center w-[54%] min-w-[300px]'>
+                <div className='flex flex-col bg-nexus50 p-6 rounded-xl items-center justify-center w-[clamp(300px,50rem,1000px)]'>
                     <div className='flex flex-col text-center mx-6 mb-4'>
                         <p className="headingText font-titilliumWeb-bold text-nexus900 mb-2">
                             Link Your Google and Discord Accounts:

@@ -3,6 +3,7 @@ import { useMediaQuery } from 'react-responsive';
 import Button from '../components/Button';
 import { HiArrowRightStartOnRectangle, HiOutlineUsers  } from "react-icons/hi2";
 import { motion } from 'framer-motion';
+import { useMobile } from '../context/mobileContext';
 
 const ServerCard = ({
   title, link, banner, icon, description,
@@ -45,7 +46,7 @@ const ServerCard = ({
 };
 
 function DiscordServers() {
-  const isMed = useMediaQuery({ query: '(max-width: 800px)' })
+  const {isMobile} = useMobile()
 
   const servers = [{title: "School of Engineering and Computer Science", link: "https://discord.gg/CknqAB2J5q", banner:"url('/assets/DiscordServerAssets/ECSBanner.png')", icon:"/assets/DiscordServerAssets/ECSIcon.png", description: 'Grind away on coding and engineering problems with your fellow classmates!', members: 225},
                    {title: "School of Economic, Political and Policy Sciences", link: "https://discord.gg/PRGbNG5Aus", banner:"url('/assets/DiscordServerAssets/EPSBanner.png')", icon:"/assets/DiscordServerAssets/EPSIcon.png", description: 'Discuss the socio-economic state of the world with other like-minded students!', members: 155},
@@ -80,7 +81,7 @@ function DiscordServers() {
         <div className="min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center bg-fixed overflow-x-hidden"
              style={{ backgroundImage: "url('/assets/CoursesBG.svg')", fontFamily: "titilliumWeb-semibold" }}>
     {/* ----------------------------------- MAIN CONTAINER ---------------------------------------- */}
-        <motion.div className={`flex flex-col min-w-[300px] w-[70%] mt-12 items-center justify-center rounded-2xl bg-gradient-to-b from-nexus900 via-50% via-nexus800 to-90% to-nexus900 p-6 scale-90`}
+        <motion.div className={`flex flex-col min-w-[350px] w-[70%] mt-12 items-center justify-center rounded-2xl bg-gradient-to-b from-nexus900 via-50% via-nexus800 to-90% to-nexus900 p-6 scale-90`}
                     initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{duration:0.7}}>
     {/* ----------------------------------- HEADING + SEARCH ---------------------------------------- */}
           <div className="flex flex-col w-full h-full py-2 rounded-xl">
@@ -92,14 +93,14 @@ function DiscordServers() {
             </span>
           </div>
     {/* ----------------------------------- COURSES ---------------------------------------- */}
-          <div className="grid grid-cols-2 mt-4 gap-6 w-full h-full items-center justify-center overflow-hidden">
+          <div className={`${isMobile ? 'flex flex-col': 'grid grid-cols-2'} mt-4 gap-6 w-full h-full items-center justify-center overflow-hidden`}>
             {servers.map((item, index) => (
               <div className="flex w-full h-full">
                 <ServerCard link={item.link} title={item.title} banner={item.banner} icon={item.icon} description={item.description} members={item.members} liveMembers={liveCounts[index]} loadingMembers={loadingCounts[index]}/>
               </div>
             ))}
           </div>
-          <span className='font-titilliumWeb-regular text-gray-400 text-lg mt-2'>
+          <span className='font-titilliumWeb-regular text-gray-400 text-lg mt-2 text-center'>
             Make sure to read all of the servers’ rules, and most importantly, have fun!
           </span>
         </motion.div>

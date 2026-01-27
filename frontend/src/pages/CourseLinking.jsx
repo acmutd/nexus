@@ -163,41 +163,37 @@ export default function CourseLinking() {
   };
 
   const OptionBox = ({ icon, title, description, details, buttonText, onClick }) => (
-    <div
-      className="relative"
-    >
-      <div
-        className={`absolute inset-0 rounded-lg ${shadowAccentColor} shadow-md`}
-        style={{ transform: 'translate(6px, 6px)', zIndex: 0 }}
-      />
-      <div
-        className="flex flex-col items-start bg-white rounded-lg p-6 border border-gray-200 
-                  transition duration-300 ease-in-out relative z-10 
-                  font-titilliumWeb"
-        style={{ height: '100%', width: '100%' }} 
-      >
-        <div className="mb-4 self-start">{icon}</div> 
-        <h3 className="font-bold bodyText text-gray-800 mb-2 text-left w-full">{title}</h3> 
-        <p className="text-nexus900 text-left tinyText mb-2 flex-1 w-full"> 
-          {description}
-        </p>
-        <ul className="list-disc list-inside tinyText text-left text-nexus900 w-full mb-6 pl-4">
-          {details.map((detail, index) => (
-            <li key={index} className="mb-1">{detail}</li>
-          ))}
-        </ul>
-        <Button text={buttonText} onClick={onClick} />
+      <div className="relative w-full flex">
+          <div className={`absolute inset-0 rounded-lg bg-gray-400 shadow-md`}
+                style={{ transform: 'translate(6px, 6px)', zIndex: 0 }}
+          />
+
+          <div
+              className="flex flex-col min-h-[265px] items-start bg-white rounded-lg p-6 border border-gray-200 
+                      transition duration-300 ease-in-out relative z-10 
+                      font-titilliumWeb"
+              style={{ height: '100%', width: '100%' }}
+          >
+              <div className="mb-4 self-start">{icon}</div>
+              <h3 className="font-bold bodyText text-gray-800 mb-2 text-left w-full">{title}</h3>
+              <p className="text-nexus900 text-left tinyText mb-2 flex-1 w-full">
+              {description}
+              </p>
+              <ul className="list-disc list-inside tinyText text-left text-nexus900 w-full mb-6 pl-4">
+              {details.map((detail, index) => (
+                  <li key={index} className="mb-1">{detail}</li>
+              ))}
+              </ul>
+              <Button text={buttonText} onClick={onClick} />
+          </div>
       </div>
-    </div>
   );
 
   return (
     <div
-      className="min-h-screen w-full flex flex-col items-center bg-blue-950 bg-cover bg-center pt-16 pb-6 "
+      className="min-h-screen w-full flex flex-col items-center bg-blue-950 bg-cover bg-center pt-16 pb-6 justify-center"
       style={{
-        backgroundImage: isMed
-          ? "url('/assets/AccessRequestBGLong.svg')"
-          : "url('/assets/AccessRequestBG.svg')",
+        backgroundImage: "url('/assets/AccessRequestBG.svg')"
       }}
     >
 
@@ -276,7 +272,7 @@ export default function CourseLinking() {
         </div>
 
         <div
-          className={`flex ${isMed ? "flex-col" : "flex-row"} w-full h-full gap-8 justify-center items-stretch`}
+          className={`flex ${isMed ? "flex-col" : "flex-row"} w-full h-full gap-8 justify-center`}
         >
           <OptionBox
             icon={

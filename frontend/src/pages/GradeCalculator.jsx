@@ -7,7 +7,7 @@ import { getFirebaseAuth, getFirebaseFirestore } from '../firebase.js';
 import { doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import GradeCalculatorSidebar from '../components/GradeCalculatorSidebar.jsx'
-import { HiTrash, HiCheckCircle, HiX, HiChevronDown, HiPlus, HiOutlineSave, HiQuestionMarkCircle } from 'react-icons/hi'; 
+import { HiTrash, HiCheckCircle, HiX, HiChevronDown, HiPlus, HiOutlineSave, HiQuestionMarkCircle, HiExclamationCircle } from 'react-icons/hi'; 
 import Fade from "@mui/material/Fade";
 import Button from "../components/Button.jsx";
 import { useMobile } from "../context/mobileContext.jsx";
@@ -40,6 +40,7 @@ const GradeCalculator = () => {
     const [courses, setCourses] = useState([]);
     const [selectedCourseForSave, setSelectedCourseForSave] = useState('');
     const [currentUser, setCurrentUser] = useState(null);
+    const [warningOpen, setWarningOpen] = useState(false);
 
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -56,6 +57,7 @@ const GradeCalculator = () => {
         const handleClickOutside = (event) => {
             if(infoRef.current && !infoRef.current.contains(event.target)) {
                 setInfoOpen(false)
+                setWarningOpen(false)
             }
         }
         document.addEventListener("mousedown", handleClickOutside)
@@ -471,7 +473,7 @@ const GradeCalculator = () => {
                                     What are Categories and Weight?
                                 </h1>
                                 <span className="text-white font-titilliumWeb-regular tinyText flex w-full mt-2">
-                                    From the buttons on the bottom right, add in the categories that contribute to your final grade (ex. homework, quizzes, midterms, projects), leaving out the one(s) that you have not taken or received a grade for (ex. final exam). For the ones that you’ve added, enter their weight: if homework is 25% of your grade, put 25 into the box.
+                                    From the buttons on the bottom right, add in the categories that contribute to your final grade (ex. homework, quizzes, midterms, projects). It is important to LEAVE OUT at least one category: the Grade Calculator determines what portion of your overall grade remains on its own, and calculates what grade is needed on the REMAINING work to achieve your desired final grade. For example, if you know what you have achieved on all assignments, quizzes, and your midterm, enter those three as categories; if your one remaining category is the final exam, the Grade Calculator will tell you what score you need on that exam. For the ones that you’ve added, enter their weight: if homework is 25% of your grade, put 25 into the box.
                                 </span>
                                 <img src="/assets/GradeCalcGif1.gif" className="flex my-4 w-[55%]"/>
                                 <h1 className="text-white font-titilliumWeb-bold bodyText flex items-start w-full pt-4">
@@ -488,6 +490,8 @@ const GradeCalculator = () => {
                                     Now scroll down and enter the numerical value for the grade you want in the class. If you want an A and need a 94% in the class to do so, enter 94 into the box.
                                     You should now be able to see the grade you need to achieve on the remaining tasks to earn your desired grade! Press the “Save” button to refer back to this calculation later.
                                 </span>
+                                <img src="/assets/GradeCalcGif3.gif" className="flex my-4 w-[55%]"/>
+                                <img src="/assets/GradeCalcGif4.gif" className="flex my-4 w-[55%]"/>
                             </SimpleBar>
 
                         </motion.div>
@@ -547,7 +551,7 @@ const GradeCalculator = () => {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{duration: 0.15, type: 'tween'}}
-                                    className={`rounded-lg category relative w-[clamp(300px,100%,500px)]`}
+                                    className={`rounded-lg category relative w-[clamp(300px,100%,600px)]`}
                                 >
 
                                     {/* LIGHT BLUE TAB */}
@@ -706,7 +710,7 @@ const GradeCalculator = () => {
                         className="flex w-full items-center justify-center"
                     >
                         <motion.div
-                            className="rounded-lg flex flex-col justify-center items-center bg-nexus900 w-[clamp(300px,70%,1000px)] mb-20 text-center"
+                            className="rounded-lg flex flex-col justify-center items-center bg-nexus900 w-[clamp(300px,70%,2000px)] mb-20 text-center"
                             layout={"position"}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -717,9 +721,31 @@ const GradeCalculator = () => {
                                 <h1 className="bodyText text-nexus50"><strong>Overall Grade: </strong> {overallGrade}%</h1>
                             </div>
                             <div className={`flex flex-row items-start justify-between bg-nexus800 w-[95%] ${isMobile ? 'px-4' : 'px-12'} my-4 rounded-lg py-2 gap-6 `}>
-                                <div className="flex flex-col items-center justify-center gap-2 tinyText">
+                                <div className="flex flex-col items-center justify-center gap-2 tinyText relative">
                                     <h1 className="tinyText text-nexus50"><strong>Remaining Assignment Weight:</strong> </h1>
-                                    {remainingWeight}%
+                                    <h1 className="relative items-center justify-center flex">
+                                        {remainingWeight}%
+                                        {remainingWeight == 0 && (
+                                            <div className="flex flex-row items-center justify-center absolute gap-2 left-6 select-none" ref={infoRef}>
+                                                <div className="flex">
+                                                    <HiExclamationCircle onClick={() => setWarningOpen(!warningOpen)} className="flex cursor-pointer" />
+                                                </div>
+                                                <AnimatePresence>                                                    
+                                                    {warningOpen && (
+                                                    <motion.div
+                                                                className="w-[clamp(200px,45vw,300px)] bg-white tinyText text-nexus900 items-center justify-center flex p-2 rounded-lg"
+                                                                initial={{scaleX: 0, opacity: 0, originX: 0}}
+                                                                animate={{scaleX: 1, opacity: 1,  originX: 0}}
+                                                                exit={{scaleX: 0, opacity: 0}}
+                                                                transition={{duration:0.1}}>
+                                                                
+                                                        The Grade Needed for your Desired Grade can't be calculated if the Remaining Assignment Weight is 0!
+                                                    </motion.div>
+                                                    )}
+                                                </AnimatePresence>
+                                            </div>
+                                        )}
+                                    </h1>
                                 </div>
                                 <div className="flex flex-col items-center justify-center ">
                                     <h1 className="tinyText text-nexus50"><strong>Desired Class Grade:</strong></h1>
@@ -741,7 +767,7 @@ const GradeCalculator = () => {
                                 </div>
                                 <div className="flex flex-col items-center justify-center tinyText gap-2">
                                     <h1 className="text-nexus50">
-                                        Grade Needed on Remaining Work:
+                                        Grade Needed on Remaining Category:
                                     </h1>
                                     {requiredGrade === null ? 
                                         "Not Possible" : 
@@ -753,7 +779,7 @@ const GradeCalculator = () => {
                     </motion.div>
                 </div>
 
-                {/* BUTTONS */}
+                {/* INFO BUTTON */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -762,6 +788,7 @@ const GradeCalculator = () => {
                     <HiQuestionMarkCircle className="cursor-pointer" size={25} onClick={() => setInfoOpen(true)}/>
                 </motion.div>
 
+                {/* BUTTONS */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
