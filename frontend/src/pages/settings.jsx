@@ -282,26 +282,22 @@ function Settings() {
     setError('');
     setOkMsg('');
 
+    setActionBusy(true);
     try {
-      setActionBusy(true);
       const token = await user.getIdToken();
-      const res = await fetch(`/api/discord/unlink`, {
+      await fetch(`/api/discord/unlink`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ uid: user.uid })
       });
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(`HTTP ${res.status}: ${text}`);
-      }
       await refreshUserFirestore(user.uid);
       setOkMsg('Discord account unlinked.');
-    } catch (e) {
-      console.error('Unlink Discord error:', e);
-      setError((e?.message || 'Failed to unlink Discord').replace('Firebase: ', ''));
+    } catch (err) {
+      console.error('Failed to unlink Discord:', err);
+      setError((err?.message || 'Failed to unlink Discord').replace('Firebase: ', ''));
     } finally {
       setActionBusy(false);
     }
@@ -342,6 +338,22 @@ function Settings() {
       // Re-authenticate user with their password
       const credential = EmailAuthProvider.credential(user.email, deletePassword);
       await reauthenticateWithCredential(user, credential);
+      
+        // Unlink Discord account via API before deleting user data
+        try {
+          const token = await user.getIdToken();
+          await fetch(`/api/discord/unlink`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ uid: user.uid })
+          });
+        } catch (err) {
+          // log
+          console.error('Failed to unlink Discord during account deletion:', err);
+        }
       
       // Delete Firestore document
       const db = dbRef.current || getFirestore();
