@@ -1,6 +1,8 @@
 const admin = require("firebase-admin");
 require("./config/firebaseAdmin.js");
 
+
+
 // response helpers
 const fail = (res, code, error, extra = {}) =>
     res.status(code).json({success: false, error, ...extra});
@@ -17,7 +19,7 @@ async function verifyUserOrFail(req, res) {
         const decoded = await admin.auth().verifyIdToken(token);
 
         if (decoded.uid !== id) {
-            return {ok: false, res: fail(res, 403, "Token does not match user ID")};
+                    return {ok: false, res: fail(res, 403, "Token does not match user ID")};
         }
 
         return {ok: true, uid: decoded.uid};
@@ -33,7 +35,6 @@ module.exports = async (req, res) => {
         }
 
         const {id, courses, meta} = req.body;
-
         const auth = await verifyUserOrFail(req, res);
         if (!auth.ok) return;
 
@@ -53,8 +54,7 @@ module.exports = async (req, res) => {
                 payload.netId = meta.netId;
             }
 
-            await userRef.set(payload, {merge: true});
-        } catch (e) {
+            await userRef.set(payload, {merge: true});        } catch (e) {
             console.error("Error saving to Firestore:", e);
             return fail(res, 500, "Failed to save transcript data");
         }

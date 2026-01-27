@@ -3,8 +3,6 @@ const {PDFParse} = require("pdf-parse");
 const fs = require("fs");
 const path = require("path");
 
-const PARSE_SEMESTER = "2026 Spring";
-
 const EXCLUDED_ACTIVITY_TYPES = new Set([
     "Laboratory",
     "Laboratory - No Lab Fee",
@@ -85,27 +83,47 @@ function safeReadJson(filePath) {
 }
 
 // term is "25f", "26s", etc
-function loadCoursebookTerm(term) {
+async function loadCoursebookTerm(term) {
     const t = String(term || "").trim().toLowerCase();
-    if (!t) return {byCourseKey: new Map(), activityByCourseKey: new Map()};
+    if (!t) return {byCourseKey: new Map(), activityByCourseKey: new Map(), sectionsByCourseKey: new Map()};
     if (coursebookCache.has(t)) return coursebookCache.get(t);
 
-    // serverless layout: ./data/classes_25f.json, etc
-    const filePath = path.join(__dirname, "data", `classes_${t}.json`);
+    let rows = [];
 
-    if (!fs.existsSync(filePath)) {
-        const empty = {byCourseKey: new Map(), activityByCourseKey: new Map()};
+    // The remote coursebook URL must be provided via term-specific env var `COURSEBOOK_URL_<TERM>` (ex COURSEBOOK_URL_26S)
+    const envVar = `COURSEBOOK_URL_${t.toUpperCase().replace(/[^A-Z0-9]/g,'')}`;
+    const remote = process.env[envVar] || null;
+    if (!remote) {
+        throw new Error(`Missing required environment variable ${envVar}. Please set it to the read-only coursebook URL`);
+    }
+    try {
+        const resp = await fetch(remote);        if (resp.ok) {
+            const json = await resp.json();
+            if (Array.isArray(json)) rows = json;
+            else {
+                console.error(`Remote coursebook for term=${t} returned non-array`);
+            }
+        } else {
+            console.error(`Failed to fetch remote coursebook for term=${t}: status=${resp.status}`);
+        }
+    } catch (e) {
+        console.error(`Error fetching remote coursebook for term=${t}:`, e);
+    }
+
+    if (!Array.isArray(rows) || rows.length === 0) {
+        const empty = {byCourseKey: new Map(), activityByCourseKey: new Map(), sectionsByCourseKey: new Map()};
         coursebookCache.set(t, empty);
         return empty;
     }
-
-    let rows = [];
-    try {
-        rows = safeReadJson(filePath);
-        if (!Array.isArray(rows)) rows = [];
-    } catch (e) {
-        console.error(`Failed to parse coursebook file for term=${t}:`, e);
-        rows = [];
+        const filePath = path.join(__dirname, "data", `classes_${t}.json`);
+    if (fs.existsSync(filePath)) {
+        try {
+            rows = safeReadJson(filePath);
+            if (!Array.isArray(rows)) rows = [];
+        } catch (e) {
+            console.error(`Failed to parse local coursebook file for term=${t}:`, e);
+            rows = [];
+        }
     }
 
     const byCourseKey = new Map();
@@ -144,10 +162,10 @@ function loadCoursebookTerm(term) {
     return payload;
 }
 
-function courseHasAllowedActivity({term, prefix, number, transcriptInstructors = null}) {
+async function courseHasAllowedActivity({term, prefix, number, transcriptInstructors = null}) {
     if (!term || !prefix || !number) return false;
 
-    const {activityByCourseKey, sectionsByCourseKey} = loadCoursebookTerm(term);
+    const {activityByCourseKey, sectionsByCourseKey} = await loadCoursebookTerm(term);
     const key = `${String(term).toLowerCase()}|${String(prefix).toLowerCase()}|${String(number).trim()}`;
     const set = activityByCourseKey.get(key) || new Set();
     const sections = sectionsByCourseKey.get(key) || [];
@@ -183,7 +201,7 @@ function courseHasAllowedActivity({term, prefix, number, transcriptInstructors =
         // no matching sections -> fall through to global activity check
     }
 
-    // Global check: if any section has a non-excluded activity (e.g. Lecture), allow
+    // Global check: if any section has a non-excluded activity (ex Lecture), allow
     for (const sec of sections) {
         const a = String(sec.activity || '').trim().toLowerCase();
         if (a && !excludedLower.has(a)) {
@@ -275,7 +293,7 @@ const Transcript = (() => {
         return String(raw || "").split(/[,&;]/).map((s) => s.trim()).filter(Boolean);
     }
 
-    function choosePrimaryInstructor({term, prefix, number, transcriptInstructors}) {
+    async function choosePrimaryInstructor({term, prefix, number, transcriptInstructors}) {
         console.log('--- choosePrimaryInstructor ---');
         console.log('input:', { term, prefix, number, transcriptInstructors });
 
@@ -302,7 +320,7 @@ const Transcript = (() => {
             return fallback;
         }
 
-        const {byCourseKey} = loadCoursebookTerm(t);
+        const {byCourseKey} = await loadCoursebookTerm(t);
         const key = `${t}|${p}|${n}`;
         const profSet = byCourseKey.get(key);
 
@@ -340,7 +358,7 @@ const Transcript = (() => {
         return fallback;
     }
 
-    function extractTranscriptData(transcriptText) {
+    async function extractTranscriptData(transcriptText) {
         const transcript_data = {
             student_name: null,
             student_id: null,
@@ -357,8 +375,32 @@ const Transcript = (() => {
         let currentSection = null;
         let currentSemester = null;
 
-        const targetSemester = PARSE_SEMESTER || null;
-        let collecting = targetSemester ? false : true;
+        // Determine target term (short code like '26s') from environment when possible
+        function deriveTargetTermCodeFromEnv() {
+            // 1) scan any COURSEBOOK_URL* env values for 'classes_<term>.json'
+            for (const v of Object.values(process.env || {})) {
+                try {
+                    const s = String(v || '');
+                    const m = s.match(/classes[_-]?([0-9]{2}[fsu])\.json/i);
+                    if (m) return m[1].toLowerCase();
+                } catch (e) {
+                    // ignore
+                }
+            }
+
+            // 2) fallback to PARSE_SEMESTER env if provided (ex '2026 Spring')
+            if (process.env.PARSE_SEMESTER) {
+                const code = semesterToTermCode(process.env.PARSE_SEMESTER);
+                if (code) return code;
+            }
+
+            return null;
+        }
+
+        const targetTerm = deriveTargetTermCodeFromEnv();
+        if (targetTerm) console.log('Target transcript term from env:', targetTerm);
+
+        let collecting = targetTerm ? false : true;
         let parsedTarget = false;
 
         for (let i = 0; i < lines.length; i++) {
@@ -381,19 +423,23 @@ const Transcript = (() => {
             if (semMatch) {
                 currentSemester = line;
                 if (currentSection === "utd_classes") {
-                    if (targetSemester) {
-                        if (currentSemester === targetSemester) {
+                    // convert semester line like '2026 Spring' to term code '26s'
+                    const semTermCode = semesterToTermCode(currentSemester);
+                    if (targetTerm) {
+                        if (semTermCode === targetTerm) {
                             transcript_data.courses.utd_classes[currentSemester] = [];
                             collecting = true;
                             parsedTarget = true;
                         } else {
                             collecting = false;
-                            if (parsedTarget) break;
+                            if (parsedTarget) break; // finished parsing the target semester
                         }
                     } else {
                         transcript_data.courses.utd_classes[currentSemester] = [];
                         collecting = true;
                     }
+                } else {
+                    collecting = false;
                 }
                 continue;
             }
@@ -449,10 +495,10 @@ const Transcript = (() => {
             }
 
             const term = semesterToTermCode(currentSemester); // "25f"
-            const allowed = courseHasAllowedActivity({term, prefix, number, transcriptInstructors: instructors});
+            const allowed = await courseHasAllowedActivity({term, prefix, number, transcriptInstructors: instructors});
             if (!allowed) {
                 // fetch activity info (if any) for better debugging
-                const { activityByCourseKey } = loadCoursebookTerm(term);
+                const { activityByCourseKey } = await loadCoursebookTerm(term);
                 const key = `${String(term).toLowerCase()}|${String(prefix).toLowerCase()}|${String(number).trim()}`;
                 const activities = activityByCourseKey.get(key);
                 const activityList = activities ? Array.from(activities) : null;
@@ -460,7 +506,7 @@ const Transcript = (() => {
                 continue;
             }
 
-            const instructor = choosePrimaryInstructor({term, prefix, number, transcriptInstructors: instructors});
+            const instructor = await choosePrimaryInstructor({term, prefix, number, transcriptInstructors: instructors});
 
             transcript_data.courses.utd_classes[currentSemester].push({
                 course_code: courseCode,
@@ -528,7 +574,7 @@ module.exports = async (req, res) => {
         }
 
         // parse
-        const transcriptData = Transcript.extractTranscriptData(pdf.text);
+        const transcriptData = await Transcript.extractTranscriptData(pdf.text);
         transcriptData.id = id;
 
         const currentSemesterCourses = Transcript.extractCurrentSemesterCourses(transcriptData);

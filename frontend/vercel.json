@@ -1,6 +1,0 @@
-{
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/((?!api/|_next/|static/|assets/|favicon.ico).*)", "dest": "/index.html" }
-  ]
-}
