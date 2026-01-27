@@ -98,6 +98,8 @@ export default function Signup() {
         { merge: true }
       );
 
+      // After signup, go to course linking and make sure onboarding state is refreshed
+      try { window.dispatchEvent(new CustomEvent('refreshOnboarding')) } catch (e) { }
       navigate("/CourseLinking");
     } catch (e) {
       console.error("Signup error:", e);

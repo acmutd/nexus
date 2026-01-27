@@ -153,6 +153,8 @@ export default function CourseLinking() {
       if (!response.ok || !data.success) throw new Error(data.error || 'Failed to save transcript');
 
       // Navigate on success -> go to account linking
+      // Refresh onboarding state in context so RequireOnboarding can redirect appropriately
+      try { window.dispatchEvent(new CustomEvent('refreshOnboarding')) } catch (e) { }
       navigate('/accountlinking');
     } catch (error) {
       console.error('Confirm transcript error:', error);

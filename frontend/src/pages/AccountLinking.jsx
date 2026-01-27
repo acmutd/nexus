@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Button from '../components/Button';
 import { useMobile } from '../context/mobileContext';
 import { initializeApp, getApps, getApp } from 'firebase/app';
+import { useAuth } from '../context/authContext';
 import {
   getAuth,
   onAuthStateChanged,
@@ -37,6 +38,8 @@ const AccountLinking = () => {
     const handledRef = useRef(false);
     const linkingRef = useRef(false);
     const watchdogRef = useRef(null);
+
+    const { refreshOnboarding } = useAuth();
 
     useEffect(() => {
       let unsub = () => {};
@@ -359,7 +362,7 @@ const AccountLinking = () => {
                     {okMsg && <div className="text-green-400 text-sm mb-2">{okMsg}</div>}
 
                     <div className='flex flex-col w-full gap-2'>
-                        <Button text={`Continue (${linkedCount}/2)`} onClick={() => navigate('/home')} disabled={!canContinue} />
+                        <Button text={`Continue (${linkedCount}/2)`} onClick={async () => { const res = await refreshOnboarding(user); if (res && res.googleLinked && res.discordLinked) navigate('/home') }} disabled={!canContinue} />
                         <Button className="bg-gray-500" text={"Skip"} onClick={() => navigate('/home')} />
                         {!canContinue && <div className="text-sm text-gray-500 text-center mt-1">Link both accounts to continue</div>}
                     </div>

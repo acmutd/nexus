@@ -1,8 +1,6 @@
 const admin = require("firebase-admin");
 require("./config/firebaseAdmin.js");
 
-
-
 // response helpers
 const fail = (res, code, error, extra = {}) =>
     res.status(code).json({success: false, error, ...extra});
