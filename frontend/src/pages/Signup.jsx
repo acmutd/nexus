@@ -142,7 +142,7 @@ export default function Signup() {
             />
           </div>
 
-          <div className="mb-4 relative font-titilliumWeb-bold">
+          <div className="mb-4 relative font-titilliumWeb-semibold tinyText">
             <h1 className="tinyText font-titilliumWeb-semibold text-nexus700 mb-2">
               Password
             </h1>            
@@ -166,7 +166,7 @@ export default function Signup() {
             </div>      
           </div>
 
-          <div className="mb-4 relative font-titilliumWeb-bold">
+          <div className="mb-4 relative font-titilliumWeb-semibold tinyText">
             <h1 className="tinyText font-titilliumWeb-semibold text-nexus700 mb-2 ">
               Confirm Password
             </h1>    

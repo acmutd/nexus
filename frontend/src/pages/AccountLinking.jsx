@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import Button from '../components/Button';
 import { useMobile } from '../context/mobileContext';
 import { initializeApp, getApps, getApp } from 'firebase/app';
@@ -11,12 +11,13 @@ import {
   GoogleAuthProvider,
   linkWithPopup
 } from 'firebase/auth';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 
 const API_ORIGIN = window.location.origin;
 
 const AccountLinking = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const {isMobile} = useMobile();
 
     // Firebase / user state
@@ -38,6 +39,7 @@ const AccountLinking = () => {
     const handledRef = useRef(false);
     const linkingRef = useRef(false);
     const watchdogRef = useRef(null);
+    const [popupVisible, setPopupVisible] = useState(false);
 
     const { refreshOnboarding } = useAuth();
 
@@ -83,6 +85,16 @@ const AccountLinking = () => {
         if (watchdogRef.current) clearInterval(watchdogRef.current);
       };
     }, []);
+
+    // Entry animation like login/signup
+    useEffect(() => {
+      setPopupVisible(false);
+      const t = setTimeout(() => {
+        if (popupRef.current) popupRef.current.offsetHeight;
+        setPopupVisible(true);
+      }, 60);
+      return () => clearTimeout(t);
+    }, [location.pathname, location.key]);
 
     // Listen for Discord popup postMessage (SUCCESS / ERROR)
     useEffect(() => {
@@ -279,6 +291,32 @@ const AccountLinking = () => {
       }
     };
 
+    const skipAccountLinking = async () => {
+      if (!user) {
+        navigate('/home');
+        return;
+      }
+
+      try {
+        setActionBusy(true);
+        const db = dbRef.current || getFirestore();
+        await setDoc(
+          doc(db, 'users', user.uid),
+          {
+            accountLinkingSkipped: true,
+            accountLinkingSkippedAt: new Date().toISOString(),
+          },
+          { merge: true }
+        );
+        await refreshOnboarding(user);
+      } catch (e) {
+        console.error('Failed to mark account linking as skipped:', e);
+      } finally {
+        setActionBusy(false);
+        navigate('/home');
+      }
+    };
+
     const linkedCount = (googleLinked ? 1 : 0) + (discordLinked ? 1 : 0);
     const canContinue = linkedCount === 2;
 
@@ -313,7 +351,9 @@ const AccountLinking = () => {
         <div className='min-h-screen w-full bg-center bg-cover bg-nexus900 pt-20 items-center justify-center flex'
             style={{backgroundImage: "url('/assets/AccessRequestBG.svg')"}}>
 
-            <div className='flex flex-col w-full h-full items-center justify-center scale-90'>
+            <div
+              ref={popupRef}
+              className={`flex flex-col w-full h-full items-center justify-center scale-90 transition-all duration-500 transform ${popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}>
                 <h1 className='headingText text-white font-titilliumWeb-bold mb-2'>
                     Account Linking
                 </h1>
@@ -363,7 +403,7 @@ const AccountLinking = () => {
 
                     <div className='flex flex-col w-full gap-2'>
                         <Button text={`Continue (${linkedCount}/2)`} onClick={async () => { const res = await refreshOnboarding(user); if (res && res.googleLinked && res.discordLinked) navigate('/home') }} disabled={!canContinue} />
-                        <Button className="bg-gray-500" text={"Skip"} onClick={() => navigate('/home')} />
+                        <Button className="bg-gray-500" text={"Skip"} onClick={skipAccountLinking} />
                         {!canContinue && <div className="text-sm text-gray-500 text-center mt-1">Link both accounts to continue</div>}
                     </div>
                 </div>

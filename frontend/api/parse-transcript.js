@@ -137,10 +137,16 @@ async function loadCoursebookTerm(term) {
     const envVar = `COURSEBOOK_URL_${t.toUpperCase().replace(/[^A-Z0-9]/g,'')}`;
     const remote = process.env[envVar] || null;
     if (!remote) {
-        throw new Error(`Missing required environment variable ${envVar}. Please set it to the read-only coursebook URL`);
+        // Be tolerant when a coursebook for a term isn't provided — return an empty payload
+        // This prevents the function from failing for older/newer terms that we don't have data for.
+        console.warn(`Missing ${envVar}; proceeding with empty coursebook for term=${t}`);
+        const empty = {byCourseKey: new Map(), activityByCourseKey: new Map(), sectionsByCourseKey: new Map()};
+        coursebookCache.set(t, empty);
+        return empty;
     }
     try {
-        const resp = await fetch(remote);        if (resp.ok) {
+        const resp = await fetch(remote);
+        if (resp.ok) {
             const json = await resp.json();
             if (Array.isArray(json)) rows = json;
             else {

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import { HiUpload, HiOutlineX } from 'react-icons/hi';
 import { AnimatePresence } from 'motion/react';
@@ -8,11 +8,16 @@ import AccessRequestModal from '../components/AccessRequestModal';
 import TranscriptModal from '../components/TranscriptModal';
 import LoginWithNetIDModal from '../components/LoginWithNetIDModal';
 import Button from '../components/Button';
+import { useAuth } from '../context/authContext';
 
 export default function CourseLinking() {
   const isMed = useMediaQuery({ query: '(max-width: 800px)' });
   const navigate = useNavigate();
+  const location = useLocation();
   const fileInputRef = useRef(null);
+  const { refreshOnboarding } = useAuth();
+  const popupRef = useRef(null);
+  const [popupVisible, setPopupVisible] = useState(false);
 
   const shadowAccentColor = 'bg-gray-400';
 
@@ -35,6 +40,16 @@ export default function CourseLinking() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('from') === 'accessrequest') setShowAccessRequestModal(true);
   }, []);
+
+  // Entry animation similar to login/signup popup
+  useEffect(() => {
+    setPopupVisible(false);
+    const t = setTimeout(() => {
+      if (popupRef.current) popupRef.current.offsetHeight;
+      setPopupVisible(true);
+    }, 60);
+    return () => clearTimeout(t);
+  }, [location.pathname, location.key]);
 
   // Handle removing courses
   const handleRemoveCourse = (indexToRemove) => {
@@ -132,6 +147,10 @@ export default function CourseLinking() {
     const metaToSave = metaArg || parsedMeta;
 
     try {
+      console.log('[CourseLinking] handleConfirmAndContinue start', {
+        coursesCount: coursesToSave?.length || 0,
+        meta: metaToSave,
+      });
       const auth = getAuth();
       const user = auth.currentUser;
 
@@ -150,16 +169,34 @@ export default function CourseLinking() {
       });
 
       const data = await response.json();
+      console.log('[CourseLinking] confirm-transcript response', { ok: response.ok, status: response.status, data });
       if (!response.ok || !data.success) throw new Error(data.error || 'Failed to save transcript');
 
       // Navigate on success -> go to account linking
       // Refresh onboarding state in context so RequireOnboarding can redirect appropriately
-      try { window.dispatchEvent(new CustomEvent('refreshOnboarding')) } catch (e) { }
+      try {
+        // Try to refresh onboarding; poll a few times in case of eventual consistency
+        let onboarding = await refreshOnboarding(user);
+        console.log('[CourseLinking] onboarding after save', onboarding);
+        const maxAttempts = 6;
+        for (let i = 0; i < maxAttempts && onboarding && !onboarding.hasCourses; i++) {
+          await new Promise((r) => setTimeout(r, 500));
+          onboarding = await refreshOnboarding(user);
+          console.log(`[CourseLinking] onboarding poll ${i + 1}`, onboarding);
+        }
+        if (!onboarding || !onboarding.hasCourses) {
+          console.warn('[CourseLinking] onboarding still reports no courses after polling; proceeding anyway');
+        }
+      } catch (e) {
+        console.warn('refreshOnboarding failed after transcript save', e);
+      }
+      console.log('[CourseLinking] navigating to /accountlinking');
       navigate('/accountlinking');
     } catch (error) {
       console.error('Confirm transcript error:', error);
       setTranscriptError(error.message || 'Failed to save transcript');
     } finally {
+      console.log('[CourseLinking] handleConfirmAndContinue finished');
       setSavingTranscript(false);
     }
   };
@@ -198,7 +235,6 @@ export default function CourseLinking() {
         backgroundImage: "url('/assets/AccessRequestBG.svg')"
       }}
     >
-
     <AccessRequestModal
       isOpen={showAccessRequestModal}
       onClose={() => setShowAccessRequestModal(false)}
@@ -242,7 +278,10 @@ export default function CourseLinking() {
       }}
     />
 
-    <div className="flex items-center justify-center flex-col scale-90 mt-4">
+    <div
+      ref={popupRef}
+      className={`flex items-center justify-center flex-col scale-90 mt-4 transition-all duration-500 transform ${popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
+    >
       <h1
         className="font-titilliumWeb-bold text-white headingText mb-2"
         style={{ zIndex: 1 }}

@@ -41,6 +41,7 @@ module.exports = async (req, res) => {
         }
 
         try {
+            console.info('confirm-transcript: saving courses for user', id, 'count=', courses.length);
             const userRef = admin.firestore().collection("users").doc(id);
 
             const payload = {
@@ -52,12 +53,14 @@ module.exports = async (req, res) => {
                 payload.netId = meta.netId;
             }
 
-            await userRef.set(payload, {merge: true});        } catch (e) {
+            await userRef.set(payload, {merge: true});
+            console.info('confirm-transcript: save complete for user', id);
+        } catch (e) {
             console.error("Error saving to Firestore:", e);
             return fail(res, 500, "Failed to save transcript data");
         }
 
-        return ok(res, {message: "Transcript saved"});
+        return ok(res, {message: "Transcript saved", coursesCount: Array.isArray(courses) ? courses.length : 0});
     } catch (e) {
         console.error("Error in /api/confirm-transcript:", e);
         return fail(res, 500, "Internal server error");

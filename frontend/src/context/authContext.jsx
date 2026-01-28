@@ -11,12 +11,12 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  // onboarding state: hasCourses, googleLinked (from auth), discordLinked (from firestore)
-  const [onboarding, setOnboarding] = useState({ loaded: false, hasCourses: false, googleLinked: false, discordLinked: false })
+  // onboarding state: hasCourses, googleLinked (from auth), discordLinked (from firestore), accountLinkingSkipped (from firestore)
+  const [onboarding, setOnboarding] = useState({ loaded: false, hasCourses: false, googleLinked: false, discordLinked: false, accountLinkingSkipped: false })
 
   const refreshOnboarding = async (u) => {
     if (!u) {
-      const result = { loaded: true, hasCourses: false, googleLinked: false, discordLinked: false };
+      const result = { loaded: true, hasCourses: false, googleLinked: false, discordLinked: false, accountLinkingSkipped: false };
       setOnboarding(result);
       return result;
     }
@@ -29,14 +29,15 @@ export function AuthProvider({ children }) {
       const hasCourses = Array.isArray(data.courses) && data.courses.length > 0
       const discordLinked = !!(data.discord && data.discord.id)
       const googleLinked = (u.providerData || []).some(p => p.providerId === 'google.com')
-      const res = { loaded: true, hasCourses, googleLinked, discordLinked };
+      const accountLinkingSkipped = !!data.accountLinkingSkipped
+      const res = { loaded: true, hasCourses, googleLinked, discordLinked, accountLinkingSkipped };
       setOnboarding(res);
       return res;
     } catch (e) {
       console.error('refreshOnboarding error:', e)
       // still set loaded so UI won't block forever
       const googleLinked = (u.providerData || []).some(p => p.providerId === 'google.com')
-      const res = { loaded: true, hasCourses: false, googleLinked, discordLinked: false };
+      const res = { loaded: true, hasCourses: false, googleLinked, discordLinked: false, accountLinkingSkipped: false };
       setOnboarding(res);
       return res;
     }
@@ -57,7 +58,7 @@ export function AuthProvider({ children }) {
       console.warn('AuthProvider: firebase auth not ready', err)
       setUser(null)
       setLoading(false)
-      setOnboarding({ loaded: true, hasCourses: false, googleLinked: false, discordLinked: false })
+      setOnboarding({ loaded: true, hasCourses: false, googleLinked: false, discordLinked: false, accountLinkingSkipped: false })
     }
 
     // Listen for manual refresh events dispatched after onboarding actions so other components
@@ -111,8 +112,12 @@ export function RequireOnboarding({ step = 'course', children }) {
   if (!user) return <Navigate to="/login" replace />
 
   if (step === 'course') {
-    // If user already completed course linking, send them forward to account linking
-    if (onboarding.hasCourses) return <Navigate to="/accountlinking" replace />
+    // If user already completed course linking, send them forward to account linking unless they've dismissed it
+    if (onboarding.hasCourses) {
+      const needsAccountLinking = !(onboarding.googleLinked && onboarding.discordLinked);
+      if (needsAccountLinking && !onboarding.accountLinkingSkipped) return <Navigate to="/accountlinking" replace />
+      return <Navigate to="/home" replace />
+    }
     return children
   }
 
