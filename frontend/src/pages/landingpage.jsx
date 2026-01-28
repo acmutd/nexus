@@ -31,6 +31,8 @@ function LandingPage() {
   const [initError, setInitError] = useState('');
 
   const [user, setUser] = useState(null);
+  const popupRef = useRef(null);
+  const [popupVisible, setPopupVisible] = useState(false);
 
   useEffect(() => {
     let unsub = () => {};
@@ -76,12 +78,25 @@ function LandingPage() {
     } 
   }, [user])
 
+  // Entry popup animation
+  useEffect(() => {
+    setPopupVisible(false);
+    const t = setTimeout(() => {
+      if (popupRef.current) popupRef.current.offsetHeight;
+      setPopupVisible(true);
+    }, 60);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
     <div
       className="min-h-screen flex items-center justify-center bg-blue-950 bg-no-repeat bg-cover bg-center pb-15"
       style={{backgroundImage: "url('/assets/LandingPageBG.svg')"}}
     >
-      <div className="flex flex-col items-center justify-center min-h-full pt-30">
+      <div
+        ref={popupRef}
+        className={`flex flex-col items-center justify-center min-h-full pt-30 transition-all duration-500 transform ${popupVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
+      >
         {/* --------------------------------- HEADER --------------------------------- */}
         <h1 className={`flex font-titilliumWeb-bold text-white titleText text-center`}>
           <Typewriter options={{strings: "Welcome To Nexus!", autoStart: true, cursor: "_", delay: 50}}>
