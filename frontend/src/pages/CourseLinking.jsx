@@ -16,19 +16,7 @@ export default function CourseLinking() {
   const isMed = useMediaQuery({ query: '(max-width: 800px)' });
   const navigate = useNavigate();
   const location = useLocation();
-  const persistentSkipKey = 'skipAccountLinkingAfterRelink';
-  const [shouldSkipAccountLinking, setShouldSkipAccountLinking] = useState(() => {
-    const fromState = Boolean(location.state?.skipAccountLinking || location.state?.forceCourseRelink);
-    if (fromState && typeof window !== 'undefined') {
-      localStorage.setItem(persistentSkipKey, 'true');
-    }
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem(persistentSkipKey) === 'true';
-      return fromState || stored;
-    }
-    return fromState;
-  });
-  const forceCourseRelink = location.state?.forceCourseRelink ?? false;
+  const isRedoFlow = Boolean(location.state?.skipAccountLinking || location.state?.forceCourseRelink);
   const fileInputRef = useRef(null);
   const { refreshOnboarding } = useAuth();
   const popupRef = useRef(null);
@@ -55,18 +43,6 @@ export default function CourseLinking() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('from') === 'accessrequest') setShowAccessRequestModal(true);
   }, []);
-
-  // Remember if user came from "Redo course linking" so we always skip account linking afterward
-  useEffect(() => {
-    const fromState = Boolean(location.state?.skipAccountLinking || forceCourseRelink);
-    const stored = typeof window !== 'undefined' && localStorage.getItem(persistentSkipKey) === 'true';
-    const nextSkip = fromState || stored;
-
-    setShouldSkipAccountLinking(nextSkip);
-    if (fromState && typeof window !== 'undefined') {
-      localStorage.setItem(persistentSkipKey, 'true');
-    }
-  }, [location.state, forceCourseRelink]);
 
   // Entry animation similar to login/signup popup
   useEffect(() => {
@@ -173,7 +149,7 @@ export default function CourseLinking() {
     const coursesToSave = Array.isArray(coursesArg) ? coursesArg : parsedCourses;
     const metaToSave = {
       ...(metaArg || parsedMeta || {}),
-      ...(shouldSkipAccountLinking ? { skipAccountLinking: true } : {})
+      ...(isRedoFlow ? { skipAccountLinking: true } : {})
     };
 
     try {
@@ -183,6 +159,7 @@ export default function CourseLinking() {
       });
       const auth = getAuth();
       const user = auth.currentUser;
+      let onboardingResult = null;
 
       if (!user) {
         setTranscriptError('Please log in first');
@@ -207,11 +184,13 @@ export default function CourseLinking() {
       try {
         // Try to refresh onboarding; poll a few times in case of eventual consistency
         let onboarding = await refreshOnboarding(user);
+        onboardingResult = onboarding;
         console.log('[CourseLinking] onboarding after save', onboarding);
         const maxAttempts = 6;
         for (let i = 0; i < maxAttempts && onboarding && !onboarding.hasCourses; i++) {
           await new Promise((r) => setTimeout(r, 500));
           onboarding = await refreshOnboarding(user);
+          onboardingResult = onboarding;
           console.log(`[CourseLinking] onboarding poll ${i + 1}`, onboarding);
         }
         if (!onboarding || !onboarding.hasCourses) {
@@ -222,7 +201,7 @@ export default function CourseLinking() {
       }
 
       // For redo flow, mark account linking as skipped so guards won't redirect
-      if (shouldSkipAccountLinking) {
+      if (isRedoFlow) {
         try {
           const { db } = await initFirebase();
           await setDoc(
@@ -238,21 +217,13 @@ export default function CourseLinking() {
           console.warn('Failed to mark accountLinkingSkipped after relink', e);
         }
       }
-      if (shouldSkipAccountLinking) {
-        console.log('[CourseLinking] navigating to /home (skipAccountLinking)');
-        try {
-          localStorage.removeItem(persistentSkipKey);
-        } catch (e) {
-          console.warn('Failed to clear skipAccountLinking flag', e);
-        }
+      const skipAccountStep = isRedoFlow || (onboardingResult && onboardingResult.accountLinkingSkipped);
+
+      if (skipAccountStep) {
+        console.log('[CourseLinking] navigating to /home (skip/accountLinkingSkipped)');
         navigate('/home');
       } else {
         console.log('[CourseLinking] navigating to /accountlinking');
-        try {
-          localStorage.removeItem(persistentSkipKey);
-        } catch (e) {
-          console.warn('Failed to clear skipAccountLinking flag', e);
-        }
         navigate('/accountlinking');
       }
     } catch (error) {

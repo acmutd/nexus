@@ -29,7 +29,8 @@ export function AuthProvider({ children }) {
       const hasCourses = Array.isArray(data.courses) && data.courses.length > 0
       const discordLinked = !!(data.discord && data.discord.id)
       const googleLinked = (u.providerData || []).some(p => p.providerId === 'google.com')
-      const accountLinkingSkipped = !!data.accountLinkingSkipped
+      // Backwards-compatible: some records only stored accountLinkingSkippedAt
+      const accountLinkingSkipped = !!(data.accountLinkingSkipped ?? data.accountLinkingSkippedAt)
       const res = { loaded: true, hasCourses, googleLinked, discordLinked, accountLinkingSkipped };
       setOnboarding(res);
       return res;
