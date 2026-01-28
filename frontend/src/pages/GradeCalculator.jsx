@@ -4,7 +4,7 @@ import Backdrop from '@mui/material/Backdrop';
 import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
 import { getFirebaseAuth, getFirebaseFirestore } from '../firebase.js';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import GradeCalculatorSidebar from '../components/GradeCalculatorSidebar.jsx'
 import { HiTrash, HiCheckCircle, HiX, HiChevronDown, HiPlus, HiOutlineSave, HiQuestionMarkCircle, HiExclamationCircle, HiPencil } from 'react-icons/hi'; 
@@ -34,6 +34,7 @@ const GradeCalculator = () => {
     const [error, setError] = useState('');
 
     const [infoOpen, setInfoOpen] = useState(false)
+    const [hasSeenInstructions, setHasSeenInstructions] = useState(false)
     const infoRef = useRef(null)
     const [saveDialogOpen, setSaveDialogOpen] = useState(false);
     const [saveTitle, setSaveTitle] = useState('');
@@ -58,6 +59,9 @@ const GradeCalculator = () => {
     useEffect(() => {
         const handleClickOutside = (event) => {
             if(infoRef.current && !infoRef.current.contains(event.target)) {
+                if (infoOpen) {
+                    localStorage.setItem('gradeCalc_hasSeenInstructions', 'true');
+                }
                 setInfoOpen(false)
                 setWarningOpen(false)
             }
@@ -65,6 +69,31 @@ const GradeCalculator = () => {
         document.addEventListener("mousedown", handleClickOutside)
         return () => {document.removeEventListener("mousedown", handleClickOutside)}
     }, [])
+
+    useEffect(() => {
+        const checkInstructions = async () => {
+            if (currentUser) {
+                try {
+                    const db = getFirebaseFirestore();
+                    const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+                    
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        const hasSeenInstructions = userData.hasSeenGradeCalcInstructions || false;
+                        
+                        if (!hasSeenInstructions) {
+                            setInfoOpen(true);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error checking instructions status:', error);
+                }
+            }
+        };
+        
+        checkInstructions();
+    }, [currentUser]);
+
 
     useEffect(() => {
         const auth = getFirebaseAuth();
@@ -523,7 +552,19 @@ const GradeCalculator = () => {
                                 transition={{duration:0.25}}
                                 className="flex relative flex-col w-[clamp(300px,60vw,600px)] bg-nexus800 h-auto rounded-lg z-60 p-6 shadow-2xl">
                                 
-                                <HiX size={25} className="text-white absolute right-6 top-6 hover:text-gray-300 cursor-pointer transition duration-300" onClick={() => {setInfoOpen(false)}}/>
+                                <HiX size={25} className="text-white absolute right-6 top-6 hover:text-gray-300 cursor-pointer transition duration-300" onClick={async () => {
+                                    setInfoOpen(false);
+                                    if (currentUser) {
+                                        try {
+                                            const db = getFirebaseFirestore();
+                                            await updateDoc(doc(db, 'users', currentUser.uid), {
+                                                hasSeenGradeCalcInstructions: true
+                                            });
+                                        } catch (error) {
+                                            console.error('Error updating instructions status:', error);
+                                        }
+                                    }
+                                }}/>
                                 <h1 className="text-white font-titilliumWeb-bold headingText flex items-start w-full mb-4">
                                     Welcome To Grade Calculator!
                                 </h1>
