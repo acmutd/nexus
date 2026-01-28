@@ -635,7 +635,7 @@ const GradeCalculator = () => {
                                                             }
                                                         }}
                                                         autoComplete="off"
-                                                        placeholder="Homework"
+                                                        placeholder="Enter category (e.g. Homework)"
                                                         required
                                                     />
                                                 </div>
@@ -726,7 +726,7 @@ const GradeCalculator = () => {
                                                                                 setValidationErrors(newErrors);
                                                                             }
                                                                         }}
-                                                                        placeholder="Homework #1"
+                                                                        placeholder="Assignment name (e.g. Homework #1)"
                                                                     />
                                                                     <div className="flex flex-row gap-1 items-center justify-center">
                                                                         <input
