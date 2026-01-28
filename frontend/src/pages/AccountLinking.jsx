@@ -282,6 +282,19 @@ const AccountLinking = () => {
     const linkedCount = discordLinked ? 1 : 0;
     const canContinue = linkedCount === 1;
 
+    // Auto-continue once Discord is linked
+    useEffect(() => {
+      const goHome = async () => {
+        try {
+          const res = await refreshOnboarding(user);
+          if (res?.discordLinked) navigate('/home');
+        } catch (e) {
+          console.error('Auto-continue failed:', e);
+        }
+      };
+      if (discordLinked && user) goHome();
+    }, [discordLinked, user, navigate, refreshOnboarding]);
+
     const OptionBox = ({ icon, title, description, details, buttonText, onClick }) => (
         <div className="relative w-full flex">
             <div className={`absolute inset-0 rounded-lg bg-gray-400 shadow-md`}
@@ -350,9 +363,8 @@ const AccountLinking = () => {
                     {okMsg && <div className="text-green-400 text-sm mb-2">{okMsg}</div>}
 
                     <div className='flex flex-col w-full gap-2'>
-                        <Button text={`Continue (${linkedCount}/1)`} onClick={async () => { const res = await refreshOnboarding(user); if (res && res.discordLinked) navigate('/home') }} disabled={!canContinue} />
                         <Button className="bg-gray-500" text={"Skip"} onClick={skipAccountLinking} />
-                        {!canContinue && <div className="text-sm text-gray-500 text-center mt-1">Link Discord to continue</div>}
+                      
                     </div>
                 </div>
             </div>
