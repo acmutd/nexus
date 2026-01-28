@@ -4,17 +4,19 @@ import { useMediaQuery } from 'react-responsive';
 import { HiUpload, HiOutlineX } from 'react-icons/hi';
 import { AnimatePresence } from 'motion/react';
 import { getAuth } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import AccessRequestModal from '../components/AccessRequestModal';
 import TranscriptModal from '../components/TranscriptModal';
 import LoginWithNetIDModal from '../components/LoginWithNetIDModal';
 import Button from '../components/Button';
 import { useAuth } from '../context/authContext';
+import { initFirebase } from '../firebase';
 
 export default function CourseLinking() {
   const isMed = useMediaQuery({ query: '(max-width: 800px)' });
   const navigate = useNavigate();
   const location = useLocation();
-  const skipAccountLinking = location.state?.skipAccountLinking ?? false;
+  const isRedoFlow = Boolean(location.state?.skipAccountLinking || location.state?.forceCourseRelink);
   const fileInputRef = useRef(null);
   const { refreshOnboarding } = useAuth();
   const popupRef = useRef(null);
@@ -147,7 +149,7 @@ export default function CourseLinking() {
     const coursesToSave = Array.isArray(coursesArg) ? coursesArg : parsedCourses;
     const metaToSave = {
       ...(metaArg || parsedMeta || {}),
-      ...(skipAccountLinking ? { skipAccountLinking: true } : {})
+      ...(isRedoFlow ? { skipAccountLinking: true } : {})
     };
 
     try {
@@ -157,6 +159,7 @@ export default function CourseLinking() {
       });
       const auth = getAuth();
       const user = auth.currentUser;
+      let onboardingResult = null;
 
       if (!user) {
         setTranscriptError('Please log in first');
@@ -181,11 +184,13 @@ export default function CourseLinking() {
       try {
         // Try to refresh onboarding; poll a few times in case of eventual consistency
         let onboarding = await refreshOnboarding(user);
+        onboardingResult = onboarding;
         console.log('[CourseLinking] onboarding after save', onboarding);
         const maxAttempts = 6;
         for (let i = 0; i < maxAttempts && onboarding && !onboarding.hasCourses; i++) {
           await new Promise((r) => setTimeout(r, 500));
           onboarding = await refreshOnboarding(user);
+          onboardingResult = onboarding;
           console.log(`[CourseLinking] onboarding poll ${i + 1}`, onboarding);
         }
         if (!onboarding || !onboarding.hasCourses) {
@@ -194,8 +199,28 @@ export default function CourseLinking() {
       } catch (e) {
         console.warn('refreshOnboarding failed after transcript save', e);
       }
-      if (skipAccountLinking) {
-        console.log('[CourseLinking] navigating to /home (skipAccountLinking)');
+
+      // For redo flow, mark account linking as skipped so guards won't redirect
+      if (isRedoFlow) {
+        try {
+          const { db } = await initFirebase();
+          await setDoc(
+            doc(db, 'users', user.uid),
+            {
+              accountLinkingSkipped: true,
+              accountLinkingSkippedAt: new Date().toISOString(),
+            },
+            { merge: true }
+          );
+          await refreshOnboarding(user);
+        } catch (e) {
+          console.warn('Failed to mark accountLinkingSkipped after relink', e);
+        }
+      }
+      const skipAccountStep = isRedoFlow || (onboardingResult && onboardingResult.accountLinkingSkipped);
+
+      if (skipAccountStep) {
+        console.log('[CourseLinking] navigating to /home (skip/accountLinkingSkipped)');
         navigate('/home');
       } else {
         console.log('[CourseLinking] navigating to /accountlinking');
