@@ -625,23 +625,11 @@ module.exports = async (req, res) => {
             return fail(res, 400, "No courses found for the current semester");
         }
 
-        // save immediately
-        try {
-            const userRef = admin.firestore().collection("users").doc(id);
-            await userRef.set(
-                {
-                    lastTranscriptUpload: new Date().toISOString(),
-                    courses: currentSemesterCourses,
-                },
-                {merge: true}
-            );
-        } catch (e) {
-            console.error("Error saving to Firestore:", e);
-            return fail(res, 500, "Failed to save transcript data");
-        }
+        // Do NOT save to Firestore here. The client must confirm (press "Continue")
+        // before we persist parsed courses. This prevents unwanted autosave behavior.
 
         return ok(res, {
-            message: "Transcript parsed successfully",
+            message: "Transcript parsed successfully (not saved). Confirm to persist.",
             transcript_data: transcriptData,
             current_semester_courses: currentSemesterCourses,
         });

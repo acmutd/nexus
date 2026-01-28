@@ -4,5 +4,16 @@
       "source": "/((?!api/|_next/|static/|assets/|favicon.ico).*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "functions": {
+    "api/parse-transcript.js": {
+      "includeFiles": [
+        "node_modules/pdf-parse/dist/pdf-parse/cjs/pdf.worker.mjs",
+        "node_modules/pdf-parse/dist/pdf-parse/cjs/*.mjs",
+        "node_modules/pdf-parse/dist/pdf-parse/cjs/*.js"
+      ],
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  }
 }
