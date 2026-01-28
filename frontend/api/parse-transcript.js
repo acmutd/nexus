@@ -1,5 +1,26 @@
 const {admin} = require("./config/firebaseAdmin.js");
-const {PDFParse} = require("pdf-parse");
+
+// DOM polyfills for pdfjs in serverless envs (Vercel)
+// placeholders so pdfjs doesn't throw when DOM types are missin they avoid the process crashing when @napi-rs/canvas isn't available
+if (typeof global.DOMMatrix === 'undefined') {
+    global.DOMMatrix = class DOMMatrix {};
+}
+if (typeof global.ImageData === 'undefined') {
+    global.ImageData = class ImageData {
+        constructor(data, width, height) { this.data = data; this.width = width; this.height = height; }
+    };
+}
+if (typeof global.Path2D === 'undefined') {
+    global.Path2D = class Path2D { constructor() {} };
+}
+
+let PDFParse;
+try {
+    PDFParse = require("pdf-parse").PDFParse;
+} catch (e) {
+    console.warn("pdf-parse failed to load at require():", e && e.message);
+}
+
 const fs = require("fs");
 const path = require("path");
 
@@ -47,13 +68,35 @@ async function parsePdfTextOrFail(pdf_content, res) {
         return {ok: false, res: fail(res, 400, "PDF file size exceeds 0.5MB limit")};
     }
 
+    // Fallback extractor that doesn't rely on native canvas or DOM APIs.
+    function fallbackExtractPdfText(buffer) {
+        const s = buffer.toString('latin1');
+        // grab long-ish runs of printable characters and collapse whitespace
+        const matches = s.match(/[\t \n\r\u00A0-\uFFFFA-Za-z0-9'"(),.:;\-\/&%$#]{4,}/g) || [];
+        const cleaned = matches.map(m => m.replace(/\s+/g, ' ').trim()).filter(Boolean).join('\n');
+        return cleaned;
+    }
+
     let parser;
     try {
-        parser = new PDFParse({data: pdfBuffer});
-        const pdfData = await parser.getText();
-        return {ok: true, text: pdfData.text || ""};
+        if (PDFParse) {
+            parser = new PDFParse({data: pdfBuffer});
+            const pdfData = await parser.getText();
+            return {ok: true, text: pdfData.text || ""};
+        } else {
+            // pdf-parse couldn't be required (missing native deps); use fallback
+            const text = fallbackExtractPdfText(pdfBuffer);
+            return {ok: true, text};
+        }
     } catch (e) {
         console.error("PDF parsing error:", e);
+        // try fallback extractor as a last resort
+        try {
+            const text = fallbackExtractPdfText(pdfBuffer);
+            if (text && text.trim()) return {ok: true, text};
+        } catch (e2) {
+            console.error("Fallback text extraction failed:", e2);
+        }
         return {ok: false, res: fail(res, 400, "Failed to parse PDF file")};
     } finally {
         if (parser?.destroy) {
