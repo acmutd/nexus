@@ -345,6 +345,9 @@ function Settings() {
       const db = dbRef.current || getFirestore();
       const userRef = doc(db, 'users', user.uid);
       await deleteDoc(userRef);
+
+      const gradesRef = doc(db, 'courseGrades', user.uid);
+      await deleteDoc(gradesRef);
       
       // Delete Firebase Auth user
       await deleteUser(user);
