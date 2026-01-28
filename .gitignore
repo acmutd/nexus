@@ -180,6 +180,5 @@ package-lock.json
 #scraper
 /scraper2/
 
-vercel.json
 .vercel
 .env*.local
