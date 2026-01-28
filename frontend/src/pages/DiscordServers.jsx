@@ -78,33 +78,36 @@ function DiscordServers() {
   }, []);
 
   return (
-        <div className="min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center bg-fixed overflow-x-hidden"
-             style={{ backgroundImage: "url('/assets/CoursesBG.svg')", fontFamily: "titilliumWeb-semibold" }}>
+    <>
+    <div className="inset-0 min-h-screen fixed flex items-center justify-center bg-blue-950 bg-cover bg-center overflow-x-hidden"
+         style={{ backgroundImage: "url('/assets/CoursesBG.svg')"}} />
     {/* ----------------------------------- MAIN CONTAINER ---------------------------------------- */}
-        <motion.div className={`flex flex-col min-w-[350px] w-[70%] mt-12 items-center justify-center rounded-2xl bg-gradient-to-b from-nexus900 via-50% via-nexus800 to-90% to-nexus900 p-6 scale-90`}
-                    initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{duration:0.7}}>
-    {/* ----------------------------------- HEADING + SEARCH ---------------------------------------- */}
-          <div className="flex flex-col w-full h-full py-2 rounded-xl">
-            <h1 className="font-titilliumWeb-bold text-nexus50 headingText">
-              Discord Servers
-            </h1>
-            <span className="font-titilliumWeb-regular text-gray-400 tinyText">
-              Join all your school’s Discord community servers to connect with your fellow classmates, share resources, and collaborate!
+        <div className='relative flex items-center justify-center w-full'>
+          <motion.div className={`flex flex-col min-w-[350px] w-[70%] mt-12 items-center justify-center rounded-2xl bg-gradient-to-b from-nexus900 via-50% via-nexus800 to-90% to-nexus900 p-6 scale-90`}
+                      initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{duration:0.7}}>
+      {/* ----------------------------------- HEADING + SEARCH ---------------------------------------- */}
+            <div className="flex flex-col w-full h-full py-2 rounded-xl">
+              <h1 className="font-titilliumWeb-bold text-nexus50 headingText">
+                Discord Servers
+              </h1>
+              <span className="font-titilliumWeb-regular text-gray-400 tinyText">
+                Join all your school’s Discord community servers to connect with your fellow classmates, share resources, and collaborate!
+              </span>
+            </div>
+      {/* ----------------------------------- COURSES ---------------------------------------- */}
+            <div className={`${isMobile ? 'flex flex-col': 'grid grid-cols-2'} mt-4 gap-6 w-full h-full items-center justify-center overflow-hidden`}>
+              {servers.map((item, index) => (
+                <div className="flex w-full h-full">
+                  <ServerCard link={item.link} title={item.title} banner={item.banner} icon={item.icon} description={item.description} members={item.members} liveMembers={liveCounts[index]} loadingMembers={loadingCounts[index]}/>
+                </div>
+              ))}
+            </div>
+            <span className='font-titilliumWeb-regular text-gray-400 text-lg mt-2 text-center'>
+              Make sure to read all of the servers’ rules, and most importantly, have fun!
             </span>
-          </div>
-    {/* ----------------------------------- COURSES ---------------------------------------- */}
-          <div className={`${isMobile ? 'flex flex-col': 'grid grid-cols-2'} mt-4 gap-6 w-full h-full items-center justify-center overflow-hidden`}>
-            {servers.map((item, index) => (
-              <div className="flex w-full h-full">
-                <ServerCard link={item.link} title={item.title} banner={item.banner} icon={item.icon} description={item.description} members={item.members} liveMembers={liveCounts[index]} loadingMembers={loadingCounts[index]}/>
-              </div>
-            ))}
-          </div>
-          <span className='font-titilliumWeb-regular text-gray-400 text-lg mt-2 text-center'>
-            Make sure to read all of the servers’ rules, and most importantly, have fun!
-          </span>
-        </motion.div>
-    </div>
+          </motion.div>
+        </div>
+    </>
   )
 }
 
