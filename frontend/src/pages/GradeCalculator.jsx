@@ -635,7 +635,7 @@ const GradeCalculator = () => {
                                                             }
                                                         }}
                                                         autoComplete="off"
-                                                        placeholder="Enter Category"
+                                                        placeholder="Homework"
                                                         required
                                                     />
                                                 </div>
@@ -661,6 +661,7 @@ const GradeCalculator = () => {
                                                         }}
                                                         autoComplete="off"
                                                         required
+                                                        placeholder="25"
                                                     />
                                                     <h1 className="pl-1 pr-1 block tinyText text-white">%</h1>
                                                 </div>
@@ -725,7 +726,7 @@ const GradeCalculator = () => {
                                                                                 setValidationErrors(newErrors);
                                                                             }
                                                                         }}
-                                                                        placeholder="Assignment"
+                                                                        placeholder="Homework #1"
                                                                     />
                                                                     <div className="flex flex-row gap-1 items-center justify-center">
                                                                         <input
@@ -743,7 +744,7 @@ const GradeCalculator = () => {
                                                                                     setValidationErrors(newErrors);
                                                                                 }
                                                                             }}
-                                                                            placeholder="100">
+                                                                            placeholder="25">
                                                                         </input>
                                                                         /
                                                                         <input
@@ -761,7 +762,7 @@ const GradeCalculator = () => {
                                                                                     setValidationErrors(newErrors);
                                                                                 }
                                                                             }}
-                                                                            placeholder="100">
+                                                                            placeholder="30">
                                                                         </input>
                                                                     </div>
                                                                 </div>
