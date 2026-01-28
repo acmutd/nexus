@@ -48,6 +48,8 @@ const GradeCalculator = () => {
 
     const [showSuccessNotification, setShowSuccessNotification] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
+    const [validationErrors, setValidationErrors] = useState({});
+    const [isSaving, setIsSaving] = useState(false);
 
     const handleSidebarToggle = (collapsed) => {
         setSidebarCollapsed(collapsed);
@@ -311,25 +313,72 @@ const GradeCalculator = () => {
         setCategories(newCategories);
     };
 
-    const deleteAssignmentRow = (categoryIndex, assignmentIndex) => {
+   const deleteAssignmentRow = (categoryIndex, assignmentIndex) => {
         const newCategories = [...categories];
 
         if (newCategories[categoryIndex].assignments.length > 1) {
             newCategories[categoryIndex].assignments.splice(assignmentIndex, 1);
             setCategories(newCategories);
-        }
+            
+            const newErrors = {...validationErrors};
+            delete newErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-name`];
+            delete newErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-grade`];
+            delete newErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-weight`];
+            setValidationErrors(newErrors);
+    }
+    };
+
+    const validateFields = () => {
+        const errors = {};
+        
+        categories.forEach((category, catIndex) => {
+            if (!category.name.trim()) {
+                errors[`category-${catIndex}-name`] = true;
+            }
+            
+            if (!category.weight || category.weight === '') {
+                errors[`category-${catIndex}-weight`] = true;
+            }
+            
+            category.assignments.forEach((assignment, asnIndex) => {
+                if (!assignment.assignment.trim()) {
+                    errors[`category-${catIndex}-assignment-${asnIndex}-name`] = true;
+                }
+                if (!assignment.grade || assignment.grade === '') {
+                    errors[`category-${catIndex}-assignment-${asnIndex}-grade`] = true;
+                }
+                if (!assignment.weight || assignment.weight === '') {
+                    errors[`category-${catIndex}-assignment-${asnIndex}-weight`] = true;
+                }
+            });
+        });
+        
+        return errors;
     };
 
     const handleSaveGradeHistory = async () => {
+
+        if (isSaving) return; 
+    
+        const errors = validateFields();
+        
         if (!saveTitle.trim()) {
-            setError('Please enter a title for this grade history');
-            return;
+            errors['saveTitle'] = true;
         }
         
         if (!selectedCourseForSave) {
-            setError('Please select a course for this grade history');
+            errors['courseSelection'] = true;
+        }
+        
+        setValidationErrors(errors);
+        
+        if (Object.keys(errors).length > 0) {
+            setError('Please fill in all required fields');
             return;
         }
+        
+        setError('');
+        setIsSaving(true);
         
         try {
             const auth = getFirebaseAuth(); 
@@ -401,7 +450,10 @@ const GradeCalculator = () => {
         } catch (error) {
             console.error('Error saving grade history:', error);
             setError('Failed to save grades. Please try again.');
+        } finally {
+            setIsSaving(false); 
         }
+
     };
 
     const handleNewCalculation = () => {
@@ -568,9 +620,20 @@ const GradeCalculator = () => {
                                                 <div className="flex flex-3">
                                                     <input
                                                         id={`category-${categoryIndex}`}
-                                                        className="flex bg-nexus800 tinyText w-full text-white rounded-md focus:border-nexus300 focus:outline-none focus:ring-nexus200 focus:ring-opacity-50 p-1.5"
+                                                        className={`flex bg-nexus800 tinyText w-full text-white rounded-md focus:outline-none p-1.5 ${
+                                                            validationErrors[`category-${categoryIndex}-name`] 
+                                                            ? 'border-2 border-[#D73A49] focus:border-[#D73A49] focus:ring-[#D73A49]' 
+                                                            : 'focus:border-nexus300 focus:ring-nexus200 focus:ring-opacity-50'
+                                                        }`}
                                                         value={category.name}
-                                                        onChange={(e) => handleCategoryChange(categoryIndex, "name", e.target.value)}
+                                                        onChange={(e) => {
+                                                            handleCategoryChange(categoryIndex, "name", e.target.value);
+                                                            if (validationErrors[`category-${categoryIndex}-name`]) {
+                                                                const newErrors = {...validationErrors};
+                                                                delete newErrors[`category-${categoryIndex}-name`];
+                                                                setValidationErrors(newErrors);
+                                                            }
+                                                        }}
                                                         autoComplete="off"
                                                         placeholder="Enter Category"
                                                         required
@@ -582,9 +645,20 @@ const GradeCalculator = () => {
                                                     <input
                                                         type="text"
                                                         id={`category-weight-${categoryIndex}`}
-                                                        className="bg-nexus800 tinyText w-10 text-white block rounded-md focus:border-nexus300 focus:outline-none focus:ring-nexus200 focus:ring-opacity-50 p-1.5"
+                                                        className={`bg-nexus800 tinyText w-10 text-white block rounded-md focus:outline-none p-1.5 ${
+                                                            validationErrors[`category-${categoryIndex}-weight`] 
+                                                            ? 'border-2 border-[#D73A49] focus:border-[#D73A49] focus:ring-[#D73A49]' 
+                                                            : 'focus:border-nexus300 focus:ring-nexus200 focus:ring-opacity-50'
+                                                        }`}
                                                         value={category.weight}
-                                                        onChange={(e) => handleCategoryChange(categoryIndex, "weight", e.target.value)}
+                                                        onChange={(e) => {
+                                                            handleCategoryChange(categoryIndex, "weight", e.target.value);
+                                                            if (validationErrors[`category-${categoryIndex}-weight`]) {
+                                                                const newErrors = {...validationErrors};
+                                                                delete newErrors[`category-${categoryIndex}-weight`];
+                                                                setValidationErrors(newErrors);
+                                                            }
+                                                        }}
                                                         autoComplete="off"
                                                         required
                                                     />
@@ -598,6 +672,13 @@ const GradeCalculator = () => {
                                                 onClick={() => {
                                                     const newCategories = categories.filter((_, index) => index !== categoryIndex);
                                                     setCategories(newCategories);
+                                                    const newErrors = {...validationErrors};
+                                                    Object.keys(newErrors).forEach(key => {
+                                                        if (key.startsWith(`category-${categoryIndex}-`)) {
+                                                            delete newErrors[key];
+                                                        }
+                                                    });
+                                                    setValidationErrors(newErrors);
                                                 }}
                                                 className=" flex items-center justify-center text-nexus200 rounded-md transition-all duration-200 hover:text-white group z-10"
                                                 title="Delete Category"
@@ -628,35 +709,62 @@ const GradeCalculator = () => {
                                                                 <div className="flex flex-col w-full pl-2">
                                                                     {/* NAME + POINTS */}
                                                                     <div className="flex flex-row gap-2 tinyText mb-2 w-full">
-                                                                        <input
-                                                                            type="text"
-                                                                            className="py-1.5 bg-nexus900 tinyText flex-3 text-white rounded-md focus:outline-none p-1"
-                                                                            value={assignment.assignment}
-                                                                            onChange={(e) =>
-                                                                                handleAssignmentChange(categoryIndex, assignmentIndex, "assignment", e.target.value)
+                                                                    <input
+                                                                        type="text"
+                                                                        className={`py-1.5 bg-nexus900 tinyText flex-3 text-white rounded-md focus:outline-none p-1 ${
+                                                                            validationErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-name`]
+                                                                            ? 'border-2 border-[#D73A49] focus:border-[#D73A49] focus:ring-[#D73A49]'
+                                                                            : ''
+                                                                        }`}
+                                                                        value={assignment.assignment}
+                                                                        onChange={(e) => {
+                                                                            handleAssignmentChange(categoryIndex, assignmentIndex, "assignment", e.target.value);
+                                                                            if (validationErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-name`]) {
+                                                                                const newErrors = {...validationErrors};
+                                                                                delete newErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-name`];
+                                                                                setValidationErrors(newErrors);
                                                                             }
-                                                                            placeholder="Assignment"
-                                                                        />
-                                                                        <div className="flex flex-row gap-1 items-center justify-center">
-                                                                            <input
-                                                                                className="bg-nexus900 tinyText w-10 text-white block rounded-md focus:outline-none p-1"
-                                                                                value={assignment.grade}
-                                                                                onChange={(e) =>
-                                                                                    handleAssignmentChange(categoryIndex, assignmentIndex, "grade", e.target.value)
+                                                                        }}
+                                                                        placeholder="Assignment"
+                                                                    />
+                                                                    <div className="flex flex-row gap-1 items-center justify-center">
+                                                                        <input
+                                                                            className={`bg-nexus900 tinyText w-10 text-white block rounded-md focus:outline-none p-1 ${
+                                                                                validationErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-grade`]
+                                                                                ? 'border-2 border-[#D73A49] focus:border-[#D73A49] focus:ring-[#D73A49]'
+                                                                                : ''
+                                                                            }`}
+                                                                            value={assignment.grade}
+                                                                            onChange={(e) => {
+                                                                                handleAssignmentChange(categoryIndex, assignmentIndex, "grade", e.target.value);
+                                                                                if (validationErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-grade`]) {
+                                                                                    const newErrors = {...validationErrors};
+                                                                                    delete newErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-grade`];
+                                                                                    setValidationErrors(newErrors);
                                                                                 }
-                                                                                placeholder="100">
-                                                                            </input>
-                                                                            /
-                                                                            <input
-                                                                                className="bg-nexus900 tinyText w-10 text-white block rounded-md focus:outline-none p-1"
-                                                                                value={assignment.weight}
-                                                                                onChange={(e) =>
-                                                                                    handleAssignmentChange(categoryIndex, assignmentIndex, "weight", e.target.value)
+                                                                            }}
+                                                                            placeholder="100">
+                                                                        </input>
+                                                                        /
+                                                                        <input
+                                                                            className={`bg-nexus900 tinyText w-10 text-white block rounded-md focus:outline-none p-1 ${
+                                                                                validationErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-weight`]
+                                                                                ? 'border-2 border-[#D73A49] focus:border-[#D73A49] focus:ring-[#D73A49]'
+                                                                                : ''
+                                                                            }`}
+                                                                            value={assignment.weight}
+                                                                            onChange={(e) => {
+                                                                                handleAssignmentChange(categoryIndex, assignmentIndex, "weight", e.target.value);
+                                                                                if (validationErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-weight`]) {
+                                                                                    const newErrors = {...validationErrors};
+                                                                                    delete newErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-weight`];
+                                                                                    setValidationErrors(newErrors);
                                                                                 }
-                                                                                placeholder="100">
-                                                                            </input>
-                                                                        </div>
+                                                                            }}
+                                                                            placeholder="100">
+                                                                        </input>
                                                                     </div>
+                                                                </div>
 
                                                                     {/* PERCENTAGE BAR */}
                                                                     <div className="flex flex-row items-center justify-center gap-2">
@@ -798,7 +906,10 @@ const GradeCalculator = () => {
                         className="fixed bottom-6 right-4 flex flex-col gap-2"
                     >
                         <Button className="p-1 gap-2" text={"Add Category"} icon={<HiPlus/>} onClick={addCategory}/>
-                        <Button className="p-1 px-2 gap-2" text={editMode ? 'Update Calculation' : 'Save Calculation'} icon={<HiOutlineSave/>} onClick={() => setSaveDialogOpen(true)}/>
+                        <Button className="p-1 px-2 gap-2" text={editMode ? 'Update Calculation' : 'Save Calculation'} icon={<HiOutlineSave/>} onClick={() => {
+                            setValidationErrors({});
+                            setSaveDialogOpen(true);
+                        }}/>
                         
                         <Modal
                             open={saveDialogOpen}
@@ -866,12 +977,12 @@ const GradeCalculator = () => {
                                                 Cancel
                                             </button>
                                             <button
-                                                className="px-4 py-2 bg-nexus500 text-white text-xl rounded-md transition duration-300 hover:bg-nexus600 cursor-pointer"
-                                                onClick={handleSaveGradeHistory}
-                                                disabled={!saveTitle.trim() || !selectedCourseForSave}
-                                            >
-                                                {editMode ? 'Update' : 'Save'}
-                                            </button>
+                                            className="px-4 py-2 bg-nexus500 text-white text-xl rounded-md transition duration-300 hover:bg-nexus600 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                            onClick={handleSaveGradeHistory}
+                                            disabled={!saveTitle.trim() || !selectedCourseForSave || isSaving}
+                                        >
+                                            {isSaving ? 'Saving...' : (editMode ? 'Update' : 'Save')}
+                                        </button>
                                         </div>
 
                                     </div>
