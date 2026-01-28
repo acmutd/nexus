@@ -54,7 +54,7 @@ export function AuthProvider({ children }) {
         refreshOnboarding(u)
       })
     } catch (err) {
-      // Firebase not initialized yet (e.g., init failed). Treat as logged-out.
+      // Firebase not initialized yet (ex init failed). Treat as logged-out.
       console.warn('AuthProvider: firebase auth not ready', err)
       setUser(null)
       setLoading(false)
@@ -114,7 +114,7 @@ export function RequireOnboarding({ step = 'course', children }) {
   if (!user) return <Navigate to="/login" replace />
 
   if (step === 'course') {
-    // Allow forcing course relink even if onboarding still shows courses (e.g., Firestore eventual consistency)
+    // Allow forcing course relink even if onboarding still shows courses (ex Firestore eventual consistency)
     if (forceCourseRelink) return children
 
     // If user already completed course linking, send them forward to account linking unless they've dismissed it
@@ -130,7 +130,10 @@ export function RequireOnboarding({ step = 'course', children }) {
     // can't visit account step before finishing courses
     if (!onboarding.hasCourses) return <Navigate to="/CourseLinking" replace />
 
-    // Account linking is optional — allow visiting even if already linked/skipped
+    // Only allow when user still needs to link Discord and hasn't skipped
+    const needsAccountLinking = !onboarding.discordLinked && !onboarding.accountLinkingSkipped;
+    if (!needsAccountLinking) return <Navigate to="/home" replace />
+
     return children
   }
 

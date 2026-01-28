@@ -35,7 +35,7 @@ const AccountLinking = () => {
     const watchdogRef = useRef(null);
     const [popupVisible, setPopupVisible] = useState(false);
 
-    const { refreshOnboarding } = useAuth();
+    const { refreshOnboarding, onboarding } = useAuth();
 
     useEffect(() => {
       let unsub = () => {};
@@ -294,6 +294,14 @@ const AccountLinking = () => {
       };
       if (discordLinked && user) goHome();
     }, [discordLinked, user, navigate, refreshOnboarding]);
+
+    // Hard block access if onboarding already linked or explicitly skipped (e.g., redo flow)
+    useEffect(() => {
+      if (!onboarding?.loaded) return;
+      if (onboarding.discordLinked || onboarding.accountLinkingSkipped) {
+        navigate('/home', { replace: true });
+      }
+    }, [onboarding, navigate]);
 
     const OptionBox = ({ icon, title, description, details, buttonText, onClick }) => (
         <div className="relative w-full flex">
