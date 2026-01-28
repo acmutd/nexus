@@ -7,13 +7,8 @@ import { useAuth } from '../context/authContext';
 import {
   getAuth,
   onAuthStateChanged,
-  unlink,
-  GoogleAuthProvider,
-  linkWithPopup
 } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
-
-const API_ORIGIN = window.location.origin;
 
 const AccountLinking = () => {
     const navigate = useNavigate();
@@ -25,7 +20,6 @@ const AccountLinking = () => {
     const dbRef = useRef(null);
 
     // provider/linking state
-    const [googleLinked, setGoogleLinked] = useState(false);
     const [discordLinked, setDiscordLinked] = useState(false);
     const [discordUsername, setDiscordUsername] = useState(null);
 
@@ -64,11 +58,8 @@ const AccountLinking = () => {
           unsub = onAuthStateChanged(a, async (u) => {
             setUser(u || null);
             if (u) {
-              const providers = (u.providerData || []).map(p => p.providerId);
-              setGoogleLinked(providers.includes('google.com'));
               await refreshUserFirestore(u.uid);
             } else {
-              setGoogleLinked(false);
               setDiscordLinked(false);
               setDiscordUsername(null);
             }
@@ -156,35 +147,6 @@ const AccountLinking = () => {
       } catch (e) {
         console.error('Failed to refresh Firestore user doc:', e);
         return false;
-      }
-    };
-
-    // Google link or unlink
-    const handleGoogleAction = async () => {
-      if (!user) {
-        alert('You must be signed in.');
-        return;
-      }
-      setError('');
-      setOkMsg('');
-
-      try {
-        setActionBusy(true);
-        if (googleLinked) {
-          await unlink(user, 'google.com');
-          setGoogleLinked(false);
-          setOkMsg('Google account unlinked.');
-        } else {
-          const provider = new GoogleAuthProvider();
-          await linkWithPopup(user, provider);
-          setGoogleLinked(true);
-          setOkMsg('Google account linked.');
-        }
-      } catch (e) {
-        console.error('Google link/unlink error:', e);
-        setError((e?.message || 'Google action failed').replace('Firebase: ', ''));
-      } finally {
-        setActionBusy(false);
       }
     };
 
@@ -317,8 +279,8 @@ const AccountLinking = () => {
       }
     };
 
-    const linkedCount = (googleLinked ? 1 : 0) + (discordLinked ? 1 : 0);
-    const canContinue = linkedCount === 2;
+    const linkedCount = discordLinked ? 1 : 0;
+    const canContinue = linkedCount === 1;
 
     const OptionBox = ({ icon, title, description, details, buttonText, onClick }) => (
         <div className="relative w-full flex">
@@ -360,10 +322,10 @@ const AccountLinking = () => {
                 <div className='flex flex-col bg-nexus50 p-6 rounded-xl items-center justify-center w-[clamp(300px,50rem,1000px)]'>
                     <div className='flex flex-col text-center mx-6 mb-4'>
                         <p className="headingText font-titilliumWeb-bold text-nexus900 mb-2">
-                            Link Your Google and Discord Accounts:
+                            Link Your Discord Account:
                         </p>
                         <p className="bodyText font-titilliumWeb-regular text-nexus800 mb-2">
-                            To access Nexus main features, linking your Discord and Google account will be needed. If you want to skip it for now, you can link them later in your account settings page.
+                            To access Nexus main features, linking your Discord account will be needed. If you want to skip it for now, you can link it later in your account settings page.
                         </p>
                     </div>
 
@@ -382,29 +344,15 @@ const AccountLinking = () => {
                             buttonText={discordLinked ? 'Unlink' : 'Click to Login'}
                             onClick={() => handleDiscordAction()}
                         />
-                        <OptionBox
-                            icon={
-                            <img
-                                src="/assets/GoogleIcon.svg"
-                                alt="Login"
-                                className="w-10 h-10"
-                            />
-                            }
-                            title={googleLinked ? 'Unlink Google' : 'Link Google'}
-                            description="Linking your Google Account will give you access to make edits to the SuperDoc."
-                            details={[]}
-                            buttonText={googleLinked ? 'Unlink' : 'Click to Login'}
-                            onClick={() => handleGoogleAction()}
-                        />
                     </div>
 
                     {error && <div className="text-red-600 text-sm mb-2">{error}</div>}
                     {okMsg && <div className="text-green-400 text-sm mb-2">{okMsg}</div>}
 
                     <div className='flex flex-col w-full gap-2'>
-                        <Button text={`Continue (${linkedCount}/2)`} onClick={async () => { const res = await refreshOnboarding(user); if (res && res.googleLinked && res.discordLinked) navigate('/home') }} disabled={!canContinue} />
+                        <Button text={`Continue (${linkedCount}/1)`} onClick={async () => { const res = await refreshOnboarding(user); if (res && res.discordLinked) navigate('/home') }} disabled={!canContinue} />
                         <Button className="bg-gray-500" text={"Skip"} onClick={skipAccountLinking} />
-                        {!canContinue && <div className="text-sm text-gray-500 text-center mt-1">Link both accounts to continue</div>}
+                        {!canContinue && <div className="text-sm text-gray-500 text-center mt-1">Link Discord to continue</div>}
                     </div>
                 </div>
             </div>

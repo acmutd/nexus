@@ -9,9 +9,6 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 import {
   getAuth,
   onAuthStateChanged,
-  unlink,
-  GoogleAuthProvider,
-  linkWithPopup,
   deleteUser,
   EmailAuthProvider,
   reauthenticateWithCredential
@@ -43,7 +40,6 @@ function Settings() {
 
   // User/provider state
   const [user, setUser] = useState(null);
-  const [googleLinked, setGoogleLinked] = useState(false);
   const [discordLinked, setDiscordLinked] = useState(false);
   const [discordUsername, setDiscordUsername] = useState(null);
 
@@ -92,14 +88,9 @@ function Settings() {
         unsub = onAuthStateChanged(a, async (u) => {
           setUser(u || null);
           if (u) {
-            // Determine if Google is linked
-            const providers = (u.providerData || []).map(p => p.providerId);
-            setGoogleLinked(providers.includes('google.com'));
-
             // Load Firestore user doc for Discord username
             await refreshUserFirestore(u.uid);
           } else {
-            setGoogleLinked(false);
             setDiscordLinked(false);
             setDiscordUsername(null);
           }
@@ -201,37 +192,6 @@ function Settings() {
     } catch (e) {
       console.error('Failed to refresh Firestore user doc:', e);
       return false;
-    }
-  };
-
-  // Google link or unlink
-  const handleGoogleAction = async () => {
-    if (!user) {
-      alert('You must be signed in.');
-      return;
-    }
-    setError('');
-    setOkMsg('');
-
-    try {
-      setActionBusy(true);
-      if (googleLinked) {
-        // Unlink Google
-        await unlink(user, 'google.com');
-        setGoogleLinked(false);
-        setOkMsg('Google account unlinked.');
-      } else {
-        // Link Google to the existing account via linkWithPopup
-        const provider = new GoogleAuthProvider();
-        await linkWithPopup(user, provider);
-        setGoogleLinked(true);
-        setOkMsg('Google account linked.');
-      }
-    } catch (e) {
-      console.error('Google link/unlink error:', e);
-      setError((e?.message || 'Google action failed').replace('Firebase: ', ''));
-    } finally {
-      setActionBusy(false);
     }
   };
 
@@ -506,21 +466,6 @@ function Settings() {
                     <h2 className="text-nexus300 bodyText" style={{ fontFamily: 'titilliumWeb-bold' }}>
                       Account Linking
                     </h2>
-                    {/* Google Link/Unlink */}
-                    <span className=" text-gray-400 font-titilliumWeb-regular my-2 tinyText">
-                      You'll need to link a Google Account to be able to contribute to the SuperDoc!
-                    </span>
-                    <div
-                      className={`flex w-full h-12 bg-nexus800 rounded-md items-center transition duration-300 tinyText font-titilliumWeb-semibold ${actionBusy ? '' : 'hover:bg-nexus700'}`}
-                      style={{ cursor: 'pointer' }}
-                      onClick={actionBusy ? undefined : handleGoogleAction}
-                    >
-                      <h1 className="flex w-full items-center pl-2 text-nexus100">
-                        {googleLinked ? 'Unlink Google' : 'Link Google'}
-                      </h1>
-                      <HiChevronRight className="flex items-center justify-center" size={30} color="#CCE0FF" />
-                    </div>
-
                     {/* Discord Link/Unlink  username inline when linked */}
                     <div
                       className={`flex w-full h-12 bg-nexus800 mt-4 rounded-md items-center transition duration-300 tinyText font-titilliumWeb-semibold ${actionBusy ? '' : 'hover:bg-nexus700'}`}

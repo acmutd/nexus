@@ -3,6 +3,7 @@ import { getApp } from 'firebase/app';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { AnimatePresence, motion } from 'framer-motion';
+import ConfirmLogoutModal from './ConfirmLogoutModal';
 import { getFirestore, doc, onSnapshot } from 'firebase/firestore';
 import { HiX } from 'react-icons/hi';
 import pfp from '../assets/default_pfp.svg';
@@ -15,6 +16,8 @@ export default function AvatarMenu({
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [open, setOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [logoutBusy, setLogoutBusy] = useState(false);
   const menuRef = useRef(null);
 
   // Auth + live Firestore user doc (auto-updates after linking)
@@ -141,7 +144,7 @@ export default function AvatarMenu({
 
             <button
               type="button"
-              onClick={handleLogout}
+              onClick={() => { setOpen(false); setShowLogoutModal(true); }}
               className="w-full text-left mb-2 px-2 py-2 text-sm hover:bg-nexus700 cursor-pointer"
               role="menuitem"
               style={{cursor: 'pointer'}}
@@ -153,6 +156,24 @@ export default function AvatarMenu({
           </motion.div>
         ) : null}
       </AnimatePresence>
+      {/* Confirm Logout Modal (render outside dropdown so it appears immediately) */}
+      <ConfirmLogoutModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={async () => {
+          setLogoutBusy(true);
+          try {
+            await signOut(getAuth(getApp()));
+            if (redirectOnLogout) window.location.assign(redirectOnLogout);
+          } catch (e) {
+            console.error('Logout failed:', e);
+            if (redirectOnLogout) window.location.assign(redirectOnLogout);
+          } finally {
+            setLogoutBusy(false);
+          }
+        }}
+        busy={logoutBusy}
+      />
     </div>
   );
 }

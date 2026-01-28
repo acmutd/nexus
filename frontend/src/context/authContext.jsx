@@ -114,7 +114,7 @@ export function RequireOnboarding({ step = 'course', children }) {
   if (step === 'course') {
     // If user already completed course linking, send them forward to account linking unless they've dismissed it
     if (onboarding.hasCourses) {
-      const needsAccountLinking = !(onboarding.googleLinked && onboarding.discordLinked);
+      const needsAccountLinking = !onboarding.discordLinked;
       if (needsAccountLinking && !onboarding.accountLinkingSkipped) return <Navigate to="/accountlinking" replace />
       return <Navigate to="/home" replace />
     }

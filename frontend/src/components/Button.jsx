@@ -21,10 +21,11 @@ const Button = ({text, icon, onClick, href, className, disabled, title}) => {
 
   return (
     <button 
-      onClick={disabled ? '' : onClick}
+      onClick={disabled ? undefined : onClick}
       className={`${className} flex bg-nexus600 w-full h-[40px] rounded-md items-center justify-center active:scale-80 
                  transition duration-300  ${disabled ? "opacity-50" : "hover:scale-102 cursor-pointer"}`}
       title={title}
+      disabled={disabled}
     >
       <h1 className='font-titilliumWeb-bold tinyText text-white text-lg'>
         {text}
