@@ -165,14 +165,14 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
                         onClick={toggleDropdown}
                         className="flex items-center justify-between w-full p-2 rounded pb-4"
                       >
-                        <button 
+                        <div 
                           className="flex items-center rounded-full relative group text-nexus200 hover:text-white"
                           title="Grade History"
                         >
                           <HiOutlineClock size={20} />
                           <span className="ml-2 text-sm font-medium cursor-pointer">Calculation History</span>
                           <span className="absolute -bottom-2 left-0 w-full h-0.5 bg-current transform scale-x-0 transition-transform duration-300 origin-left group-hover:scale-x-100"></span>
-                        </button>
+                        </div>
                         {isDropdownOpen ? <HiChevronUp className="cursor-pointer text-nexus200 hover:text-white" /> : <HiChevronDown className="cursor-pointer text-nexus200 hover:text-white" />}
                       </button>
                       

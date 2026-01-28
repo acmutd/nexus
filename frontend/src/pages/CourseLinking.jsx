@@ -14,6 +14,7 @@ export default function CourseLinking() {
   const isMed = useMediaQuery({ query: '(max-width: 800px)' });
   const navigate = useNavigate();
   const location = useLocation();
+  const skipAccountLinking = location.state?.skipAccountLinking ?? false;
   const fileInputRef = useRef(null);
   const { refreshOnboarding } = useAuth();
   const popupRef = useRef(null);
@@ -144,7 +145,10 @@ export default function CourseLinking() {
     setTranscriptError('');
 
     const coursesToSave = Array.isArray(coursesArg) ? coursesArg : parsedCourses;
-    const metaToSave = metaArg || parsedMeta;
+    const metaToSave = {
+      ...(metaArg || parsedMeta || {}),
+      ...(skipAccountLinking ? { skipAccountLinking: true } : {})
+    };
 
     try {
       console.log('[CourseLinking] handleConfirmAndContinue start', {
@@ -190,8 +194,13 @@ export default function CourseLinking() {
       } catch (e) {
         console.warn('refreshOnboarding failed after transcript save', e);
       }
-      console.log('[CourseLinking] navigating to /accountlinking');
-      navigate('/accountlinking');
+      if (skipAccountLinking) {
+        console.log('[CourseLinking] navigating to /home (skipAccountLinking)');
+        navigate('/home');
+      } else {
+        console.log('[CourseLinking] navigating to /accountlinking');
+        navigate('/accountlinking');
+      }
     } catch (error) {
       console.error('Confirm transcript error:', error);
       setTranscriptError(error.message || 'Failed to save transcript');

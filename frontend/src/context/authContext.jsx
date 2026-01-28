@@ -105,6 +105,8 @@ export function RequireAuth({ children }) {
 export function RequireOnboarding({ step = 'course', children }) {
   // step: 'course' or 'account'
   const { onboarding, onboarding: { loaded }, user } = useAuth()
+  const location = useLocation()
+  const forceCourseRelink = location.state && location.state.forceCourseRelink;
 
   if (!loaded) return <LoadingScreen />
 
@@ -112,6 +114,9 @@ export function RequireOnboarding({ step = 'course', children }) {
   if (!user) return <Navigate to="/login" replace />
 
   if (step === 'course') {
+    // Allow forcing course relink even if onboarding still shows courses (e.g., Firestore eventual consistency)
+    if (forceCourseRelink) return children
+
     // If user already completed course linking, send them forward to account linking unless they've dismissed it
     if (onboarding.hasCourses) {
       const needsAccountLinking = !onboarding.discordLinked;

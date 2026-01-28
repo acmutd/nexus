@@ -49,8 +49,9 @@ module.exports = async (req, res) => {
                 courses,
             };
 
-            if (meta && typeof meta === "object" && meta.netId) {
-                payload.netId = meta.netId;
+            if (meta && typeof meta === "object") {
+                if (meta.netId) payload.netId = meta.netId;
+                if (meta.skipAccountLinking) payload.accountLinkingSkipped = true;
             }
 
             await userRef.set(payload, {merge: true});

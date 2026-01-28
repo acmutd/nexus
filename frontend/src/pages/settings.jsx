@@ -5,6 +5,7 @@ import { HiCog, HiUserCircle, HiLockClosed, HiX, HiChevronRight } from 'react-ic
 import { BsChevronRight } from "react-icons/bs";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { useMobile } from '../context/mobileContext';
+import { useAuth } from '../context/authContext';
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import {
   getAuth,
@@ -49,6 +50,10 @@ function Settings() {
   const [okMsg, setOkMsg] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showPWResetModal, setShowPWResetModal] = useState(false);
+  const [showRedoModal, setShowRedoModal] = useState(false);
+  const [redoConfirmText, setRedoConfirmText] = useState('');
+  const [redoError, setRedoError] = useState('');
+  const { refreshOnboarding } = useAuth();
   const [deletePassword, setDeletePassword] = useState('');
   const [deletePassword2, setDeletePassword2] = useState('');
   const [deletePwVisible, setDeletePwVisible] = useState(false);
@@ -159,6 +164,9 @@ function Settings() {
       if(popupRef.current && !popupRef.current.contains(event.target)) {
         setShowDeleteModal(false)
         setShowPWResetModal(false)
+        setShowRedoModal(false)
+        setRedoConfirmText('')
+        setRedoError('')
       }
     }
 
@@ -295,6 +303,53 @@ function Settings() {
       handleDiscordUnlink();
     } else {
       startDiscordLink();
+    }
+  };
+
+  const handleRedoCourseLinking = async () => {
+    if (!user) {
+      setError('You must be signed in.');
+      return;
+    }
+
+    if (redoConfirmText.trim() !== 'Confirm') {
+      setRedoError('Please type "Confirm" exactly to proceed.');
+      return;
+    }
+
+    setError('');
+    setRedoError('');
+    setOkMsg('');
+    setActionBusy(true);
+
+    try {
+      const token = await user.getIdToken();
+      const resp = await fetch('/api/firestore/resetCourses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: user.uid, token })
+      });
+
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok || data.success === false) {
+        throw new Error(data.error || 'Failed to reset courses');
+      }
+
+      // Refresh onboarding snapshot and redirect to course linking
+      try {
+        await refreshOnboarding(user);
+      } catch (e) {
+        console.warn('refreshOnboarding after reset failed, proceeding with navigation', e);
+      }
+      window.dispatchEvent(new Event('refreshOnboarding'));
+      setShowRedoModal(false);
+      setRedoConfirmText('');
+      setRedoError('');
+      navigate('/CourseLinking', { state: { skipAccountLinking: true, forceCourseRelink: true }, replace: true });
+    } catch (e) {
+      console.error('Redo course linking error:', e);
+      setRedoError((e?.message || 'Failed to reset courses').replace('Firebase: ', ''));
+      setActionBusy(false);
     }
   };
 
@@ -492,6 +547,27 @@ function Settings() {
                       </div>
                     )}
 
+                    {/* Redo Course Linking */}
+                    <div className="flex flex-col pt-6">
+                      <h2 className="text-nexus300 bodyText" style={{ fontFamily: 'titilliumWeb-bold' }}>
+                        Course Linking
+                      </h2>
+                      <span className="text-gray-400 font-titilliumWeb-regular tinyText my-2">
+                        
+                      </span>
+                      <div
+                        className={`flex w-full h-12 bg-nexus800 rounded-md items-center transition duration-300 ${actionBusy ? '' : 'hover:bg-nexus700'}`}
+                        style={{ cursor: 'pointer' }}
+                        onClick={actionBusy ? undefined : () => setShowRedoModal(true)}
+                        disabled={actionBusy}
+                      >
+                        <h1 className="flex w-full items-center pl-2 text-nexus100 tinyText font-titilliumWeb-semibold">
+                          Redo Course Linking
+                        </h1>
+                        <HiChevronRight className="flex items-center justify-center" size={30} color="#CCE0FF" />
+                      </div>
+                    </div>
+
                     {/* Delete Account Button */}
                     <div className="flex flex-col pt-6">
                       <h2 className="text-nexus300 bodyText" style={{ fontFamily: 'titilliumWeb-bold' }}>
@@ -608,6 +684,65 @@ function Settings() {
                 {okMsg && <div className="text-green-400 mt-2">{okMsg}</div>}
               </motion.div>
           </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Redo Course Linking Confirmation Modal */}
+        <AnimatePresence>
+          {showRedoModal && (
+            <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(0, 13, 33, .9)'}}>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{opacity: 0, scale: 0.9, transition: {duration: 0.2}}}
+                transition={{duration: 0.2}}
+                className="bg-nexus800 rounded-lg p-8 w-[450px] shadow-xl border relative"
+                ref={popupRef}
+              >
+                <HiX onClick={() => { setShowRedoModal(false); setRedoConfirmText(''); setRedoError(''); }}
+                     className='text-white absolute right-8 top-9 cursor-pointer hover:text-gray-400 transition duration-300' size={25}
+                />
+                <h2 className="bodyText text-nexus200 font-titilliumWeb-bold mb-1">
+                  Redo Course Linking?
+                </h2>
+                <p className="text-gray-400 mb-4 tinyText">
+                  This will remove all linked courses and any saved grades for this account. You will need to relink via eLearning or transcript upload again.
+                </p>
+
+                <div className="mb-4">
+                  <label className="block text-left text-nexus100 mb-2 font-semibold tinyText">
+                    Type <span className="text-nexus300">Confirm</span> to continue
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full bg-nexus900 text-white px-4 py-2 border border-nexus800 rounded-md focus:outline-none placeholder-gray-400"
+                    placeholder="Confirm"
+                    value={redoConfirmText}
+                    onChange={(e) => setRedoConfirmText(e.target.value)}
+                    disabled={actionBusy}
+                  />
+                </div>
+
+                {redoError && (
+                  <div className="mb-4 text-red-400 text-sm">{redoError}</div>
+                )}
+
+                <div className="flex gap-3">
+                  <Button
+                    className={'bg-nexus700'}
+                    onClick={() => { setShowRedoModal(false); setRedoConfirmText(''); setRedoError(''); }}
+                    disabled={actionBusy}
+                    text="Cancel"
+                  />
+                  <Button
+                    className={'bg-red-500'}
+                    onClick={handleRedoCourseLinking}
+                    disabled={actionBusy}
+                    text={actionBusy ? "Clearing..." : "Confirm"}
+                  />
+                </div>
+              </motion.div>
+            </div>
           )}
         </AnimatePresence>
 
