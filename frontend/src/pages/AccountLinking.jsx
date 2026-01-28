@@ -310,9 +310,8 @@ const AccountLinking = () => {
             />
 
             <div
-                className="flex flex-col min-h-[265px] items-start bg-white rounded-lg p-6 border border-gray-200 
-                        transition duration-300 ease-in-out relative z-10 
-                        font-titilliumWeb"
+                className="flex flex-col min-h-[265px] md:min-h-[265px] items-start bg-white rounded-lg p-6 border border-gray-200 
+             transition duration-300 ease-in-out relative z-10 font-titilliumWeb"
                 style={{ height: '100%', width: '100%' }}
             >
                 <div className="mb-4 self-start">{icon}</div>
@@ -340,7 +339,7 @@ const AccountLinking = () => {
                 <h1 className='headingText text-white font-titilliumWeb-bold mb-2'>
                     Account Linking
                 </h1>
-                <div className='flex flex-col bg-nexus50 p-6 rounded-xl items-center justify-center w-[clamp(300px,50rem,1000px)]'>
+                <div className='flex flex-col bg-nexus50 p-6 rounded-xl items-center justify-center w-full max-w-[50rem] px-6 md:px-0'>
                     <div className='flex flex-col text-center mx-6 mb-4'>
                         <p className="headingText font-titilliumWeb-bold text-nexus900 mb-2">
                             Link Your Discord Account:
