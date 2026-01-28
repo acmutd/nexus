@@ -59,6 +59,10 @@ const Icons = {
                                                  strokeWidth={1.5} stroke="currentColor" className={className}>
         <path strokeLinecap="round" strokeLinejoin="round"
               d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z"/>
+    </svg>), Filter: ({className}) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            strokeWidth={1.5} stroke="currentColor" className={className}>
+        <path strokeLinecap="round" strokeLinejoin="round"
+              d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"/>
     </svg>),
 };
 
@@ -104,6 +108,23 @@ function ActionButton({onClick, title, icon: Icon, hoverColor}) {
     </button>);
 }
 
+function FilterButton({label, isActive, onClick}) {
+    return (
+        <button
+            onClick={onClick}
+            className={`
+                px-3 py-1.5 text-xs font-semibold rounded-full border transition-all duration-200
+                ${isActive
+                ? 'bg-nexus-blue-100 text-nexus-blue-700 border-nexus-blue-200 shadow-inner'
+                : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:border-gray-300 shadow-sm'
+            }
+            `}
+        >
+            {label}
+        </button>
+    );
+}
+
 export default function AdminDashboard() {
     const {user, loading} = useAuth();
 
@@ -114,6 +135,7 @@ export default function AdminDashboard() {
     const [search, setSearch] = useState('');
     const [error, setError] = useState(null);
     const [expandedCourses, setExpandedCourses] = useState({});
+    const [activeFilters, setActiveFilters] = useState([]);
 
     useEffect(() => {
         const checkAdminAndLoad = async () => {
@@ -218,9 +240,13 @@ export default function AdminDashboard() {
         if (!confirm(prompt)) return;
         try {
             const token = await user.getIdToken();
-            const res = await fetch(`/api/admin/users?targetUid=${targetUid}&action=${action}`, {
-                method: 'DELETE', headers: {Authorization: `Bearer ${token}`},
-            });
+            const res = await fetch(
+                `/api/admin/users?targetUid=${targetUid}&action=${action}`,
+                {
+                    method: 'DELETE',
+                    headers: {Authorization: `Bearer ${token}`},
+                }
+            );
             if (res.ok) {
                 if (action === 'user') {
                     setUsers((prev) => prev.filter((u) => u.uid !== targetUid));
@@ -236,11 +262,47 @@ export default function AdminDashboard() {
         }
     };
 
+    const toggleFilter = (filter) => {
+        setActiveFilters(prev =>
+            prev.includes(filter)
+                ? prev.filter(f => f !== filter)
+                : [...prev, filter]
+        );
+    };
+
     const filteredUsers = useMemo(() => {
         const q = search.trim().toLowerCase();
-        if (!q) return users;
-        return users.filter((u) => (u.netId?.toLowerCase() || '').includes(q) || (u.email?.toLowerCase() || '').includes(q) || (u.discord?.username?.toLowerCase() || '').includes(q));
-    }, [users, search]);
+
+        let filtered = users;
+
+        if (q) {
+            filtered = filtered.filter((u) =>
+                (u.netId?.toLowerCase() || '').includes(q) ||
+                (u.email?.toLowerCase() || '').includes(q) ||
+                (u.discord?.username?.toLowerCase() || '').includes(q)
+            );
+        }
+
+        if (activeFilters.length > 0) {
+            if (activeFilters.includes('admin')) {
+                filtered = filtered.filter(u => u.isAdmin);
+            }
+            if (activeFilters.includes('discord')) {
+                filtered = filtered.filter(u => !!u.discord?.id);
+            }
+            if (activeFilters.includes('no-discord')) {
+                filtered = filtered.filter(u => !u.discord?.id);
+            }
+            if (activeFilters.includes('courses')) {
+                filtered = filtered.filter(u => (u.courses?.length || 0) > 0);
+            }
+            if (activeFilters.includes('no-courses')) {
+                filtered = filtered.filter(u => (u.courses?.length || 0) === 0);
+            }
+        }
+
+        return filtered;
+    }, [users, search, activeFilters]);
 
     const stats = useMemo(() => {
         const total = users.length;
@@ -300,33 +362,66 @@ export default function AdminDashboard() {
                             </p>
                         </div>
 
-                        <div className="flex items-center gap-3">
-                            <button
-                                onClick={fetchUsers}
-                                disabled={isLoadingData}
-                                className="group inline-flex items-center gap-2 rounded-xl border border-nexus-blue-200 bg-white/90 backdrop-blur px-4 py-2.5 text-sm font-semibold text-nexus-blue-700 shadow-md hover:shadow-lg hover:bg-nexus-blue-50 disabled:opacity-60"
-                            >
-                                <Icons.Refresh
-                                    className={`h-4 w-4 transition-transform ${isLoadingData ? 'animate-spin' : 'group-hover:rotate-180 duration-500'}`}
-                                />
-                                Refresh
-                            </button>
-
-                            <div className="relative">
-                                {/* Icon */}
+                        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-3">
+                            <div className="flex flex-wrap items-center gap-2">
                                 <div
-                                    className="pointer-events-none absolute inset-y-0 left-3 flex items-center z-10">
-                                    <Icons.Search className="h-4 w-4 text-nexus-blue-500"/>
+                                    className="text-xs font-semibold text-gray-400 uppercase tracking-wider mr-1">Filters:
                                 </div>
-
-                                {/* Input */}
-                                <input
-                                    type="text"
-                                    value={search}
-                                    placeholder="Search NetID, email, Discord…"
-                                    className="h-11 w-[340px] rounded-xl border border-nexus-blue-200 bg-white/90 backdrop-blur px-4 pl-9 text-sm font-medium outline-none shadow-md focus:ring-2 focus:ring-nexus-blue-400"
-                                    onChange={(e) => setSearch(e.target.value)}
+                                <FilterButton
+                                    label="Admins"
+                                    isActive={activeFilters.includes('admin')}
+                                    onClick={() => toggleFilter('admin')}
                                 />
+                                <FilterButton
+                                    label="Discord"
+                                    isActive={activeFilters.includes('discord')}
+                                    onClick={() => toggleFilter('discord')}
+                                />
+                                <FilterButton
+                                    label="No Discord"
+                                    isActive={activeFilters.includes('no-discord')}
+                                    onClick={() => toggleFilter('no-discord')}
+                                />
+                                <FilterButton
+                                    label="Has Courses"
+                                    isActive={activeFilters.includes('courses')}
+                                    onClick={() => toggleFilter('courses')}
+                                />
+                                <FilterButton
+                                    label="No Courses"
+                                    isActive={activeFilters.includes('no-courses')}
+                                    onClick={() => toggleFilter('no-courses')}
+                                />
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                <button
+                                    onClick={fetchUsers}
+                                    disabled={isLoadingData}
+                                    className="group inline-flex items-center gap-2 rounded-xl border border-nexus-blue-200 bg-white/90 backdrop-blur px-4 py-2.5 text-sm font-semibold text-nexus-blue-700 shadow-md hover:shadow-lg hover:bg-nexus-blue-50 disabled:opacity-60"
+                                >
+                                    <Icons.Refresh
+                                        className={`h-4 w-4 transition-transform ${isLoadingData ? 'animate-spin' : 'group-hover:rotate-180 duration-500'}`}
+                                    />
+                                    Refresh
+                                </button>
+
+                                <div className="relative">
+                                    {/* Icon */}
+                                    <div
+                                        className="pointer-events-none absolute inset-y-0 left-3 flex items-center z-10">
+                                        <Icons.Search className="h-4 w-4 text-nexus-blue-500"/>
+                                    </div>
+
+                                    {/* Input */}
+                                    <input
+                                        type="text"
+                                        value={search}
+                                        placeholder="Search..."
+                                        className="h-11 w-[200px] rounded-xl border border-nexus-blue-200 bg-white/90 backdrop-blur px-4 pl-9 text-sm font-medium outline-none shadow-md focus:ring-2 focus:ring-nexus-blue-400"
+                                        onChange={(e) => setSearch(e.target.value)}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
