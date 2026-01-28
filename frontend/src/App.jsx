@@ -16,6 +16,7 @@ import CourseLinking from './pages/CourseLinking';
 import AccountLinking from './pages/AccountLinking';
 import ResetPassword from './pages/ResetPassword';
 import UnderConstruction from './pages/UnderConstruction';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
 
@@ -39,6 +40,7 @@ function App() {
           <Route path="/CourseLinking" element={<RequireAuth><RequireOnboarding step="course"><CourseLinking /></RequireOnboarding></RequireAuth>} />
           <Route path="/accountlinking" element={<RequireAuth><RequireOnboarding step="account"><AccountLinking /></RequireOnboarding></RequireAuth>} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/admin" element={<RequireAuth><AdminDashboard /></RequireAuth>} />
         </Routes>
 
       </div>
