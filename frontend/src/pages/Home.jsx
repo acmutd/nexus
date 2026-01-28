@@ -36,7 +36,7 @@ const Home = () => {
           style={{ backgroundImage: "url('/assets/HomeBG.svg')"}}/>
       
       {/* -------------------------------------- CONTENT -------------------------------------------*/}
-      <div className='relative z-0'>
+        <div className='relative flex items-center justify-center w-full min-h-screen'>
         <motion.div className="flex flex-col w-full h-full items-center justify-center mt-30 z-1" initial={{opacity:0, y:20}} animate={{opacity: 1, y:0}} transition={{duration: 0.7}}>
 
           <div className="min-w-75 bg-linear-to-b from-nexus800 via-nexus900 to-nexus800 px-10 py-6 w-[60%] flex flex-col items-center justify-center overflow-y-auto rounded-lg ">

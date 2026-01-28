@@ -82,7 +82,7 @@ function DiscordServers() {
     <div className="inset-0 min-h-screen fixed flex items-center justify-center bg-blue-950 bg-cover bg-center overflow-x-hidden"
          style={{ backgroundImage: "url('/assets/CoursesBG.svg')"}} />
     {/* ----------------------------------- MAIN CONTAINER ---------------------------------------- */}
-        <div className='relative flex items-center justify-center w-full'>
+        <div className='relative flex items-center justify-center w-full min-h-screen'>
           <motion.div className={`flex flex-col min-w-[350px] w-[70%] mt-12 items-center justify-center rounded-2xl bg-gradient-to-b from-nexus900 via-50% via-nexus800 to-90% to-nexus900 p-6 scale-90`}
                       initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{duration:0.7}}>
       {/* ----------------------------------- HEADING + SEARCH ---------------------------------------- */}
