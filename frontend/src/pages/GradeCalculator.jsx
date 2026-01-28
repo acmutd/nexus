@@ -281,20 +281,34 @@ const GradeCalculator = () => {
     };
 
     const calculateRequiredGrade = (currentWeightedGrade, remainingWeight, desiredGrade) => {
-        if (remainingWeight <= 0) return null;
+        if (remainingWeight <= 0) return { status: 'not_possible', value: null };
         
         const currentWeight = 100 - remainingWeight;
         const currentWeightDecimal = currentWeight / 100;
         const remainingWeightDecimal = remainingWeight / 100;
         
         const requiredGrade = (
-          (desiredGrade - (currentWeightedGrade * currentWeightDecimal)) / 
-          remainingWeightDecimal
+        (desiredGrade - (currentWeightedGrade * currentWeightDecimal)) / 
+        remainingWeightDecimal
         );
         
-        if (requiredGrade > 100 || requiredGrade < 0) return null;
+        // Grade is guaranteed (negative score needed)
+        if (requiredGrade < 0) {
+            return { status: 'guaranteed', value: requiredGrade.toFixed(2) };
+        }
         
-        return requiredGrade.toFixed(2);
+        // Achievable with extra credit (100 < score <= 120)
+        if (requiredGrade > 100 && requiredGrade <= 120) {
+            return { status: 'extra_credit', value: requiredGrade.toFixed(2) };
+        }
+        
+        // Not possible (score > 120)
+        if (requiredGrade > 120) {
+            return { status: 'not_possible', value: requiredGrade.toFixed(2) };
+        }
+        
+        // Achievable normally (0 <= score <= 100)
+        return { status: 'achievable', value: requiredGrade.toFixed(2) };
     };
 
     const calculateOverallGrade = () => {
@@ -957,10 +971,27 @@ const GradeCalculator = () => {
                                         <h1 className="text-nexus50">
                                             Grade Needed on Remaining Category:
                                         </h1>
-                                        {requiredGrade === null ? 
-                                            "Not Possible" : 
-                                            `${requiredGrade}%`
-                                        }
+                                        <div className="flex flex-col items-center gap-1">
+                                            {requiredGrade === null || requiredGrade.status === 'not_possible' ? (
+                                                <span className="text-red-400 font-bold">Not Possible</span>
+                                            ) : requiredGrade.status === 'guaranteed' ? (
+                                                <div className="flex flex-col items-center">
+                                                    <span className="text-green-400 font-bold">Grade Guaranteed!</span>
+                                                    <span className="text-gray-400 text-xs mt-1">
+                                                        (You've already secured your desired grade)
+                                                    </span>
+                                                </div>
+                                            ) : requiredGrade.status === 'extra_credit' ? (
+                                                <div className="flex flex-col items-center">
+                                                    <span className="text-yellow-400 font-bold">{requiredGrade.value}%</span>
+                                                    <span className="text-yellow-300 text-xs mt-1">
+                                                        ⚠️ Extra Credit Required
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <span className="font-bold">{requiredGrade.value}%</span>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </motion.div>
