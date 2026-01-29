@@ -6,29 +6,29 @@ const FloatingClouds = () => {
   const clouds = [
     {
       name: 'cloud1',
-      path: '/assets/LoginPipelineAssets/LoginPipelineCloud1.svg',
+      path: '/assets/LoginPipelineAssets/LoginPipelineCloud2.svg',
       width: 400,
       yPosition: '5%',
-      duration: 60,
+      duration: 15,
       delay: 0,
       opacity: 0.9
     },
     {
       name: 'cloud2',
-      path: '/assets/LoginPipelineAssets/LoginPipelineCloud4.svg',
+      path: '/assets/LoginPipelineAssets/LoginPipelineCloud3.svg',
       width: 400,
       yPosition: '35%',
-      duration: 75,
-      delay: 15,
+      duration: 35,
+      delay: 5,
       opacity: 0.85
     },
     {
       name: 'cloud3',
-      path: '/assets/LoginPipelineAssets/LoginPipelineCloud3.svg',
+      path: '/assets/LoginPipelineAssets/LoginPipelineCloud4.svg',
       width: 400,
       yPosition: '60%',
-      duration: 85,
-      delay: 25,
+      duration: 25,
+      delay: 0,
       opacity: 0.8
     },
     {
@@ -36,10 +36,19 @@ const FloatingClouds = () => {
       path: '/assets/LoginPipelineAssets/LoginPipelineCloud4.svg',
       width: 400,
       yPosition: '85%',
-      duration: 55,
-      delay: 35,
+      duration: 15,
+      delay: 10,
       opacity: 0.88
-    }
+    },
+    {
+      name: 'cloud5',
+      path: '/assets/LoginPipelineAssets/LoginPipelineCloud1.svg',
+      width: 400,
+      yPosition: '75%',
+      duration: 35,
+      delay: 0,
+      opacity: 0.88
+    },
   ];
 
   return (
@@ -84,22 +93,13 @@ const Cloud = ({ path, width, yPosition, duration, delay, opacity, instanceId, i
         repeatDelay: 0
       }}
     >
-      <motion.div
-        animate={{
-          y: [0, -10, 0],
-        }}
-        transition={{
-          duration: 4 + Math.random() * 2,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      >
-        <img 
-          src={path} 
-          alt={`Cloud ${instanceId}`}
-          className="w-full h-auto"
-        />
-      </motion.div>
+
+      <img 
+        src={path} 
+        alt={`Cloud ${instanceId}`}
+        className="w-full h-auto"
+      />
+
     </motion.div>
   );
 };

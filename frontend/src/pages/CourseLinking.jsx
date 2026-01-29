@@ -13,9 +13,11 @@ import { useAuth } from '../context/authContext';
 import { initFirebase } from '../firebase';
 import { motion } from 'motion/react';
 import FloatingClouds from '../components/FloatingClouds';
+import { useMobile } from '../context/mobileContext';
 
 export default function CourseLinking() {
-  const isMed = useMediaQuery({ query: '(max-width: 800px)' });
+  const {isMobile} = useMobile()
+
   const navigate = useNavigate();
   const location = useLocation();
   const isRedoFlow = Boolean(location.state?.skipAccountLinking || location.state?.forceCourseRelink);
@@ -349,6 +351,7 @@ export default function CourseLinking() {
       <FloatingClouds />
     </div>
     {objects.map((obj) => (
+      !isMobile && 
       <motion.div 
         key={obj.name}
         style={obj.style}
@@ -418,8 +421,8 @@ export default function CourseLinking() {
         className="flex flex-col bg-nexus50 rounded-xl shadow-2xl p-6"
         style={{
           zIndex: 2,
-          width: isMed ? "90%" : "50rem",
-          minHeight: isMed ? "auto" : "28rem",
+          width: isMobile ? "90%" : "50rem",
+          minHeight: isMobile ? "auto" : "28rem",
         }}
       >
         <div className="text-center mb-6">
@@ -438,7 +441,7 @@ export default function CourseLinking() {
         </div>
 
         <div
-          className={`flex ${isMed ? "flex-col" : "flex-row"} w-full h-full gap-8 justify-center`}
+          className={`flex ${isMobile ? "flex-col" : "flex-row"} w-full h-full gap-8 justify-center`}
         >
           <OptionBox
             icon={

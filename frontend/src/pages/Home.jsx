@@ -119,6 +119,7 @@ const Home = () => {
 
       {/* Floating objects */}
       {objects.map((obj) => (
+        !isMobile &&
           <motion.div
               key={obj.name}
               style={obj.style}

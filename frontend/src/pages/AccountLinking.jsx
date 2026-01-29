@@ -404,6 +404,7 @@ const AccountLinking = () => {
       <FloatingClouds />
     </div>
     {objects.map((obj) => (
+      !isMobile &&
       <motion.div 
         key={obj.name}
         style={obj.style}
