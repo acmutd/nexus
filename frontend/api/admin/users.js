@@ -89,6 +89,21 @@ module.exports = async (req, res) => {
                 await batch.commit();
                 return res.json({success: true, message: 'User data wiped'});
             }
+            // todo - if IAM roles are in place, swap the above conditional for the below
+            // if (action === 'user') {
+            //     const batch = db.batch();
+            //     batch.delete(db.collection('users').doc(targetUid));
+            //     batch.delete(db.collection('courseGrades').doc(targetUid));
+            //     await batch.commit();
+            //
+            //     try {
+            //         await admin.auth().deleteUser(targetUid);
+            //     } catch (e) {
+            //         throw e;
+            //     }
+            //
+            //     return res.json({success: true, message: 'User data + auth account deleted'});
+            // }
         }
 
         return res.status(405).json({error: 'Method not allowed'});
