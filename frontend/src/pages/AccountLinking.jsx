@@ -343,10 +343,10 @@ const AccountLinking = () => {
                 <div className='flex flex-col bg-nexus50 p-6 rounded-xl items-center justify-center w-[clamp(300px,50rem,1000px)]'>
                     <div className='flex flex-col text-center mx-6 mb-4'>
                         <p className="headingText font-titilliumWeb-bold text-nexus900 mb-2">
-                            Link Your Discord Account:
+                            Link Your Discord Account
                         </p>
                         <p className="bodyText font-titilliumWeb-regular text-nexus800 mb-2">
-                            To access Nexus main features, linking your Discord account will be needed. If you want to skip it for now, you can link it later in your account settings page.
+                            To access Nexus' main features, you will need to link your Discord account. If you want to skip it for now, you can link it later from the Settings page.
                         </p>
                     </div>
 
@@ -360,7 +360,7 @@ const AccountLinking = () => {
                             />
                             }
                             title={discordLinked ? `Unlink Discord${discordUsername ? ` (${discordUsername})` : ''}` : 'Link Discord'}
-                            description="LInking your Discord will give you access to your courses in each class Discord server."
+                            description="Linking your Discord will give you access to your courses in each Discord server."
                             details={[]}
                             buttonText={discordLinked ? 'Unlink' : 'Click to Login'}
                             onClick={() => handleDiscordAction()}

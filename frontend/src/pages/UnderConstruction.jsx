@@ -21,7 +21,7 @@ const UnderConstruction = () => {
                    p-8 shadow-2xl text-center"
       >
         <h1 className="text-3xl text-white mb-3 font-titilliumWeb-semibold">
-          Under construction! 
+          Under Construction 
           <br />
           Come back soon!
         </h1>

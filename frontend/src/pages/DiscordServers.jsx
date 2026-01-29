@@ -64,7 +64,7 @@ function DiscordServers() {
 
   const servers = [{title: "School of Engineering and Computer Science", link: "https://discord.gg/CknqAB2J5q", banner:"url('/assets/DiscordServerAssets/ECSBanner.png')", icon:"/assets/DiscordServerAssets/ECSIcon.png", description: 'Grind away on coding and engineering problems with your fellow classmates!', members: 225},
                    {title: "School of Economic, Political and Policy Sciences", link: "https://discord.gg/PRGbNG5Aus", banner:"url('/assets/DiscordServerAssets/EPSBanner.png')", icon:"/assets/DiscordServerAssets/EPSIcon.png", description: 'Discuss the socio-economic state of the world with other like-minded students!', members: 155},
-                   {title: "School of Management", link: "https://discord.gg/RDwdNrGwse", banner:"url('/assets/DiscordServerAssets/MGTBanner.png')", icon:"/assets/DiscordServerAssets/MGTIcon.png", description: 'Network with prospective talented executives and business analysts right here!', members: 121},
+                   {title: "School of Management", link: "https://discord.gg/RDwdNrGwse", banner:"url('/assets/DiscordServerAssets/MGTBanner.png')", icon:"/assets/DiscordServerAssets/MGTIcon.png", description: 'Network with prospective talented executives and business analysts!', members: 121},
                    {title: "School of Natural Sciences and Mathematics", link: "https://discord.gg/BxfHe9JGwc", banner:"url('/assets/DiscordServerAssets/NSMBanner.png')", icon:"/assets/DiscordServerAssets/NSMIcon.png", description: 'Solve complex formulas and equations with other mathematicians and scientists!', members: 167},
   ]
 
@@ -237,8 +237,8 @@ function DiscordServers() {
               <h1 className="font-titilliumWeb-bold text-nexus50 headingText">
                 Discord Servers
               </h1>
-              <span className="font-titilliumWeb-semibold text-gray-300 tinyText">
-                    Smart join feature where you can automatically join all servers needed based on your courses saving you time!
+              <span className="font-titilliumWeb-semibold text-gray-300 tinyText mt-4">
+                    Use our Smart Join feature to be added to all your necessary servers at once! Hover over the button to see which servers hold your courses.
               </span>
               <div className="flex mt-4 w-full">
                 <div className={`${isMobile ? 'w-full' : 'w-auto'}`}>
@@ -249,7 +249,7 @@ function DiscordServers() {
                       text={joinBusy ? "Opening Discord…" : "Smart Join"}
                     />
                     <div className="absolute left-0 mt-2 w-72 bg-nexus900 text-white text-xs rounded-md p-3 shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20">
-                      <div className="font-titilliumWeb-bold mb-1">Your courses</div>
+                      <div className="font-titilliumWeb-bold mb-1">Your Courses:</div>
                       {derived.normalized?.length ? (
                         <ul className="list-disc list-inside space-y-0.5 max-h-32 overflow-y-auto">
                           {derived.normalized.map((c, i) => (
@@ -259,8 +259,8 @@ function DiscordServers() {
                       ) : (
                         <div className="text-gray-400">No courses loaded yet.</div>
                       )}
-                      <div className="mt-2 text-gray-300">
-                        Target servers: {derived.schools?.length ? derived.schools.join(', ') : 'None'}
+                      <div className="font-titilliumWeb-bold mt-1 mb-1">
+                        Target Servers: {derived.schools?.length ? derived.schools.join(', ') : 'None'}
                       </div>
                     </div>
                   </div>
@@ -276,7 +276,7 @@ function DiscordServers() {
               ))}
             </div>
             <span className='font-titilliumWeb-regular text-gray-400 text-lg mt-2 text-center'>
-              Make sure to read all of the servers’ rules, and most importantly, have fun!
+              Make sure to read all of the server rules and, most importantly, have fun!
             </span>
           </motion.div>
         </div>

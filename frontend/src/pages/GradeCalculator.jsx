@@ -587,14 +587,14 @@ const GradeCalculator = () => {
                                         What are Categories and Weight?
                                     </h1>
                                     <span className="text-white font-titilliumWeb-regular tinyText flex w-full mt-2">
-                                        From the buttons on the bottom right, add in the categories that contribute to your final grade (ex. homework, quizzes, midterms, projects). It is important to LEAVE OUT at least one category: the Grade Calculator determines what portion of your overall grade remains on its own, and calculates what grade is needed on the REMAINING work to achieve your desired final grade. For example, if you know what you have achieved on all assignments, quizzes, and your midterm, enter those three as categories; if your one remaining category is the final exam, the Grade Calculator will tell you what score you need on that exam. For the ones that you’ve added, enter their weight: if homework is 25% of your grade, put 25 into the box.
+                                        From the buttons on the bottom right, add in the categories that contribute to your final grade (ex. homework, quizzes, midterms, projects). It is important to LEAVE OUT at least one category: the Grade Calculator determines what portion of your overall grade remains on its own, and calculates what grade is needed on the REMAINING work to achieve your desired final grade. <br/>For example, if you know what you have achieved on all assignments, quizzes, and your midterm, enter those three as categories; if your one remaining category is the final exam, the Grade Calculator will tell you what score you need on that exam. For the ones that you’ve added, enter their weight: if homework is 25% of your grade, put 25 into the box.
                                     </span>
                                     <img src="/assets/GradeCalcGif1.gif" className="flex my-4 w-[55%]"/>
                                     <h1 className="text-white font-titilliumWeb-bold bodyText flex items-start w-full pt-4">
                                         How Do Assignments Work?
                                     </h1>
                                     <span className="text-white font-titilliumWeb-regular tinyText flex w-full mt-2">
-                                        Once you’ve added as many categories as you need, type in the score you’ve received on each assignment in that category as a point value. For example, if you received a 25/30 on your first homework assignment, put 25 in the first box and 30 in the second. Repeat until all your graded assignments have been entered. You should be able to see the overall grade for each category.
+                                        Once you’ve added as many categories as you need, type in the score you’ve received on each assignment in that category as a point value. <br/>For example, if you received a 25/30 on your first homework assignment, put 25 in the first box and 30 in the second. <br/>Repeat until all your graded assignments have been entered. You should be able to see the overall grade for each category.
                                     </span>
                                     <img src="/assets/GradeCalcGif2.gif" className="flex my-4 w-[55%]"/>
                                     <h1 className="text-white font-titilliumWeb-bold bodyText flex items-start w-full pt-4">
@@ -602,7 +602,7 @@ const GradeCalculator = () => {
                                     </h1>
                                     <span className="text-white font-titilliumWeb-regular tinyText flex w-full mt-2">
                                         Now scroll down and enter the numerical value for the grade you want in the class. If you want an A and need a 94% in the class to do so, enter 94 into the box.
-                                        You should now be able to see the grade you need to achieve on the remaining tasks to earn your desired grade! Press the “Save” button to refer back to this calculation later.
+                                        <br/>You should now be able to see the grade you need to achieve on the remaining tasks to earn your desired grade! <br/>Press the “Save” button to refer back to this calculation later.
                                     </span>
                                     <img src="/assets/GradeCalcGif3.gif" className="flex my-4 w-[55%]"/>
                                     <img src="/assets/GradeCalcGif4.gif" className="flex my-4 w-[55%]"/>

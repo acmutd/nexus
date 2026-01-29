@@ -41,7 +41,7 @@ const Home = () => {
 
           <div className="min-w-75 bg-linear-to-b from-nexus800 via-nexus900 to-nexus800 px-10 py-6 w-[60%] flex flex-col items-center justify-center overflow-y-auto rounded-lg ">
             <h2 className="text-white headingText font-titilliumWeb-semibold mb-6 w-full text-center">
-              Welcome Back to Nexus! Where Do You Wanna Go?
+              Welcome back to Nexus! Where do you wanna go?
             </h2>
 
             {/* ----------------------- BUTTONS --------------------------------*/}
@@ -71,7 +71,7 @@ const Home = () => {
             <div className="flex w-full h-full text-white relative border-t-1 border-nexus700 pt-4">
               {/* -------------------- CONTENT ------------------------ */}
               <div className="flex flex-wrap w-full h-fit m-2">
-                <h1 className="flex w-full bodyText font-titilliumWeb-semibold items-center justify-center text-center">Interested in More Like Nexus?</h1>
+                <h1 className="flex w-full bodyText font-titilliumWeb-semibold items-center justify-center text-center mb-1">Interested in More Like Nexus?</h1>
                 <h1 className="flex w-full tinyText text-gray-400 font-titilliumWeb-semibold mb-4 items-center justify-center text-center">Nexus is just one of ACM's projects, you can check out more of them below!</h1>
                 <div className={`flex-row ${isMobile ? 'flex flex-wrap' : isScreenMedium ? 'grid grid-cols-2' : 'grid grid-cols-3'} w-full h-full gap-8 text-center font-titilliumWeb-semibold tinyText`}>
                   {acmWebsites.map((website, webIndex) => (
@@ -92,7 +92,7 @@ const Home = () => {
             </div>
 
           </div>
-          <div className='bg-nexus800 rounded-full flex px-4 items-center gap-2 justify-center font-titilliumWeb-semibold p-1 mt-2 text-nexus100 mb-4'>
+          <div className='bg-nexus800 rounded-full flex px-4 items-center gap-2 justify-center font-titilliumWeb-semibold p-1 mt-2 text-nexus100 mt-8 mb-4'>
             <img src='/assets/Logo.svg' className='w-7 h-7'/>
             Powered by ACM Dev
           </div>

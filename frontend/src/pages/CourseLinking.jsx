@@ -347,10 +347,10 @@ export default function CourseLinking() {
       >
         <div className="text-center mb-6">
           <p className="headingText font-titilliumWeb-bold text-nexus900 mb-2">
-            Nexus Needs Access to Your Courses:
+            Nexus Needs Access to Your Courses
           </p>
           <p className="bodyText font-titilliumWeb-regular text-nexus800 mb-2">
-            Login through eLearning and let Nexus' Web Scraper do the rest
+            Login through eLearning and let Nexus do the rest
           </p>
           <p className="bodyText font-titilliumWeb-bold text-nexus900 mb-2">
             OR
@@ -372,7 +372,7 @@ export default function CourseLinking() {
               />
             }
             title="Login via eLearning"
-            description="Allow Nexus to directly access your courses in eLearning via our Web Scraper."
+            description="Allow Nexus to directly access your courses in eLearning."
             details={["Quick Login", "Real-Time Sync"]}
             buttonText="Click to Login"
             onClick={() => setShowAccessRequestModal(true)}

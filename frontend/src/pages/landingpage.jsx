@@ -104,7 +104,7 @@ function LandingPage() {
         </h1>
         <h2
           className={`flex ${isMobile ? 'w-[80%]' : 'w-1/2'} bodyText font-titilliumWeb-regular text-white text-center pt-4`}>
-          The best place for connecting with classmates, enhancing collaboration, and boosting academic success.
+          Your hub for connecting with classmates, enhancing collaboration, and planning for success.
         </h2>
         <Link to="/signup" className="text-white bg-nexus500 py-3 px-14 text-xl font-titilliumWeb-bold rounded-lg mt-8 flex flex-row 
                             transition duration-300 hover:scale-105 drop-shadow-black">
@@ -121,7 +121,7 @@ function LandingPage() {
                 Smart Learning
               </h1>
               <h2 className="text-nexus900 font-titilliumWeb-regular bodyText overflow-wrap">
-                Stay on top of your grades and assignments and see the impact of a quiz or exam on your grade using the grade calculator.
+                Determine the impact of your upcoming test or quiz to stay on top of your grades with Grade Calculator.
               </h2>
             </div>
             {!isMobile && <motion.ul whileHover={{rotate: 12, scale: 1.1}} 
@@ -144,7 +144,7 @@ function LandingPage() {
               Collaborative Environment
             </h1>
             <h2 className="text-nexus900 font-titilliumWeb-regular bodyText overflow-wrap">
-              Connect with peers and share knowledge effortlessly with our automated Discord server filtering for all your classes.
+            Effortlessly connect with your peers through automated Discord servers, filtered for each one of your classes.
             </h2>
           </div>
         </div>
@@ -156,7 +156,7 @@ function LandingPage() {
               Resource Sharing
             </h1>
             <h2 className="text-nexus900 font-titilliumWeb-regular bodyText overflow-wrap">
-              Missed a lecture? Cramming for an exam? No problem! Access and contribute to study materials alongside your classmates using Nexus’ Superdoc!
+              Upload and combine your notes with your classmates through SuperDoc, the ultimate cramming tool and study guide.
             </h2>
           </div>
           {!isMobile && <motion.ul whileHover={{rotate: 12, scale: 1.1}} 
