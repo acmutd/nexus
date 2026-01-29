@@ -191,7 +191,7 @@ const GradeHistory = () => {
                         <div className="flex-1">
                           <h3 className="font-semibold">{history.saveTitle}</h3>
                           <p className="text-sm mt-1">
-                            Current: {history.currentGrade}% | Desired: {history.desiredGrade}%
+                            Current: {history.currentGrade}% | Desired: {history.desiredGrade ? `${history.desiredGrade}%` : 'N/A'}
                           </p>
                           <p className="text-xs mt-1">
                             {new Date(history.timestamp).toLocaleDateString()}
@@ -289,10 +289,25 @@ const GradeHistory = () => {
                         <span className="font-medium">Current Grade:</span> {selectedHistoryDetails.currentGrade}%
                       </p>
                       <p className="text-white">
-                        <span className="font-medium">Desired Grade:</span> {selectedHistoryDetails.desiredGrade || 'N/A'}%
+                        <span className="font-medium">Desired Grade:</span> {selectedHistoryDetails.desiredGrade ? `${selectedHistoryDetails.desiredGrade}%` : 'N/A'}
                       </p>
                       <p className="text-white">
-                        <span className="font-medium">Required Grade on Remaining:</span> {selectedHistoryDetails.requiredGrade || 'Not possible'}%
+                        <span className="font-medium">Required Grade on Remaining:</span>{' '}
+                        {typeof selectedHistoryDetails.requiredGrade === 'object' && selectedHistoryDetails.requiredGrade !== null ? (
+                          selectedHistoryDetails.requiredGrade.status === 'not_possible' ? (
+                            <span className="text-red-400">Not Possible</span>
+                          ) : selectedHistoryDetails.requiredGrade.status === 'guaranteed' ? (
+                            <span className="text-green-400">Grade Guaranteed!</span>
+                          ) : selectedHistoryDetails.requiredGrade.status === 'extra_credit' ? (
+                            <span className="text-yellow-400">{selectedHistoryDetails.requiredGrade.value}% (Extra Credit Required)</span>
+                          ) : (
+                            `${selectedHistoryDetails.requiredGrade.value}%`
+                          )
+                        ) : selectedHistoryDetails.requiredGrade ? (
+                          `${selectedHistoryDetails.requiredGrade}%`
+                        ) : (
+                          <span className="text-gray-400">N/A</span>
+                        )}
                       </p>
                       <p className="text-white">
                         <span className="font-medium">Date Created:</span> {new Date(selectedHistoryDetails.timestamp).toLocaleString()}

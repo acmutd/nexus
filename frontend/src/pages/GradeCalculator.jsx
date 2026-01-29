@@ -12,6 +12,7 @@ import Fade from "@mui/material/Fade";
 import Button from "../components/Button.jsx";
 import { useMobile } from "../context/mobileContext.jsx";
 import SimpleBar from 'simplebar-react';
+import { useLocation } from 'react-router-dom';
 
 const GradeCalculator = () => {
     const {isScreenMedium} = useMobile()
@@ -51,6 +52,8 @@ const GradeCalculator = () => {
     const [successMessage, setSuccessMessage] = useState('');
     const [validationErrors, setValidationErrors] = useState({});
     const [isSaving, setIsSaving] = useState(false);
+
+    const location = useLocation();
 
     const handleSidebarToggle = (collapsed) => {
         setSidebarCollapsed(collapsed);
@@ -151,7 +154,7 @@ const GradeCalculator = () => {
         };
 
         loadEditData();
-    }, [currentUser]);
+    }, [currentUser, location.search]);
 
     const fetchUserCourses = async (uid) => {
         try {
@@ -462,20 +465,16 @@ const GradeCalculator = () => {
             let message = '';
 
             if (editMode && editingGradeId) {
-                // update existing grade
-                response = await axios.put(
-                    `/api/grades/updateGrade/${user.uid}/${editingGradeId}`,
-                    gradeHistoryData
-                );
+                gradeHistoryData.gradeId = editingGradeId;
                 message = 'Grade updated successfully!';
             } else {
-                // create new grade
-                response = await axios.post(
-                    '/api/grades/saveGrades',
-                    gradeHistoryData
-                );
                 message = 'Grades saved successfully!';
             }
+
+            response = await axios.post(
+                '/api/grades/saveGrades',
+                gradeHistoryData
+            );
             
             console.log('Grade history saved:', response.data);
             setSaveDialogOpen(false);
@@ -589,14 +588,14 @@ const GradeCalculator = () => {
                                     <span className="text-white font-titilliumWeb-regular tinyText flex w-full mt-2">
                                         From the buttons on the bottom right, add in the categories that contribute to your final grade (ex. homework, quizzes, midterms, projects). It is important to LEAVE OUT at least one category: the Grade Calculator determines what portion of your overall grade remains on its own, and calculates what grade is needed on the REMAINING work to achieve your desired final grade. <br/>For example, if you know what you have achieved on all assignments, quizzes, and your midterm, enter those three as categories; if your one remaining category is the final exam, the Grade Calculator will tell you what score you need on that exam. For the ones that you’ve added, enter their weight: if homework is 25% of your grade, put 25 into the box.
                                     </span>
-                                    <img src="/assets/GradeCalcGif1.gif" className="flex my-4 w-[55%]"/>
+                                    <img src="/assets/GradeCalcGif1.gif" className="flex my-4 w-[55%] mx-auto"/>
                                     <h1 className="text-white font-titilliumWeb-bold bodyText flex items-start w-full pt-4">
                                         How Do Assignments Work?
                                     </h1>
                                     <span className="text-white font-titilliumWeb-regular tinyText flex w-full mt-2">
                                         Once you’ve added as many categories as you need, type in the score you’ve received on each assignment in that category as a point value. <br/>For example, if you received a 25/30 on your first homework assignment, put 25 in the first box and 30 in the second. <br/>Repeat until all your graded assignments have been entered. You should be able to see the overall grade for each category.
                                     </span>
-                                    <img src="/assets/GradeCalcGif2.gif" className="flex my-4 w-[55%]"/>
+                                    <img src="/assets/GradeCalcGif2.gif" className="flex my-4 w-[55%] mx-auto"/>
                                     <h1 className="text-white font-titilliumWeb-bold bodyText flex items-start w-full pt-4">
                                         How Do Desired Grades Work?
                                     </h1>
@@ -604,8 +603,8 @@ const GradeCalculator = () => {
                                         Now scroll down and enter the numerical value for the grade you want in the class. If you want an A and need a 94% in the class to do so, enter 94 into the box.
                                         <br/>You should now be able to see the grade you need to achieve on the remaining tasks to earn your desired grade! <br/>Press the “Save” button to refer back to this calculation later.
                                     </span>
-                                    <img src="/assets/GradeCalcGif3.gif" className="flex my-4 w-[55%]"/>
-                                    <img src="/assets/GradeCalcGif4.gif" className="flex my-4 w-[55%]"/>
+                                    <img src="/assets/GradeCalcGif3.gif" className="flex my-4 w-[55%] mx-auto"/>
+                                    <img src="/assets/GradeCalcGif4.gif" className="flex mt-8 mb-4 w-[55%] mx-auto"/>
                                 </SimpleBar>
 
                             </motion.div>
@@ -973,7 +972,14 @@ const GradeCalculator = () => {
                                         </h1>
                                         <div className="flex flex-col items-center gap-1">
                                             {requiredGrade === null || requiredGrade.status === 'not_possible' ? (
-                                                <span className="text-red-400 font-bold">Not Possible</span>
+                                                <div className="flex flex-col items-center">
+                                                    <span className="text-red-400 font-bold">Not Possible</span>
+                                                    {requiredGrade?.value && (
+                                                        <span className="text-red-300 text-xs mt-1">
+                                                            (Above {requiredGrade.value}% required)
+                                                        </span>
+                                                    )}
+                                                </div>
                                             ) : requiredGrade.status === 'guaranteed' ? (
                                                 <div className="flex flex-col items-center">
                                                     <span className="text-green-400 font-bold">Grade Guaranteed!</span>
@@ -983,9 +989,9 @@ const GradeCalculator = () => {
                                                 </div>
                                             ) : requiredGrade.status === 'extra_credit' ? (
                                                 <div className="flex flex-col items-center">
-                                                    <span className="text-yellow-400 font-bold">{requiredGrade.value}%</span>
+                                                    <span className="text-yellow-400 font-bold">Extra Credit Required</span>
                                                     <span className="text-yellow-300 text-xs mt-1">
-                                                        ⚠️ Extra Credit Required
+                                                        (Above {requiredGrade.value}% required)
                                                     </span>
                                                 </div>
                                             ) : (
