@@ -121,23 +121,24 @@ function StatCard({label, value, sub, icon: Icon}) {
 
 function ActionButton({onClick, title, icon: Icon, hoverColor, disabled = false}) {
     const hoverClasses = {
-        blue: 'hover:border-nexus-blue-200 hover:bg-nexus-blue-50 hover:text-nexus-blue-700 hover:shadow-nexus-blue-100 hover:cursor-pointer',
-        green: 'hover:border-green-300 hover:bg-green-50 hover:text-green-700 hover:shadow-green-100 hover:cursor-pointer',
-        orange: 'hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700 hover:shadow-orange-100 hover:cursor-pointer',
-        yellow: 'hover:border-yellow-200 hover:bg-yellow-50 hover:text-yellow-700 hover:shadow-yellow-100 hover:cursor-pointer',
-        red: 'hover:border-red-200 hover:bg-red-50 hover:text-red-700 hover:shadow-red-100 hover:cursor-pointer',
+        blue: 'hover:border-nexus-blue-200 hover:bg-nexus-blue-50 hover:text-nexus-blue-700 hover:shadow-nexus-blue-100 hover:cursor-pointer hover:z-10',
+        green: 'hover:border-green-300 hover:bg-green-50 hover:text-green-700 hover:shadow-green-100 hover:cursor-pointer hover:z-10',
+        orange: 'hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700 hover:shadow-orange-100 hover:cursor-pointer hover:z-10',
+        yellow: 'hover:border-yellow-200 hover:bg-yellow-50 hover:text-yellow-700 hover:shadow-yellow-100 hover:cursor-pointer hover:z-10',
+        red: 'hover:border-red-200 hover:bg-red-50 hover:text-red-700 hover:shadow-red-100 hover:cursor-pointer hover:z-10',
     };
+
 
     return (<button
         onClick={onClick}
         title={title}
         disabled={disabled}
-        className={`group/btn relative inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white px-2.5 py-2 text-gray-400 shadow-sm transition-all duration-200 hover:scale-110 hover:shadow-md ${hoverClasses[hoverColor]} ${disabled ? 'opacity-50 cursor-not-allowed hover:scale-100' : ''}`}
+        className={`group/btn relative inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white px-2.5 py-2 text-gray-400 shadow-sm transition-all duration-200 hover:scale-110 hover:shadow-md ${hoverClasses[hoverColor]} ${disabled ? 'opacity-50 cursor-not-allowed hover:scale-100 hover:z-40' : ''}`}
     >
         <Icon className="h-4 w-4 transition-transform duration-200 group-hover/btn:scale-110"/>
         <span
             className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-2 py-1 text-xs text-white opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-200 shadow-lg z-50">
-        {title}
+            {title}
         </span>
     </button>);
 }
@@ -848,7 +849,7 @@ export default function AdminDashboard() {
                 <div className="max-h-[calc(100vh-475px)] overflow-auto">
                     <table className="w-full text-sm text-left">
                         <thead
-                            className="sticky top-0 z-10 bg-gradient-to-r from-nexus-blue-50 to-nexus-blue-100/80 backdrop-blur-xl border-b-2 border-nexus-blue-200/50">
+                            className="sticky top-0 z-20 bg-gradient-to-r from-nexus-blue-50 to-nexus-blue-100/80 backdrop-blur-xl border-b-2 border-nexus-blue-200/50">
                         <tr className="text-xs uppercase tracking-wider font-bold text-nexus-blue-800">
                             <th className="px-4 py-5 w-12">
                                 <Checkbox
@@ -977,7 +978,7 @@ export default function AdminDashboard() {
                             </td>
 
                             <td className="px-6 py-5 text-right">
-                                <div className="relative z-20">
+                                <div className="relative">
                                     <div
                                         className="flex justify-end gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200">
                                         <ActionButton
