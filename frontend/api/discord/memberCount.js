@@ -25,6 +25,7 @@ module.exports = async (req, res) => {
         }
 
         const data = await r.json();
+        res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=60');
 
         return res.status(200).json(data.aproximate);
     } catch (err) {
