@@ -102,8 +102,8 @@ export default function Signup() {
       try { window.dispatchEvent(new CustomEvent('refreshOnboarding')) } catch (e) { }
       navigate("/CourseLinking");
     } catch (e) {
-      console.error("Signup error:", e);
-      const msg = (e?.message || "Signup failed").replace("Firebase: ", "");
+      console.error("Sign Up error:", e);
+      const msg = (e?.message || "Sign Up failed").replace("Firebase: ", "");
       setError(msg);
     }
   };

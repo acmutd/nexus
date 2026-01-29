@@ -30,14 +30,114 @@ const Home = () => {
     }
   }
 
+  const floatVariants = {
+      float: (custom) => ({
+          y: [0, custom.y, 0],
+          x: [0, custom.x, 0],
+          rotate: [custom.startRotate, custom.endRotate, custom.startRotate],
+          transition: {
+              duration: custom.duration,
+              repeat: Infinity,
+              ease: "easeInOut",
+          }
+      })
+  };
+
+  const objects = [
+      {
+          name: 'laptop',
+          path: '/assets/HomePageAssets/Laptop.svg',
+          style: {
+              position: 'fixed',
+              top: '15%',
+              left: '5%',
+              width: '200px',
+          },
+          custom: { x: 5, y: -6, startRotate: 0, endRotate: -6, duration: 7.5 }
+      },
+      {
+          name: 'chair',
+          path: '/assets/HomePageAssets/Chair.svg',
+          style: {
+              position: 'fixed',
+              top: '15%',
+              right: '2%',
+              width: '240px',
+          },
+          custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 7.5 }
+      },
+      {
+          name: 'coffee',
+          path: '/assets/HomePageAssets/Coffee.svg',
+          style: {
+              position: 'fixed',
+              top: '45%',
+              left: '3%',
+              width: '200px',
+          },
+          custom: { x: 8, y: -5, startRotate: 0, endRotate: 3, duration: 7.5 }
+      },
+      {
+          name: 'books',
+          path: '/assets/HomePageAssets/Books.svg',
+          style: {
+              position: 'fixed',
+              bottom: '3%',
+              right: '2%',
+              width: '200px',
+          },
+          custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 7.5 }
+      },
+      {
+          name: 'pigy',
+          path: '/assets/HomePageAssets/Pigy.svg',
+          style: {
+              position: 'fixed',
+              bottom: '23%',
+              right: '3%',
+              width: '220px',
+          },
+          custom: { x: 8, y: -5, startRotate: 0, endRotate: 3, duration: 7.5 }
+      },
+      {
+          name: 'peechi',
+          path: '/assets/HomePageAssets/Peechi.svg',
+          style: {
+              position: 'fixed',
+              bottom: '2%',
+              left: '5%',
+              width: '140px',
+          },
+          custom: { x: 8, y: -5, startRotate: 0, endRotate: 3, duration: 7.5 }
+      }
+  ];
+
   return (
     <>
-      <div className={`inset-0 min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center fixed overflow-hidden`} 
-          style={{ backgroundImage: "url('/assets/HomeBG.svg')"}}/>
-      
+      <div className={`inset-0 min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center fixed overflow-hidden z-0`} 
+          style={{ backgroundImage: "url('/assets/BasicBG.svg')"}}/>
+
+      {/* Floating objects */}
+      {objects.map((obj) => (
+          <motion.div
+              key={obj.name}
+              style={obj.style}
+              variants={floatVariants}
+              animate="float"
+              custom={obj.custom}
+              className='will-change-transform pointer-events-none'
+          >
+              <img 
+                  src={obj.path} 
+                  alt={obj.name} 
+                  style={{ width: '100%', height: 'auto' }}
+              />
+          </motion.div>
+      ))}
+
       {/* -------------------------------------- CONTENT -------------------------------------------*/}
-        <div className='relative flex items-center justify-center w-full min-h-screen'>
-        <motion.div className="flex flex-col w-full h-full items-center justify-center mt-30 z-1" initial={{opacity:0, y:20}} animate={{opacity: 1, y:0}} transition={{duration: 0.7}}>
+        <div className='relative flex items-center justify-center w-full min-h-screen overflow-hidden'>
+        <motion.div className="flex flex-col w-full h-full items-center justify-center mt-30 z-1" initial={{opacity:0, y:20}} animate={{opacity: 1, y:0}} transition={{duration: 0.7, delay: 0.2}}>
 
           <div className="min-w-75 bg-linear-to-b from-nexus800 via-nexus900 to-nexus800 px-10 py-6 w-[60%] flex flex-col items-center justify-center overflow-y-auto rounded-lg ">
             <h2 className="text-white headingText font-titilliumWeb-semibold mb-6 w-full text-center">

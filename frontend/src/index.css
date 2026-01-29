@@ -5,6 +5,12 @@
   src: url("../src/assets/fonts/TitilliumWeb-Bold.ttf");
 }
 
+/* Prevent white flash and provide persistent background layer */
+html, body, #root {
+  height: 100%;
+  background-color: var(--color-nexus900);
+}
+
 @font-face {
   font-family: TitilliumWeb-Regular;
   src: url("../src/assets/fonts/TitilliumWeb-Regular.ttf");

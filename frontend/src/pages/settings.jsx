@@ -851,9 +851,9 @@ function Settings() {
         {/* Pidgy */}
         {!isMobile && (
           <motion.div className='absolute top-0 right-10'
-                      initial={{y:-275}}
-                      animate={{y:0}}
-                      transition={{duration:1, type:'spring'}}
+                      initial={{y:-350, opacity: 0}}
+                      animate={{y:0, opacity: 1}}
+                      transition={{duration:1, type:'spring', delay: 0.2}}
             >
             <motion.img className="flex h-[500px]" src='/assets/SettingsPidgy.svg'
                         animate={{rotate:-12}}

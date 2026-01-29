@@ -11,6 +11,8 @@ import LoginWithNetIDModal from '../components/LoginWithNetIDModal';
 import Button from '../components/Button';
 import { useAuth } from '../context/authContext';
 import { initFirebase } from '../firebase';
+import { motion } from 'motion/react';
+import FloatingClouds from '../components/FloatingClouds';
 
 export default function CourseLinking() {
   const isMed = useMediaQuery({ query: '(max-width: 800px)' });
@@ -275,14 +277,89 @@ export default function CourseLinking() {
   if ((authLoading || !onboarding?.loaded) || (onboarding?.hasCourses && !location.state?.forceCourseRelink)) {
     return null;
   }
+  const floatVariants = {
+    float: (custom) => ({
+      y: [0, custom.y, 0],
+      x: [0, custom.x, 0],
+      rotate: [custom.startRotate, custom.endRotate, custom.startRotate],
+      transition: {
+          duration: custom.duration,
+          repeat: Infinity,
+          ease: "easeInOut",
+      }
+    })
+  };
+
+  const objects = [
+    {
+        name: 'calculator',
+        path: '/assets/Calculator.svg',
+        style: {
+            position: 'fixed',
+            top: '16%',
+            right: '5%',
+            width: '18%',
+        },
+        custom: { x: 5, y: 6, startRotate: 0, endRotate: 6, duration: 10 }
+    },
+    {
+        name: 'book',
+        path: '/assets/Book.svg',
+        style: {
+            position: 'fixed',
+            bottom: '5%',
+            right: '2%',
+            width: '18%',
+        },
+        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+    },
+        {
+        name: 'peechi',
+        path: '/assets/LoginPipelineAssets/LoginPipelinePeechi.svg',
+        style: {
+            position: 'fixed',
+            bottom: '8%',
+            left: '5%',
+            width: '12%',
+        },
+        custom: { x: 5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+    },
+    {
+        name: 'microphone',
+        path: '/assets//Megaphone.svg',
+        style: {
+            position: 'fixed',
+            top: '20%',
+            left: '5%',
+            width: '18%',
+        },
+        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+    },
+  ]
 
   return (
     <div
       className="min-h-screen w-full flex flex-col items-center bg-blue-950 bg-cover bg-center pt-16 pb-6 justify-center"
       style={{
-        backgroundImage: "url('/assets/AccessRequestBG.svg')"
+        backgroundImage: "url('/assets/BasicBG.svg')"
       }}
     >
+    {/* FLOATING ICONS */}
+    <div className='fixed overflow-hidden w-full h-full'>
+      <FloatingClouds />
+    </div>
+    {objects.map((obj) => (
+      <motion.div 
+        key={obj.name}
+        style={obj.style}
+        custom={obj.custom}
+        variants={floatVariants}
+        animate="float"
+        className='will-change-transform pointer-events-none'>
+          <img src={obj.path} style={{ width: '100%', height: 'auto' }}/>
+      </motion.div>
+    ))}
+
     <AccessRequestModal
       isOpen={showAccessRequestModal}
       onClose={() => setShowAccessRequestModal(false)}

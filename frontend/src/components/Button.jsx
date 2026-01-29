@@ -7,7 +7,7 @@ const Button = ({text, icon, onClick, href, className, disabled, title}) => {
         href={disabled ? '' : href} 
         target="_blank" 
         rel="noopener noreferrer"
-        className={`${className} flex bg-nexus600 w-full h-[40px] rounded-md items-center justify-center active:scale-80 
+        className={`${className} flex bg-nexus600 w-full h-[40px] rounded-md items-center justify-center active:scale-95 
                   transition duration-300  ${disabled ? "opacity-50" : "hover:scale-102 cursor-pointer"}`}
         title={title}
       >
@@ -22,7 +22,7 @@ const Button = ({text, icon, onClick, href, className, disabled, title}) => {
   return (
     <button 
       onClick={disabled ? undefined : onClick}
-      className={`${className} flex bg-nexus600 w-full h-[40px] rounded-md items-center justify-center active:scale-80 
+      className={`${className} flex bg-nexus600 w-full h-[40px] rounded-md items-center justify-center active:scale-95 
                  transition duration-300  ${disabled ? "opacity-50" : "hover:scale-102 cursor-pointer"}`}
       title={title}
       disabled={disabled}

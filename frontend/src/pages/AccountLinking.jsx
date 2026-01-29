@@ -9,6 +9,8 @@ import {
   onAuthStateChanged,
 } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import FloatingClouds from '../components/FloatingClouds';
+import { motion } from 'motion/react';
 
 const AccountLinking = () => {
     const navigate = useNavigate();
@@ -330,62 +332,141 @@ const AccountLinking = () => {
         </div>
     );
 
-    return (
-        <div className='min-h-screen w-full bg-center bg-cover bg-nexus900 pt-20 items-center justify-center flex'
-            style={{backgroundImage: "url('/assets/AccessRequestBG.svg')"}}>
+  const floatVariants = {
+    float: (custom) => ({
+      y: [0, custom.y, 0],
+      x: [0, custom.x, 0],
+      rotate: [custom.startRotate, custom.endRotate, custom.startRotate],
+      transition: {
+          duration: custom.duration,
+          repeat: Infinity,
+          ease: "easeInOut",
+      }
+    })
+  };
 
+  const objects = [
+    {
+        name: 'calculator',
+        path: '/assets/Calculator.svg',
+        style: {
+            position: 'fixed',
+            top: '16%',
+            right: '5%',
+            width: '18%',
+        },
+        custom: { x: 5, y: 6, startRotate: 0, endRotate: 6, duration: 10 }
+    },
+    {
+        name: 'book',
+        path: '/assets/Book.svg',
+        style: {
+            position: 'fixed',
+            bottom: '5%',
+            right: '2%',
+            width: '18%',
+        },
+        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+    },
+        {
+        name: 'peechi',
+        path: '/assets/LoginPipelineAssets/LoginPipelinePeechi.svg',
+        style: {
+            position: 'fixed',
+            bottom: '8%',
+            left: '5%',
+            width: '12%',
+        },
+        custom: { x: 5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+    },
+    {
+        name: 'microphone',
+        path: '/assets//Megaphone.svg',
+        style: {
+            position: 'fixed',
+            top: '20%',
+            left: '5%',
+            width: '18%',
+        },
+        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+    },
+  ]
+
+  return (
+    <div
+      className="min-h-screen w-full flex flex-col items-center bg-blue-950 bg-cover bg-center pt-16 pb-6 justify-center"
+      style={{
+        backgroundImage: "url('/assets/BasicBG.svg')"
+      }}
+    >
+    {/* FLOATING ICONS */}
+    <div className='fixed overflow-hidden w-full h-full'>
+      <FloatingClouds />
+    </div>
+    {objects.map((obj) => (
+      <motion.div 
+        key={obj.name}
+        style={obj.style}
+        custom={obj.custom}
+        variants={floatVariants}
+        animate="float"
+        className='will-change-transform pointer-events-none'>
+          <img src={obj.path} style={{ width: '100%', height: 'auto' }}/>
+      </motion.div>
+    ))}
+
+        <div
+          ref={popupRef}
+          className={`flex flex-col w-full h-full items-center justify-center scale-90 transition-all duration-500 transform ${popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}>
+            <h1 className='headingText text-white font-titilliumWeb-bold mb-2'>
+                Account Linking
+            </h1>
             <div
-              ref={popupRef}
-              className={`flex flex-col w-full h-full items-center justify-center scale-90 transition-all duration-500 transform ${popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}>
-                <h1 className='headingText text-white font-titilliumWeb-bold mb-2'>
-                    Account Linking
-                </h1>
-                <div
-                  className='flex flex-col bg-nexus50 p-6 rounded-xl items-center justify-center shadow-2xl'
-                  style={{
-                    width: isMobile ? '90%' : '50rem',
-                    minHeight: isMobile ? 'auto' : '28rem'
-                  }}
-                >
-                    <div className='flex flex-col text-center mx-6 mb-4 w-full'>
-                        <p className="headingText font-titilliumWeb-bold text-nexus900">
-                            Link Your Discord Account
+              className='flex flex-col bg-nexus50 p-6 rounded-xl items-center justify-center shadow-2xl'
+              style={{
+                width: isMobile ? '90%' : '35rem',
+                minHeight: isMobile ? 'auto' : '28rem'
+              }}
+            >
+                <div className='flex flex-col text-center mx-6 mb-4 w-full'>
+                    <p className="headingText font-titilliumWeb-bold text-nexus900">
+                        Link Your Discord Account
+                    </p>
+                </div>
+                <div className={`flex flex-col gap-8 justify-center items-center mb-6 w-full px-2`}>
+                    <div className="flex flex-col justify-center text-center max-w-xl  -mt-2 md:mt-0">
+                        <p className="bodyText font-titilliumWeb-regular text-nexus800">
+                            To access Nexus' main features, you will need to link your Discord account. If you want to skip it for now, you can link it later from the Settings page.
                         </p>
                     </div>
-                    <div className={`flex ${isMobile ? "flex-col" : "flex-row"} gap-8 justify-center items-stretch mb-6 w-full px-2`}>
-                        <OptionBox
-                            icon={
-                            <img
-                                src="/assets/DiscordIcon.svg"
-                                alt="Login"
-                                className="w-10 h-10"
-                            />
-                            }
-                            title={discordLinked ? `Unlink Discord${discordUsername ? ` (${discordUsername})` : ''}` : 'Link Discord'}
-                            description="Linking your Discord will give you access to your courses in each Discord server."
-                            details={[]}
-                            buttonText={discordLinked ? 'Unlink' : 'Click to Login'}
-                            onClick={() => handleDiscordAction()}
-                            boxWidth={isMobile ? '100%' : '22rem'}
+                    <OptionBox
+                        icon={
+                        <img
+                            src="/assets/DiscordIcon.svg"
+                            alt="Login"
+                            className="w-10 h-10"
                         />
-                        <div className="flex flex-col justify-start text-left max-w-xl self-start -mt-2 md:mt-0">
-                            <p className="bodyText font-titilliumWeb-regular text-nexus800">
-                                To access Nexus' main features, you will need to link your Discord account. If you want to skip it for now, you can link it later from the Settings page.
-                            </p>
-                        </div>
-                    </div>
+                        }
+                        title={discordLinked ? `Unlink Discord${discordUsername ? ` (${discordUsername})` : ''}` : 'Link Discord'}
+                        description="Linking your Discord will give you access to your courses in each Discord server."
+                        details={[]}
+                        buttonText={discordLinked ? 'Unlink' : 'Click to Login'}
+                        onClick={() => handleDiscordAction()}
+                        boxWidth={isMobile ? '100%' : '22rem'}
+                    />
+                </div>
 
-                    {error && <div className="text-red-600 text-sm mb-2">{error}</div>}
-                    {okMsg && <div className="text-green-400 text-sm mb-2">{okMsg}</div>}
+                {error && <div className="text-red-600 text-sm mb-2">{error}</div>}
+                {okMsg && <div className="text-green-400 text-sm mb-2">{okMsg}</div>}
 
-                    <div className="flex w-full justify-end mt-2">
-                        <div className="w-32">
-                            <Button className="bg-gray-500" text={"Skip"} onClick={skipAccountLinking} />
-                        </div>
+                <div className="flex w-full justify-end mt-2">
+                    <div className="w-full">
+                        <Button className="bg-gray-500" text={"Skip"} onClick={skipAccountLinking} />
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     )
 }
 
