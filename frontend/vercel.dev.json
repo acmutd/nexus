@@ -1,0 +1,4 @@
+{
+  "devCommand": "vite --port $PORT",
+  "framework": "vite"
+}

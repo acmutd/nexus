@@ -98,10 +98,12 @@ export default function Signup() {
         { merge: true }
       );
 
+      // After signup, go to course linking and make sure onboarding state is refreshed
+      try { window.dispatchEvent(new CustomEvent('refreshOnboarding')) } catch (e) { }
       navigate("/CourseLinking");
     } catch (e) {
-      console.error("Signup error:", e);
-      const msg = (e?.message || "Signup failed").replace("Firebase: ", "");
+      console.error("Sign Up error:", e);
+      const msg = (e?.message || "Sign Up failed").replace("Firebase: ", "");
       setError(msg);
     }
   };
@@ -140,7 +142,7 @@ export default function Signup() {
             />
           </div>
 
-          <div className="mb-4 relative font-titilliumWeb-bold">
+          <div className="mb-4 relative font-titilliumWeb-semibold tinyText">
             <h1 className="tinyText font-titilliumWeb-semibold text-nexus700 mb-2">
               Password
             </h1>            
@@ -164,7 +166,7 @@ export default function Signup() {
             </div>      
           </div>
 
-          <div className="mb-4 relative font-titilliumWeb-bold">
+          <div className="mb-4 relative font-titilliumWeb-semibold tinyText">
             <h1 className="tinyText font-titilliumWeb-semibold text-nexus700 mb-2 ">
               Confirm Password
             </h1>    

@@ -17,8 +17,11 @@ module.exports = async (req, res) => {
         }
 
         // Forward to bot server
-        // todo - localhost here needs to be an env var w/ DigitalOcean endpoint
-        const botResponse = await axios.post('http://localhost:3000/bot/allocate', {
+        const botUrl = process.env.DISCORD_BOT_URL
+            ? `${process.env.DISCORD_BOT_URL}/api/discord/allocate`
+            : 'http://localhost:3000/bot/allocate';
+
+        const botResponse = await axios.post(botUrl, {
             discordId,
             courses,
         });

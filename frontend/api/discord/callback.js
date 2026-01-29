@@ -1,26 +1,9 @@
 const axios = require('axios');
-const admin = require('firebase-admin');
+const {admin} = require('../config/firebaseAdmin.js');
 
 // require('dotenv').config()
 
-const {
-    DISCORD_CLIENT_ID,
-    DISCORD_CLIENT_SECRET,
-    DISCORD_BOT_URL,
-    FIREBASE_PROJECT_ID,
-} = process.env;
-
-if (!admin.apps.length) {
-    // todo - this jawn needs to be put in vercel env too
-    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
-
-    admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-        projectId: FIREBASE_PROJECT_ID,
-    });
-
-    console.log('Firebase Admin initialized');
-}
+const {DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, DISCORD_BOT_URL, DISCORD_TOKEN, BOT_API_KEY} = process.env;
 
 const tokenRequests = new Map();
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -82,9 +65,9 @@ module.exports = async (req, res) => {
     if (req.method !== 'GET') return res.status(405).send('Method not allowed');
 
     console.log('Callback received:', req.query);
-    const {code, state: uid} = req.query;
+    const {code, state} = req.query;
 
-    if (!code || !uid) {
+    if (!code || !state) {
         return res.status(400).send(`
       <script>
         window.opener && window.opener.postMessage({
@@ -96,114 +79,207 @@ module.exports = async (req, res) => {
     `);
     }
 
+    // Parse state (legacy uid string or JSON payload)
+    let uid = state;
+    let mode = 'link';
+    let inviteCodes = [];
+    try {
+        const decoded = decodeURIComponent(state);
+        const parsed = JSON.parse(decoded);
+        uid = parsed.uid || uid;
+        mode = parsed.mode || 'link';
+        inviteCodes = Array.isArray(parsed.invites) ? parsed.invites : [];
+        console.log('[callback] state', {mode, uid, invites: inviteCodes.length});
+    } catch {
+        console.log('[callback] legacy state', uid);
+    }
+
     try {
         const token = await getDiscordToken(code);
-        console.log('Access token retrieved');
+        console.log('[callback] access token ok');
 
         const userRes = await axios.get('https://discord.com/api/users/@me', {
             headers: {Authorization: `Bearer ${token}`},
         });
 
         const d = userRes.data; // { id, username, global_name, avatar, etc }
-        console.log('Discord user:', d);
+        console.log('[callback] discord user', d?.id);
 
         const avatarUrl = discordAvatarUrl(d.id, d.avatar);
 
-        // Check if this Discord account is already linked to a different user
-        const existingDiscordQuery = await admin
-            .firestore()
-            .collection('users')
-            .where('discord.id', '==', d.id)
-            .get();
+        // Linking only for link mode (not join_all)
+        if (mode === 'link') {
+            // Prevent linking the same Discord account to multiple Nexus users
+            const dupSnap = await admin.firestore()
+                .collection('users')
+                .where('discord.id', '==', d.id)
+                .limit(1)
+                .get();
 
-        if (!existingDiscordQuery.empty) {
-            const existingUserId = existingDiscordQuery.docs[0].id;
-            if (existingUserId !== uid) {
-                console.log(`Discord ID ${d.id} is already linked to user ${existingUserId}`);
-                return res.status(409).send(`
+            if (!dupSnap.empty) {
+                const existingUid = dupSnap.docs[0].id;
+                if (existingUid !== uid) {
+                    return res.send(`
+              <script>
+                try {
+                  window.opener && window.opener.postMessage({
+                    type: 'DISCORD_AUTH_ERROR',
+                    error: 'This Discord account is already linked to another Nexus user.'
+                  }, '*');
+                } catch (e) {}
+                window.close();
+              </script>
+            `);
+                }
+            }
+
+            const userRef = admin.firestore().collection('users').doc(uid);
+            await userRef.set(
+                {
+                    discord: {
+                        id: d.id,
+                        username: d.username ?? null,
+                        globalName: d.global_name ?? null,
+                        avatarHash: d.avatar ?? null,
+                        avatarUrl: avatarUrl,
+                        linkedAt: admin.firestore.FieldValue.serverTimestamp(),
+                    },
+                    lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
+                },
+                {merge: true}
+            );
+
+            // Grant Discord course access after successful linking
+            try {
+            console.log('Granting Discord course access for user:', uid);
+                const userDoc = await userRef.get();
+                const userData = userDoc.data();
+                const userCourses = userData?.courses || [];
+
+                if (userCourses.length > 0) {
+                    console.log('User has courses, calling bot grant-access API:', userCourses);
+
+                    const botResponse = await axios.post(
+                        `${DISCORD_BOT_URL}/api/discord/grant-access`,
+                        {
+                            discordId: d.id,
+                            courses: userCourses,
+                            uid: uid,
+                        },
+                        {
+                            timeout: 10000,
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-API-Key': BOT_API_KEY || 'your-shared-secret-key',
+                            },
+                        }
+                    );
+
+                    console.log('Bot grant-access response:', botResponse.status);
+                } else {
+                    console.log('User has no courses, skipping Discord access grant');
+                }
+            } catch (botError) {
+                console.error(
+                    'Failed to grant Discord access (bot may be offline):',
+                    botError.response?.data || botError.message
+                );
+            }
+
+            // Let the opener know it worked
+            return res.send(`
           <script>
             try {
               window.opener && window.opener.postMessage({
-                type: 'DISCORD_AUTH_ERROR',
-                error: 'This Discord account is already linked to another Nexus account'
+                type: 'DISCORD_AUTH_SUCCESS',
+                data: {
+                  id: ${JSON.stringify(d.id)},
+                  username: ${JSON.stringify(d.username ?? null)},
+                  globalName: ${JSON.stringify(d.global_name ?? null)},
+                  avatarUrl: ${JSON.stringify(avatarUrl)}
+                }
               }, '*');
             } catch (e) {}
             window.close();
           </script>
         `);
-            }
         }
 
-        const userRef = admin.firestore().collection('users').doc(uid);
-        await userRef.set(
-            {
-                discord: {
-                    id: d.id,
-                    username: d.username ?? null,
-                    globalName: d.global_name ?? null,
-                    avatarHash: d.avatar ?? null,
-                    avatarUrl: avatarUrl,
-                    linkedAt: admin.firestore.FieldValue.serverTimestamp(),
-                },
-                lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
-            },
-            {merge: true}
-        );
-
-        // NEW: Grant Discord course access after successful linking
-        try {
-            console.log('Granting Discord course access for user:', uid);
-
-            // Get user's current courses from Firestore
-            const userDoc = await userRef.get();
-            const userData = userDoc.data();
-            const userCourses = userData?.courses || [];
-
-            if (userCourses.length > 0) {
-                console.log('User has courses, calling bot grant-access API:', userCourses);
-
-                const botResponse = await axios.post(
-                    `${DISCORD_BOT_URL}/api/discord/grant-access`,
-                    {
-                        discordId: d.id,
-                        courses: userCourses,
-                        uid: uid,
-                    },
-                    {
-                        timeout: 10000,
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-API-Key': process.env.BOT_API_KEY || 'your-shared-secret-key',
-                        },
+        // join_all mode: resolve invites -> guildIds, call bot join-guilds
+        if (mode === 'join_all') {
+            console.log('[callback] join_all start', inviteCodes);
+            const guildIds = [];
+            for (const code of inviteCodes) {
+                try {
+                    const inviteRes = await axios.get(
+                        `https://discord.com/api/v10/invites/${encodeURIComponent(code)}?with_counts=false&with_expiration=false`,
+                        { headers: { Authorization: `Bot ${DISCORD_TOKEN}` } }
+                    );
+                    const gid = inviteRes.data?.guild?.id;
+                    if (gid) {
+                        guildIds.push(gid);
+                        console.log('[callback] invite resolved', code, '->', gid);
+                    } else {
+                        console.error('[callback] invite missing guild', code, inviteRes.data);
                     }
-                );
-
-                console.log('Bot grant-access response:', botResponse.status);
-            } else {
-                console.log('User has no courses, skipping Discord access grant');
+                } catch (e) {
+                    console.error('[callback] invite resolve failed', code, e.response?.data || e.message);
+                }
             }
-        } catch (botError) {
-            // Don't fail the Discord linking if bot is unavailable
-            console.error(
-                'Failed to grant Discord access (bot may be offline):',
-                botError.response?.data || botError.message
-            );
+            console.log('[callback] guildIds', guildIds);
+
+            let joinResults = [];
+            if (guildIds.length) {
+                try {
+                    const resp = await axios.post(
+                        `${DISCORD_BOT_URL}/api/discord/join-guilds`,
+                        {
+                            userAccessToken: token,
+                            guildIds,
+                            discordId: d.id,
+                        },
+                        {
+                            timeout: 15000,
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-API-Key': BOT_API_KEY || 'your-shared-secret-key',
+                            },
+                        }
+                    );
+                    joinResults = resp.data?.results || [];
+                    console.log('[callback] join-guilds status', resp.status);
+                    console.log('[callback] join results', joinResults);
+                } catch (e) {
+                    console.error('[callback] join-guilds call failed status', e.response?.status);
+                    console.error('[callback] join-guilds call failed data', e.response?.data || e.message);
+                }
+            }
+            else {
+                console.warn('[callback] no guildIds to join after invite resolve');
+            }
+
+            const payload = {
+                type: 'DISCORD_JOIN_ALL_RESULT',
+                data: { userId: d.id, results: joinResults, guildIds },
+            };
+
+            return res.send(`
+          <script>
+            try {
+              window.opener && window.opener.postMessage(${JSON.stringify(payload)}, '*');
+            } catch (e) {}
+            window.close();
+          </script>
+        `);
         }
 
-        // Let the opener know it worked
-        return res.send(`
+        // Fallback: unknown mode
+        return res.status(400).send(`
       <script>
-        try {
-          window.opener && window.opener.postMessage({
-            type: 'DISCORD_AUTH_SUCCESS',
-            data: {
-              id: ${JSON.stringify(d.id)},
-              username: ${JSON.stringify(d.username ?? null)},
-              globalName: ${JSON.stringify(d.global_name ?? null)},
-              avatarUrl: ${JSON.stringify(avatarUrl)}
-            }
-          }, '*');
-        } catch (e) {}
+        window.opener && window.opener.postMessage({
+          type: 'DISCORD_AUTH_ERROR',
+          error: 'Unsupported mode'
+        }, '*');
         window.close();
       </script>
     `);

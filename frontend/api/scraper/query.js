@@ -34,20 +34,37 @@ module.exports = async (req, res) => {
 
         const dataDir = path.join(__dirname, '..', 'data');
 
+        // Use remote coursebook URL  (COURSEBOOK_URL_26S)
+        let remoteCourseRows = [];
+        try {
+            const url = process.env.COURSEBOOK_URL_26S || null;
+            if (!url) {
+                if (VERBOSE) console.warn('COURSEBOOK_URL_26S not set; course names will be null');
+            } else {
+                try {
+                    const r = await fetch(url);
+                    if (r.ok) {
+                        const json = await r.json();
+                        if (Array.isArray(json)) remoteCourseRows = json;
+                        else if (VERBOSE) console.error('COURSEBOOK_URL_26S returned non-array');
+                    } else if (VERBOSE) console.error('Failed to fetch COURSEBOOK_URL_26S:', r.status);
+                } catch (e) {
+                    if (VERBOSE) console.error('Error fetching COURSEBOOK_URL_26S:', e);
+                }
+            }
+        } catch (e) {
+            if (VERBOSE) console.error('prepare remoteCourseRows error:', e);
+        }
+
         const findCourseRow = (dept, num, classNumber = null) => {
             try {
-                if (!fs.existsSync(dataDir)) return null;
-                const files = fs.readdirSync(dataDir).filter((f) => /^classes_(.+)\.json$/i.test(f));
-                for (const f of files) {
-                    const rows = JSON.parse(fs.readFileSync(path.join(dataDir, f), 'utf8'));
-                    for (const row of rows) {
-                        const rp = String(row.course_prefix || '').trim().toLowerCase();
-                        const rn = String(row.course_number || '').trim();
-                        const rClass = String(row.class_number || '').trim();
-                        if (rp === String(dept || '').toLowerCase() && rn === String(num || '').trim()) {
-                            if (classNumber && rClass && rClass === String(classNumber)) return row;
-                            return row;
-                        }
+                for (const row of remoteCourseRows) {
+                    const rp = String(row.course_prefix || '').trim().toLowerCase();
+                    const rn = String(row.course_number || '').trim();
+                    const rClass = String(row.class_number || '').trim();
+                    if (rp === String(dept || '').toLowerCase() && rn === String(num || '').trim()) {
+                        if (classNumber && rClass && rClass === String(classNumber)) return row;
+                        return row;
                     }
                 }
             } catch (e) {

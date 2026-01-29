@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+html, body {
+  overscroll-behavior-y: none; 
+}
 
 .logo {
   height: 6em;
@@ -29,6 +32,34 @@
 .titleText {
   font-size: clamp(2.2rem, 3vw, 3rem);
   line-height: 1.15; 
+}
+
+.underlineText {
+  position: relative;
+  text-decoration: none;
+  padding-bottom: 4px;
+}
+
+.underlineText::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background-color: #ffffff;
+  width: 0;
+  transition: 0.4s ease-out;
+}
+
+.underlineText:hover::after {
+  width: 100%;
+}
+
+.custom-scrollbar .simplebar-scrollbar::before {
+  background-color: rgb(112, 112, 112);
+  margin-right: 4px;
+  margin-block: 4px;
+  width: 4px;
 }
 
 @keyframes logo-spin {

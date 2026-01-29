@@ -2,72 +2,24 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useMobile } from '../context/mobileContext';
 
-const gradesData = [
-  { subject: 'Math', homework: 92, exam: 88, weights: { homework: 0.4, exam: 0.6 } },
-  { subject: 'History', homework: 90, exam: 86, weights: { homework: 0.3, exam: 0.7 } },
-  { subject: 'Computer Science', homework: 99, exam: 97, weights: { homework: 0.4, exam: 0.6 } },
+const acmWebsites = [
+  { name: 'UTD Grades', link: 'https://www.utdgrades.com', icon: "/assets/UTDGradesIcon.svg", description: "Make smarter choices by seeing how students did in any given class." },
+  { name: 'Sage', link: 'https://utdsage.com', icon: "/assets/SageIcon.svg", description: "Get personalized advice on your degree plan, at any time." },
+  { name: 'ACM UTD Discord', link: 'https://discord.gg/ttB9HuaKsA', icon: "/assets/ACMIcon.svg", description: "Get involved with the Association of Computing Machinery at UTD." },
 ];
-
-const calculateWeightedGrade = (homework, exam, weights) => {
-  return Math.round(homework * weights.homework + exam * weights.exam);
-};
-
-const GradeCircle = ({ grade, index }) => {
-  const colors = ['#60A5FA', '#34D399', '#F59E0B', '#EF4444', '#8B5CF6'];
-  const radius = 35; 
-  const stroke = 7;
-  const normalizedRadius = radius - stroke / 2;
-  const circumference = normalizedRadius * 2 * Math.PI;
-  const strokeDashoffset = circumference - (grade / 100) * circumference;
-
-  return (
-    <svg height={radius * 2} width={radius * 2}>
-      <circle
-        stroke="#4F46E5"
-        fill="transparent"
-        strokeWidth={stroke}
-        r={normalizedRadius}
-        cx={radius}
-        cy={radius}
-        className="opacity-20"
-      />
-      <circle
-        stroke={colors[index % colors.length]}
-        fill="transparent"
-        strokeWidth={stroke}
-        strokeLinecap="round"
-        r={normalizedRadius}
-        cx={radius}
-        cy={radius}
-        strokeDasharray={`${circumference} ${circumference}`}
-        strokeDashoffset={strokeDashoffset}
-        transform={`rotate(-90 ${radius} ${radius})`}
-      />
-      <text
-        x="50%"
-        y="50%"
-        dominantBaseline="middle"
-        textAnchor="middle"
-        fill="white"
-        className="text-white text-lg font-bold"
-      >
-        {grade}%
-      </text>
-    </svg>
-  );
-};
 
 const Home = () => {
   const navigate = useNavigate()
   const {isMobile} = useMobile()
-  
+  const {isScreenMedium} = useMobile()
+
   function handleButtonClick(name) {
     switch(name) {
       case "Discord": 
         navigate('/discordservers')
         break;
       case "Superdoc":
-        navigate("/superdoc")
+        navigate("/underconstruction")
         break;
       case "GradeCalc":
         navigate("/grade-calculator")
@@ -78,80 +30,176 @@ const Home = () => {
     }
   }
 
+  const floatVariants = {
+      float: (custom) => ({
+          y: [0, custom.y, 0],
+          x: [0, custom.x, 0],
+          rotate: [custom.startRotate, custom.endRotate, custom.startRotate],
+          transition: {
+              duration: custom.duration,
+              repeat: Infinity,
+              ease: "easeInOut",
+          }
+      })
+  };
+
+  const objects = [
+      {
+          name: 'laptop',
+          path: '/assets/HomePageAssets/Laptop.svg',
+          style: {
+              position: 'fixed',
+              top: '15%',
+              left: '5%',
+              width: '200px',
+          },
+          custom: { x: 5, y: -6, startRotate: 0, endRotate: -6, duration: 7.5 }
+      },
+      {
+          name: 'chair',
+          path: '/assets/HomePageAssets/Chair.svg',
+          style: {
+              position: 'fixed',
+              top: '15%',
+              right: '2%',
+              width: '240px',
+          },
+          custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 7.5 }
+      },
+      {
+          name: 'coffee',
+          path: '/assets/HomePageAssets/Coffee.svg',
+          style: {
+              position: 'fixed',
+              top: '45%',
+              left: '3%',
+              width: '200px',
+          },
+          custom: { x: 8, y: -5, startRotate: 0, endRotate: 3, duration: 7.5 }
+      },
+      {
+          name: 'books',
+          path: '/assets/HomePageAssets/Books.svg',
+          style: {
+              position: 'fixed',
+              bottom: '3%',
+              right: '2%',
+              width: '200px',
+          },
+          custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 7.5 }
+      },
+      {
+          name: 'pigy',
+          path: '/assets/HomePageAssets/Pigy.svg',
+          style: {
+              position: 'fixed',
+              bottom: '23%',
+              right: '3%',
+              width: '220px',
+          },
+          custom: { x: 8, y: -5, startRotate: 0, endRotate: 3, duration: 7.5 }
+      },
+      {
+          name: 'peechi',
+          path: '/assets/HomePageAssets/Peechi.svg',
+          style: {
+              position: 'fixed',
+              bottom: '2%',
+              left: '5%',
+              width: '140px',
+          },
+          custom: { x: 8, y: -5, startRotate: 0, endRotate: 3, duration: 7.5 }
+      }
+  ];
+
   return (
-    <div className="flex w-full h-full bg-nexus900">
-      {/* -------------------------------------- BACKGROUND -------------------------------------------*/}
-      <div className="flex h-full w-full bg-no-repeat bg-center bg-cover fixed z-0" style={{ backgroundImage: "url('/assets/HomeBG.svg')"}}/>
-      
+    <>
+      <div className={`inset-0 min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center fixed overflow-hidden z-0`} 
+          style={{ backgroundImage: "url('/assets/BasicBG.svg')"}}/>
+
+      {/* Floating objects */}
+      {objects.map((obj) => (
+        !isMobile &&
+          <motion.div
+              key={obj.name}
+              style={obj.style}
+              variants={floatVariants}
+              animate="float"
+              custom={obj.custom}
+              className='will-change-transform pointer-events-none'
+          >
+              <img 
+                  src={obj.path} 
+                  alt={obj.name} 
+                  style={{ width: '100%', height: 'auto' }}
+              />
+          </motion.div>
+      ))}
+
       {/* -------------------------------------- CONTENT -------------------------------------------*/}
-      <motion.div className="flex flex-col w-full h-full items-center justify-center mt-35 mb-15 z-1" initial={{opacity:0, y:20}} animate={{opacity: 1, y:0}} transition={{duration: 0.7}}>
+        <div className='relative flex items-center justify-center w-full min-h-screen overflow-hidden'>
+        <motion.div className="flex flex-col w-full h-full items-center justify-center mt-30 z-1" initial={{opacity:0, y:20}} animate={{opacity: 1, y:0}} transition={{duration: 0.7, delay: 0.2}}>
 
-        <div className="min-w-[300px] bg-gradient-to-b from-nexus800 via-nexus900 to-nexus800 p-12 w-3/5 max-w-5xl flex flex-col items-center overflow-y-auto rounded-2xl">
-          <h2 className="text-white headingText font-titilliumWeb-semibold mb-6 w-full text-center">
-            Welcome Back! What Do You Want To Do Today?
-          </h2>
+          <div className="min-w-75 bg-linear-to-b from-nexus800 via-nexus900 to-nexus800 px-10 py-6 w-[60%] flex flex-col items-center justify-center overflow-y-auto rounded-lg ">
+            <h2 className="text-white headingText font-titilliumWeb-semibold mb-6 w-full text-center">
+              Welcome back to Nexus! Where do you wanna go?
+            </h2>
 
-          {/* ----------------------- BUTTONS --------------------------------*/}
-          <div className={`${isMobile ? 'grid grid-cols-2' : 'flex flex-wrap'} justify-center gap-12 mb-10`}>
-            {['Discord', 'Superdoc', 'GradeCalc', 'Settings'].map((name) => (
-              <div key={name} className="flex flex-col items-center">
-                <div
-                  className={`rounded-xl p-6 hover:scale-110 transition cursor-pointer bg-cover bg-center`}
-                  style={{ backgroundImage: `url('/assets/${name}Button.svg')`, width: "clamp(100px, 10vw, 150px)", height: "clamp(100px, 10vw, 150px)"} }
-                  onClick={() => handleButtonClick(name)}
-                />
-                <span className="text-white text-sm font-semibold mt-2">
-                  {name === 'Discord' ? 'Discord Servers' :  name === 'GradeCalc' ? 'Grade Calculator' : name}
-                </span>
-              </div>
-            ))}
-          </div>
+            {/* ----------------------- BUTTONS --------------------------------*/}
+            <div className={`${isScreenMedium ? 'grid grid-cols-2' : 'flex flex-wrap'} w-full justify-between gap-12 mb-10`}>
+              {['Discord', 'Superdoc', 'GradeCalc', 'Settings'].map((name) => (
+                <div key={name} className="flex flex-col items-center">
+                  <div
+                    className={`rounded-xl p-6 hover:scale-103 transition cursor-pointer bg-cover bg-center`}
+                    style={{ backgroundImage: `url('/assets/${name}Button.svg')`, width: "clamp(115px, 10vw, 200px)", height: "clamp(115px, 10vw, 200px)"} }
+                    onClick={() => handleButtonClick(name)}
+                  />
+                  <span className="text-white tinyText font-titilliumWeb-semibold mt-2 text-center whitespace-nowrap">
+                    {name === 'Discord' ? 'Discord Servers' :  name === 'GradeCalc' ? 'Grade Calculator' : name}
+                  </span>
+                </div>
+              ))}
+            </div>
 
-          {/* Recent Activity*/}
-          <div className="bg-nexus800 rounded-xl p-6 w-full text-white mb-4 relative">
-            <h3 className="text-2xl font-titilliumWeb-semibold mb-1">Recent Activity</h3>
-            <ul className="text-nexus300 text-lg space-y-1 font-titilliumWeb-regular ">
-            </ul>
-          </div>
+            {/*{ Recent Activity}
+            <div className="bg-nexus800 rounded-xl p-6 w-full text-white mb-4 relative">
+              <h3 className="text-2xl font-titilliumWeb-semibold mb-1">Recent Activity</h3>
+              <ul className="text-nexus300 text-lg space-y-1 font-titilliumWeb-regular ">
+              </ul>
+            </div>*/}
 
-          {/*Grades */}
-          <div className="flex bg-nexus800 rounded-xl p-6 w-full h-full text-white relative">
-            {/* -------------------- CONTENT ------------------------ */}
-            <div className="flex flex-wrap w-full h-fit justify-center items-center">
-              <h3 className="flex w-full text-2xl font-titilliumWeb-semibold mb-4">Grades</h3>
-              <div className="flex flex-row flex-wrap w-full h-full gap-8">
-                {gradesData.map((item, index) => {
-                  const finalGrade = calculateWeightedGrade(
-                    item.homework,
-                    item.exam,
-                    item.weights
-                  );
-                  return (
-                    <div key={item.subject} className="flex flex-row flex-wrap justify-center items-center w-fit h-fit gap-2">
-                      <GradeCircle grade={finalGrade} index={index}/>
-                      <div className="flex flex-col items-start justify-center w-fit">
-                        <span className="text-white text-lg font-semibold mt-2">{item.subject}</span>
-                        <div className="flex flex-col text-sm text-gray-300 text-start">
-                          <span>
-                            Homework: {item.homework}% ({item.weights.homework * 100}%)
-                          </span>
-                          <span>
-                            Exam: {item.exam}% ({item.weights.exam * 100}%)
-                          </span>
-                          <span className="text-blue-300 font-semibold">
-                            Final: {finalGrade}%
-                          </span>
-                        </div>
+            {/* acm shilling */}
+            <div className="flex w-full h-full text-white relative border-t-1 border-nexus700 pt-4">
+              {/* -------------------- CONTENT ------------------------ */}
+              <div className="flex flex-wrap w-full h-fit m-2">
+                <h1 className="flex w-full bodyText font-titilliumWeb-semibold items-center justify-center text-center mb-1">Interested in More Like Nexus?</h1>
+                <h1 className="flex w-full tinyText text-gray-400 font-titilliumWeb-semibold mb-4 items-center justify-center text-center">Nexus is just one of ACM's projects, you can check out more of them below!</h1>
+                <div className={`flex-row ${isMobile ? 'flex flex-wrap' : isScreenMedium ? 'grid grid-cols-2' : 'grid grid-cols-3'} w-full h-full gap-8 text-center font-titilliumWeb-semibold tinyText`}>
+                  {acmWebsites.map((website, webIndex) => (
+                    <a className='flex flex-row tinyText w-full rounded-lg gap-2 cursor-pointer' href={website.link} target='_blank' rel="noopener noreferrer" >
+                      <img src={website.icon} className='w-24 h-24 flex  hover:scale-105 transition duration-300'/>
+                      <div className='flex flex-col text-start justify-start mt-2 w-auto'>
+                        <h1 className='underlineText flex'>
+                          {website.name}
+                        </h1>
+                        <span className='text-xs text-gray-400'>
+                          {website.description}
+                        </span>
                       </div>
-                    </div>
-                  );
-                })}
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
+
           </div>
-        </div>
-      </motion.div>
-    </div>
+          <div className='bg-nexus800 rounded-full flex px-4 items-center gap-2 justify-center font-titilliumWeb-semibold p-1 mt-2 text-nexus100 mt-8 mb-4'>
+            <img src='/assets/Logo.svg' className='w-7 h-7'/>
+            Powered by ACM Dev
+          </div>
+        </motion.div>
+      </div>
+    </>
   );
 };
 

@@ -1,0 +1,8 @@
+Garunteed to work instructions trust
+cd into frontend and do the following:
+
+npm install -g vercel
+npm install
+
+to run local server (while in frontend folder):
+vercel dev --local-config vercel.dev.json

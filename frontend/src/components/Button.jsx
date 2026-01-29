@@ -1,16 +1,17 @@
 import React from 'react'
 
-const Button = ({text, icon, onClick, href, className, disabled}) => {
+const Button = ({text, icon, onClick, href, className, disabled, title}) => {
   if (href) {
     return (
       <a 
-        href={href} 
+        href={disabled ? '' : href} 
         target="_blank" 
         rel="noopener noreferrer"
-        className="flex w-full h-[40px] bg-nexus600 rounded-md items-center justify-center 
-                   transition duration-300 hover:scale-105 cursor-pointer"
+        className={`${className} flex bg-nexus600 w-full h-[40px] rounded-md items-center justify-center active:scale-95 
+                  transition duration-300  ${disabled ? "opacity-50" : "hover:scale-102 cursor-pointer"}`}
+        title={title}
       >
-        <h1 className='font-titilliumWeb-regular text-white text-lg'>
+        <h1 className='font-titilliumWeb-semibold text-white text-lg'>
           {text}
         </h1>
         {icon}
@@ -20,9 +21,11 @@ const Button = ({text, icon, onClick, href, className, disabled}) => {
 
   return (
     <button 
-      onClick={disabled ? '' : onClick}
-      className={`${className} flex bg-nexus600 w-full h-[40px] rounded-md items-center justify-center 
-                 transition duration-300 ${disabled ? "opacity-50" : "hover:scale-105 cursor-pointer"}`}
+      onClick={disabled ? undefined : onClick}
+      className={`${className} flex bg-nexus600 w-full h-[40px] rounded-md items-center justify-center active:scale-95 
+                 transition duration-300  ${disabled ? "opacity-50" : "hover:scale-102 cursor-pointer"}`}
+      title={title}
+      disabled={disabled}
     >
       <h1 className='font-titilliumWeb-bold tinyText text-white text-lg'>
         {text}

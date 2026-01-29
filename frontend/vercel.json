@@ -1,6 +1,15 @@
 {
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/((?!api/|_next/|static/|assets/|favicon.ico).*)", "dest": "/index.html" }
-  ]
+  "rewrites": [
+    {
+      "source": "/((?!api/|_next/|static/|assets/|favicon.ico).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "functions": {
+    "api/parse-transcript.js": {
+      "includeFiles": "node_modules/pdf-parse/dist/pdf-parse/cjs/**",
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  }
 }

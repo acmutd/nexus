@@ -172,7 +172,7 @@ const Login = () => {
           </form>
           
           <div className="text-center tinyText text-gray-700 font-titilliumWeb-bold mt-4">
-            Don’t have an account? <Link to="/signup" className="font-bold text-blue-900 hover:underline">Signup here</Link>
+            Don’t have an account? <Link to="/signup" className="font-bold text-blue-900 hover:underline">Sign Up here</Link>
           </div>
           
           <div className="text-center mt-1 font-titilliumWeb-bold">

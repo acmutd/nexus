@@ -1,8 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import 'simplebar-react/dist/simplebar.min.css';
 import LandingPage from "./pages/landingpage"
-import DiscordLogin from './pages/discordlogin';
-import { RequireAuth } from './context/authContext';
+import { RequireAuth, RequireOnboarding, RequireCourses, RedirectIfAuthenticated } from './context/authContext';
 import Navbar from "./components/Navbar";
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -16,6 +15,7 @@ import Home from './pages/Home';
 import CourseLinking from './pages/CourseLinking';
 import AccountLinking from './pages/AccountLinking';
 import ResetPassword from './pages/ResetPassword';
+import UnderConstruction from './pages/UnderConstruction';
 
 function App() {
 
@@ -25,19 +25,19 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<LandingPage/>}/>
-          <Route path="/settings" element={<RequireAuth><Settings/></RequireAuth>} />
-          <Route path="/grade-calculator" element={<RequireAuth><GradeCalculator /></RequireAuth>} />
-          <Route path="/grade-history" element={<RequireAuth><GradeHistory /></RequireAuth>} />
-          <Route path="/grade-history/:courseId" element={<RequireAuth><GradeHistory /></RequireAuth>} />
-          <Route path="/discordlogin" element={<RequireAuth><DiscordLogin /></RequireAuth>} />
-          <Route path="/login" element={<Login />}/>
-          <Route path="/signup" element={<Signup />}/>
-          <Route path="/superdoc" element={<RequireAuth><SuperDoc /></RequireAuth>} />
-          <Route path="/superdocupload" element={<RequireAuth><SuperDocUpload /></RequireAuth>} />
-          <Route path="/discordservers" element={<RequireAuth><DiscordServers /></RequireAuth>} />
-          <Route path="/home" element={<RequireAuth><Home /></RequireAuth>} />
-          <Route path="/CourseLinking" element={<RequireAuth><CourseLinking /></RequireAuth>} />
-          <Route path="/accountlinking" element={<RequireAuth><AccountLinking /></RequireAuth>} />
+          <Route path="/underconstruction" element={<UnderConstruction/>}/>
+          <Route path="/settings" element={<RequireAuth><RequireCourses><Settings/></RequireCourses></RequireAuth>} />
+          <Route path="/grade-calculator" element={<RequireAuth><RequireCourses><GradeCalculator /></RequireCourses></RequireAuth>} />
+          <Route path="/grade-history" element={<RequireAuth><RequireCourses><GradeHistory /></RequireCourses></RequireAuth>} />
+          <Route path="/grade-history/:courseId" element={<RequireAuth><RequireCourses><GradeHistory /></RequireCourses></RequireAuth>} />
+          <Route path="/login" element={<RedirectIfAuthenticated><Login /></RedirectIfAuthenticated>}/>
+          <Route path="/signup" element={<RedirectIfAuthenticated><Signup /></RedirectIfAuthenticated>}/>
+          <Route path="/superdoc" element={<RequireAuth><RequireCourses><SuperDoc /></RequireCourses></RequireAuth>} />
+          <Route path="/superdocupload" element={<RequireAuth><RequireCourses><SuperDocUpload /></RequireCourses></RequireAuth>} />
+          <Route path="/discordservers" element={<RequireAuth><RequireCourses><DiscordServers /></RequireCourses></RequireAuth>} />
+          <Route path="/home" element={<RequireAuth><RequireCourses><Home /></RequireCourses></RequireAuth>} />
+          <Route path="/CourseLinking" element={<RequireAuth><RequireOnboarding step="course"><CourseLinking /></RequireOnboarding></RequireAuth>} />
+          <Route path="/accountlinking" element={<RequireAuth><RequireOnboarding step="account"><AccountLinking /></RequireOnboarding></RequireAuth>} />
           <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
 

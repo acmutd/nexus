@@ -1,18 +1,30 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import { HiUpload, HiOutlineX } from 'react-icons/hi';
 import { AnimatePresence } from 'motion/react';
 import { getAuth } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import AccessRequestModal from '../components/AccessRequestModal';
 import TranscriptModal from '../components/TranscriptModal';
 import LoginWithNetIDModal from '../components/LoginWithNetIDModal';
 import Button from '../components/Button';
+import { useAuth } from '../context/authContext';
+import { initFirebase } from '../firebase';
+import { motion } from 'motion/react';
+import FloatingClouds from '../components/FloatingClouds';
+import { useMobile } from '../context/mobileContext';
 
 export default function CourseLinking() {
-  const isMed = useMediaQuery({ query: '(max-width: 800px)' });
+  const {isMobile} = useMobile()
+
   const navigate = useNavigate();
+  const location = useLocation();
+  const isRedoFlow = Boolean(location.state?.skipAccountLinking || location.state?.forceCourseRelink);
   const fileInputRef = useRef(null);
+  const { refreshOnboarding, onboarding, loading: authLoading } = useAuth();
+  const popupRef = useRef(null);
+  const [popupVisible, setPopupVisible] = useState(false);
 
   const shadowAccentColor = 'bg-gray-400';
 
@@ -35,6 +47,25 @@ export default function CourseLinking() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('from') === 'accessrequest') setShowAccessRequestModal(true);
   }, []);
+
+  // If onboarding already has courses and we weren't explicitly asked to relink, bounce to /home immediately.
+  useEffect(() => {
+    if (authLoading || !onboarding?.loaded) return;
+    if (onboarding.hasCourses && !location.state?.forceCourseRelink) {
+      navigate('/home', { replace: true });
+    }
+  }, [authLoading, onboarding, location.state, navigate]);
+
+  // Entry animation similar to login/signup popup (skip if we're going to redirect)
+  useEffect(() => {
+    if (onboarding?.hasCourses && !location.state?.forceCourseRelink) return;
+    setPopupVisible(false);
+    const t = setTimeout(() => {
+      if (popupRef.current) popupRef.current.offsetHeight;
+      setPopupVisible(true);
+    }, 60);
+    return () => clearTimeout(t);
+  }, [location.pathname, location.key, onboarding?.hasCourses, location.state]);
 
   // Handle removing courses
   const handleRemoveCourse = (indexToRemove) => {
@@ -129,11 +160,19 @@ export default function CourseLinking() {
     setTranscriptError('');
 
     const coursesToSave = Array.isArray(coursesArg) ? coursesArg : parsedCourses;
-    const metaToSave = metaArg || parsedMeta;
+    const metaToSave = {
+      ...(metaArg || parsedMeta || {}),
+      ...(isRedoFlow ? { skipAccountLinking: true } : {})
+    };
 
     try {
+      console.log('[CourseLinking] handleConfirmAndContinue start', {
+        coursesCount: coursesToSave?.length || 0,
+        meta: metaToSave,
+      });
       const auth = getAuth();
       const user = auth.currentUser;
+      let onboardingResult = null;
 
       if (!user) {
         setTranscriptError('Please log in first');
@@ -150,56 +189,179 @@ export default function CourseLinking() {
       });
 
       const data = await response.json();
+      console.log('[CourseLinking] confirm-transcript response', { ok: response.ok, status: response.status, data });
       if (!response.ok || !data.success) throw new Error(data.error || 'Failed to save transcript');
 
       // Navigate on success -> go to account linking
-      navigate('/accountlinking');
+      // Refresh onboarding state in context so RequireOnboarding can redirect appropriately
+      try {
+        // Try to refresh onboarding; poll a few times in case of eventual consistency
+        let onboarding = await refreshOnboarding(user);
+        onboardingResult = onboarding;
+        console.log('[CourseLinking] onboarding after save', onboarding);
+        const maxAttempts = 6;
+        for (let i = 0; i < maxAttempts && onboarding && !onboarding.hasCourses; i++) {
+          await new Promise((r) => setTimeout(r, 500));
+          onboarding = await refreshOnboarding(user);
+          onboardingResult = onboarding;
+          console.log(`[CourseLinking] onboarding poll ${i + 1}`, onboarding);
+        }
+        if (!onboarding || !onboarding.hasCourses) {
+          console.warn('[CourseLinking] onboarding still reports no courses after polling; proceeding anyway');
+        }
+      } catch (e) {
+        console.warn('refreshOnboarding failed after transcript save', e);
+      }
+
+      // For redo flow, mark account linking as skipped so guards won't redirect
+      if (isRedoFlow) {
+        try {
+          const { db } = await initFirebase();
+          await setDoc(
+            doc(db, 'users', user.uid),
+            {
+              accountLinkingSkipped: true,
+              accountLinkingSkippedAt: new Date().toISOString(),
+            },
+            { merge: true }
+          );
+          await refreshOnboarding(user);
+        } catch (e) {
+          console.warn('Failed to mark accountLinkingSkipped after relink', e);
+        }
+      }
+      const skipAccountStep = isRedoFlow || (onboardingResult && onboardingResult.accountLinkingSkipped);
+
+      if (skipAccountStep) {
+        console.log('[CourseLinking] navigating to /home (skip/accountLinkingSkipped)');
+        navigate('/home');
+      } else {
+        console.log('[CourseLinking] navigating to /accountlinking');
+        navigate('/accountlinking');
+      }
     } catch (error) {
       console.error('Confirm transcript error:', error);
       setTranscriptError(error.message || 'Failed to save transcript');
     } finally {
+      console.log('[CourseLinking] handleConfirmAndContinue finished');
       setSavingTranscript(false);
     }
   };
 
   const OptionBox = ({ icon, title, description, details, buttonText, onClick }) => (
-    <div
-      className="relative"
-    >
-      <div
-        className={`absolute inset-0 rounded-lg ${shadowAccentColor} shadow-md`}
-        style={{ transform: 'translate(6px, 6px)', zIndex: 0 }}
-      />
-      <div
-        className="flex flex-col items-start bg-white rounded-lg p-6 border border-gray-200 
-                  transition duration-300 ease-in-out relative z-10 
-                  font-titilliumWeb"
-        style={{ height: '100%', width: '100%' }} 
-      >
-        <div className="mb-4 self-start">{icon}</div> 
-        <h3 className="font-bold bodyText text-gray-800 mb-2 text-left w-full">{title}</h3> 
-        <p className="text-nexus900 text-left tinyText mb-2 flex-1 w-full"> 
-          {description}
-        </p>
-        <ul className="list-disc list-inside tinyText text-left text-nexus900 w-full mb-6 pl-4">
-          {details.map((detail, index) => (
-            <li key={index} className="mb-1">{detail}</li>
-          ))}
-        </ul>
-        <Button text={buttonText} onClick={onClick} />
+      <div className="relative w-full flex">
+          <div className={`absolute inset-0 rounded-lg bg-gray-400 shadow-md`}
+                style={{ transform: 'translate(6px, 6px)', zIndex: 0 }}
+          />
+
+          <div
+              className="flex flex-col min-h[265px] items-start bg-white rounded-lg p-6 border border-gray-200 
+                      transition duration-300 ease-in-out relative z-10 
+                      font-titilliumWeb"
+              style={{ height: '100%', width: '100%' }}
+          >
+              <div className="mb-4 self-start">{icon}</div>
+              <h3 className="font-bold bodyText text-gray-800 mb-2 text-left w-full">{title}</h3>
+              <p className="text-nexus900 text-left tinyText mb-2 flex-1 w-full">
+              {description}
+              </p>
+              <ul className="list-disc list-inside tinyText text-left text-nexus900 w-full mb-6 pl-4">
+              {details.map((detail, index) => (
+                  <li key={index} className="mb-1">{detail}</li>
+              ))}
+              </ul>
+              <Button text={buttonText} onClick={onClick} />
+          </div>
       </div>
-    </div>
   );
+
+  // While waiting to decide (or redirecting), show nothing to avoid flicker
+  if ((authLoading || !onboarding?.loaded) || (onboarding?.hasCourses && !location.state?.forceCourseRelink)) {
+    return null;
+  }
+  const floatVariants = {
+    float: (custom) => ({
+      y: [0, custom.y, 0],
+      x: [0, custom.x, 0],
+      rotate: [custom.startRotate, custom.endRotate, custom.startRotate],
+      transition: {
+          duration: custom.duration,
+          repeat: Infinity,
+          ease: "easeInOut",
+      }
+    })
+  };
+
+  const objects = [
+    {
+        name: 'calculator',
+        path: '/assets/Calculator.svg',
+        style: {
+            position: 'fixed',
+            top: '16%',
+            right: '5%',
+            width: '18%',
+        },
+        custom: { x: 5, y: 6, startRotate: 0, endRotate: 6, duration: 10 }
+    },
+    {
+        name: 'book',
+        path: '/assets/Book.svg',
+        style: {
+            position: 'fixed',
+            bottom: '5%',
+            right: '2%',
+            width: '18%',
+        },
+        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+    },
+        {
+        name: 'peechi',
+        path: '/assets/LoginPipelineAssets/LoginPipelinePeechi.svg',
+        style: {
+            position: 'fixed',
+            bottom: '8%',
+            left: '5%',
+            width: '12%',
+        },
+        custom: { x: 5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+    },
+    {
+        name: 'microphone',
+        path: '/assets//Megaphone.svg',
+        style: {
+            position: 'fixed',
+            top: '20%',
+            left: '5%',
+            width: '18%',
+        },
+        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+    },
+  ]
 
   return (
     <div
-      className="min-h-screen w-full flex flex-col items-center bg-blue-950 bg-cover bg-center pt-16 pb-6 "
+      className="min-h-screen w-full flex flex-col items-center bg-blue-950 bg-cover bg-center pt-16 pb-6 justify-center"
       style={{
-        backgroundImage: isMed
-          ? "url('/assets/AccessRequestBGLong.svg')"
-          : "url('/assets/AccessRequestBG.svg')",
+        backgroundImage: "url('/assets/BasicBG.svg')"
       }}
     >
+    {/* FLOATING ICONS */}
+    <div className='fixed overflow-hidden w-full h-full'>
+      <FloatingClouds />
+    </div>
+    {objects.map((obj) => (
+      !isMobile && 
+      <motion.div 
+        key={obj.name}
+        style={obj.style}
+        custom={obj.custom}
+        variants={floatVariants}
+        animate="float"
+        className='will-change-transform pointer-events-none'>
+          <img src={obj.path} style={{ width: '100%', height: 'auto' }}/>
+      </motion.div>
+    ))}
 
     <AccessRequestModal
       isOpen={showAccessRequestModal}
@@ -244,7 +406,10 @@ export default function CourseLinking() {
       }}
     />
 
-    <div className="flex items-center justify-center flex-col scale-90 mt-4">
+    <div
+      ref={popupRef}
+      className={`flex items-center justify-center flex-col scale-90 mt-4 transition-all duration-500 transform ${popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
+    >
       <h1
         className="font-titilliumWeb-bold text-white headingText mb-2"
         style={{ zIndex: 1 }}
@@ -256,16 +421,16 @@ export default function CourseLinking() {
         className="flex flex-col bg-nexus50 rounded-xl shadow-2xl p-6"
         style={{
           zIndex: 2,
-          width: isMed ? "90%" : "50rem",
-          minHeight: isMed ? "auto" : "28rem",
+          width: isMobile ? "90%" : "50rem",
+          minHeight: isMobile ? "auto" : "28rem",
         }}
       >
         <div className="text-center mb-6">
           <p className="headingText font-titilliumWeb-bold text-nexus900 mb-2">
-            Nexus Needs Access to Your Courses:
+            Nexus Needs Access to Your Courses
           </p>
           <p className="bodyText font-titilliumWeb-regular text-nexus800 mb-2">
-            Login through eLearning and let Nexus' Web Scraper do the rest
+            Login through eLearning and let Nexus do the rest
           </p>
           <p className="bodyText font-titilliumWeb-bold text-nexus900 mb-2">
             OR
@@ -276,7 +441,7 @@ export default function CourseLinking() {
         </div>
 
         <div
-          className={`flex ${isMed ? "flex-col" : "flex-row"} w-full h-full gap-8 justify-center items-stretch`}
+          className={`flex ${isMobile ? "flex-col" : "flex-row"} w-full h-full gap-8 justify-center`}
         >
           <OptionBox
             icon={
@@ -287,7 +452,7 @@ export default function CourseLinking() {
               />
             }
             title="Login via eLearning"
-            description="Allow Nexus to directly access your courses in eLearning via our Web Scraper."
+            description="Allow Nexus to directly access your courses in eLearning."
             details={["Quick Login", "Real-Time Sync"]}
             buttonText="Click to Login"
             onClick={() => setShowAccessRequestModal(true)}

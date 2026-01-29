@@ -21,5 +21,3 @@ Lead: Prerita Babarjung <br>
 Frontend: Humza Qureshi <br>
 Backend: Sreevasan Sivasubramanian <br>
 Full Stack: Naomi Ntuli, Thomas Le, Indrajith Thyagaraja <br>
-
-

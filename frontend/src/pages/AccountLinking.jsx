@@ -1,21 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import Button from '../components/Button';
 import { useMobile } from '../context/mobileContext';
 import { initializeApp, getApps, getApp } from 'firebase/app';
+import { useAuth } from '../context/authContext';
 import {
   getAuth,
   onAuthStateChanged,
-  unlink,
-  GoogleAuthProvider,
-  linkWithPopup
 } from 'firebase/auth';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
-
-const API_ORIGIN = window.location.origin;
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import FloatingClouds from '../components/FloatingClouds';
+import { motion } from 'motion/react';
 
 const AccountLinking = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const {isMobile} = useMobile();
 
     // Firebase / user state
@@ -23,7 +22,6 @@ const AccountLinking = () => {
     const dbRef = useRef(null);
 
     // provider/linking state
-    const [googleLinked, setGoogleLinked] = useState(false);
     const [discordLinked, setDiscordLinked] = useState(false);
     const [discordUsername, setDiscordUsername] = useState(null);
 
@@ -37,6 +35,9 @@ const AccountLinking = () => {
     const handledRef = useRef(false);
     const linkingRef = useRef(false);
     const watchdogRef = useRef(null);
+    const [popupVisible, setPopupVisible] = useState(false);
+
+    const { refreshOnboarding, onboarding } = useAuth();
 
     useEffect(() => {
       let unsub = () => {};
@@ -59,11 +60,8 @@ const AccountLinking = () => {
           unsub = onAuthStateChanged(a, async (u) => {
             setUser(u || null);
             if (u) {
-              const providers = (u.providerData || []).map(p => p.providerId);
-              setGoogleLinked(providers.includes('google.com'));
               await refreshUserFirestore(u.uid);
             } else {
-              setGoogleLinked(false);
               setDiscordLinked(false);
               setDiscordUsername(null);
             }
@@ -81,15 +79,25 @@ const AccountLinking = () => {
       };
     }, []);
 
+    // Entry animation like login/signup
+    useEffect(() => {
+      setPopupVisible(false);
+      const t = setTimeout(() => {
+        if (popupRef.current) popupRef.current.offsetHeight;
+        setPopupVisible(true);
+      }, 60);
+      return () => clearTimeout(t);
+    }, [location.pathname, location.key]);
+
     // Listen for Discord popup postMessage (SUCCESS / ERROR)
     useEffect(() => {
       const onMessage = async (ev) => {
         if (popupRef.current && ev.source !== popupRef.current) return;
-        if (ev.origin !== API_ORIGIN) return;
         const msg = ev.data || {};
         if (msg.type !== 'DISCORD_AUTH_SUCCESS' && msg.type !== 'DISCORD_AUTH_ERROR') return;
-
-        if (handledRef.current) return;
+        if (handledRef.current) {
+          return;
+        }
         handledRef.current = true;
 
         try { popupRef.current?.close?.(); } catch {}
@@ -127,45 +135,20 @@ const AccountLinking = () => {
           if (discord && discord.id) {
             setDiscordLinked(true);
             setDiscordUsername(discord.username ?? null);
+            return true;
           } else {
             setDiscordLinked(false);
             setDiscordUsername(null);
+            return false;
           }
         } else {
           setDiscordLinked(false);
           setDiscordUsername(null);
+          return false;
         }
       } catch (e) {
         console.error('Failed to refresh Firestore user doc:', e);
-      }
-    };
-
-    // Google link or unlink
-    const handleGoogleAction = async () => {
-      if (!user) {
-        alert('You must be signed in.');
-        return;
-      }
-      setError('');
-      setOkMsg('');
-
-      try {
-        setActionBusy(true);
-        if (googleLinked) {
-          await unlink(user, 'google.com');
-          setGoogleLinked(false);
-          setOkMsg('Google account unlinked.');
-        } else {
-          const provider = new GoogleAuthProvider();
-          await linkWithPopup(user, provider);
-          setGoogleLinked(true);
-          setOkMsg('Google account linked.');
-        }
-      } catch (e) {
-        console.error('Google link/unlink error:', e);
-        setError((e?.message || 'Google action failed').replace('Firebase: ', ''));
-      } finally {
-        setActionBusy(false);
+        return false;
       }
     };
 
@@ -203,12 +186,29 @@ const AccountLinking = () => {
         if (popup.closed) {
           clearInterval(watchdogRef.current);
           watchdogRef.current = null;
+          setTimeout(async () => {
+            if (!handledRef.current) {
+              // Try refreshing user doc to see if backend already linked the Discord account
+              try {
+                const linked = await refreshUserFirestore(user.uid);
+                if (linked) {
+                  handledRef.current = true;
+                  setOkMsg('Discord linked successfully.');
+                  setError('');
+                  linkingRef.current = false;
+                  setActionBusy(false);
+                  return;
+                }
+              } catch (e) {
+                console.error('[DiscordPopup] Error refreshing user after popup close:', e);
+              }
 
-          if (!handledRef.current) {
-            setActionBusy(false);
-            linkingRef.current = false;
-            setError('Discord login was cancelled.');
-          }
+              setError('Discord login was cancelled.');
+              setOkMsg('');
+              linkingRef.current = false;
+              setActionBusy(false);
+            }
+          }, 150); // 150ms delay to allow postMessage handler to run
         }
       }, 400);
     };
@@ -255,11 +255,58 @@ const AccountLinking = () => {
       }
     };
 
-    const linkedCount = (googleLinked ? 1 : 0) + (discordLinked ? 1 : 0);
-    const canContinue = linkedCount === 2;
+    const skipAccountLinking = async () => {
+      if (!user) {
+        navigate('/home');
+        return;
+      }
 
-    const OptionBox = ({ icon, title, description, details, buttonText, onClick }) => (
-        <div className="relative">
+      try {
+        setActionBusy(true);
+        const db = dbRef.current || getFirestore();
+        await setDoc(
+          doc(db, 'users', user.uid),
+          {
+            accountLinkingSkipped: true,
+            accountLinkingSkippedAt: new Date().toISOString(),
+          },
+          { merge: true }
+        );
+        await refreshOnboarding(user);
+      } catch (e) {
+        console.error('Failed to mark account linking as skipped:', e);
+      } finally {
+        setActionBusy(false);
+        navigate('/home');
+      }
+    };
+
+    const linkedCount = discordLinked ? 1 : 0;
+    const canContinue = linkedCount === 1;
+
+    // Auto-continue once Discord is linked
+    useEffect(() => {
+      const goHome = async () => {
+        try {
+          const res = await refreshOnboarding(user);
+          if (res?.discordLinked) navigate('/home');
+        } catch (e) {
+          console.error('Auto-continue failed:', e);
+        }
+      };
+      if (discordLinked && user) goHome();
+    }, [discordLinked, user, navigate, refreshOnboarding]);
+
+    // Hard block access if onboarding already linked or explicitly skipped (e.g., redo flow)
+    useEffect(() => {
+      if (!onboarding?.loaded) return;
+      if (onboarding.discordLinked || onboarding.accountLinkingSkipped) {
+        navigate('/home', { replace: true });
+      }
+    }, [onboarding, navigate]);
+
+    const OptionBox = ({ icon, title, description, details, buttonText, onClick, boxWidth }) => (
+        <div className="relative w-full flex" style={{ maxWidth: boxWidth || '100%' }}>
             <div className={`absolute inset-0 rounded-lg bg-gray-400 shadow-md`}
                  style={{ transform: 'translate(6px, 6px)', zIndex: 0 }}
             />
@@ -285,66 +332,142 @@ const AccountLinking = () => {
         </div>
     );
 
-    return (
-        <div className='min-h-screen w-full bg-center bg-cover bg-nexus900 pt-20 '
-            style={{backgroundImage: "url('/assets/AccessRequestBG.svg')"}}>
+  const floatVariants = {
+    float: (custom) => ({
+      y: [0, custom.y, 0],
+      x: [0, custom.x, 0],
+      rotate: [custom.startRotate, custom.endRotate, custom.startRotate],
+      transition: {
+          duration: custom.duration,
+          repeat: Infinity,
+          ease: "easeInOut",
+      }
+    })
+  };
 
-            <div className='flex flex-col w-full h-full items-center justify-center scale-90'>
-                <h1 className='headingText text-white font-titilliumWeb-bold mb-2'>
-                    Account Linking
-                </h1>
-                <div className='flex flex-col bg-nexus50 p-6 rounded-xl items-center justify-center w-[54%] min-w-[300px]'>
-                    <div className='flex flex-col text-center mx-6 mb-4'>
-                        <p className="headingText font-titilliumWeb-bold text-nexus900 mb-2">
-                            Link Your Google and Discord Accounts:
-                        </p>
-                        <p className="bodyText font-titilliumWeb-regular text-nexus800 mb-2">
-                            To access Nexus main features, linking your Discord and Google account will be needed. If you want to skip it for now, you can link them later in your account settings page.
+  const objects = [
+    {
+        name: 'calculator',
+        path: '/assets/Calculator.svg',
+        style: {
+            position: 'fixed',
+            top: '16%',
+            right: '5%',
+            width: '18%',
+        },
+        custom: { x: 5, y: 6, startRotate: 0, endRotate: 6, duration: 10 }
+    },
+    {
+        name: 'book',
+        path: '/assets/Book.svg',
+        style: {
+            position: 'fixed',
+            bottom: '5%',
+            right: '2%',
+            width: '18%',
+        },
+        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+    },
+        {
+        name: 'peechi',
+        path: '/assets/LoginPipelineAssets/LoginPipelinePeechi.svg',
+        style: {
+            position: 'fixed',
+            bottom: '8%',
+            left: '5%',
+            width: '12%',
+        },
+        custom: { x: 5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+    },
+    {
+        name: 'microphone',
+        path: '/assets//Megaphone.svg',
+        style: {
+            position: 'fixed',
+            top: '20%',
+            left: '5%',
+            width: '18%',
+        },
+        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+    },
+  ]
+
+  return (
+    <div
+      className="min-h-screen w-full flex flex-col items-center bg-blue-950 bg-cover bg-center pt-16 pb-6 justify-center"
+      style={{
+        backgroundImage: "url('/assets/BasicBG.svg')"
+      }}
+    >
+    {/* FLOATING ICONS */}
+    <div className='fixed overflow-hidden w-full h-full'>
+      <FloatingClouds />
+    </div>
+    {objects.map((obj) => (
+      !isMobile &&
+      <motion.div 
+        key={obj.name}
+        style={obj.style}
+        custom={obj.custom}
+        variants={floatVariants}
+        animate="float"
+        className='will-change-transform pointer-events-none'>
+          <img src={obj.path} style={{ width: '100%', height: 'auto' }}/>
+      </motion.div>
+    ))}
+
+        <div
+          ref={popupRef}
+          className={`flex flex-col w-full h-full items-center justify-center scale-90 transition-all duration-500 transform ${popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}>
+            <h1 className='headingText text-white font-titilliumWeb-bold mb-2'>
+                Account Linking
+            </h1>
+            <div
+              className='flex flex-col bg-nexus50 p-6 rounded-xl items-center justify-center shadow-2xl'
+              style={{
+                width: isMobile ? '90%' : '35rem',
+                minHeight: isMobile ? 'auto' : '28rem'
+              }}
+            >
+                <div className='flex flex-col text-center mx-6 mb-4 w-full'>
+                    <p className="headingText font-titilliumWeb-bold text-nexus900">
+                        Link Your Discord Account
+                    </p>
+                </div>
+                <div className={`flex flex-col gap-8 justify-center items-center mb-6 w-full px-2`}>
+                    <div className="flex flex-col justify-center text-center max-w-xl  -mt-2 md:mt-0">
+                        <p className="bodyText font-titilliumWeb-regular text-nexus800">
+                            To access Nexus' main features, you will need to link your Discord account. If you want to skip it for now, you can link it later from the Settings page.
                         </p>
                     </div>
-
-                    <div className={`flex ${isMobile ? "flex-col" : "flex-row"} gap-8 justify-center items-stretch mb-6`}>
-                        <OptionBox
-                            icon={
-                            <img
-                                src="/assets/DiscordIcon.svg"
-                                alt="Login"
-                                className="w-10 h-10"
-                            />
-                            }
-                            title={discordLinked ? `Unlink Discord${discordUsername ? ` (${discordUsername})` : ''}` : 'Link Discord'}
-                            description="LInking your Discord will give you access to your courses in each class Discord server."
-                            details={[]}
-                            buttonText={discordLinked ? 'Unlink' : 'Click to Login'}
-                            onClick={() => handleDiscordAction()}
+                    <OptionBox
+                        icon={
+                        <img
+                            src="/assets/DiscordIcon.svg"
+                            alt="Login"
+                            className="w-10 h-10"
                         />
-                        <OptionBox
-                            icon={
-                            <img
-                                src="/assets/GoogleIcon.svg"
-                                alt="Login"
-                                className="w-10 h-10"
-                            />
-                            }
-                            title={googleLinked ? 'Unlink Google' : 'Link Google'}
-                            description="Linking your Google Account will give you access to make edits to the SuperDoc."
-                            details={[]}
-                            buttonText={googleLinked ? 'Unlink' : 'Click to Login'}
-                            onClick={() => handleGoogleAction()}
-                        />
-                    </div>
+                        }
+                        title={discordLinked ? `Unlink Discord${discordUsername ? ` (${discordUsername})` : ''}` : 'Link Discord'}
+                        description="Linking your Discord will give you access to your courses in each Discord server."
+                        details={[]}
+                        buttonText={discordLinked ? 'Unlink' : 'Click to Login'}
+                        onClick={() => handleDiscordAction()}
+                        boxWidth={isMobile ? '100%' : '22rem'}
+                    />
+                </div>
 
-                    {error && <div className="text-red-600 text-sm mb-2">{error}</div>}
-                    {okMsg && <div className="text-green-400 text-sm mb-2">{okMsg}</div>}
+                {error && <div className="text-red-600 text-sm mb-2">{error}</div>}
+                {okMsg && <div className="text-green-400 text-sm mb-2">{okMsg}</div>}
 
-                    <div className='flex flex-col w-full gap-2'>
-                        <Button text={`Continue (${linkedCount}/2)`} onClick={() => navigate('/home')} disabled={!canContinue} />
-                        <Button className="bg-gray-500" text={"Skip"} onClick={() => navigate('/home')} />
-                        {!canContinue && <div className="text-sm text-gray-500 text-center mt-1">Link both accounts to continue</div>}
+                <div className="flex w-full justify-end mt-2">
+                    <div className="w-full">
+                        <Button className="bg-gray-500" text={"Skip"} onClick={skipAccountLinking} />
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     )
 }
 

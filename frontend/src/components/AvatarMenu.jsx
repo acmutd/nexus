@@ -3,18 +3,23 @@ import { getApp } from 'firebase/app';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { AnimatePresence, motion } from 'framer-motion';
+import ConfirmLogoutModal from './ConfirmLogoutModal';
 import { getFirestore, doc, onSnapshot } from 'firebase/firestore';
 import { HiX } from 'react-icons/hi';
 import pfp from '../assets/default_pfp.svg';
+import { LOGOUT_REDIRECT_PATH, setPostLogoutRedirect } from '../context/authContext';
 
 export default function AvatarMenu({
   settingsOnClick,
-  redirectOnLogout = '/login',
+  redirectOnLogout = LOGOUT_REDIRECT_PATH,
   buttonTone = 'light',
 }) {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [open, setOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [logoutBusy, setLogoutBusy] = useState(false);
   const menuRef = useRef(null);
 
   // Auth + live Firestore user doc (auto-updates after linking)
@@ -62,12 +67,15 @@ export default function AvatarMenu({
   }, [open]);
 
   async function handleLogout() {
+    const target = redirectOnLogout || LOGOUT_REDIRECT_PATH;
     try {
+      setPostLogoutRedirect(target);
       await signOut(getAuth(getApp()));
-      if (redirectOnLogout) window.location.assign(redirectOnLogout);
+      // Let routing + RequireAuth handle navigation using the stored target
     } catch (e) {
       console.error('Logout failed:', e);
-      if (redirectOnLogout) window.location.assign(redirectOnLogout);
+      // Fallback: soft navigate if signOut throws but user likely still logged out
+      if (target) navigate(target, { replace: true });
     }
   }
 
@@ -141,7 +149,7 @@ export default function AvatarMenu({
 
             <button
               type="button"
-              onClick={handleLogout}
+              onClick={() => { setOpen(false); setShowLogoutModal(true); }}
               className="w-full text-left mb-2 px-2 py-2 text-sm hover:bg-nexus700 cursor-pointer"
               role="menuitem"
               style={{cursor: 'pointer'}}
@@ -153,6 +161,23 @@ export default function AvatarMenu({
           </motion.div>
         ) : null}
       </AnimatePresence>
+      {/* Confirm Logout Modal (render outside dropdown so it appears immediately) */}
+      <ConfirmLogoutModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={async () => {
+          setLogoutBusy(true);
+          try {
+            await handleLogout();
+          } catch (e) {
+            console.error('Logout failed:', e);
+          } finally {
+            setLogoutBusy(false);
+            setShowLogoutModal(false);
+          }
+        }}
+        busy={logoutBusy}
+      />
     </div>
   );
 }
