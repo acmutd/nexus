@@ -402,4 +402,3 @@ export default function CourseLinking() {
   </div>
   );
 }
-

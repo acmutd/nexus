@@ -109,6 +109,30 @@ module.exports = async (req, res) => {
 
         // Linking only for link mode (not join_all)
         if (mode === 'link') {
+            // Prevent linking the same Discord account to multiple Nexus users
+            const dupSnap = await admin.firestore()
+                .collection('users')
+                .where('discord.id', '==', d.id)
+                .limit(1)
+                .get();
+
+            if (!dupSnap.empty) {
+                const existingUid = dupSnap.docs[0].id;
+                if (existingUid !== uid) {
+                    return res.send(`
+              <script>
+                try {
+                  window.opener && window.opener.postMessage({
+                    type: 'DISCORD_AUTH_ERROR',
+                    error: 'This Discord account is already linked to another Nexus user.'
+                  }, '*');
+                } catch (e) {}
+                window.close();
+              </script>
+            `);
+                }
+            }
+
             const userRef = admin.firestore().collection('users').doc(uid);
             await userRef.set(
                 {
