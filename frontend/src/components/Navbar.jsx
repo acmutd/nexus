@@ -91,10 +91,7 @@ const Navbar = () => {
             {loading ? (
               <div className="h-10 w-10 rounded-full bg-white/40 animate-pulse" />
             ) : user ? (
-              <AvatarMenu
-                redirectOnLogout="/login"
-                buttonTone={isScrolled ? 'dark' : 'light'}
-              />
+              <AvatarMenu buttonTone={isScrolled ? 'dark' : 'light'} />
             ) : (
               <Link to="/login" className={buttonClasses} aria-label="Login">
                 <HiUserCircle className="mr-1" /> Login

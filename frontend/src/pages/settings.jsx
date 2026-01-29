@@ -5,7 +5,7 @@ import { HiCog, HiUserCircle, HiLockClosed, HiX, HiChevronRight } from 'react-ic
 import { BsChevronRight } from "react-icons/bs";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { useMobile } from '../context/mobileContext';
-import { useAuth } from '../context/authContext';
+import { useAuth, LOGOUT_REDIRECT_PATH, setPostLogoutRedirect } from '../context/authContext';
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import {
   getAuth,
@@ -375,6 +375,7 @@ function Settings() {
 
     try {
       setActionBusy(true);
+      setPostLogoutRedirect(LOGOUT_REDIRECT_PATH);
       
       // Re-authenticate user with their password
       const credential = EmailAuthProvider.credential(user.email, deletePassword);
@@ -404,11 +405,9 @@ function Settings() {
       const gradesRef = doc(db, 'courseGrades', user.uid);
       await deleteDoc(gradesRef);
       
-      // Delete Firebase Auth user
+      // Delete Firebase Auth user (triggers auth change)
       await deleteUser(user);
-      
-      // Navigate to landing page
-      navigate('/');
+      // Let RequireAuth consume redirect; no manual navigation needed
     } catch (e) {
       console.error('Delete account error:', e);
       const msg = (e?.message || 'Failed to delete account').replace('Firebase: ', '');

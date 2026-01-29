@@ -18,7 +18,7 @@ export default function CourseLinking() {
   const location = useLocation();
   const isRedoFlow = Boolean(location.state?.skipAccountLinking || location.state?.forceCourseRelink);
   const fileInputRef = useRef(null);
-  const { refreshOnboarding } = useAuth();
+  const { refreshOnboarding, onboarding, loading: authLoading } = useAuth();
   const popupRef = useRef(null);
   const [popupVisible, setPopupVisible] = useState(false);
 
@@ -44,15 +44,24 @@ export default function CourseLinking() {
     if (params.get('from') === 'accessrequest') setShowAccessRequestModal(true);
   }, []);
 
-  // Entry animation similar to login/signup popup
+  // If onboarding already has courses and we weren't explicitly asked to relink, bounce to /home immediately.
   useEffect(() => {
+    if (authLoading || !onboarding?.loaded) return;
+    if (onboarding.hasCourses && !location.state?.forceCourseRelink) {
+      navigate('/home', { replace: true });
+    }
+  }, [authLoading, onboarding, location.state, navigate]);
+
+  // Entry animation similar to login/signup popup (skip if we're going to redirect)
+  useEffect(() => {
+    if (onboarding?.hasCourses && !location.state?.forceCourseRelink) return;
     setPopupVisible(false);
     const t = setTimeout(() => {
       if (popupRef.current) popupRef.current.offsetHeight;
       setPopupVisible(true);
     }, 60);
     return () => clearTimeout(t);
-  }, [location.pathname, location.key]);
+  }, [location.pathname, location.key, onboarding?.hasCourses, location.state]);
 
   // Handle removing courses
   const handleRemoveCourse = (indexToRemove) => {
@@ -242,7 +251,7 @@ export default function CourseLinking() {
           />
 
           <div
-              className="flex flex-col min-h-[265px] items-start bg-white rounded-lg p-6 border border-gray-200 
+              className="flex flex-col min-h[265px] items-start bg-white rounded-lg p-6 border border-gray-200 
                       transition duration-300 ease-in-out relative z-10 
                       font-titilliumWeb"
               style={{ height: '100%', width: '100%' }}
@@ -261,6 +270,11 @@ export default function CourseLinking() {
           </div>
       </div>
   );
+
+  // While waiting to decide (or redirecting), show nothing to avoid flicker
+  if ((authLoading || !onboarding?.loaded) || (onboarding?.hasCourses && !location.state?.forceCourseRelink)) {
+    return null;
+  }
 
   return (
     <div
@@ -388,3 +402,4 @@ export default function CourseLinking() {
   </div>
   );
 }
+

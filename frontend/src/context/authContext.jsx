@@ -5,6 +5,29 @@ import LoadingScreen from '../components/LoadingScreen'
 import { Navigate, useLocation } from 'react-router-dom'
 import { getDoc, doc } from 'firebase/firestore'
 
+// Single source of truth for where to send users after logout/delete.
+export const LOGOUT_REDIRECT_PATH = '/'
+
+// Helpers for redirect handling (single source of truth)
+export function setPostLogoutRedirect(path = LOGOUT_REDIRECT_PATH) {
+  try {
+    sessionStorage.setItem('postLogoutRedirect', path || LOGOUT_REDIRECT_PATH)
+  } catch (e) {
+    console.warn('setPostLogoutRedirect failed', e)
+  }
+}
+
+export function consumePostLogoutRedirect() {
+  try {
+    const target = sessionStorage.getItem('postLogoutRedirect')
+    if (target) sessionStorage.removeItem('postLogoutRedirect')
+    return target || null
+  } catch (e) {
+    console.warn('consumePostLogoutRedirect failed', e)
+    return null
+  }
+}
+
 const AuthContext = createContext({ user: null, loading: true })
 
 export function AuthProvider({ children }) {
@@ -97,19 +120,64 @@ export function RequireAuth({ children }) {
   const { user, loading } = useAuth()
   const location = useLocation()
 
-  if (loading) return <LoadingScreen />
-  if (!user) return <Navigate to="/login" state={{ from: location }} replace />
+  if (loading) return null
+  if (!user) {
+    // Honor a one-time post-logout/delete redirect, else fall back to login
+    const target = consumePostLogoutRedirect()
+    const dest = target || LOGOUT_REDIRECT_PATH || "/login"
+    return <Navigate to={dest} state={{ from: location }} replace />
+  }
+  return children
+}
+
+// Redirect authenticated users away from routes meant for guests (e.g., signup/login)
+export function RedirectIfAuthenticated({ children }) {
+  const { user, loading, onboarding } = useAuth()
+
+  // Wait until both auth and onboarding are resolved to avoid flicker/loops
+  if (loading || !onboarding.loaded) return <LoadingScreen />
+
+  if (user) {
+    // If they haven't linked courses yet, push them back into onboarding
+    if (!onboarding.hasCourses) return <Navigate to="/CourseLinking" replace />
+    return <Navigate to="/home" replace />
+  }
+
   return children
 }
 
 // RequireOnboarding wraps onboarding routes to enforce progression order
 export function RequireOnboarding({ step = 'course', children }) {
   // step: 'course' or 'account'
-  const { onboarding, onboarding: { loaded }, user } = useAuth()
+  const { onboarding, onboarding: { loaded }, user, refreshOnboarding } = useAuth()
   const location = useLocation()
   const forceCourseRelink = location.state && location.state.forceCourseRelink;
+  const [rechecking, setRechecking] = useState(false)
+  const [rechecked, setRechecked] = useState(false)
 
-  if (!loaded) return <LoadingScreen />
+  useEffect(() => {
+    if (!loaded) return
+    if (!user) return
+    if (onboarding.hasCourses) return
+    if (rechecking || rechecked) return
+
+    let cancelled = false
+    const run = async () => {
+      setRechecking(true)
+      try {
+        await refreshOnboarding(user)
+      } catch (e) {
+        console.warn('RequireOnboarding recheck failed', e)
+      } finally {
+        if (!cancelled) setRechecked(true)
+        setRechecking(false)
+      }
+    }
+    run()
+    return () => { cancelled = true }
+  }, [loaded, user, onboarding.hasCourses, refreshOnboarding, rechecking, rechecked])
+
+  if (!loaded || rechecking) return null
 
   // If not signed in - handled by RequireAuth, but be defensive
   if (!user) return <Navigate to="/login" replace />
@@ -143,11 +211,39 @@ export function RequireOnboarding({ step = 'course', children }) {
 
 // RequireCourses enforces that the user has completed course linking before accessing core app pages
 export function RequireCourses({ children }) {
-  const { user, loading, onboarding } = useAuth()
+  const { user, loading, onboarding, refreshOnboarding } = useAuth()
+  const [rechecking, setRechecking] = useState(false)
+  const [rechecked, setRechecked] = useState(false)
 
-  if (loading || !onboarding.loaded) return <LoadingScreen />
+  // If courses look missing, double-check once before redirecting to avoid flicker.
+  useEffect(() => {
+    if (loading) return
+    if (!user) return
+    if (!onboarding.loaded) return
+    if (onboarding.hasCourses) return
+    if (rechecking || rechecked) return
+
+    let cancelled = false
+    const run = async () => {
+      setRechecking(true)
+      try {
+        await refreshOnboarding(user)
+      } catch (e) {
+        console.warn('RequireCourses recheck failed', e)
+      } finally {
+        if (!cancelled) setRechecked(true)
+        setRechecking(false)
+      }
+    }
+    run()
+
+    return () => { cancelled = true }
+  }, [loading, user, onboarding, refreshOnboarding, rechecking, rechecked])
+
+  if (loading || !onboarding.loaded || rechecking) return null
   if (!user) return <Navigate to="/login" replace />
-  if (!onboarding.hasCourses) return <Navigate to="/CourseLinking" replace />
+  if (!onboarding.hasCourses && rechecked) return <Navigate to="/CourseLinking" replace />
+  if (!onboarding.hasCourses) return null
   return children
 }
 

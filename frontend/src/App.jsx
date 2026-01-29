@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import 'simplebar-react/dist/simplebar.min.css';
 import LandingPage from "./pages/landingpage"
-import { RequireAuth, RequireOnboarding, RequireCourses } from './context/authContext';
+import { RequireAuth, RequireOnboarding, RequireCourses, RedirectIfAuthenticated } from './context/authContext';
 import Navbar from "./components/Navbar";
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -30,8 +30,8 @@ function App() {
           <Route path="/grade-calculator" element={<RequireAuth><RequireCourses><GradeCalculator /></RequireCourses></RequireAuth>} />
           <Route path="/grade-history" element={<RequireAuth><RequireCourses><GradeHistory /></RequireCourses></RequireAuth>} />
           <Route path="/grade-history/:courseId" element={<RequireAuth><RequireCourses><GradeHistory /></RequireCourses></RequireAuth>} />
-          <Route path="/login" element={<Login />}/>
-          <Route path="/signup" element={<Signup />}/>
+          <Route path="/login" element={<RedirectIfAuthenticated><Login /></RedirectIfAuthenticated>}/>
+          <Route path="/signup" element={<RedirectIfAuthenticated><Signup /></RedirectIfAuthenticated>}/>
           <Route path="/superdoc" element={<RequireAuth><RequireCourses><SuperDoc /></RequireCourses></RequireAuth>} />
           <Route path="/superdocupload" element={<RequireAuth><RequireCourses><SuperDocUpload /></RequireCourses></RequireAuth>} />
           <Route path="/discordservers" element={<RequireAuth><RequireCourses><DiscordServers /></RequireCourses></RequireAuth>} />
