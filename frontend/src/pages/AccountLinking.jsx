@@ -303,8 +303,8 @@ const AccountLinking = () => {
       }
     }, [onboarding, navigate]);
 
-    const OptionBox = ({ icon, title, description, details, buttonText, onClick }) => (
-        <div className="relative w-full flex">
+    const OptionBox = ({ icon, title, description, details, buttonText, onClick, boxWidth }) => (
+        <div className="relative w-full flex" style={{ maxWidth: boxWidth || '100%' }}>
             <div className={`absolute inset-0 rounded-lg bg-gray-400 shadow-md`}
                  style={{ transform: 'translate(6px, 6px)', zIndex: 0 }}
             />
@@ -340,17 +340,19 @@ const AccountLinking = () => {
                 <h1 className='headingText text-white font-titilliumWeb-bold mb-2'>
                     Account Linking
                 </h1>
-                <div className='flex flex-col bg-nexus50 p-6 rounded-xl items-center justify-center w-[clamp(300px,50rem,1000px)]'>
-                    <div className='flex flex-col text-center mx-6 mb-4'>
-                        <p className="headingText font-titilliumWeb-bold text-nexus900 mb-2">
+                <div
+                  className='flex flex-col bg-nexus50 p-6 rounded-xl items-center justify-center shadow-2xl'
+                  style={{
+                    width: isMobile ? '90%' : '50rem',
+                    minHeight: isMobile ? 'auto' : '28rem'
+                  }}
+                >
+                    <div className='flex flex-col text-center mx-6 mb-4 w-full'>
+                        <p className="headingText font-titilliumWeb-bold text-nexus900">
                             Link Your Discord Account
                         </p>
-                        <p className="bodyText font-titilliumWeb-regular text-nexus800 mb-2">
-                            To access Nexus' main features, you will need to link your Discord account. If you want to skip it for now, you can link it later from the Settings page.
-                        </p>
                     </div>
-
-                    <div className={`flex ${isMobile ? "flex-col" : "flex-row"} gap-8 justify-center items-stretch mb-6`}>
+                    <div className={`flex ${isMobile ? "flex-col" : "flex-row"} gap-8 justify-center items-stretch mb-6 w-full px-2`}>
                         <OptionBox
                             icon={
                             <img
@@ -364,15 +366,22 @@ const AccountLinking = () => {
                             details={[]}
                             buttonText={discordLinked ? 'Unlink' : 'Click to Login'}
                             onClick={() => handleDiscordAction()}
+                            boxWidth={isMobile ? '100%' : '22rem'}
                         />
+                        <div className="flex flex-col justify-start text-left max-w-xl self-start -mt-2 md:mt-0">
+                            <p className="bodyText font-titilliumWeb-regular text-nexus800">
+                                To access Nexus' main features, you will need to link your Discord account. If you want to skip it for now, you can link it later from the Settings page.
+                            </p>
+                        </div>
                     </div>
 
                     {error && <div className="text-red-600 text-sm mb-2">{error}</div>}
                     {okMsg && <div className="text-green-400 text-sm mb-2">{okMsg}</div>}
 
-                    <div className='flex flex-col w-full gap-2'>
-                        <Button className="bg-gray-500" text={"Skip"} onClick={skipAccountLinking} />
-                      
+                    <div className="flex w-full justify-end mt-2">
+                        <div className="w-32">
+                            <Button className="bg-gray-500" text={"Skip"} onClick={skipAccountLinking} />
+                        </div>
                     </div>
                 </div>
             </div>
