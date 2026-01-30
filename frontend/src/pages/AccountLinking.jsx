@@ -355,20 +355,20 @@ const AccountLinking = () => {
             right: '5%',
             width: '18%',
         },
-        custom: { x: 5, y: 6, startRotate: 0, endRotate: 6, duration: 10 }
+        custom: { x: 5, y: 6, startRotate: 0, endRotate: 6, duration: 5.5 }
     },
     {
         name: 'book',
         path: '/assets/Book.svg',
         style: {
             position: 'fixed',
-            bottom: '5%',
+            bottom: '3%',
             right: '2%',
             width: '18%',
         },
-        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 5.5 }
     },
-        {
+    {
         name: 'peechi',
         path: '/assets/LoginPipelineAssets/LoginPipelinePeechi.svg',
         style: {
@@ -377,7 +377,7 @@ const AccountLinking = () => {
             left: '5%',
             width: '12%',
         },
-        custom: { x: 5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+        custom: { x: 8, y: -5, startRotate: 0, endRotate: 3, duration: 5.5 }
     },
     {
         name: 'microphone',
@@ -388,7 +388,7 @@ const AccountLinking = () => {
             left: '5%',
             width: '18%',
         },
-        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 5.5 }
     },
   ]
 
