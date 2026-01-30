@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useMobile } from '../context/mobileContext';
 import StarsOverlay from '../components/StarsOverlay';
+import StarFieldOverlay from '../components/StarFieldOverlay';
 
 const acmWebsites = [
   { name: 'UTD Grades', link: 'https://www.utdgrades.com', icon: "/assets/UTDGradesIcon.svg", description: "Make smarter choices by seeing how students did in any given class." },
@@ -117,7 +118,7 @@ const Home = () => {
     <>
       <div className={`inset-0 min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center fixed overflow-hidden z-0`} 
           style={{ backgroundImage: "url('/assets/BasicBGTest.svg')"}}/>
-           <StarsOverlay count={isMobile ? 100 : 200} />
+           <StarFieldOverlay count={isMobile ? 100 : 200} />
 
       {/* Floating objects */}
       {objects.map((obj) => (
