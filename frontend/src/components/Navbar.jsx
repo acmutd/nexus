@@ -53,7 +53,7 @@ const Navbar = () => {
       <div className="container mx-auto">
         <div className="flex justify-between items-center py-5 md:py-4 px-3 md:px-0">
 
-          {/* Logo + Nexus text */}
+          {/* Logo + Nexus text*/}
           <button
             className="flex items-center flex-shrink-0 transition duration-300 transform hover:scale-110 z-60 cursor-pointer"
             onClick={() => { window.scrollTo(0, 0); user ? navigate('/home') : navigate('/'); }}
@@ -65,14 +65,12 @@ const Navbar = () => {
             />
             <span 
               className={`text-xl font-bold hidden md:inline ml-2 ${
-                isScrolled ? 'text-nexus-blue-700' : 'text-white'
+                isScrolled ? 'text-nexus800' : 'text-white'
               }`}
             >
               Nexus
             </span>
           </button>
-
-          {/* Mobile icon only menu + desktop text */}
           <div className="flex flex-1 items-center justify-between md:justify-end gap-0 md:gap-6">
 
             {/* Discord */}
@@ -82,12 +80,12 @@ const Navbar = () => {
             >
               <AiFillDiscord 
                 className={`text-4xl md:text-xl ml-5 md:ml-4 ${
-                  isScrolled ? 'text-nexus-blue-700' : 'text-white'
+                  isScrolled ? 'text-nexus800' : 'text-white'
                 }`} 
               />
               <span 
                 className={`hidden md:inline ml-2 ${
-                  isScrolled ? 'text-nexus-blue-700' : 'text-white'
+                  isScrolled ? 'text-nexus800' : 'text-white'
                 }`}
               >
                 Discord Servers
@@ -101,38 +99,38 @@ const Navbar = () => {
             >
               <FaCalculator 
                 className={`text-3xl md:text-lg ml-5 md:ml-4 ${
-                  isScrolled ? 'text-nexus-blue-700' : 'text-white'
+                  isScrolled ? 'text-nexus800' : 'text-white'
                 }`} 
               />
               <span 
                 className={`hidden md:inline ml-2 ${
-                  isScrolled ? 'text-nexus-blue-700' : 'text-white'
+                  isScrolled ? 'text-nexus800' : 'text-white'
                 }`}
               >
                 Grade Calculator
               </span>
             </Link>
 
-            {/* Superdoc */}
+            {/* Superdoc*/}
             <button
               onClick={handleSuperdocClick}
               className="flex justify-center items-center w-full md:w-auto"
             >
               <HiDocumentText 
                 className={`text-4xl md:text-xl ml-5 md:ml-4 ${
-                  isScrolled ? 'text-nexus-blue-700' : 'text-white'
+                  isScrolled ? 'text-nexus800' : 'text-white'
                 }`} 
               />
               <span 
                 className={`hidden md:inline ml-2 ${
-                  isScrolled ? 'text-nexus-blue-700' : 'text-white'
+                  isScrolled ? 'text-nexus800' : 'text-white'
                 }`}
               >
                 Superdoc
               </span>
             </button>
 
-            {/* Avatar / Login */}
+            {/* Avatar/Login */}
             <div className="flex justify-center w-full md:w-auto ml-0 md:ml-0">
               {loading ? (
                 <div className="h-10 w-10 rounded-full bg-white/40 animate-pulse" />
