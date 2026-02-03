@@ -17,7 +17,7 @@ async function testEndpoint() {
         const base64Data = fileBuffer.toString('base64');
         //console.log("base64Data:",base64Data);
         const payload = {
-            pdfName: "TestFile.pdf",
+            docName: "sd-test-3",
             courseId: "ENG-101",
             pdfBase64: base64Data
         };
