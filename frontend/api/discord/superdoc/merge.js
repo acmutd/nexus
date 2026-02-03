@@ -6,16 +6,8 @@ const client = new Client({
 });
 
 async function getOrCreateFilesChannel(server) {
-    let channel = server.channels.cache.find(
-        c => c.name === 'files' && c.type === ChannelType.GuildText
-    );
-    if (!channel) {
-        channel = await server.channels.create({
-            name: 'files',
-            type: ChannelType.GuildText,
-            permissionOverwrites: [{ id: server.roles.everyone.id, deny: ['ViewChannel'] }],
-        });
-    }
+    const name = "files";
+    let channel =  server.channels.fetch('1468393627830190144')
     return channel;
 }
 
@@ -23,7 +15,7 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
     try {
-        const { pdfBase64, pdfName, courseId } = req.body;
+        const { pdfBase64, docName, courseId } = req.body;
 
         if (!pdfBase64) {
             return res.status(400).json({ error: "Missing pdfBase64 field" });
@@ -34,21 +26,21 @@ export default async function handler(req, res) {
 
         // 2. Discord Login & Upload
         if (!client.isReady()) {
-            await client.login(process.env.DISCORD_BOT_TOKEN);
+            await client.login(process.env.PDF_MANAGER_BOT_TOKEN);
         }
-
-        const server = client.guilds.cache.find(s => s.name === "pdf-db");
+        //console.log(client.guilds.cache)
+        const server = await client.guilds.fetch(process.env.PDF_MANAGER_GUILD_ID);
         if (!server) throw new Error("Discord server 'pdf-db' not found.");
 
         const channel = await getOrCreateFilesChannel(server);
-        const file = new AttachmentBuilder(pdfBuffer, { name: pdfName || 'document.pdf' });
-        
+        const file = new AttachmentBuilder(pdfBuffer, { name: 'document.pdf' });
+
         const message = await channel.send({ files: [file] });
         const discordUrl = message.attachments.first().url;
 
         // 3. Trigger Merge (Optional call to your other bot endpoint)
-        const botUrl = process.env.DISCORD_BOT_URL 
-            ? `${process.env.DISCORD_BOT_URL}/api/superdoc/merge` 
+        const botUrl = process.env.DISCORD_BOT_URL
+            ? `${process.env.DISCORD_BOT_URL}/api/superdoc/merge`
             : 'http://localhost:3000/api/superdoc/merge';
 
         let mergeResult = { status: "skipped" };
@@ -59,7 +51,7 @@ export default async function handler(req, res) {
                 body: JSON.stringify({
                     pdfAttachment: discordUrl,
                     courseId: courseId,
-                    documentName: pdfName
+                    documentName: docName
                 }),
             });
             mergeResult = await mergeResponse.json();
