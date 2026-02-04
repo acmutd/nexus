@@ -3,10 +3,11 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import Button from "../components/Button";
+import LoadingScreen from "../components/LoadingScreen";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -21,22 +22,21 @@ export default function Signup() {
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
   const [error, setError] = useState("");
+  const [sendingEmail, setSendingEmail] = useState(false);
 
   const location = useLocation();
 
-  // Popup animation state: retrigger on every navigation to this route
+  // Popup animation state
   const popupRef = useRef(null);
   const [popupVisible, setPopupVisible] = useState(false);
   useEffect(() => {
     setPopupVisible(false);
     const t = setTimeout(() => {
-      // Force reflow so transition runs reliably
       if (popupRef.current) popupRef.current.offsetHeight;
       setPopupVisible(true);
     }, 60);
     return () => clearTimeout(t);
   }, [location.pathname, location.key]);
-
 
   useEffect(() => {
     (async () => {
@@ -64,7 +64,6 @@ export default function Signup() {
     })();
   }, []);
 
-
   const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -82,6 +81,8 @@ export default function Signup() {
       return;
     }
 
+    setSendingEmail(true);
+
     try {
       const cred = await createUserWithEmailAndPassword(auth, email.trim(), pw);
       const user = cred.user;
@@ -91,24 +92,72 @@ export default function Signup() {
         {
           uid: user.uid,
           email: user.email ?? null,
+          emailVerified: false,
           servers: [],
           courses: [],
           createdAt: new Date().toISOString(),
+          verificationCode: null,
+          verificationCodeCreatedAt: null,
+          verificationAttempts: 0
         },
         { merge: true }
       );
 
-      // After signup, go to course linking and make sure onboarding state is refreshed
-      try { window.dispatchEvent(new CustomEvent('refreshOnboarding')) } catch (e) { }
-      navigate("/CourseLinking");
+      const sendCodeResponse = await fetch('/api/email/sendVerificationCode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: user.email })
+      });
+
+      if (!sendCodeResponse.ok) {
+        const errorData = await sendCodeResponse.json();
+        console.error('Send code error:', errorData);
+        throw new Error(errorData.error || 'Failed to send verification code');
+      }
+
+      const sendCodeData = await sendCodeResponse.json();
+
+      const storeCodeResponse = await fetch('/api/email/storeVerificationCode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          uid: user.uid,
+          code: sendCodeData.code
+        })
+      });
+
+      if (!storeCodeResponse.ok) {
+        const errorData = await storeCodeResponse.json();
+        console.error('Store code error:', errorData);
+        throw new Error(errorData.error || 'Failed to store verification code');
+      }
+
+      // Keep loading screen visible during navigation
+      navigate("/verify-code", { 
+        state: { 
+          email: user.email,
+          uid: user.uid 
+        } 
+      });
+
     } catch (e) {
-      console.error("Sign Up error:", e);
-      const msg = (e?.message || "Sign Up failed").replace("Firebase: ", "");
+      console.error("Signup error:", e);
+      const msg = (e?.message || "Signup failed").replace("Firebase: ", "");
       setError(msg);
+      setSendingEmail(false); // Only hide loading on error
     }
   };
 
   if (loading) return <div className="flex items-center justify-center min-h-screen bg-blue-950 text-blue-200 font-titilliumWeb-regular">Loading…</div>;
+
+  if (sendingEmail) {
+    return (
+      <LoadingScreen 
+        message="Creating Your Account" 
+        detail="Sending verification code to your email..."
+      />
+    );
+  }
 
   return (
     <div
@@ -195,10 +244,9 @@ export default function Signup() {
           <Button
             type="submit"
             className={"mb-2"}
-            text={"Sign Up"}
+            text="Sign Up"
+            disabled={sendingEmail}
           />
-
-
         </form>
 
         <div className="text-center tinyText text-gray-700 font-titilliumWeb-bold">
