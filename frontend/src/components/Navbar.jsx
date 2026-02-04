@@ -89,7 +89,7 @@ const Navbar = () => {
               ) : (
                 <Link
                   to="/login"
-                  className={`flex items-center font-bold py-1.5 px-3 rounded border transition duration-300 transform hover:scale-110 ${
+                  className={`flex items-center ml-auto md:ml-4 font-bold py-1.5 px-3 rounded border transition duration-300 transform hover:scale-110 ${
                     isScrolled
                       ? 'bg-blue-900 border-nexus-blue-900 text-white hover:bg-nexus-blue-100'
                       : 'bg-white text-nexus-blue-900 hover:bg-gray-100'
