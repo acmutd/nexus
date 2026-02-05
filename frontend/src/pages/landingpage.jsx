@@ -1,9 +1,9 @@
 import React, {useEffect, useState, useRef} from 'react'
-import { HiArrowNarrowRight, HiCalculator, HiUserGroup, HiDocumentText } from 'react-icons/hi';
+import { HiArrowNarrowRight, HiArrowNarrowUp, HiCalculator, HiUserGroup, HiDocumentText } from 'react-icons/hi';
 import { useMediaQuery } from 'react-responsive';
 import { useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence} from 'framer-motion';
-import Typewriter from "typewriter-effect"
+import { TypeAnimation } from 'react-type-animation'
 import { useMobile } from '../context/mobileContext';
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import StarFieldOverlay from '../components/StarFieldOverlay';
@@ -29,12 +29,13 @@ function LandingPage() {
   const [auth, setAuth] = useState(null);
   const dbRef = useRef(null);
 
-  const [initLoading, setInitLoading] = useState(true);
-  const [initError, setInitError] = useState('');
+const [initLoading, setInitLoading] = useState(true);
+const [initError, setInitError] = useState('');
 
-  const [user, setUser] = useState(null);
-  const popupRef = useRef(null);
-  const [popupVisible, setPopupVisible] = useState(false);
+const [user, setUser] = useState(null);
+const popupRef = useRef(null);
+const [popupVisible, setPopupVisible] = useState(false);
+const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
     let unsub = () => {};
@@ -89,6 +90,23 @@ function LandingPage() {
     }, 60);
     return () => clearTimeout(t);
   }, []);
+
+  // Toggle scroll-to-top button near bottom
+  useEffect(() => {
+    const onScroll = () => {
+      const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 200;
+      setShowScrollTop(nearBottom);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Section refs for scroll snapping
+  const laptopRef = useRef(null);
+  const calculatorRef = useRef(null);
+  const bookRef = useRef(null);
+
+  // No custom wheel handling; rely on CSS scroll snap for parallax-like paging
 
   const floatingVariants = {
     float: (custom) => ({
@@ -175,18 +193,33 @@ function LandingPage() {
   ]
 
   return (
+    <>
     <div
-      className="min-h-screen flex justify-center bg-linear-to-b from-nexus900 to-nexus700 bg-no-repeat bg-cover bg-center overflow-hidden"
+      className="min-h-screen w-full flex justify-center bg-linear-to-b from-nexus900 to-nexus700 bg-no-repeat bg-cover bg-center overflow-hidden snap-y snap-mandatory overflow-y-auto"
+      style={{ scrollPaddingTop: isMobile ? 0 : '120px' }}
     >
       <StarFieldOverlay count={200}/>
       <div
         ref={popupRef}
         className={`mt-40 flex flex-col transition-all duration-500 transform gap-100 ${popupVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
+        style={{ scrollSnapType: isMobile ? 'none' : 'y mandatory' }}
       >
         {/* --------------------------------- HEADER --------------------------------- */}
-        <div className={`flex flex-col h-[60vh] justify-center text-center items-center relative scale-110`}>
+        <div
+          className={`flex flex-col h-[60vh] justify-center text-center items-center relative scale-110`}
+          style={{ scrollSnapAlign: 'none' }}
+        >
           <h1 className={`flex font-titilliumWeb-bold text-white text-5xl text-center `}>
-            Welcome To Nexus!
+            <TypeAnimation
+              sequence={[
+                '',
+                'Welcome To Nexus!',
+              ]}
+              wrapper="span"
+              speed={30}
+              cursor={true}
+              repeat={0}
+            />
           </h1>
           <h2
             className={`flex headingText font-titilliumWeb-regular text-white text-center ${isMobile ? 'w-[80%]' : 'w-[54%]'} `}>
@@ -218,11 +251,20 @@ function LandingPage() {
         </div>
         
         {/* -------------------------------- LAPTOP ---------------------------------- */}
-        <motion.div className='flex relative w-full justify-start ml-20 pointer-events-none will-change-transform'
+        <motion.div
+          ref={laptopRef}
+          className='flex relative w-full justify-start ml-20 pointer-events-none will-change-transform'
+          style={{ scrollSnapAlign: isMobile ? 'none' : 'start', scrollMarginTop: isMobile ? undefined : '120px' }}
         >
-          <h1 className='flex titleText font-titilliumWeb-semibold text-white w-[48%]'>
+          <motion.h1
+            className='flex titleText font-titilliumWeb-semibold text-white w-[48%]'
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            viewport={{ once: false, amount: 0.5 }}
+          >
             Connect with peers and share knowledge effortlessly with our automated Discord server filtering for all your classes.
-          </h1>
+          </motion.h1>
 
           <motion.img 
             className='w-[35%] absolute left-1/2 -translate-x-[25%] -top-70 pointer-events-none will-change-transform'
@@ -233,7 +275,7 @@ function LandingPage() {
           <motion.div className='flex absolute w-full justify-end pr-20 top-[45%] pointer-events-none will-change-transform'
             initial={{y:300}}
             whileInView={{y:0}}
-            viewport={{once: true}}
+            viewport={{once: true, amount: 0.40}}
             transition={{duration:2, type: 'spring'}}
           >
             <motion.img 
@@ -247,31 +289,52 @@ function LandingPage() {
         </motion.div>
 
         {/* -------------------------------- CALCULATOR ---------------------------------- */}
-        <motion.div className='flex relative w-full justify-end pr-20'
+        <motion.div
+          ref={calculatorRef}
+          className='flex relative w-full justify-end pr-20'
+          style={{ scrollSnapAlign: isMobile ? 'none' : 'start', scrollMarginTop: isMobile ? undefined : '120px' }}
         >
-          <h1 className='flex titleText font-titilliumWeb-semibold text-white w-[48%]'>
+          <motion.h1
+            className='flex titleText font-titilliumWeb-semibold text-white w-[48%]'
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            viewport={{ once: false, amount: 0.5 }}
+          >
             Stay on top of your grades and assignments and see the impact of a quiz or exam on your grade using the grade calculator. 
-          </h1>
+          </motion.h1>
           <motion.img 
             className='w-[25%] absolute right-1/2 scale-120 -top-70 pointer-events-none will-change-transform rotate-30'
             variants={floatingVariants} 
             src='/assets/Calculator.svg' 
             animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 7.5}}/>
 
-            <motion.div className='flex absolute w-full -left-1 top-[40%] pointer-events-none will-change-transform'
+            <div
+              className='flex absolute w-full -left-1 top-[40%] pointer-events-none will-change-transform'
             >
-              <motion.img 
+              <img 
                 className='w-[23%] flex pointer-events-none will-change-transform'
                 src='/assets/HomePageAssets/SwingingAnimation.svg'
+                alt="Swinging animation"
               />
-            </motion.div>
+            </div>
         </motion.div>
 
         {/* -------------------------------- BOOK ---------------------------------- */}
-        <motion.div className='flex relative w-full justify-start ml-20 mb-100'
+        <motion.div
+          ref={bookRef}
+          className='flex relative w-full justify-start ml-20 mb-100'
+          style={{ scrollSnapAlign: isMobile ? 'none' : 'start', scrollMarginTop: isMobile ? undefined : '120px' }}
         >
-          <h1 className='flex titleText font-titilliumWeb-semibold text-white w-[55%]'>
-            Missed a lecture? Cramming for an exam? No biggie! Access and contribute to study materials alongside your classmates using Nexus’ Superdoc!          </h1>
+          <motion.h1
+            className='flex titleText font-titilliumWeb-semibold text-white w-[55%]'
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            viewport={{ once: false, amount: 0.5 }}
+          >
+            Missed a lecture? Cramming for an exam? No biggie! Access and contribute to study materials alongside your classmates using Nexus’ Superdoc!
+          </motion.h1>
           <motion.img 
             className='w-[25%] absolute left-1/2 scale-120 translate-x-20 -top-60 pointer-events-none will-change-transform'
             variants={floatingVariants} 
@@ -336,6 +399,21 @@ function LandingPage() {
         </div> */}
       </div>
     </div>
+    <div
+      className={`fixed bottom-8 left-1/2 -translate-x-1/2 transition-all duration-220 ease-out ${
+        showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
+      }`}
+    >
+      <button
+        className="rounded-full bg-white/95 text-nexus-blue-900 shadow-lg border border-gray-200 px-6 py-3 hover:scale-105 transition flex items-center gap-2"
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        aria-label="Back to top"
+      >
+        <HiArrowNarrowUp size={20} />
+        <span className="font-titilliumWeb-semibold text-sm">Back to top</span>
+      </button>
+    </div>
+    </>
   )
 }
 
