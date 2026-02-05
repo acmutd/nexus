@@ -258,7 +258,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           </motion.h1>
 
           <motion.img 
-            className='w-[35%] absolute left-1/2 -translate-x-[25%] -top-70 pointer-events-none will-change-transform'
+            className='w-[35%] absolute left-1/2 -translate-x-[10%] -top-60 pointer-events-none will-change-transform'
             variants={floatingVariants} 
             src='/assets/HomePageAssets/Laptop.svg' 
             animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
@@ -295,7 +295,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
             Determine the impact of your upcoming test or quiz to stay on top of your grades with Grade Calculator.
           </motion.h1>
           <motion.img 
-            className='w-[25%] absolute right-1/2 scale-120 -top-70 pointer-events-none will-change-transform rotate-30'
+            className='w-[25%] absolute right-1/2 -translate-x-[20%] scale-120 -top-70 pointer-events-none will-change-transform rotate-30'
             variants={floatingVariants} 
             src='/assets/Calculator.svg' 
             animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
