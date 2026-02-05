@@ -131,7 +131,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           left: '6%',
           width: '17%',
       },
-      custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 7.5 }
+      custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 4.5 }
     },
     {
       name: 'chair',
@@ -142,7 +142,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           left: '3%',
           width: '19%',
       },
-      custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 7.5 }
+      custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 4.5 }
     },
     {
       name: 'pigy',
@@ -153,7 +153,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           left: '14%',
           width: '20%',
       },
-      custom: { x: -5, y: -6, startRotate: -6, endRotate: 4, duration: 7.5 }
+      custom: { x: -5, y: -6, startRotate: -6, endRotate: 4, duration: 4.5 }
     },
     {
       name: 'coffee',
@@ -164,7 +164,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           right: '3%',
           width: '15%',
       },
-      custom: { x: -5, y: -6, startRotate: -6, endRotate: 4, duration: 7.5 }
+      custom: { x: -5, y: -6, startRotate: -6, endRotate: 4, duration: 4.5 }
     },
     {
       name: 'peechi',
@@ -175,7 +175,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           right: '13%',
           width: '12%',
       },
-      custom: { x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 7.5 }
+      custom: { x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 5.5 }
     },
     {
       name: 'megaphone',
@@ -188,7 +188,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           scaleX: -1
           
       },
-      custom: { x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 7.5 }
+      custom: { x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 5.5 }
     },
   ]
 
@@ -258,10 +258,10 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           </motion.h1>
 
           <motion.img 
-            className='w-[35%] absolute left-1/2 -translate-x-[25%] -top-70 pointer-events-none will-change-transform'
+            className='w-[35%] absolute left-1/2 -translate-x-[20%] -top-70 pointer-events-none will-change-transform'
             variants={floatingVariants} 
             src='/assets/HomePageAssets/Laptop.svg' 
-            animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 7.5}}/>
+            animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
           
           <motion.div className='flex absolute w-full justify-end pr-20 top-[45%] pointer-events-none will-change-transform'
             initial={{y:300}}
@@ -273,7 +273,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
               className='w-[20%] flex pointer-events-none will-change-transform'
               src='/assets/HomePageAssets/BalloonPigy.svg'
               variants={floatingVariants}
-              animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 7.5}}/>
+              animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
 
           </motion.div>
 
@@ -295,10 +295,10 @@ const [showScrollTop, setShowScrollTop] = useState(false);
             Stay on top of your grades and assignments and see the impact of a quiz or exam on your grade using the grade calculator. 
           </motion.h1>
           <motion.img 
-            className='w-[25%] absolute right-1/2 scale-120 -top-70 pointer-events-none will-change-transform rotate-30'
+            className='w-[25%] absolute right-1/2 -translate-x-20 scale-120 -top-50 pointer-events-none will-change-transform rotate-30'
             variants={floatingVariants} 
             src='/assets/Calculator.svg' 
-            animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 7.5}}/>
+            animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
 
             <div
               className='flex absolute w-full -left-1 top-[40%] pointer-events-none will-change-transform'
@@ -330,7 +330,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
             className='w-[25%] absolute left-1/2 scale-120 translate-x-20 -top-60 pointer-events-none will-change-transform'
             variants={floatingVariants} 
             src='/assets/Book.svg' 
-            animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 7.5}}/>
+            animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
         </motion.div>
 
         <img src='/assets/HomePageAssets/LPBottomClouds.svg' className='flex absolute bottom-0'/>
