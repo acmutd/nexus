@@ -199,6 +199,42 @@ const Home = () => {
           </div>
         </motion.div>
       </div>
+      {/* ---------------- FEEDBACK BUBBLE ---------------- */}
+    <a
+      href="https://docs.google.com/forms/d/e/1FAIpQLSfA5sNwJUlHn3QroikwHuDGhOve6qjb7ssMjkvLd-RGK_PLaQ/viewform"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="fixed bottom-6 right-6 z-50 group"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.5 }}
+        className="relative bg-nexus800 text-white px-5 py-3 rounded-full shadow-lg
+                  flex items-center gap-2 cursor-pointer
+                  hover:scale-105 hover:bg-nexus700 transition"
+      >
+        <span className="tinyText font-titilliumWeb-semibold whitespace-nowrap">
+          Fill out feedback form
+        </span>
+
+        {/*hover tip*/}
+        <span
+          className="absolute bottom-full right-0 mb-3 w-72 p-3 rounded-lg
+                    bg-nexus900 text-white text-xs leading-snug
+                    opacity-0 translate-y-2 pointer-events-none
+                    transition-all duration-300
+                    group-hover:opacity-100 group-hover:translate-y-0"
+        >
+          Run into any issues, potential improvements, or want to tell us what you like about Nexus,
+          let us know by filling out this form.
+          <br />
+          <br />
+          We appreciate any and all input :)
+        </span>
+      </motion.div>
+    </a>
+
     </>
   );
 };
