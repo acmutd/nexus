@@ -48,10 +48,17 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { email, uid } = req.body;
+    const { email, uid, isPreAuth } = req.body;
 
-    if (!email || !uid) {
-      return res.status(400).json({ error: 'Email and UID are required' });
+    console.log('[resendVerificationCode] Request received:', { email, uid, isPreAuth });
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    // For post-auth flow, uid is required
+    if (!isPreAuth && !uid) {
+      return res.status(400).json({ error: 'UID is required for post-auth flow' });
     }
 
     const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -155,19 +162,38 @@ module.exports = async (req, res) => {
     };
 
     await sgMail.send(msg);
+    console.log('[resendVerificationCode] Email sent successfully to:', email);
 
-    await db.collection('users').doc(uid).update({
-      verificationCode: verificationCode,
-      verificationCodeCreatedAt: Date.now(),
-      verificationAttempts: 0
-    });
+    // Store the code based on flow type
+    if (isPreAuth) {
+
+      const normalizedEmail = email.toLowerCase().trim();
+      
+      await db.collection('preAuthVerifications').doc(normalizedEmail).set({
+        code: verificationCode,
+        email: normalizedEmail,
+        createdAt: Date.now(),
+        attempts: 0,
+        expiresAt: Date.now() + (15 * 60 * 1000) // 15 minutes from now
+      });
+      
+      console.log('[resendVerificationCode] Stored code in Firestore for:', normalizedEmail);
+    } else {
+
+      await db.collection('users').doc(uid).update({
+        verificationCode: verificationCode,
+        verificationCodeCreatedAt: Date.now(),
+        verificationAttempts: 0
+      });
+      console.log('[resendVerificationCode] Stored code in Firestore for user:', uid);
+    }
 
     return res.status(200).json({ 
       success: true, 
       message: 'New verification code sent successfully'
     });
   } catch (error) {
-    console.error('Resend verification error:', error);
+    console.error('[resendVerificationCode] Error:', error);
     return res.status(500).json({ 
       error: 'Failed to resend verification code',
       details: error.message 

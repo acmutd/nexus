@@ -2,6 +2,33 @@ const sgMail = require('@sendgrid/mail');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
+let db;
+
+try {
+  const admin = require('../../config/firebaseAdmin.js');
+  db = admin.db;
+} catch (e) {
+  try {
+    const admin = require('../config/firebaseAdmin.js');
+    db = admin.db;
+  } catch (e2) {
+    const admin = require('firebase-admin');
+    
+    if (!admin.apps.length) {
+      const serviceAccount = JSON.parse(
+        process.env.FIREBASE_SERVICE_ACCOUNT_JSON || '{}'
+      );
+      
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+        databaseURL: `https://${process.env.FIREBASE_PROJECT_ID}.firebaseio.com`
+      });
+    }
+    
+    db = admin.firestore();
+  }
+}
+
 module.exports = async (req, res) => {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -22,12 +49,13 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { email } = req.body;
+    const { email, isPreAuth } = req.body;
+
+    console.log('[sendVerificationCode] Request received:', { email, isPreAuth });
 
     if (!email) {
       return res.status(400).json({ error: 'Email is required' });
     }
-
 
     if (!process.env.SENDGRID_API_KEY) {
       console.error('SENDGRID_API_KEY is not set!');
@@ -144,14 +172,31 @@ module.exports = async (req, res) => {
     };
 
     await sgMail.send(msg);
+    console.log('[sendVerificationCode] Email sent successfully to:', email);
+
+    // Store the code based on flow type
+    if (isPreAuth) {
+      const normalizedEmail = email.toLowerCase().trim();
+      
+      await db.collection('preAuthVerifications').doc(normalizedEmail).set({
+        code: verificationCode,
+        email: normalizedEmail,
+        createdAt: Date.now(),
+        attempts: 0,
+        expiresAt: Date.now() + (15 * 60 * 1000) // 15 minutes from now
+      });
+      
+      console.log('[sendVerificationCode] Stored code in Firestore for:', normalizedEmail);
+    }
+    // For non-preAuth flow, the code is returned and stored by storeVerificationCode.js
 
     return res.status(200).json({ 
       success: true, 
       message: 'Verification code sent successfully',
-      code: verificationCode // Return code so it can be stored
+      code: verificationCode 
     });
   } catch (error) {
-    console.error('SendGrid error:', error);
+    console.error('[sendVerificationCode] Error:', error);
     
     if (error.response) {
       console.error('SendGrid response error:', error.response.body);

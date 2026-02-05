@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { HiMail } from 'react-icons/hi';
+import { initializeApp, getApps, getApp } from "firebase/app";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import LoadingScreen from '../components/LoadingScreen';
 
 export default function VerifyCode() {
   const location = useLocation();
   const navigate = useNavigate();
   
   const email = location.state?.email || '';
-  const uid = location.state?.uid || '';
+  const isPreAuth = location.state?.isPreAuth || false;
   
   const [code, setCode] = useState(['', '', '', '', '', '']);
   const [verifying, setVerifying] = useState(false);
@@ -15,17 +18,16 @@ export default function VerifyCode() {
   const [resending, setResending] = useState(false);
   const [resendMessage, setResendMessage] = useState('');
   const [attemptsLeft, setAttemptsLeft] = useState(5);
+  const [creatingAccount, setCreatingAccount] = useState(false);
 
-  // Refs for input fields
   const inputRefs = useRef([]);
 
   useEffect(() => {
-    if (!email || !uid) {
+    if (!email) {
       navigate('/signup');
     }
-  }, [email, uid, navigate]);
+  }, [email, navigate]);
 
-  // Focus first input on mount
   useEffect(() => {
     if (inputRefs.current[0]) {
       inputRefs.current[0].focus();
@@ -33,7 +35,6 @@ export default function VerifyCode() {
   }, []);
 
   const handleChange = (index, value) => {
-    // Only allow numbers
     if (value && !/^\d$/.test(value)) return;
 
     const newCode = [...code];
@@ -41,19 +42,16 @@ export default function VerifyCode() {
     setCode(newCode);
     setError('');
 
-    // Auto-focus next input
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
   const handleKeyDown = (index, e) => {
-    // Handle backspace
     if (e.key === 'Backspace' && !code[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
     
-    // Handle paste
     if (e.key === 'v' && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       navigator.clipboard.readText().then(text => {
@@ -86,36 +84,83 @@ export default function VerifyCode() {
     setError('');
 
     try {
+      // Verify the code
       const response = await fetch('/api/email/verifyCode', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           code: enteredCode,
-          uid 
+          email: email,
+          isPreAuth: isPreAuth
         })
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // Success! Navigate to login or home
-        navigate('/login', { 
-          state: { message: 'Email verified successfully! Please log in.' } 
-        });
+        // If this is pre-auth verification, NOW create the Firebase account
+        if (isPreAuth) {
+          setCreatingAccount(true);
+          
+          // Get the stored signup data
+          const pendingSignup = sessionStorage.getItem('pendingSignup');
+          if (!pendingSignup) {
+            throw new Error('Signup data not found. Please start over.');
+          }
+          
+          const { email: signupEmail, password } = JSON.parse(pendingSignup);
+          
+          // Initialize Firebase if needed
+          let auth;
+          if (getApps().length) {
+            auth = getAuth(getApp());
+          } else {
+            const res = await fetch(`/api/firebase-config`);
+            if (!res.ok) throw new Error('Failed to load Firebase config');
+            const cfg = await res.json();
+            const app = initializeApp(cfg);
+            auth = getAuth(app);
+          }
+          
+          // NOW create the Firebase Auth account
+          const cred = await createUserWithEmailAndPassword(auth, signupEmail, password);
+          const user = cred.user;
+          
+          // Store user data in sessionStorage for onboarding
+          sessionStorage.setItem('pendingOnboarding', JSON.stringify({
+            uid: user.uid,
+            email: user.email,
+            emailVerified: true,
+            createdAt: new Date().toISOString(),
+          }));
+          
+          // Clear the signup data
+          sessionStorage.removeItem('pendingSignup');
+          
+          // Navigate to course linking (first onboarding step)
+          navigate('/CourseLinking');
+        } else {
+          // Old flow: user already exists, navigate to login
+          navigate('/login', { 
+            state: { message: 'Email verified successfully! Please log in.' } 
+          });
+        }
       } else {
         setError(data.error || 'Invalid verification code');
         if (data.attemptsLeft !== undefined) {
           setAttemptsLeft(data.attemptsLeft);
         }
-        // Clear the code on error
         setCode(['', '', '', '', '', '']);
         inputRefs.current[0]?.focus();
       }
     } catch (err) {
       console.error('Verification error:', err);
-      setError('An error occurred. Please try again.');
+      setError(err.message || 'An error occurred. Please try again.');
+      setCode(['', '', '', '', '', '']);
+      inputRefs.current[0]?.focus();
     } finally {
       setVerifying(false);
+      setCreatingAccount(false);
     }
   };
 
@@ -128,12 +173,15 @@ export default function VerifyCode() {
       const response = await fetch('/api/email/resendVerificationCode', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, uid })
+        body: JSON.stringify({ 
+          email,
+          isPreAuth: isPreAuth
+        })
       });
 
       if (response.ok) {
         setResendMessage('New code sent! Check your email.');
-        setAttemptsLeft(5); // Reset attempts
+        setAttemptsLeft(5);
         setCode(['', '', '', '', '', '']);
         inputRefs.current[0]?.focus();
       } else {
@@ -147,6 +195,15 @@ export default function VerifyCode() {
       setResending(false);
     }
   };
+
+  if (creatingAccount) {
+    return (
+      <LoadingScreen 
+        message="Creating Your Account" 
+        detail="Setting up your Nexus account..."
+      />
+    );
+  }
 
   return (
     <div
@@ -237,10 +294,10 @@ export default function VerifyCode() {
 
         <div className="mt-8 text-center">
           <button
-            onClick={() => navigate('/login')}
+            onClick={() => navigate('/signup')}
             className="text-blue-900 font-titilliumWeb-bold hover:underline tinyText"
           >
-            Back to Login
+            Back to Sign Up
           </button>
         </div>
 

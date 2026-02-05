@@ -1,21 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, Link, useLocation } from "react-router-dom";
-
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
-
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import Button from "../components/Button";
-import LoadingScreen from "../components/LoadingScreen";
 
 export default function Signup() {
   const navigate = useNavigate();
 
-  const [auth, setAuth] = useState(null);
-  const firestoreRef = useRef(null);
-
-  const [loading, setLoading] = useState(true);
   const [pwVisible, setPwVisible] = useState(false);
   const [pw2Visible, setPw2Visible] = useState(false);
   const [email, setEmail] = useState("");
@@ -24,54 +14,10 @@ export default function Signup() {
   const [error, setError] = useState("");
   const [sendingEmail, setSendingEmail] = useState(false);
 
-  const location = useLocation();
-
-  // Popup animation state
-  const popupRef = useRef(null);
-  const [popupVisible, setPopupVisible] = useState(false);
-  useEffect(() => {
-    setPopupVisible(false);
-    const t = setTimeout(() => {
-      if (popupRef.current) popupRef.current.offsetHeight;
-      setPopupVisible(true);
-    }, 60);
-    return () => clearTimeout(t);
-  }, [location.pathname, location.key]);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        if (getApps().length) {
-          const app = getApp();
-          setAuth(getAuth(app));
-          firestoreRef.current = getFirestore(app);
-        } else {
-          const res = await fetch(`/api/firebase-config`);
-          if (!res.ok) throw new Error(`Config fetch failed: ${res.status} ${res.statusText}`);
-          const cfg = await res.json();
-          if (!cfg?.apiKey) throw new Error("Config missing required keys.");
-
-          const app = initializeApp(cfg);
-          setAuth(getAuth(app));
-          firestoreRef.current = getFirestore(app);
-        }
-      } catch (e) {
-        console.error("Init error:", e);
-        setError(String(e?.message || e));
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
-
   const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    if (!auth || !firestoreRef.current) {
-      setError("App not initialized.");
-      return;
-    }
     if (!email || !pw || !pw2) {
       setError("Please fill in all fields.");
       return;
@@ -81,32 +27,30 @@ export default function Signup() {
       return;
     }
 
+    // Basic email validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
     setSendingEmail(true);
 
     try {
-      const cred = await createUserWithEmailAndPassword(auth, email.trim(), pw);
-      const user = cred.user;
+      // Store email and password temporarily
+      sessionStorage.setItem('pendingSignup', JSON.stringify({
+        email: email.trim(),
+        password: pw,
+        createdAt: new Date().toISOString(),
+      }));
 
-      await setDoc(
-        doc(firestoreRef.current, "users", user.uid),
-        {
-          uid: user.uid,
-          email: user.email ?? null,
-          emailVerified: false,
-          servers: [],
-          courses: [],
-          createdAt: new Date().toISOString(),
-          verificationCode: null,
-          verificationCodeCreatedAt: null,
-          verificationAttempts: 0
-        },
-        { merge: true }
-      );
-
+      // Send verification code WITHOUT creating Firebase account yet
       const sendCodeResponse = await fetch('/api/email/sendVerificationCode', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: user.email })
+        body: JSON.stringify({ 
+          email: email.trim(),
+          isPreAuth: true // Flag to indicate this is before account creation
+        })
       });
 
       if (!sendCodeResponse.ok) {
@@ -115,28 +59,11 @@ export default function Signup() {
         throw new Error(errorData.error || 'Failed to send verification code');
       }
 
-      const sendCodeData = await sendCodeResponse.json();
-
-      const storeCodeResponse = await fetch('/api/email/storeVerificationCode', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          uid: user.uid,
-          code: sendCodeData.code
-        })
-      });
-
-      if (!storeCodeResponse.ok) {
-        const errorData = await storeCodeResponse.json();
-        console.error('Store code error:', errorData);
-        throw new Error(errorData.error || 'Failed to store verification code');
-      }
-
-      // Keep loading screen visible during navigation
+      // Navigate to verification page
       navigate("/verify-code", { 
         state: { 
-          email: user.email,
-          uid: user.uid 
+          email: email.trim(),
+          isPreAuth: true // Flag to tell verify page to create account after verification
         } 
       });
 
@@ -144,20 +71,9 @@ export default function Signup() {
       console.error("Signup error:", e);
       const msg = (e?.message || "Signup failed").replace("Firebase: ", "");
       setError(msg);
-      setSendingEmail(false); // Only hide loading on error
+      setSendingEmail(false);
     }
   };
-
-  if (loading) return <div className="flex items-center justify-center min-h-screen bg-blue-950 text-blue-200 font-titilliumWeb-regular">Loading…</div>;
-
-  if (sendingEmail) {
-    return (
-      <LoadingScreen 
-        message="Creating Your Account" 
-        detail="Sending verification code to your email..."
-      />
-    );
-  }
 
   return (
     <div
@@ -168,11 +84,7 @@ export default function Signup() {
         backgroundPosition: 'center'
       }}
     >
-      <div
-        ref={popupRef}
-        className={`bg-nexus100 rounded-lg shadow-lg p-8 w-full max-w-md transition-all duration-500 transform mt-15
-          ${popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
-      >
+      <div className="bg-nexus100 rounded-lg shadow-lg p-8 w-full max-w-md">
         <h2 className="bodyText mb-1 text-gray-800 font-titilliumWeb-bold">Sign up for Nexus</h2>
         <p className="text-blue-900 mb-6 tinyText font-titilliumWeb-bold">Create an account to get started</p>
         
@@ -216,7 +128,7 @@ export default function Signup() {
           </div>
 
           <div className="mb-4 relative font-titilliumWeb-semibold tinyText">
-            <h1 className="tinyText font-titilliumWeb-semibold text-nexus700 mb-2 ">
+            <h1 className="tinyText font-titilliumWeb-semibold text-nexus700 mb-2">
               Confirm Password
             </h1>    
             <div className="flex relative tinyText">
@@ -244,7 +156,7 @@ export default function Signup() {
           <Button
             type="submit"
             className={"mb-2"}
-            text="Sign Up"
+            text={sendingEmail ? "Sending..." : "Continue"}
             disabled={sendingEmail}
           />
         </form>
