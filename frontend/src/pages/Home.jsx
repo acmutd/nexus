@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { delay, motion } from 'framer-motion';
 import { useMobile } from '../context/mobileContext';
 import StarFieldOverlay from '../components/StarFieldOverlay';
 
@@ -51,8 +51,8 @@ const Home = () => {
           style: {
               position: 'fixed',
               top: '15%',
-              left: '5%',
-              width: '200px',
+              left: '3%',
+              width: '240px',
           },
           custom: { x: 10, y: -6, startRotate: -2, endRotate: 6, duration: 6.2 }
       },
