@@ -33,12 +33,21 @@ const AccountLinking = () => {
 
     // Discord popup orchestration
     const popupRef = useRef(null);
+    const discordPopupRef = useRef(null);
     const handledRef = useRef(false);
     const linkingRef = useRef(false);
     const watchdogRef = useRef(null);
     const [popupVisible, setPopupVisible] = useState(false);
 
     const { refreshOnboarding, onboarding } = useAuth();
+
+    // Check if user is in pre-Firestore onboarding flow
+    const [isPreFirestoreOnboarding, setIsPreFirestoreOnboarding] = useState(false);
+
+    useEffect(() => {
+      const pendingOnboarding = sessionStorage.getItem('pendingOnboarding');
+      setIsPreFirestoreOnboarding(!!pendingOnboarding);
+    }, []);
 
     useEffect(() => {
       let unsub = () => {};
@@ -60,8 +69,12 @@ const AccountLinking = () => {
 
           unsub = onAuthStateChanged(a, async (u) => {
             setUser(u || null);
-            if (u) {
+            if (u && !isPreFirestoreOnboarding) {
               await refreshUserFirestore(u.uid);
+            } else if (u && isPreFirestoreOnboarding) {
+              // In pre-Firestore flow, don't try to read from Firestore yet
+              setDiscordLinked(false);
+              setDiscordUsername(null);
             } else {
               setDiscordLinked(false);
               setDiscordUsername(null);
@@ -72,7 +85,7 @@ const AccountLinking = () => {
         }
       })();
       return () => { unsub && unsub(); };
-    }, []);
+    }, [isPreFirestoreOnboarding]);
 
     useEffect(() => {
       return () => {
@@ -93,7 +106,7 @@ const AccountLinking = () => {
     // Listen for Discord popup postMessage (SUCCESS / ERROR)
     useEffect(() => {
       const onMessage = async (ev) => {
-        if (popupRef.current && ev.source !== popupRef.current) return;
+        if (discordPopupRef.current && ev.source !== discordPopupRef.current) return;
         const msg = ev.data || {};
         if (msg.type !== 'DISCORD_AUTH_SUCCESS' && msg.type !== 'DISCORD_AUTH_ERROR') return;
         if (handledRef.current) {
@@ -101,31 +114,93 @@ const AccountLinking = () => {
         }
         handledRef.current = true;
 
-        try { popupRef.current?.close?.(); } catch {}
+        try { discordPopupRef.current?.close?.(); } catch {}
         if (watchdogRef.current) {
           clearInterval(watchdogRef.current);
           watchdogRef.current = null;
         }
 
-        if (msg.type === 'DISCORD_AUTH_SUCCESS') {
-          setOkMsg('Discord linked successfully.');
-          setError('');
-          linkingRef.current = false;
-
-          if (user?.uid) await refreshUserFirestore(user.uid);
-        } else {
-          alert(msg.error || 'Discord link failed.');
+        if (msg.type === 'DISCORD_AUTH_ERROR') {
+          setError(msg.error || 'Discord linking failed');
           setOkMsg('');
           linkingRef.current = false;
+          setActionBusy(false);
+          return;
         }
-        setActionBusy(false);
+
+        try {
+          if (isPreFirestoreOnboarding) {
+            // Store Discord info in sessionStorage
+            const pendingOnboarding = JSON.parse(sessionStorage.getItem('pendingOnboarding'));
+            pendingOnboarding.discord = {
+              id: msg.discordId,
+              username: msg.discordUsername,
+              discriminator: msg.discordDiscriminator || '0',
+              avatar: msg.discordAvatar
+            };
+            sessionStorage.setItem('pendingOnboarding', JSON.stringify(pendingOnboarding));
+            
+            setDiscordLinked(true);
+            setDiscordUsername(msg.discordUsername);
+            setOkMsg('Discord linked successfully!');
+            setError('');
+            
+            await completeOnboarding(pendingOnboarding);
+          } else {
+            await refreshUserFirestore(user?.uid);
+            setOkMsg('Discord linked successfully!');
+            setError('');
+          }
+        } catch (e) {
+          console.error('postMessage handler error:', e);
+          setError((e?.message || 'Failed to link Discord').replace('Firebase: ', ''));
+        } finally {
+          linkingRef.current = false;
+          setActionBusy(false);
+        }
       };
 
       window.addEventListener('message', onMessage);
       return () => { window.removeEventListener('message', onMessage); };
-    }, [user]);
+    }, [user, isPreFirestoreOnboarding]);
+
+    // Complete onboarding by creating Firestore document with all data
+    const completeOnboarding = async (onboardingData) => {
+      try {
+        console.log('[AccountLinking] Completing onboarding, creating Firestore document');
+        const db = dbRef.current || getFirestore();
+        
+        await setDoc(doc(db, 'users', onboardingData.uid), {
+          uid: onboardingData.uid,
+          email: onboardingData.email,
+          emailVerified: true,
+          courses: onboardingData.courses || [],
+          discord: onboardingData.discord || null,
+          servers: [],
+          createdAt: onboardingData.createdAt,
+          onboardingCompletedAt: new Date().toISOString(),
+          accountLinkingSkipped: onboardingData.accountLinkingSkipped || false,
+        });
+
+        // Clear sessionStorage
+        sessionStorage.removeItem('pendingOnboarding');
+        
+        // Refresh onboarding state
+        await refreshOnboarding(user);
+        
+        // Navigate to home
+        setTimeout(() => {
+          navigate('/home');
+        }, 500);
+      } catch (error) {
+        console.error('Failed to complete onboarding:', error);
+        setError('Failed to complete setup. Please try again.');
+        throw error;
+      }
+    };
 
     const refreshUserFirestore = async (uid) => {
+      if (!uid) return false;
       try {
         const db = dbRef.current || getFirestore();
         const userRef = doc(db, 'users', uid);
@@ -176,7 +251,7 @@ const AccountLinking = () => {
       const url = `/api/discord/auth?uid=${encodeURIComponent(user.uid)}`;
 
       const popup = window.open(url, 'discord_oauth', features);
-      popupRef.current = popup;
+      discordPopupRef.current = popup;
 
       if (!popup) {
         window.location.href = url;
@@ -209,7 +284,7 @@ const AccountLinking = () => {
               linkingRef.current = false;
               setActionBusy(false);
             }
-          }, 150); // 150ms delay to allow postMessage handler to run
+          }, 150);
         }
       }, 400);
     };
@@ -264,28 +339,37 @@ const AccountLinking = () => {
 
       try {
         setActionBusy(true);
-        const db = dbRef.current || getFirestore();
-        await setDoc(
-          doc(db, 'users', user.uid),
-          {
-            accountLinkingSkipped: true,
-            accountLinkingSkippedAt: new Date().toISOString(),
-          },
-          { merge: true }
-        );
-        await refreshOnboarding(user);
+        
+        if (isPreFirestoreOnboarding) {
+          // Complete onboarding without Discord
+          const pendingOnboarding = JSON.parse(sessionStorage.getItem('pendingOnboarding'));
+          pendingOnboarding.accountLinkingSkipped = true;
+          await completeOnboarding(pendingOnboarding);
+        } else {
+          const db = dbRef.current || getFirestore();
+          await setDoc(
+            doc(db, 'users', user.uid),
+            {
+              accountLinkingSkipped: true,
+              accountLinkingSkippedAt: new Date().toISOString(),
+            },
+            { merge: true }
+          );
+          await refreshOnboarding(user);
+          navigate('/home');
+        }
       } catch (e) {
-        console.error('Failed to mark account linking as skipped:', e);
+        console.error('Failed to skip account linking:', e);
+        setError('Failed to skip. Please try again.');
       } finally {
         setActionBusy(false);
-        navigate('/home');
       }
     };
 
     const linkedCount = discordLinked ? 1 : 0;
     const canContinue = linkedCount === 1;
 
-    // Auto-continue once Discord is linked
+    // Auto-continue once Discord is linked (only for non-pre-Firestore flow)
     useEffect(() => {
       const goHome = async () => {
         try {
@@ -295,16 +379,17 @@ const AccountLinking = () => {
           console.error('Auto-continue failed:', e);
         }
       };
-      if (discordLinked && user) goHome();
-    }, [discordLinked, user, navigate, refreshOnboarding]);
+      if (discordLinked && user && !isPreFirestoreOnboarding) goHome();
+    }, [discordLinked, user, navigate, refreshOnboarding, isPreFirestoreOnboarding]);
 
-    // Hard block access if onboarding already linked or explicitly skipped (e.g., redo flow)
+    // Hard block access if onboarding already linked or explicitly skipped (only for non-pre-Firestore flow)
     useEffect(() => {
+      if (isPreFirestoreOnboarding) return; // Allow access during initial onboarding
       if (!onboarding?.loaded) return;
       if (onboarding.discordLinked || onboarding.accountLinkingSkipped) {
         navigate('/home', { replace: true });
       }
-    }, [onboarding, navigate]);
+    }, [onboarding, navigate, isPreFirestoreOnboarding]);
 
     const OptionBox = ({ icon, title, description, details, buttonText, onClick, boxWidth }) => (
         <div className="relative w-full flex" style={{ maxWidth: boxWidth || '100%' }}>
@@ -313,9 +398,8 @@ const AccountLinking = () => {
             />
 
             <div
-                className="flex flex-col min-h-[265px] items-start bg-white rounded-lg p-6 border border-gray-200 
-                        transition duration-300 ease-in-out relative z-10 
-                        font-titilliumWeb"
+                className="flex flex-col min-h-[265px] md:min-h-[265px] items-start bg-white rounded-lg p-6 border border-gray-200 
+             transition duration-300 ease-in-out relative z-10 font-titilliumWeb"
                 style={{ height: '100%', width: '100%' }}
             >
                 <div className="mb-4 self-start">{icon}</div>

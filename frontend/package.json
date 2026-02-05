@@ -16,6 +16,7 @@
     "@heroicons/react": "^2.2.0",
     "@mui/material": "^7.3.2",
     "@napi-rs/canvas": "^0.1.88",
+    "@sendgrid/mail": "^8.1.6",
     "@tailwindcss/vite": "^4.1.11",
     "axios": "^1.12.2",
     "firebase": "^10.14.1",
