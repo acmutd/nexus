@@ -207,7 +207,7 @@ export default function VerifyCode() {
 
   return (
     <div
-      className="flex flex-col items-center justify-center min-h-screen bg-blue-950 font-titilliumWeb-regular"
+      className="mt-6 flex flex-col items-center justify-center min-h-screen bg-blue-950 font-titilliumWeb-regular"
       style={{
         backgroundImage: "url('/assets/SignUpBG.svg')",
         backgroundSize: 'cover',
@@ -264,15 +264,15 @@ export default function VerifyCode() {
           <button
             type="submit"
             disabled={verifying || code.join('').length !== 6}
-            className="w-full bg-nexus500 text-white py-3 px-8 rounded-lg font-titilliumWeb-bold hover:bg-nexus600 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed mb-4"
+            className="w-full bg-nexus500 text-white py-3 px-8 rounded-lg font-titilliumWeb-bold hover:bg-nexus600 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {verifying ? 'Verifying...' : 'Verify Email'}
           </button>
         </form>
 
-        <div className="border-t border-gray-300 pt-6 mt-6">
+        <div className="border-t border-gray-300 pt-6 mt-4">
           <p className="text-gray-600 mb-4 tinyText font-titilliumWeb-regular">
-            Didn't receive the code?
+            Didn't receive the code? Make sure you check your spam/junk folder!
           </p>
 
           <button
@@ -292,7 +292,7 @@ export default function VerifyCode() {
           )}
         </div>
 
-        <div className="mt-8 text-center">
+        <div className="mt-2 text-center">
           <button
             onClick={() => navigate('/signup')}
             className="text-blue-900 font-titilliumWeb-bold hover:underline tinyText"

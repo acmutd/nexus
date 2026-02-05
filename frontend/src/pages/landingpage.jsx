@@ -209,12 +209,12 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           className={`flex flex-col h-[60vh] justify-center text-center items-center relative scale-110`}
           style={{ scrollSnapAlign: 'none' }}
         >
-          <h1 className="relative z-10 flex font-titilliumWeb-bold text-white text-center text-[clamp(3.25rem,5.2vw,5.5rem)] leading-[1.05]">
+          <h1 className="relative mb-2 z-10 flex font-titilliumWeb-bold text-white text-center text-[clamp(3.25rem,5.2vw,5.5rem)] leading-[1.05]">
             <Typewriter options={{strings: "Welcome To Nexus!", autoStart: true, cursor: "_", delay: 50}} />
           </h1>
           <h2
             className={`relative z-10 flex font-titilliumWeb-regular text-white text-center text-[clamp(1.75rem,2.4vw,2.6rem)] leading-[1.15] ${isMobile ? 'w-[86%]' : 'w-[62%]'}`}>
-            The best place for connecting with classmates, enhancing collaboration, and boosting academic success.
+            Your hub for connecting with classmates, enhancing collaboration, and planning for success.
           </h2>
           <Link to="/signup" className="relative z-10 bg-white text-nexus-blue-900 py-4 px-16 text-2xl font-titilliumWeb-bold rounded-lg mt-6 flex flex-row items-center gap-2 border border-transparent
                               transition duration-300 hover:scale-105 hover:bg-gray-100 drop-shadow-black">
@@ -254,11 +254,11 @@ const [showScrollTop, setShowScrollTop] = useState(false);
             transition={{ duration: 0.6, ease: 'easeOut' }}
             viewport={{ once: false, amount: 0.5 }}
           >
-            Connect with peers and share knowledge effortlessly with our automated Discord server filtering for all your classes.
+            Effortlessly connect with your peers through automated Discord servers, filtered for each one of your classes.
           </motion.h1>
 
           <motion.img 
-            className='w-[35%] absolute left-1/2 -translate-x-[25%] -top-70 pointer-events-none will-change-transform'
+            className='w-[35%] absolute left-1/2 -translate-x-[10%] -top-60 pointer-events-none will-change-transform'
             variants={floatingVariants} 
             src='/assets/HomePageAssets/Laptop.svg' 
             animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 7.5}}/>
@@ -292,10 +292,10 @@ const [showScrollTop, setShowScrollTop] = useState(false);
             transition={{ duration: 0.6, ease: 'easeOut' }}
             viewport={{ once: false, amount: 0.5 }}
           >
-            Stay on top of your grades and assignments and see the impact of a quiz or exam on your grade using the grade calculator. 
+            Determine the impact of your upcoming test or quiz to stay on top of your grades with Grade Calculator.
           </motion.h1>
           <motion.img 
-            className='w-[25%] absolute right-1/2 scale-120 -top-70 pointer-events-none will-change-transform rotate-30'
+            className='w-[25%] absolute right-1/2 scale-120 -translate-x-[15%] -top-50 pointer-events-none will-change-transform rotate-30'
             variants={floatingVariants} 
             src='/assets/Calculator.svg' 
             animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 7.5}}/>
@@ -324,10 +324,10 @@ const [showScrollTop, setShowScrollTop] = useState(false);
             transition={{ duration: 0.6, ease: 'easeOut' }}
             viewport={{ once: false, amount: 0.5 }}
           >
-            Missed a lecture? Cramming for an exam? No biggie! Access and contribute to study materials alongside your classmates using Nexus’ Superdoc!
+            Upload and combine your notes with your classmates through SuperDoc, the ultimate cramming tool and study guide.
           </motion.h1>
           <motion.img 
-            className='w-[25%] absolute left-1/2 scale-120 translate-x-20 -top-60 pointer-events-none will-change-transform'
+            className='w-[25%] absolute left-1/2 scale-120 translate-x-40 -top-40 pointer-events-none will-change-transform'
             variants={floatingVariants} 
             src='/assets/Book.svg' 
             animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 7.5}}/>
@@ -404,7 +404,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
                   hover:scale-105 hover:bg-nexus700 transition"
       >
         <span className="tinyText font-titilliumWeb-semibold whitespace-nowrap">
-          Fill out feedback form
+          Give us Feedback!
         </span>
 
         {/*hover tip*/}
@@ -415,8 +415,8 @@ const [showScrollTop, setShowScrollTop] = useState(false);
                     transition-all duration-300
                     group-hover:opacity-100 group-hover:translate-y-0"
         >
-          Run into any issues, potential improvements, or want to tell us what you like about Nexus,
-          let us know by filling out this form.
+          Run into any issues, potential improvements, or want to tell us what you like about Nexus?
+          Let us know by filling out this form!
           <br />
           <br />
           We appreciate any and all input :)
@@ -436,7 +436,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
         aria-label="Back to top"
       >
         <HiArrowNarrowUp size={20} />
-        <span className="font-titilliumWeb-semibold text-sm">Back to top</span>
+        <span className="font-titilliumWeb-semibold text-sm">Back to Top</span>
       </button>
     </div>
     </>

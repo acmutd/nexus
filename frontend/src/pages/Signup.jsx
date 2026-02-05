@@ -184,7 +184,7 @@ export default function Signup() {
         <div className="text-center tinyText text-gray-700 font-titilliumWeb-bold">
           Already have an account?{" "}
           <Link to="/login" className="font-bold text-blue-900 hover:underline">
-            Login here
+            Login Here
           </Link>
         </div>
       </div>

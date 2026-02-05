@@ -125,7 +125,7 @@ const Login = () => {
       >
         <div className={`transition-all duration-500 ${showForgot ? "opacity-0 pointer-events-none -translate-x-full absolute" : "opacity-100"}`}>
           <h2 className="bodyText mb-1 text-nexus900 font-titilliumWeb-bold">Login to Nexus</h2>
-          <p className="text-nexus700 mb-4 tinyText font-titilliumWeb-bold">Enter your email and password below to login</p>
+          <p className="text-nexus700 mb-4 tinyText font-titilliumWeb-bold">Enter your email and password below to login.</p>
           <form onSubmit={loginWithEmail}>
             <div className="mb-4 font-titilliumWeb-semibold tinyText">
               <h1 className="tinyText font-titilliumWeb-semibold text-nexus700 mb-2">
@@ -172,11 +172,11 @@ const Login = () => {
           </form>
           
           <div className="text-center tinyText text-gray-700 font-titilliumWeb-bold mt-4">
-            Don’t have an account? <Link to="/signup" className="font-bold text-blue-900 hover:underline">Sign Up here</Link>
+            Don’t have an account? <Link to="/signup" className="font-bold text-blue-900 hover:underline">Sign Up Here</Link>
           </div>
           
           <div className="text-center mt-1 font-titilliumWeb-bold">
-            <button type="button" className="tinyText font-bold text-blue-900 hover:underline cursor-pointer" onClick={() => setShowForgot(true)}>Forgot password?</button>
+            <button type="button" className="tinyText font-bold text-blue-900 hover:underline cursor-pointer" onClick={() => setShowForgot(true)}>Forgot Password?</button>
           </div>
         </div>
 

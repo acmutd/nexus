@@ -217,7 +217,7 @@ const Home = () => {
                   hover:scale-105 hover:bg-nexus700 transition"
       >
         <span className="tinyText font-titilliumWeb-semibold whitespace-nowrap">
-          Fill out feedback form
+          Give us Feedback!
         </span>
 
         {/*hover tip*/}
@@ -228,8 +228,8 @@ const Home = () => {
                     transition-all duration-300
                     group-hover:opacity-100 group-hover:translate-y-0"
         >
-          Run into any issues, potential improvements, or want to tell us what you like about Nexus,
-          let us know by filling out this form.
+          Run into any issues, potential improvements, or want to tell us what you like about Nexus?
+          Let us know by filling out this form!
           <br />
           <br />
           We appreciate any and all input :)
