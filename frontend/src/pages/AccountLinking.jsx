@@ -312,9 +312,8 @@ const AccountLinking = () => {
             />
 
             <div
-                className="flex flex-col min-h-[265px] items-start bg-white rounded-lg p-6 border border-gray-200 
-                        transition duration-300 ease-in-out relative z-10 
-                        font-titilliumWeb"
+                className="flex flex-col min-h-[265px] md:min-h-[265px] items-start bg-white rounded-lg p-6 border border-gray-200 
+             transition duration-300 ease-in-out relative z-10 font-titilliumWeb"
                 style={{ height: '100%', width: '100%' }}
             >
                 <div className="mb-4 self-start">{icon}</div>
