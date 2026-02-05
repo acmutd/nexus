@@ -3,7 +3,7 @@ import { HiArrowNarrowRight, HiArrowNarrowUp, HiCalculator, HiUserGroup, HiDocum
 import { useMediaQuery } from 'react-responsive';
 import { useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence} from 'framer-motion';
-import { TypeAnimation } from 'react-type-animation'
+import Typewriter from 'typewriter-effect'
 import { useMobile } from '../context/mobileContext';
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import StarFieldOverlay from '../components/StarFieldOverlay';
@@ -210,16 +210,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           style={{ scrollSnapAlign: 'none' }}
         >
           <h1 className={`flex font-titilliumWeb-bold text-white text-5xl text-center `}>
-            <TypeAnimation
-              sequence={[
-                '',
-                'Welcome To Nexus!',
-              ]}
-              wrapper="span"
-              speed={30}
-              cursor={true}
-              repeat={0}
-            />
+            <Typewriter options={{strings: "Welcome To Nexus!", autoStart: true, cursor: "_", delay: 50}} />
           </h1>
           <h2
             className={`flex headingText font-titilliumWeb-regular text-white text-center ${isMobile ? 'w-[80%]' : 'w-[54%]'} `}>
