@@ -127,9 +127,9 @@ const [showScrollTop, setShowScrollTop] = useState(false);
       path: '/assets/HomePageAssets/Books.svg',
       style: {
           position: 'absolute',
-          top: '10%',
-          left: '10%',
-          width: '15%',
+          top: '2%',
+          left: '6%',
+          width: '17%',
       },
       custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 7.5 }
     },
@@ -138,9 +138,9 @@ const [showScrollTop, setShowScrollTop] = useState(false);
       path: '/assets/HomePageAssets/ChairLP.svg',
       style: {
           position: 'absolute',
-          top: '35%',
-          left: '6%',
-          width: '17%',
+          top: '32%',
+          left: '3%',
+          width: '19%',
       },
       custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 7.5 }
     },
@@ -149,9 +149,9 @@ const [showScrollTop, setShowScrollTop] = useState(false);
       path: '/assets/HomePageAssets/PigyLP.svg',
       style: {
           position: 'absolute',
-          top: '45%',
-          left: '17%',
-          width: '18%',
+          top: '56%',
+          left: '14%',
+          width: '20%',
       },
       custom: { x: -5, y: -6, startRotate: -6, endRotate: 4, duration: 7.5 }
     },
@@ -161,8 +161,8 @@ const [showScrollTop, setShowScrollTop] = useState(false);
       style: {
           position: 'absolute',
           top: '30%',
-          right: '5%',
-          width: '13%',
+          right: '3%',
+          width: '15%',
       },
       custom: { x: -5, y: -6, startRotate: -6, endRotate: 4, duration: 7.5 }
     },
@@ -171,9 +171,9 @@ const [showScrollTop, setShowScrollTop] = useState(false);
       path: '/assets/HomePageAssets/Peechi.svg',
       style: {
           position: 'absolute',
-          top: '10%',
-          right: '15%',
-          width: '10%',
+          top: '2%',
+          right: '13%',
+          width: '12%',
       },
       custom: { x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 7.5 }
     },
@@ -182,9 +182,9 @@ const [showScrollTop, setShowScrollTop] = useState(false);
       path: '/assets/Megaphone.svg',
       style: {
           position: 'absolute',
-          top: '50%',
-          right: '14%',
-          width: '15%',
+          top: '62%',
+          right: '10%',
+          width: '18%',
           scaleX: -1
           
       },
@@ -195,7 +195,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
   return (
     <>
     <div
-      className="min-h-screen w-full flex justify-center bg-linear-to-b from-nexus900 to-nexus700 bg-no-repeat bg-cover bg-center overflow-hidden snap-y snap-mandatory overflow-y-auto"
+      className="min-h-screen w-full flex justify-center bg-nexus700 bg-linear-to-b from-nexus900 to-nexus700 bg-no-repeat bg-top bg-[length:100%_85vh] overflow-hidden snap-y snap-mandatory overflow-y-auto"
       style={{ scrollPaddingTop: isMobile ? 0 : '120px' }}
     >
       <StarFieldOverlay count={200}/>
@@ -209,14 +209,14 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           className={`flex flex-col h-[60vh] justify-center text-center items-center relative scale-110`}
           style={{ scrollSnapAlign: 'none' }}
         >
-          <h1 className={`flex font-titilliumWeb-bold text-white text-5xl text-center `}>
+          <h1 className="relative z-10 flex font-titilliumWeb-bold text-white text-center text-[clamp(3.25rem,5.2vw,5.5rem)] leading-[1.05]">
             <Typewriter options={{strings: "Welcome To Nexus!", autoStart: true, cursor: "_", delay: 50}} />
           </h1>
           <h2
-            className={`flex headingText font-titilliumWeb-regular text-white text-center ${isMobile ? 'w-[80%]' : 'w-[54%]'} `}>
+            className={`relative z-10 flex font-titilliumWeb-regular text-white text-center text-[clamp(1.75rem,2.4vw,2.6rem)] leading-[1.15] ${isMobile ? 'w-[86%]' : 'w-[62%]'}`}>
             The best place for connecting with classmates, enhancing collaboration, and boosting academic success.
           </h2>
-          <Link to="/signup" className="bg-white text-nexus-blue-900 py-3 px-14 text-xl font-titilliumWeb-bold rounded-lg mt-4 flex flex-row items-center gap-2 border border-transparent
+          <Link to="/signup" className="relative z-10 bg-white text-nexus-blue-900 py-4 px-16 text-2xl font-titilliumWeb-bold rounded-lg mt-6 flex flex-row items-center gap-2 border border-transparent
                               transition duration-300 hover:scale-105 hover:bg-gray-100 drop-shadow-black">
             Get Started
             <HiArrowNarrowRight className="pt-0.5" size={25} />
@@ -229,7 +229,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
               variants={floatingVariants}
               animate="float"
               custom={obj.custom}
-              className='will-change-transform pointer-events-none overflow-hidden'
+              className='-z-10 will-change-transform pointer-events-none overflow-hidden'
           >
                 <img 
                     src={obj.path} 
@@ -238,7 +238,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
                 />
           </motion.div>
         )
-      ))}
+        ))}
         </div>
         
         {/* -------------------------------- LAPTOP ---------------------------------- */}
@@ -248,7 +248,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           style={{ scrollSnapAlign: isMobile ? 'none' : 'start', scrollMarginTop: isMobile ? undefined : '120px' }}
         >
           <motion.h1
-            className='flex titleText font-titilliumWeb-semibold text-white w-[48%]'
+            className='flex font-titilliumWeb-semibold text-white w-[52%] text-[clamp(2.6rem,3.4vw,3.8rem)] leading-[1.12]'
             initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -286,7 +286,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           style={{ scrollSnapAlign: isMobile ? 'none' : 'start', scrollMarginTop: isMobile ? undefined : '120px' }}
         >
           <motion.h1
-            className='flex titleText font-titilliumWeb-semibold text-white w-[48%]'
+            className='flex font-titilliumWeb-semibold text-white w-[52%] text-[clamp(2.6rem,3.4vw,3.8rem)] leading-[1.12]'
             initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -318,7 +318,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           style={{ scrollSnapAlign: isMobile ? 'none' : 'start', scrollMarginTop: isMobile ? undefined : '120px' }}
         >
           <motion.h1
-            className='flex titleText font-titilliumWeb-semibold text-white w-[55%]'
+            className='flex font-titilliumWeb-semibold text-white w-[60%] text-[clamp(2.6rem,3.4vw,3.8rem)] leading-[1.12]'
             initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
