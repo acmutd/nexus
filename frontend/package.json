@@ -32,6 +32,7 @@
     "react-responsive": "^10.0.1",
     "react-router-dom": "^7.6.3",
     "react-select": "^5.10.2",
+    "react-type-animation": "^3.2.0",
     "simplebar-react": "^3.3.2",
     "typewriter-effect": "^2.22.0",
     "vercel": "^50.6.1"

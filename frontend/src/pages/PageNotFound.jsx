@@ -4,18 +4,22 @@ import {motion} from "framer-motion";
 
 const PageNotFound = () => {
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-nexus900">
+        <div className="fixed inset-0 flex items-center justify-center bg-nexus900 font-titilliumWeb-semibold">
             <motion.div
                 initial={{opacity: 0, y: 24}}
                 animate={{opacity: 1, y: 0}}
                 transition={{duration: 0.35, ease: "easeOut"}}
                 className="w-full max-w-2xl px-8 py-16 text-center"
             >
-                <div className="mb-6 text-nexus400 text-sm tracking-wide uppercase">
-                    Nexus
+                <div className="flex justify-center">
+                    <img
+                        src="/assets/UnderConstructionIcon.svg"
+                        alt="Maintenance illustration"
+                        className="w-90 h-35"
+                        />
                 </div>
 
-                <h1 className="text-7xl font-titilliumWeb-semibold text-white mb-4">
+                <h1 className="text-7xl font-titilliumWeb-semibold text-white">
                     404
                 </h1>
 

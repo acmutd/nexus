@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
 html, body {
   overscroll-behavior-y: none; 
 }
@@ -26,7 +29,7 @@ html, body {
   line-height: 1.15; 
 }
 .headingText {
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-size: clamp(1.5rem, 2vw, 2rem);
   line-height: 1.15; 
 }
 .titleText {

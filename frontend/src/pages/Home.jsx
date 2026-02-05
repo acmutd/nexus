@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { delay, motion } from 'framer-motion';
 import { useMobile } from '../context/mobileContext';
+import StarFieldOverlay from '../components/StarFieldOverlay';
 
 const acmWebsites = [
   { name: 'UTD Grades', link: 'https://www.utdgrades.com', icon: "/assets/UTDGradesIcon.svg", description: "Make smarter choices by seeing how students did in any given class." },
@@ -50,10 +51,10 @@ const Home = () => {
           style: {
               position: 'fixed',
               top: '15%',
-              left: '5%',
-              width: '200px',
+              left: '3%',
+              width: '240px',
           },
-          custom: { x: 5, y: -6, startRotate: 0, endRotate: -6, duration: 7.5 }
+          custom: { x: 10, y: -6, startRotate: -2, endRotate: 6, duration: 6.2 }
       },
       {
           name: 'chair',
@@ -64,7 +65,7 @@ const Home = () => {
               right: '2%',
               width: '240px',
           },
-          custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 7.5 }
+          custom: { x: -7, y: -8, startRotate: -2, endRotate: -9, duration: 5.1 }
       },
       {
           name: 'coffee',
@@ -75,7 +76,7 @@ const Home = () => {
               left: '3%',
               width: '200px',
           },
-          custom: { x: 8, y: -5, startRotate: 0, endRotate: 3, duration: 7.5 }
+          custom: { x: 9, y: -7, startRotate: 1, endRotate: 7, duration: 4.8 }
       },
       {
           name: 'books',
@@ -86,7 +87,7 @@ const Home = () => {
               right: '2%',
               width: '200px',
           },
-          custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 7.5 }
+          custom: { x: -6, y: -5, startRotate: -1, endRotate: -5, duration: 6.7 }
       },
       {
           name: 'pigy',
@@ -97,7 +98,7 @@ const Home = () => {
               right: '3%',
               width: '220px',
           },
-          custom: { x: 8, y: -5, startRotate: 0, endRotate: 3, duration: 7.5 }
+          custom: { x: 11, y: -6, startRotate: 1, endRotate: 8, duration: 5.3 }
       },
       {
           name: 'peechi',
@@ -108,14 +109,15 @@ const Home = () => {
               left: '5%',
               width: '140px',
           },
-          custom: { x: 8, y: -5, startRotate: 0, endRotate: 3, duration: 7.5 }
+          custom: { x: 7, y: -6, startRotate: -3, endRotate: 3, duration: 7.1 }
       }
   ];
 
   return (
     <>
       <div className={`inset-0 min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center fixed overflow-hidden z-0`} 
-          style={{ backgroundImage: "url('/assets/BasicBG.svg')"}}/>
+          style={{ backgroundImage: "url('assets/BasicBG.svg')"}}/>
+           <StarFieldOverlay count={isMobile ? 100 : 200} />
 
       {/* Floating objects */}
       {objects.map((obj) => (
