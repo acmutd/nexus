@@ -30,10 +30,13 @@ const Navbar = () => {
   };
 
   const underline = (
-  <span className="hidden md:block absolute -bottom-1 left-4 h-0.5 bg-white
-                   w-max min-w-[calc(100%-12px)]
-                   transform scale-x-0 transition-transform duration-300
-                   origin-left group-hover:scale-x-100" />
+  <span
+    className={`hidden md:block absolute -bottom-1 left-4 h-0.5
+      w-max min-w-[calc(100%-12px)]
+      transform scale-x-0 transition-transform duration-300
+      origin-left group-hover:scale-x-100
+      ${isScrolled ? 'bg-nexus800' : 'bg-white'}
+    `}/>
 );
 
   return (
