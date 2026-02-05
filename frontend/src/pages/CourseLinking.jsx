@@ -42,6 +42,14 @@ export default function CourseLinking() {
   // Login via NetID modal state
   const [showLoginNetIDModal, setShowLoginNetIDModal] = useState(false);
 
+  // Check if user is in pre-Firestore onboarding flow
+  const [isPreFirestoreOnboarding, setIsPreFirestoreOnboarding] = useState(false);
+
+  useEffect(() => {
+    const pendingOnboarding = sessionStorage.getItem('pendingOnboarding');
+    setIsPreFirestoreOnboarding(!!pendingOnboarding);
+  }, []);
+
   // Open modal automatically if we were redirected from the old accessrequest page
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -51,21 +59,21 @@ export default function CourseLinking() {
   // If onboarding already has courses and we weren't explicitly asked to relink, bounce to /home immediately.
   useEffect(() => {
     if (authLoading || !onboarding?.loaded) return;
-    if (onboarding.hasCourses && !location.state?.forceCourseRelink) {
+    if (onboarding.hasCourses && !location.state?.forceCourseRelink && !isPreFirestoreOnboarding) {
       navigate('/home', { replace: true });
     }
-  }, [authLoading, onboarding, location.state, navigate]);
+  }, [authLoading, onboarding, location.state, navigate, isPreFirestoreOnboarding]);
 
   // Entry animation similar to login/signup popup (skip if we're going to redirect)
   useEffect(() => {
-    if (onboarding?.hasCourses && !location.state?.forceCourseRelink) return;
+    if (onboarding?.hasCourses && !location.state?.forceCourseRelink && !isPreFirestoreOnboarding) return;
     setPopupVisible(false);
     const t = setTimeout(() => {
       if (popupRef.current) popupRef.current.offsetHeight;
       setPopupVisible(true);
     }, 60);
     return () => clearTimeout(t);
-  }, [location.pathname, location.key, onboarding?.hasCourses, location.state]);
+  }, [location.pathname, location.key, onboarding?.hasCourses, location.state, isPreFirestoreOnboarding]);
 
   // Handle removing courses
   const handleRemoveCourse = (indexToRemove) => {
@@ -154,7 +162,7 @@ export default function CourseLinking() {
     }
   };
 
-  // Save parsed courses when user clicks "Continue"
+
   const handleConfirmAndContinue = async (coursesArg = null, metaArg = null) => {
     setSavingTranscript(true);
     setTranscriptError('');
@@ -169,10 +177,11 @@ export default function CourseLinking() {
       console.log('[CourseLinking] handleConfirmAndContinue start', {
         coursesCount: coursesToSave?.length || 0,
         meta: metaToSave,
+        isPreFirestoreOnboarding,
       });
+      
       const auth = getAuth();
       const user = auth.currentUser;
-      let onboardingResult = null;
 
       if (!user) {
         setTranscriptError('Please log in first');
@@ -180,64 +189,80 @@ export default function CourseLinking() {
         return;
       }
 
-      const token = await user.getIdToken();
-
-      const response = await fetch(`/api/confirm-transcript`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: user.uid, token, courses: coursesToSave, meta: metaToSave })
-      });
-
-      const data = await response.json();
-      console.log('[CourseLinking] confirm-transcript response', { ok: response.ok, status: response.status, data });
-      if (!response.ok || !data.success) throw new Error(data.error || 'Failed to save transcript');
-
-      // Navigate on success -> go to account linking
-      // Refresh onboarding state in context so RequireOnboarding can redirect appropriately
-      try {
-        // Try to refresh onboarding; poll a few times in case of eventual consistency
-        let onboarding = await refreshOnboarding(user);
-        onboardingResult = onboarding;
-        console.log('[CourseLinking] onboarding after save', onboarding);
-        const maxAttempts = 6;
-        for (let i = 0; i < maxAttempts && onboarding && !onboarding.hasCourses; i++) {
-          await new Promise((r) => setTimeout(r, 500));
-          onboarding = await refreshOnboarding(user);
-          onboardingResult = onboarding;
-          console.log(`[CourseLinking] onboarding poll ${i + 1}`, onboarding);
-        }
-        if (!onboarding || !onboarding.hasCourses) {
-          console.warn('[CourseLinking] onboarding still reports no courses after polling; proceeding anyway');
-        }
-      } catch (e) {
-        console.warn('refreshOnboarding failed after transcript save', e);
-      }
-
-      // For redo flow, mark account linking as skipped so guards won't redirect
-      if (isRedoFlow) {
-        try {
-          const { db } = await initFirebase();
-          await setDoc(
-            doc(db, 'users', user.uid),
-            {
-              accountLinkingSkipped: true,
-              accountLinkingSkippedAt: new Date().toISOString(),
-            },
-            { merge: true }
-          );
-          await refreshOnboarding(user);
-        } catch (e) {
-          console.warn('Failed to mark accountLinkingSkipped after relink', e);
-        }
-      }
-      const skipAccountStep = isRedoFlow || (onboardingResult && onboardingResult.accountLinkingSkipped);
-
-      if (skipAccountStep) {
-        console.log('[CourseLinking] navigating to /home (skip/accountLinkingSkipped)');
-        navigate('/home');
-      } else {
+      // Check if this is the initial onboarding flow (before Firestore document exists)
+      const pendingOnboarding = sessionStorage.getItem('pendingOnboarding');
+      
+      if (pendingOnboarding) {
+        console.log('[CourseLinking] Storing courses in sessionStorage for later');
+        const onboardingData = JSON.parse(pendingOnboarding);
+        onboardingData.courses = coursesToSave;
+        onboardingData.meta = metaToSave;
+        sessionStorage.setItem('pendingOnboarding', JSON.stringify(onboardingData));
+        
         console.log('[CourseLinking] navigating to /accountlinking');
         navigate('/accountlinking');
+      } else {
+        const token = await user.getIdToken();
+
+        const response = await fetch(`/api/confirm-transcript`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: user.uid, token, courses: coursesToSave, meta: metaToSave })
+        });
+
+        const data = await response.json();
+        console.log('[CourseLinking] confirm-transcript response', { ok: response.ok, status: response.status, data });
+        if (!response.ok || !data.success) throw new Error(data.error || 'Failed to save transcript');
+
+        // Refresh onboarding state
+        let onboardingResult = null;
+        try {
+          let onboarding = await refreshOnboarding(user);
+          onboardingResult = onboarding;
+          console.log('[CourseLinking] onboarding after save', onboarding);
+          const maxAttempts = 6;
+          for (let i = 0; i < maxAttempts && onboarding && !onboarding.hasCourses; i++) {
+            await new Promise((r) => setTimeout(r, 500));
+            onboarding = await refreshOnboarding(user);
+            onboardingResult = onboarding;
+            console.log(`[CourseLinking] onboarding poll ${i + 1}`, onboarding);
+          }
+          if (!onboarding || !onboarding.hasCourses) {
+            console.warn('[CourseLinking] onboarding still reports no courses after polling; proceeding anyway');
+          }
+        } catch (e) {
+          console.warn('refreshOnboarding failed after transcript save', e);
+        }
+
+        // For redo flow, mark account linking as skipped
+        if (isRedoFlow) {
+          try {
+            const { db } = await initFirebase();
+            await setDoc(
+              doc(db, 'users', user.uid),
+              {
+                accountLinkingSkipped: true,
+                accountLinkingSkippedAt: new Date().toISOString(),
+              },
+              { merge: true }
+            );
+            await refreshOnboarding(user);
+          } catch (e) {
+            console.warn('Failed to mark accountLinkingSkipped after relink', e);
+          }
+        }
+        const skipAccountStep = isRedoFlow || 
+          (onboardingResult && onboardingResult.accountLinkingSkipped) ||
+          (onboardingResult && onboardingResult.discordLinked);
+
+
+        if (skipAccountStep) {
+          console.log('[CourseLinking] navigating to /home (skip/accountLinkingSkipped)');
+          navigate('/home');
+        } else {
+          console.log('[CourseLinking] navigating to /accountlinking');
+          navigate('/accountlinking');
+        }
       }
     } catch (error) {
       console.error('Confirm transcript error:', error);
@@ -275,10 +300,11 @@ export default function CourseLinking() {
       </div>
   );
 
-  // While waiting to decide (or redirecting), show nothing to avoid flicker
-  if ((authLoading || !onboarding?.loaded) || (onboarding?.hasCourses && !location.state?.forceCourseRelink)) {
+
+  if ((authLoading || !onboarding?.loaded) || (onboarding?.hasCourses && !location.state?.forceCourseRelink && !isPreFirestoreOnboarding)) {
     return null;
   }
+  
   const floatVariants = {
     float: (custom) => ({
       y: [0, custom.y, 0],
@@ -315,7 +341,7 @@ export default function CourseLinking() {
         },
         custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
     },
-        {
+    {
         name: 'peechi',
         path: '/assets/LoginPipelineAssets/LoginPipelinePeechi.svg',
         style: {
