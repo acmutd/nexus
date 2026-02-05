@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import Button from "../components/Button";
 
 export default function Signup() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [pwVisible, setPwVisible] = useState(false);
   const [pw2Visible, setPw2Visible] = useState(false);
@@ -13,6 +14,20 @@ export default function Signup() {
   const [pw2, setPw2] = useState("");
   const [error, setError] = useState("");
   const [sendingEmail, setSendingEmail] = useState(false);
+
+  // Popup animation state: retrigger on every navigation to this route
+  const popupRef = useRef(null);
+  const [popupVisible, setPopupVisible] = useState(false);
+  
+  useEffect(() => {
+    setPopupVisible(false);
+    const t = setTimeout(() => {
+      // Force reflow so transition runs reliably
+      if (popupRef.current) popupRef.current.offsetHeight;
+      setPopupVisible(true);
+    }, 60);
+    return () => clearTimeout(t);
+  }, [location.pathname, location.key]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -84,7 +99,12 @@ export default function Signup() {
         backgroundPosition: 'center'
       }}
     >
-      <div className="bg-nexus100 rounded-lg shadow-lg p-8 w-full max-w-md">
+      <div
+        ref={popupRef}
+        className={`bg-nexus100 rounded-lg shadow-lg p-8 w-full max-w-md transition-all duration-500 transform ${
+          popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
+        }`}
+      >
         <h2 className="bodyText mb-1 text-gray-800 font-titilliumWeb-bold">Sign up for Nexus</h2>
         <p className="text-blue-900 mb-6 tinyText font-titilliumWeb-bold">Create an account to get started</p>
         
@@ -156,7 +176,7 @@ export default function Signup() {
           <Button
             type="submit"
             className={"mb-2"}
-            text={sendingEmail ? "Sending..." : "Continue"}
+            text={sendingEmail ? "Verifying..." : "Continue"}
             disabled={sendingEmail}
           />
         </form>
