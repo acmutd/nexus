@@ -6,7 +6,7 @@ import { Navigate, useLocation } from 'react-router-dom'
 import { getDoc, doc } from 'firebase/firestore'
 
 // Single source of truth for where to send users after logout/delete.
-export const LOGOUT_REDIRECT_PATH = '/'
+export const LOGOUT_REDIRECT_PATH = '/login'
 
 // Helpers for redirect handling (single source of truth)
 export function setPostLogoutRedirect(path = LOGOUT_REDIRECT_PATH) {

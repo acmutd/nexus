@@ -240,14 +240,26 @@ function DiscordServers() {
               <span className="font-titilliumWeb-semibold text-gray-300 tinyText mt-4">
                     Use our Smart Join feature to be added to all your necessary servers at once! Hover over the button to see which servers hold your courses.
               </span>
-              <div className="flex mt-4 w-full">
-                <div className={`${isMobile ? 'w-full' : 'w-auto'}`}>
+              <div className="flex mt-4 w-full justify-center w-full">
+                <div className={`${isMobile ? 'w-full flex justify-center' : 'w-auto'}`}>
                   <div className="relative group inline-block">
-                    <Button
-                      className="bg-nexus600 px-4 py-2"
+                      <Button
+                      className="
+                        bg-nexus600
+                        px-10 py-3
+                        md:py-5
+                        text-2xl md:text-lg
+                        font-semibold
+                        rounded-xl
+                        shadow-lg
+                        transition-all duration-200
+                        active:scale-95
+                        disabled:opacity-60
+                      "
                       onClick={joinBusy ? undefined : startJoinAll}
                       text={joinBusy ? "Opening Discord…" : "Smart Join"}
                     />
+
                     <div className="absolute left-0 mt-2 w-72 bg-nexus900 text-white text-xs rounded-md p-3 shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20">
                       <div className="font-titilliumWeb-bold mb-1">Your Courses:</div>
                       {derived.normalized?.length ? (
