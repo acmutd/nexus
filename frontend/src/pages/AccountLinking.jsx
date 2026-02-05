@@ -11,6 +11,7 @@ import {
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import FloatingClouds from '../components/FloatingClouds';
 import { motion } from 'motion/react';
+import StarFieldOverlay from '../components/StarFieldOverlay';
 
 const AccountLinking = () => {
     const navigate = useNavigate();
@@ -399,6 +400,7 @@ const AccountLinking = () => {
         backgroundImage: "url('/assets/BasicBG.svg')"
       }}
     >
+    <StarFieldOverlay count={isMobile ? 120 : 220} allowDepthBlur />
     {/* FLOATING ICONS */}
     <div className='fixed overflow-hidden w-full h-full'>
       <FloatingClouds />

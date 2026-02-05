@@ -14,6 +14,7 @@ import { initFirebase } from '../firebase';
 import { motion } from 'motion/react';
 import FloatingClouds from '../components/FloatingClouds';
 import { useMobile } from '../context/mobileContext';
+import StarFieldOverlay from '../components/StarFieldOverlay';
 
 export default function CourseLinking() {
   const {isMobile} = useMobile()
@@ -346,6 +347,7 @@ export default function CourseLinking() {
         backgroundImage: "url('/assets/BasicBG.svg')"
       }}
     >
+    <StarFieldOverlay count={isMobile ? 120 : 220} allowDepthBlur />
     {/* FLOATING ICONS */}
     <div className='fixed overflow-hidden w-full h-full'>
       <FloatingClouds />

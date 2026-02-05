@@ -1,7 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useMobile } from '../context/mobileContext';
-import StarsOverlay from '../components/StarsOverlay';
 import StarFieldOverlay from '../components/StarFieldOverlay';
 
 const acmWebsites = [
@@ -117,7 +116,7 @@ const Home = () => {
   return (
     <>
       <div className={`inset-0 min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center fixed overflow-hidden z-0`} 
-          style={{ backgroundImage: "url('/assets/BasicBGTest.svg')"}}/>
+          style={{ backgroundImage: "url('assets/BasicBG.svg')"}}/>
            <StarFieldOverlay count={isMobile ? 100 : 200} />
 
       {/* Floating objects */}
