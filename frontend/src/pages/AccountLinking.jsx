@@ -11,6 +11,7 @@ import {
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import FloatingClouds from '../components/FloatingClouds';
 import { motion } from 'motion/react';
+import StarFieldOverlay from '../components/StarFieldOverlay';
 
 const AccountLinking = () => {
     const navigate = useNavigate();
@@ -439,20 +440,20 @@ const AccountLinking = () => {
             right: '5%',
             width: '18%',
         },
-        custom: { x: 5, y: 6, startRotate: 0, endRotate: 6, duration: 10 }
+        custom: { x: 5, y: 6, startRotate: 0, endRotate: 6, duration: 5.5 }
     },
     {
         name: 'book',
         path: '/assets/Book.svg',
         style: {
             position: 'fixed',
-            bottom: '5%',
+            bottom: '3%',
             right: '2%',
             width: '18%',
         },
-        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 5.5 }
     },
-        {
+    {
         name: 'peechi',
         path: '/assets/LoginPipelineAssets/LoginPipelinePeechi.svg',
         style: {
@@ -461,7 +462,7 @@ const AccountLinking = () => {
             left: '5%',
             width: '12%',
         },
-        custom: { x: 5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+        custom: { x: 8, y: -5, startRotate: 0, endRotate: 3, duration: 5.5 }
     },
     {
         name: 'microphone',
@@ -472,7 +473,7 @@ const AccountLinking = () => {
             left: '5%',
             width: '18%',
         },
-        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 5.5 }
     },
   ]
 
@@ -483,6 +484,7 @@ const AccountLinking = () => {
         backgroundImage: "url('/assets/BasicBG.svg')"
       }}
     >
+    <StarFieldOverlay count={isMobile ? 120 : 220} allowDepthBlur />
     {/* FLOATING ICONS */}
     <div className='fixed overflow-hidden w-full h-full'>
       <FloatingClouds />
