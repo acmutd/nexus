@@ -6,7 +6,10 @@ import { Navigate, useLocation } from 'react-router-dom'
 import { getDoc, doc } from 'firebase/firestore'
 
 // Single source of truth for where to send users after logout/delete.
-export const LOGOUT_REDIRECT_PATH = '/login'
+export const LOGOUT_REDIRECT_PATH = '/'
+
+// Default redirect for unauthenticated access to protected routes.
+export const UNAUTH_REDIRECT_PATH = '/login'
 
 // Helpers for redirect handling (single source of truth)
 export function setPostLogoutRedirect(path = LOGOUT_REDIRECT_PATH) {
@@ -140,7 +143,7 @@ export function RequireAuth({ children }) {
   if (!user) {
     // Honor a one-time post-logout/delete redirect, else fall back to login
     const target = consumePostLogoutRedirect()
-    const dest = target || LOGOUT_REDIRECT_PATH || "/login"
+    const dest = target || UNAUTH_REDIRECT_PATH || '/login'
     return <Navigate to={dest} state={{ from: location }} replace />
   }
   return children
