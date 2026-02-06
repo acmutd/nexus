@@ -10,10 +10,10 @@ import {
   browserSessionPersistence,
   browserLocalPersistence,
 } from "firebase/auth";
-
+import StarFieldOverlay from "../components/StarFieldOverlay";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import Button from "../components/Button";
-
+import {motion} from 'framer-motion'
 const Login = () => {
   const navigate = useNavigate();
 
@@ -93,8 +93,6 @@ const Login = () => {
     }
   };
 
-
-
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     setForgotError("");
@@ -111,16 +109,46 @@ const Login = () => {
     }
   };
 
+  const floatingVariants = {
+    float: (custom) => ({
+      x: [0, custom.x, 0],
+      y: [0, custom.y, 0],
+      rotate: [custom.startRotate, custom.endRotate, custom.startRotate],
+      transition: {
+        duration: custom.duration,
+        ease: 'easeInOut',
+        repeat: Infinity
+      }
+    })
+  }
+
   if (loading) return <div className="flex items-center justify-center min-h-screen bg-blue-950 text-blue-200">Loading...</div>;
 
   return (
     <div
-      className="flex flex-col items-center justify-center min-h-screen bg-blue-950 font-titilliumWeb-regular bg-no-repeat bg-cover bg-center"
-      style={{ backgroundImage: "url('/assets/LoginBG.svg')" }}
-    >
+      className="flex flex-col items-center justify-center min-h-screen bg-linear-to-b from-nexus900 to-nexus700 font-titilliumWeb-regular">
+
+      { /* BACKGROUN ASSETS */}
+      <div className="fixed inset-0">
+        <StarFieldOverlay count={200}/>
+        <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.3}} 
+                    src="/assets/LoginSignUpAssets/LSBGClouds.svg" className="bottom-0 fixed will-change-transform pointer-events-none"/>
+        <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.4}} 
+                    src="/assets/LoginSignUpAssets/LSCliffGuy.svg" className="bottom-0 fixed w-[35%] will-change-transform pointer-events-none"/>
+        
+        <motion.div initial={{y:300, opacity:0}} animate={{y:0, opacity:1}} transition={{duration:2.5, type:'spring', damping: 12, delay:0.6}} >
+          <motion.img 
+                      variants={floatingVariants} animate="float" custom={{x:2, y:-6, duration:5.5, startRotate:0, endRotate:5}}
+                      src="/assets/LoginSignUpAssets/LSMoon.svg" className="top-25 right-20 fixed w-[15%] will-change-transform pointer-events-none"/>
+        </motion.div>
+
+        <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.4}} 
+                    src="/assets/LoginSignUpAssets/LSRightCloud.svg" className="bottom-0 right-0 fixed w-[20%] will-change-transform pointer-events-none"/>
+      </div>
+
       <div
         ref={popupRef}
-        className={`bg-nexus100 rounded-lg shadow-lg p-8 w-[30%] min-w-[300px] overflow-hidden relative transition-all duration-500 transform
+        className={`bg-nexus100 rounded-lg shadow-lg p-8 w-[clamp(320px,30%,1000px)] overflow-hidden relative transition-all duration-500 transform mt-20
           ${popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
       >
         <div className={`transition-all duration-500 ${showForgot ? "opacity-0 pointer-events-none -translate-x-full absolute" : "opacity-100"}`}>

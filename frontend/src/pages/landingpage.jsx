@@ -171,7 +171,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
       path: '/assets/HomePageAssets/Peechi.svg',
       style: {
           position: 'absolute',
-          top: '2%',
+          top: '0%',
           right: '13%',
           width: '12%',
       },
@@ -221,24 +221,25 @@ const [showScrollTop, setShowScrollTop] = useState(false);
             Get Started
             <HiArrowNarrowRight className="pt-0.5" size={25} />
           </Link>
-                {objects.map((obj) => (
-        !isScreenSmall && (
-          <motion.div
-              key={obj.name}
-              style={obj.style}
-              variants={floatingVariants}
-              animate="float"
-              custom={obj.custom}
-              className='-z-10 will-change-transform pointer-events-none overflow-hidden'
-          >
-                <img 
-                    src={obj.path} 
-                    alt={obj.name} 
-                    style={{ width: '100%', height: 'auto' }}
-                />
-          </motion.div>
-        )
-        ))}
+      
+          {objects.map((obj) => (
+            !isScreenSmall && (
+              <motion.div
+                  key={obj.name}
+                  style={obj.style}
+                  variants={floatingVariants}
+                  animate="float"
+                  custom={obj.custom}
+                  className='-z-10 will-change-transform pointer-events-none overflow-hidden'
+              >
+                    <img 
+                        src={obj.path} 
+                        alt={obj.name} 
+                        style={{ width: '100%', height: 'auto' }}
+                    />
+              </motion.div>
+            )
+          ))}
         </div>
         
         {/* -------------------------------- LAPTOP ---------------------------------- */}
@@ -258,7 +259,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           </motion.h1>
 
           <motion.img 
-            className='w-[35%] absolute left-1/2 -translate-x-[10%] -top-60 pointer-events-none will-change-transform'
+            className='w-[33%] absolute left-1/2 -translate-x-[25%] -top-70 pointer-events-none will-change-transform'
             variants={floatingVariants} 
             src='/assets/HomePageAssets/Laptop.svg' 
             animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
@@ -431,7 +432,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
       }`}
     >
       <button
-        className="rounded-full bg-white/95 text-nexus-blue-900 shadow-lg border border-gray-200 px-6 py-3 hover:scale-105 transition flex items-center gap-2"
+        className="rounded-full cursor-pointer bg-white/95 text-nexus-blue-900 shadow-lg border border-gray-200 px-6 py-3 hover:scale-105 transition flex items-center gap-2"
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         aria-label="Back to top"
       >
