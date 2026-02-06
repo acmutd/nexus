@@ -291,7 +291,7 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
             : 'linear-gradient(#002966, #001433)'
         }}
       >
-        {!isMobile && (
+        {!isMobile && !showHistoryPanel && (
           <button
             onClick={toggleSidebar}
             className="absolute top-24 -right-6 bg-nexus600 text-white p-2 rounded-r-md z-50 shadow-md cursor-pointer"
@@ -388,11 +388,19 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.2 }}
-            className="fixed left-64 top-16 h-[calc(100vh-4rem)] w-80 bg-nexus700 shadow-xl z-30 overflow-y-auto"
+            className="fixed left-64 top-16 h-[calc(100vh-4rem)] w-80 bg-nexus700 shadow-xl z-30 overflow-visible"
             onMouseEnter={() => !isMobile && setHoveredCourseId(activeCourseId)}
             onMouseLeave={() => !isMobile && !selectedCourseId && setHoveredCourseId(null)}
           >
-            <div className="p-4">
+            {!isMobile && (
+              <button
+                onClick={toggleSidebar}
+                className="absolute top-8 -right-6 bg-nexus600 text-white p-2 rounded-r-md z-50 shadow-md cursor-pointer"
+              >
+                {isCollapsed ? <HiChevronRight size={20} /> : <HiChevronLeft size={20} />}
+              </button>
+            )}
+            <div className="p-4 h-full overflow-y-auto">
               <h3 className="text-lg font-semibold text-white mb-1">
                 Calculation History
               </h3>
