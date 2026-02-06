@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useMediaQuery } from 'react-responsive';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
-import { HiArrowRightStartOnRectangle, HiOutlineUsers } from "react-icons/hi2";
+import { HiArrowRightStartOnRectangle, HiInformationCircle, HiOutlineUsers } from "react-icons/hi2";
 import { motion } from 'framer-motion';
 import { useMobile } from '../context/mobileContext';
 import { useAuth } from '../context/authContext';
@@ -71,9 +71,10 @@ function DiscordServers() {
   const [liveCounts, setLiveCounts] = useState({});
   const [loadingCounts, setLoadingCounts] = useState({});
   const [joinBusy, setJoinBusy] = useState(false);
+  const [showSmartJoinDetails, setShowSmartJoinDetails] = useState(false);
 
   useEffect(() => {
-    // For each server, extract invite code and request invite info from backend
+    // For each server, extract invite code and request invite info from backend for live member counts
     servers.forEach((s, idx) => {
       const code = s.link.split('/').pop();
       if (!code) return;
@@ -240,43 +241,112 @@ function DiscordServers() {
               <span className="font-titilliumWeb-semibold text-gray-300 tinyText mt-4">
                     Use our Smart Join feature to be added to all your necessary servers at once! Hover over the button to see which servers hold your courses.
               </span>
-              <div className="flex mt-4 w-full justify-center w-full">
-                <div className={`${isMobile ? 'w-full flex justify-center' : 'w-auto'}`}>
-                  <div className="relative group inline-block">
-                      <Button
-                      className="
-                        bg-nexus600
-                        px-10 py-3
-                        md:py-5
-                        text-2xl md:text-lg
-                        font-semibold
-                        rounded-xl
-                        shadow-lg
-                        transition-all duration-200
-                        active:scale-95
-                        disabled:opacity-60
-                      "
-                      onClick={joinBusy ? undefined : startJoinAll}
-                      text={joinBusy ? "Opening Discord…" : "Smart Join"}
-                    />
 
-                    <div className="absolute left-0 mt-2 w-72 bg-nexus900 text-white text-xs rounded-md p-3 shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20">
-                      <div className="font-titilliumWeb-bold mb-1">Your Courses:</div>
-                      {derived.normalized?.length ? (
-                        <ul className="list-disc list-inside space-y-0.5 max-h-32 overflow-y-auto">
-                          {derived.normalized.map((c, i) => (
-                            <li key={`${c.prefix}-${i}`}>{c.display}</li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <div className="text-gray-400">No courses loaded yet.</div>
-                      )}
-                      <div className="font-titilliumWeb-bold mt-1 mb-1">
-                        Target Servers: {derived.schools?.length ? derived.schools.join(', ') : 'None'}
+              {/* Smart Join section (keeps page layout the same; adds a structured section) */}
+              <div className="mt-4 w-full rounded-xl border border-nexus700 bg-nexus900/40 p-4">
+                <div className={`${isMobile ? 'flex-col' : 'flex-row'} flex items-start justify-between gap-4`}>
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-2">
+                      <div className="font-titilliumWeb-bold text-white text-lg">Smart Join</div>
+
+                      <div className="relative group">
+                        <button
+                          type="button"
+                          className="flex items-center justify-center rounded-md p-1 text-gray-300 hover:bg-nexus800 transition"
+                          aria-label="Smart Join details"
+                          aria-expanded={showSmartJoinDetails ? 'true' : 'false'}
+                          onClick={() => setShowSmartJoinDetails((s) => !s)}
+                        >
+                          <HiInformationCircle size={18} />
+                        </button>
+
+                        {!isMobile && (
+                          <div className="pointer-events-none absolute left-0 mt-2 w-72 bg-nexus900 text-white text-xs rounded-md p-3 shadow-xl opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200 z-20">
+                            <div className="font-titilliumWeb-bold mb-1">Your Courses:</div>
+                            {derived.normalized?.length ? (
+                              <ul className="list-disc list-inside space-y-0.5 max-h-32 overflow-y-auto">
+                                {derived.normalized.map((c, i) => (
+                                  <li key={`${c.prefix}-${i}`}>{c.display}</li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <div className="text-gray-400">No courses loaded yet.</div>
+                            )}
+                            <div className="font-titilliumWeb-bold mt-1 mb-1">
+                              Target Servers: {derived.schools?.length ? derived.schools.join(', ') : 'None'}
+                            </div>
+                          </div>
+                        )}
                       </div>
+                    </div>
+
+                    <div className="font-titilliumWeb-regular text-gray-300 text-xs mt-1 max-w-[560px]">
+                      {onboarding?.discordLinked
+                        ? 'Opens a Discord popup and joins the right servers for you.'
+                        : 'Requires linking your Discord account first (Account Linking).'}
+                    </div>
+                  </div>
+
+                  <div className={`${isMobile ? 'w-full flex justify-center' : 'w-auto'}`}>
+                    <div className="relative group inline-block">
+                      <Button
+                        className="
+                          bg-nexus600
+                          px-10 py-3
+                          md:py-5
+                          text-2xl md:text-lg
+                          font-semibold
+                          rounded-xl
+                          shadow-lg
+                          transition-all duration-200
+                          active:scale-95
+                          disabled:opacity-60
+                        "
+                        onClick={joinBusy ? undefined : startJoinAll}
+                        text={joinBusy ? "Opening Discord…" : "Smart Join"}
+                        disabled={joinBusy}
+                        title={!onboarding?.discordLinked ? 'Link Discord first in Account Linking' : undefined}
+                      />
+
+                      {/* Desktop hover popover (same as the info icon) */}
+                      {!isMobile && (
+                        <div className="pointer-events-none absolute left-0 mt-2 w-72 bg-nexus900 text-white text-xs rounded-md p-3 shadow-xl opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200 z-20">
+                          <div className="font-titilliumWeb-bold mb-1">Your Courses:</div>
+                          {derived.normalized?.length ? (
+                            <ul className="list-disc list-inside space-y-0.5 max-h-32 overflow-y-auto">
+                              {derived.normalized.map((c, i) => (
+                                <li key={`${c.prefix}-${i}`}>{c.display}</li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <div className="text-gray-400">No courses loaded yet.</div>
+                          )}
+                          <div className="font-titilliumWeb-bold mt-1 mb-1">
+                            Target Servers: {derived.schools?.length ? derived.schools.join(', ') : 'None'}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
+
+                {isMobile && showSmartJoinDetails && (
+                  <div className="mt-3 bg-nexus900 text-white text-xs rounded-md p-3 border border-nexus800">
+                    <div className="font-titilliumWeb-bold mb-1">Your Courses:</div>
+                    {derived.normalized?.length ? (
+                      <ul className="list-disc list-inside space-y-0.5 max-h-32 overflow-y-auto">
+                        {derived.normalized.map((c, i) => (
+                          <li key={`${c.prefix}-${i}`}>{c.display}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <div className="text-gray-400">No courses loaded yet.</div>
+                    )}
+                    <div className="font-titilliumWeb-bold mt-1 mb-1">
+                      Target Servers: {derived.schools?.length ? derived.schools.join(', ') : 'None'}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
       {/* ----------------------------------- COURSES ---------------------------------------- */}

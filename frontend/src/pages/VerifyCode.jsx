@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { HiMail } from 'react-icons/hi';
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, getFirestore, setDoc } from 'firebase/firestore';
 import LoadingScreen from '../components/LoadingScreen';
 import { motion, transform } from 'framer-motion'
 import StarFieldOverlay from '../components/StarFieldOverlay';
@@ -127,20 +128,42 @@ export default function VerifyCode() {
           const { email: signupEmail, password } = JSON.parse(pendingSignup);
           
           // Initialize Firebase if needed
+          let app;
           let auth;
           if (getApps().length) {
-            auth = getAuth(getApp());
+            app = getApp();
+            auth = getAuth(app);
           } else {
             const res = await fetch(`/api/firebase-config`);
             if (!res.ok) throw new Error('Failed to load Firebase config');
             const cfg = await res.json();
-            const app = initializeApp(cfg);
+            app = initializeApp(cfg);
             auth = getAuth(app);
           }
           
           // NOW create the Firebase Auth account
           const cred = await createUserWithEmailAndPassword(auth, signupEmail, password);
           const user = cred.user;
+
+          // Create (or merge) the Firestore `users/{uid}` document immediately so onboarding flows
+          // don't depend on sessionStorage-only state.
+          try {
+            const db = getFirestore(app);
+            await setDoc(
+              doc(db, 'users', user.uid),
+              {
+                uid: user.uid,
+                email: user.email,
+                emailVerified: true,
+                createdAt: new Date().toISOString(),
+                servers: [],
+              },
+              { merge: true }
+            );
+          } catch (e) {
+            console.error('[VerifyCode] Failed to create Firestore user doc:', e);
+            throw new Error('Account created, but failed to initialize profile. Please try again.');
+          }
           
           // Store user data in sessionStorage for onboarding
           sessionStorage.setItem('pendingOnboarding', JSON.stringify({
