@@ -109,20 +109,26 @@ export default function Signup() {
     <div
       className="flex flex-col items-center justify-center min-h-screen bg-linear-to-b from-nexus900 to-nexus700 font-titilliumWeb-regular">
 
-      { /* BACKGROUN ASSETS */}
+      { /* BACKGROUND ASSETS */}
       <div className="fixed inset-0">
         <StarFieldOverlay count={200}/>
+
+        { /* BG CLOUDS */}
         <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.3}} 
                     src="/assets/LoginSignUpAssets/LSBGClouds.svg" className="bottom-0 fixed will-change-transform pointer-events-none"/>
+
+        { /* CLIFF */}
         <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.4}} 
                     src="/assets/LoginSignUpAssets/LSCliff.svg" className="bottom-0 fixed w-[35%] will-change-transform pointer-events-none"/>
         
+        { /* MOON */}
         <motion.div initial={{y:300, opacity:0}} animate={{y:0, opacity:1}} transition={{duration:2.5, type:'spring', damping: 12, delay:0.6}} >
           <motion.img 
                       variants={floatingVariants} animate="float" custom={{x:2, y:-6, duration:5.5, startRotate:0, endRotate:5}}
                       src="/assets/LoginSignUpAssets/LSMoon.svg" className="top-25 right-20 fixed w-[15%] will-change-transform pointer-events-none"/>
         </motion.div>
         
+        { /* RIGHT CLOUD */}
         <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.4}} 
                     src="/assets/LoginSignUpAssets/LSRightCloud.svg" className="bottom-0 right-0 fixed w-[20%] will-change-transform pointer-events-none"/>
       </div>
@@ -130,8 +136,7 @@ export default function Signup() {
       <div
         ref={popupRef}
         className={`bg-nexus100 rounded-lg shadow-lg p-8 w-[clamp(320px,30%,1000px)] overflow-hidden relative transition-all duration-500 transform mt-20
-          popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
-        }`}
+          ${popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
       >
         <h2 className="bodyText mb-1 text-gray-800 font-titilliumWeb-bold">Sign up for Nexus</h2>
         <p className="text-blue-900 mb-6 tinyText font-titilliumWeb-bold">Create an account to get started</p>

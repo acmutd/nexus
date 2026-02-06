@@ -438,7 +438,7 @@ const AccountLinking = () => {
             position: 'fixed',
             top: '16%',
             right: '5%',
-            width: '18%',
+            width: '20%',
         },
         custom: { x: 5, y: 6, startRotate: 0, endRotate: 6, duration: 5.5 }
     },

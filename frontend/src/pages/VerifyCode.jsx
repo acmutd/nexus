@@ -4,6 +4,8 @@ import { HiMail } from 'react-icons/hi';
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import LoadingScreen from '../components/LoadingScreen';
+import { motion, transform } from 'framer-motion'
+import StarFieldOverlay from '../components/StarFieldOverlay';
 
 export default function VerifyCode() {
   const location = useLocation();
@@ -21,6 +23,20 @@ export default function VerifyCode() {
   const [creatingAccount, setCreatingAccount] = useState(false);
 
   const inputRefs = useRef([]);
+
+  // Popup animation state: retrigger on every navigation to this route
+  const popupRef = useRef(null);
+  const [popupVisible, setPopupVisible] = useState(false);
+
+  useEffect(() => {
+    setPopupVisible(false);
+    const t = setTimeout(() => {
+      // Force reflow so transition runs reliably
+      if (popupRef.current) popupRef.current.offsetHeight;
+      setPopupVisible(true);
+    }, 60);
+    return () => clearTimeout(t);
+  }, [location.pathname, location.key]);
 
   useEffect(() => {
     if (!email) {
@@ -205,16 +221,53 @@ export default function VerifyCode() {
     );
   }
 
+  const floatingVariants = {
+    float: (custom) => ({
+      x: [0, custom.x, 0],
+      y: [0, custom.y, 0],
+      rotate: [custom.startRotate, custom.endRotate, custom.startRotate],
+      transition: {
+        duration: custom.duration,
+        ease: 'easeInOut',
+        repeat: Infinity
+      }
+    })
+  }
+
   return (
     <div
-      className="mt-6 flex flex-col items-center justify-center min-h-screen bg-blue-950 font-titilliumWeb-regular"
-      style={{
-        backgroundImage: "url('/assets/SignUpBG.svg')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
-      }}
-    >
-      <div className="bg-nexus100 rounded-lg shadow-lg p-8 w-full max-w-md text-center">
+      className="flex flex-col items-center justify-center min-h-screen bg-linear-to-b from-nexus900 to-nexus700 font-titilliumWeb-regular">
+
+      { /* BACKGROUN ASSETS */}
+      <div className="fixed inset-0">
+        <StarFieldOverlay count={200}/>
+
+        { /* BG CLOUDS */}
+        <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.3}} 
+                    src="/assets/LoginSignUpAssets/LSBGClouds.svg" className="bottom-0 fixed will-change-transform pointer-events-none"/>
+
+        { /* CLIFF */}
+        <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.4}} 
+                    src="/assets/LoginSignUpAssets/LSCliff.svg" className="bottom-0 fixed w-[35%] will-change-transform pointer-events-none"/>
+        
+        { /* MOON */}
+        <motion.div initial={{y:300, opacity:0}} animate={{y:0, opacity:1}} transition={{duration:2.5, type:'spring', damping: 12, delay:0.6}} >
+          <motion.img 
+                      variants={floatingVariants} animate="float" custom={{x:2, y:-6, duration:5.5, startRotate:0, endRotate:5}}
+                      src="/assets/LoginSignUpAssets/LSMoon.svg" className="top-25 right-20 fixed w-[15%] will-change-transform pointer-events-none"/>
+        </motion.div>
+        
+        { /* RIGHT CLOUD */}
+        <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.4}} 
+                    src="/assets/LoginSignUpAssets/LSRightCloud.svg" className="bottom-0 right-0 fixed w-[20%] will-change-transform pointer-events-none"/>
+      </div>
+
+      <div
+        ref={popupRef}
+        className={`bg-nexus100 rounded-lg shadow-lg p-8 mt-30 mb-10 w-[clamp(320px,30%,1000px)] overflow-hidden relative transition-all duration-500 transform flex flex-col items-center
+          ${popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
+      >        
+      
         <div className="flex justify-center mb-6">
           <div className="bg-nexus500 rounded-full p-4">
             <HiMail className="text-white" size={48} />
@@ -225,16 +278,16 @@ export default function VerifyCode() {
           Verify Your Email
         </h2>
 
-        <p className="text-gray-700 mb-4 tinyText font-titilliumWeb-regular">
+        <p className="text-gray-700 tinyText font-titilliumWeb-regular">
           We've sent a 6-digit code to:
         </p>
 
-        <p className="text-nexus700 mb-6 font-titilliumWeb-bold">
+        <p className="text-nexus700 mb-4 font-titilliumWeb-bold">
           {email}
         </p>
 
         <form onSubmit={handleSubmit}>
-          <div className="flex justify-center gap-2 mb-6">
+          <div className="flex justify-center gap-2 mb-4">
             {code.map((digit, index) => (
               <input
                 key={index}
@@ -264,13 +317,13 @@ export default function VerifyCode() {
           <button
             type="submit"
             disabled={verifying || code.join('').length !== 6}
-            className="w-full bg-nexus500 text-white py-3 px-8 rounded-lg font-titilliumWeb-bold hover:bg-nexus600 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="cursor-pointer w-full bg-nexus500 text-white py-3 px-8 rounded-lg font-titilliumWeb-bold hover:bg-nexus600 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {verifying ? 'Verifying...' : 'Verify Email'}
           </button>
         </form>
 
-        <div className="border-t border-gray-300 pt-6 mt-4">
+        <div className="border-t border-gray-300 pt-4 text-center">
           <p className="text-gray-600 mb-4 tinyText font-titilliumWeb-regular">
             Didn't receive the code? Make sure you check your spam/junk folder!
           </p>
@@ -278,7 +331,7 @@ export default function VerifyCode() {
           <button
             onClick={handleResendCode}
             disabled={resending}
-            className="text-nexus700 font-titilliumWeb-bold hover:underline disabled:opacity-50 disabled:cursor-not-allowed tinyText"
+            className="cursor-pointer text-nexus700 font-titilliumWeb-bold hover:underline disabled:opacity-50 disabled:cursor-not-allowed tinyText"
           >
             {resending ? 'Sending...' : 'Resend Code'}
           </button>
@@ -292,16 +345,16 @@ export default function VerifyCode() {
           )}
         </div>
 
-        <div className="mt-2 text-center">
+        <div className="text-center">
           <button
             onClick={() => navigate('/signup')}
-            className="text-blue-900 font-titilliumWeb-bold hover:underline tinyText"
+            className="text-blue-900 font-titilliumWeb-bold hover:underline tinyText cursor-pointer"
           >
             Back to Sign Up
           </button>
         </div>
 
-        <p className="text-gray-500 text-xs mt-6">
+        <p className="text-gray-500 text-xs mt-4">
           The code will expire in 15 minutes
         </p>
       </div>
