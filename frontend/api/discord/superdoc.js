@@ -23,29 +23,9 @@ router.post('/merge_pdf', upload.single("file"), async(req,res) =>
 {
    try
    {
-       if(!req.file||!req.body.course_id)
-       {
-           return res.status(400).send("Missing Fields");
-       }
-
-
        const form = new FormData();
-       form.append("pdf_file", req.file.buffer, {
-           filename: req.file.originalname,
-           contentType: req.file.mimetype
-       });
-
-
-       form.append("course_id",req.body.course_id)
-
-
-       if(req.body.document_id)
-       {
-           form.append("document_id",req.body.document_id);
-       }
-
-
-       const response = await axios.post("http://localhost:8000/merge_pdf", form,{headers: form.getHeaders(),});
+        form.append("file", req.file.buffer,{filename:req.file.originalname});
+       const response = await axios.post("http://localhost:8000/merge_pdf_hiearchical", form,{headers: form.getHeaders(),});
 
 
        res.status(response.status).json(response.data);
@@ -65,7 +45,8 @@ router.delete('/delete_heading',async(req,res)=>
 {
    try
    {
-       const response = await axios.delete("http://localhost:8000/delete_heading",{data:payload})
+       const old_heading = req.body.old_heading;
+       const response = await axios.delete("http://localhost:8000/delete_heading",{data:{old_heading:old_heading}})
 
 
        res.status(response.status).json(response.data);
@@ -82,19 +63,8 @@ router.post('/create_heading',async(req,res) =>
 {
    try
    {
-       const{course_id,new_heading,document_id} = req.body;
-
-
-       if(!course_id||!new_heading)
-       {
-           return res.status(400).json({error:"Missing Fields"});
-       }
-       const payload =
-       {
-           course_id,
-           new_heading
-       }
-       const response = await axios.post("http://localhost:8000/create_heading",payload);
+       const new_heading= req.body.new_heading;
+       const response = await axios.post("http://localhost:8000/create_heading",{new_heading:new_heading});
 
 
         res.status(response.status).json(response.data);
@@ -111,20 +81,9 @@ router.put('/update_heading',async(req,res) =>
 {
     try
    {
-       const{course_id,old_heading,new_heading,document_id} = req.body;
-
-
-       if(!course_id||!old_heading||!new_heading)
-       {
-           return res.status(400).json({error:"Missing Fields"});
-       }
-       const payload =
-       {
-           course_id,
-           old_heading,
-           new_heading
-       }
-       const response = await axios.put("http://localhost:8000/update_heading",payload);
+        const old_heading = req.body.old_heading;
+        const new_heading = req.body.new_heading;
+       const response = await axios.put("http://localhost:8000/update_heading",{old_heading:old_heading,new_heading:new_heading});
        res.status(response.status).json(response.data);
    }
    catch(err)
@@ -139,18 +98,8 @@ router.post('/get_docids',async(req,res) =>
 {
    try
    {
-       const{course_id} = req.body;
-       if(!course_id)
-       {
-           return res.status(400).json({error:"Missing Fields"});
-       }
-       const payload =
-       {
-           course_id
-       }
-
-
-       const response = await axios.post("http://localhost:8000/get_docids",payload);
+        const course_id = req.body.course_id
+       const response = await axios.post("http://localhost:8000/get_docids",{course_id:course_id});
        res.status(response.status).json(response.data);
    }
    catch(err)
