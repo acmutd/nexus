@@ -5,11 +5,13 @@ export const MobileContext = createContext()
 export function MobileProvider({children}) {
   const [isMobile, setIsMobile] = useState(false)
   const [isScreenMedium, setIsScreenMedium] = useState(false)
+  const [isScreenSmall, setIsScreenSmall] = useState(false)
 
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768)
-      setIsScreenMedium(window.innerWidth <= 1100)
+      setIsScreenSmall(window.innerWidth <= 950)
+      setIsScreenMedium(window.innerWidth <= 1200)
     }
 
     checkMobile()
@@ -20,7 +22,7 @@ export function MobileProvider({children}) {
   }, [])
 
   return (
-    <MobileContext.Provider value={{ isMobile, isScreenMedium }}>
+    <MobileContext.Provider value={{ isMobile, isScreenMedium, isScreenSmall }}>
       {children}
     </MobileContext.Provider>
   )

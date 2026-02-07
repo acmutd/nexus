@@ -1,0 +1,30 @@
+.starfield-overlay {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.starfield-star {
+  position: absolute;
+  will-change: transform, opacity;
+  animation-name: starfield-twinkle, starfield-drift;
+  animation-timing-function: ease-in-out, linear;
+  animation-iteration-count: infinite, infinite;
+  animation-direction: alternate, alternate;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Opacity pulse */
+@keyframes starfield-twinkle {
+  0%   { opacity: 0.3; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+/* Gentle XY drift */
+@keyframes starfield-drift {
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(var(--drift-x, 8px), var(--drift-y, -6px), 0); }
+}

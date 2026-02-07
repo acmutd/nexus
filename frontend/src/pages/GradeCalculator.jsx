@@ -47,6 +47,8 @@ const GradeCalculator = () => {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [editingGradeId, setEditingGradeId] = useState(null);
+    const [sidebarRefreshTrigger, setSidebarRefreshTrigger] = useState(0);
+    const [lastSavedGrade, setLastSavedGrade] = useState(null);
 
     const [showSuccessNotification, setShowSuccessNotification] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
@@ -490,6 +492,28 @@ const GradeCalculator = () => {
             setSuccessMessage(message);
             setShowSuccessNotification(true);
 
+
+            // OPTIMISTIC UPDATE: Immediately pass grade data to sidebar
+            const gradeId = editingGradeId || response.data.gradeId || Date.now().toString();
+            setLastSavedGrade({
+                courseId: selectedCourseForSave,
+                gradeData: {
+                    id: gradeId,
+                    title: saveTitle,
+                    timestamp: Date.now(),
+                    courseId: selectedCourseForSave,
+                    currentGrade: finalGrade,
+                    desiredGrade: classGrade,
+                    requiredGrade: requiredGrade,
+                    categories: gradeHistoryData.categories
+                }
+            });
+
+
+            // Trigger sidebar refresh with delay to ensure DB write completes
+            setTimeout(() => {
+                setSidebarRefreshTrigger(prev => prev + 1);
+            }, 500);
             setTimeout(() => {
                 setShowSuccessNotification(false);
             }, 3000);
@@ -545,6 +569,8 @@ const GradeCalculator = () => {
                     onToggle={handleSidebarToggle} 
                     onNewCalculation={handleNewCalculation}
                     userCourses={courses}
+                    refreshTrigger={sidebarRefreshTrigger}
+                    lastSavedGrade={lastSavedGrade}
                 />
                 
                 {/* INFO POP UP */}

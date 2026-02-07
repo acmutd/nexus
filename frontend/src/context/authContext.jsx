@@ -8,6 +8,9 @@ import { getDoc, doc } from 'firebase/firestore'
 // Single source of truth for where to send users after logout/delete.
 export const LOGOUT_REDIRECT_PATH = '/'
 
+// Default redirect for unauthenticated access to protected routes.
+export const UNAUTH_REDIRECT_PATH = '/login'
+
 // Helpers for redirect handling (single source of truth)
 export function setPostLogoutRedirect(path = LOGOUT_REDIRECT_PATH) {
   try {
@@ -48,7 +51,23 @@ export function AuthProvider({ children }) {
       const { db } = await initFirebase()
       const userRef = doc(db, 'users', u.uid)
       const snap = await getDoc(userRef)
-      const data = snap.exists() ? (snap.data() || {}) : {}
+      
+      // If no Firestore document exists, user is still in onboarding
+      if (!snap.exists()) {
+        const googleLinked = (u.providerData || []).some(p => p.providerId === 'google.com')
+        const res = { 
+          loaded: true, 
+          hasCourses: false, 
+          googleLinked, 
+          discordLinked: false, 
+          accountLinkingSkipped: false 
+        };
+        setOnboarding(res);
+        return res;
+      }
+      
+      // Document exists - get onboarding state from it
+      const data = snap.data() || {}
       const hasCourses = Array.isArray(data.courses) && data.courses.length > 0
       const discordLinked = !!(data.discord && data.discord.id)
       const googleLinked = (u.providerData || []).some(p => p.providerId === 'google.com')
@@ -124,7 +143,7 @@ export function RequireAuth({ children }) {
   if (!user) {
     // Honor a one-time post-logout/delete redirect, else fall back to login
     const target = consumePostLogoutRedirect()
-    const dest = target || LOGOUT_REDIRECT_PATH || "/login"
+    const dest = target || UNAUTH_REDIRECT_PATH || '/login'
     return <Navigate to={dest} state={{ from: location }} replace />
   }
   return children
@@ -155,10 +174,24 @@ export function RequireOnboarding({ step = 'course', children }) {
   const [rechecking, setRechecking] = useState(false)
   const [rechecked, setRechecked] = useState(false)
 
+  // Check if user is in pre-Firestore onboarding flow
+  const [pendingOnboardingData, setPendingOnboardingData] = useState(null)
+  
+  useEffect(() => {
+    try {
+      const pending = sessionStorage.getItem('pendingOnboarding')
+      setPendingOnboardingData(pending ? JSON.parse(pending) : null)
+    } catch (e) {
+      console.warn('Failed to parse pendingOnboarding', e)
+      setPendingOnboardingData(null)
+    }
+  }, [location.pathname]) // Re-check when navigating
+
   useEffect(() => {
     if (!loaded) return
     if (!user) return
     if (onboarding.hasCourses) return
+    if (pendingOnboardingData) return // Skip recheck if in pre-Firestore flow
     if (rechecking || rechecked) return
 
     let cancelled = false
@@ -175,7 +208,7 @@ export function RequireOnboarding({ step = 'course', children }) {
     }
     run()
     return () => { cancelled = true }
-  }, [loaded, user, onboarding.hasCourses, refreshOnboarding, rechecking, rechecked])
+  }, [loaded, user, onboarding.hasCourses, refreshOnboarding, rechecking, rechecked, pendingOnboardingData])
 
   if (!loaded || rechecking) return null
 
@@ -186,21 +219,35 @@ export function RequireOnboarding({ step = 'course', children }) {
     // Allow forcing course relink even if onboarding still shows courses (ex Firestore eventual consistency)
     if (forceCourseRelink) return children
 
+    // Check for courses in either Firestore OR sessionStorage (pre-Firestore flow)
+    const hasCourses = onboarding.hasCourses || 
+      (pendingOnboardingData && Array.isArray(pendingOnboardingData.courses) && pendingOnboardingData.courses.length > 0)
+
     // If user already completed course linking, send them forward to account linking unless they've dismissed it
-    if (onboarding.hasCourses) {
-      const needsAccountLinking = !onboarding.discordLinked;
-      if (needsAccountLinking && !onboarding.accountLinkingSkipped) return <Navigate to="/accountlinking" replace />
+    if (hasCourses) {
+      const needsAccountLinking = !onboarding.discordLinked && 
+        !(pendingOnboardingData?.discord?.id) // Also check sessionStorage for Discord
+      const accountLinkingSkipped = onboarding.accountLinkingSkipped || pendingOnboardingData?.accountLinkingSkipped
+      
+      if (needsAccountLinking && !accountLinkingSkipped) return <Navigate to="/accountlinking" replace />
       return <Navigate to="/home" replace />
     }
     return children
   }
 
   if (step === 'account') {
+    const hasCourses = onboarding.hasCourses || 
+      (pendingOnboardingData && Array.isArray(pendingOnboardingData.courses) && pendingOnboardingData.courses.length > 0)
+    
     // can't visit account step before finishing courses
-    if (!onboarding.hasCourses) return <Navigate to="/CourseLinking" replace />
+    if (!hasCourses) return <Navigate to="/CourseLinking" replace />
+
+    // Check if Discord is linked in either Firestore OR sessionStorage
+    const discordLinked = onboarding.discordLinked || !!(pendingOnboardingData?.discord?.id)
+    const accountLinkingSkipped = onboarding.accountLinkingSkipped || pendingOnboardingData?.accountLinkingSkipped
 
     // Only allow when user still needs to link Discord and hasn't skipped
-    const needsAccountLinking = !onboarding.discordLinked && !onboarding.accountLinkingSkipped;
+    const needsAccountLinking = !discordLinked && !accountLinkingSkipped;
     if (!needsAccountLinking) return <Navigate to="/home" replace />
 
     return children

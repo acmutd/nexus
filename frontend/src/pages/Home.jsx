@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { delay, motion } from 'framer-motion';
 import { useMobile } from '../context/mobileContext';
+import StarFieldOverlay from '../components/StarFieldOverlay';
 
 const acmWebsites = [
   { name: 'UTD Grades', link: 'https://www.utdgrades.com', icon: "/assets/UTDGradesIcon.svg", description: "Make smarter choices by seeing how students did in any given class." },
@@ -50,10 +51,10 @@ const Home = () => {
           style: {
               position: 'fixed',
               top: '15%',
-              left: '5%',
-              width: '200px',
+              left: '3%',
+              width: '240px',
           },
-          custom: { x: 5, y: -6, startRotate: 0, endRotate: -6, duration: 7.5 }
+          custom: { x: 10, y: -6, startRotate: -2, endRotate: 6, duration: 6.2 }
       },
       {
           name: 'chair',
@@ -64,7 +65,7 @@ const Home = () => {
               right: '2%',
               width: '240px',
           },
-          custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 7.5 }
+          custom: { x: -7, y: -8, startRotate: -2, endRotate: -9, duration: 5.1 }
       },
       {
           name: 'coffee',
@@ -75,7 +76,7 @@ const Home = () => {
               left: '3%',
               width: '200px',
           },
-          custom: { x: 8, y: -5, startRotate: 0, endRotate: 3, duration: 7.5 }
+          custom: { x: 9, y: -7, startRotate: 1, endRotate: 7, duration: 4.8 }
       },
       {
           name: 'books',
@@ -86,7 +87,7 @@ const Home = () => {
               right: '2%',
               width: '200px',
           },
-          custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 7.5 }
+          custom: { x: -6, y: -5, startRotate: -1, endRotate: -5, duration: 6.7 }
       },
       {
           name: 'pigy',
@@ -97,7 +98,7 @@ const Home = () => {
               right: '3%',
               width: '220px',
           },
-          custom: { x: 8, y: -5, startRotate: 0, endRotate: 3, duration: 7.5 }
+          custom: { x: 11, y: -6, startRotate: 1, endRotate: 8, duration: 5.3 }
       },
       {
           name: 'peechi',
@@ -108,18 +109,20 @@ const Home = () => {
               left: '5%',
               width: '140px',
           },
-          custom: { x: 8, y: -5, startRotate: 0, endRotate: 3, duration: 7.5 }
+          custom: { x: 7, y: -6, startRotate: -3, endRotate: 3, duration: 7.1 }
       }
   ];
 
   return (
     <>
       <div className={`inset-0 min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center fixed overflow-hidden z-0`} 
-          style={{ backgroundImage: "url('/assets/BasicBG.svg')"}}/>
+          style={{ backgroundImage: "url('assets/BasicBG.svg')"}}/>
+           <StarFieldOverlay count={isMobile ? 100 : 200} />
 
       {/* Floating objects */}
       {objects.map((obj) => (
         !isMobile &&
+        <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{delay:0.5}}>
           <motion.div
               key={obj.name}
               style={obj.style}
@@ -134,11 +137,12 @@ const Home = () => {
                   style={{ width: '100%', height: 'auto' }}
               />
           </motion.div>
+        </motion.div>
       ))}
 
       {/* -------------------------------------- CONTENT -------------------------------------------*/}
         <div className='relative flex items-center justify-center w-full min-h-screen overflow-hidden'>
-        <motion.div className="flex flex-col w-full h-full items-center justify-center mt-30 z-1" initial={{opacity:0, y:20}} animate={{opacity: 1, y:0}} transition={{duration: 0.7, delay: 0.2}}>
+        <motion.div className="flex flex-col w-full h-full items-center justify-center mt-30 z-1 will-change-transform" initial={{opacity:0, y:20}} animate={{opacity: 1, y:0}} transition={{duration: 0.7, delay: 0.2}}>
 
           <div className="min-w-75 bg-linear-to-b from-nexus800 via-nexus900 to-nexus800 px-10 py-6 w-[60%] flex flex-col items-center justify-center overflow-y-auto rounded-lg ">
             <h2 className="text-white headingText font-titilliumWeb-semibold mb-6 w-full text-center">
@@ -199,6 +203,42 @@ const Home = () => {
           </div>
         </motion.div>
       </div>
+      {/* ---------------- FEEDBACK BUBBLE ---------------- */}
+    <a
+      href="https://docs.google.com/forms/d/e/1FAIpQLSfA5sNwJUlHn3QroikwHuDGhOve6qjb7ssMjkvLd-RGK_PLaQ/viewform"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="fixed bottom-6 right-6 z-50 group"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.5 }}
+        className="relative bg-nexus800 text-white px-5 py-3 rounded-full shadow-lg
+                  flex items-center gap-2 cursor-pointer
+                  hover:scale-105 hover:bg-nexus700 transition"
+      >
+        <span className="tinyText font-titilliumWeb-semibold whitespace-nowrap">
+          Give us Feedback!
+        </span>
+
+        {/*hover tip*/}
+        <span
+          className="absolute bottom-full right-0 mb-3 w-72 p-3 rounded-lg
+                    bg-nexus900 text-white text-xs leading-snug
+                    opacity-0 translate-y-2 pointer-events-none
+                    transition-all duration-300
+                    group-hover:opacity-100 group-hover:translate-y-0"
+        >
+          Run into any issues, potential improvements, or want to tell us what you like about Nexus?
+          Let us know by filling out this form!
+          <br />
+          <br />
+          We appreciate any and all input :)
+        </span>
+      </motion.div>
+    </a>
+
     </>
   );
 };

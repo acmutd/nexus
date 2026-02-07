@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "axios": "^1.12.2"
+    "@sendgrid/mail": "^8.1.6",
+    "axios": "^1.12.2",
+    "vercel": "^50.12.1"
   }
 }

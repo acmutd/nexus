@@ -14,6 +14,7 @@ import { initFirebase } from '../firebase';
 import { motion } from 'motion/react';
 import FloatingClouds from '../components/FloatingClouds';
 import { useMobile } from '../context/mobileContext';
+import StarFieldOverlay from '../components/StarFieldOverlay';
 
 export default function CourseLinking() {
   const {isMobile} = useMobile()
@@ -42,6 +43,14 @@ export default function CourseLinking() {
   // Login via NetID modal state
   const [showLoginNetIDModal, setShowLoginNetIDModal] = useState(false);
 
+  // Check if user is in pre-Firestore onboarding flow
+  const [isPreFirestoreOnboarding, setIsPreFirestoreOnboarding] = useState(false);
+
+  useEffect(() => {
+    const pendingOnboarding = sessionStorage.getItem('pendingOnboarding');
+    setIsPreFirestoreOnboarding(!!pendingOnboarding);
+  }, []);
+
   // Open modal automatically if we were redirected from the old accessrequest page
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -51,21 +60,21 @@ export default function CourseLinking() {
   // If onboarding already has courses and we weren't explicitly asked to relink, bounce to /home immediately.
   useEffect(() => {
     if (authLoading || !onboarding?.loaded) return;
-    if (onboarding.hasCourses && !location.state?.forceCourseRelink) {
+    if (onboarding.hasCourses && !location.state?.forceCourseRelink && !isPreFirestoreOnboarding) {
       navigate('/home', { replace: true });
     }
-  }, [authLoading, onboarding, location.state, navigate]);
+  }, [authLoading, onboarding, location.state, navigate, isPreFirestoreOnboarding]);
 
-  // Entry animation similar to login/signup popup (skip if we're going to redirect)
+  // animation
   useEffect(() => {
-    if (onboarding?.hasCourses && !location.state?.forceCourseRelink) return;
+    if (onboarding?.hasCourses && !location.state?.forceCourseRelink && !isPreFirestoreOnboarding) return;
     setPopupVisible(false);
     const t = setTimeout(() => {
       if (popupRef.current) popupRef.current.offsetHeight;
       setPopupVisible(true);
     }, 60);
     return () => clearTimeout(t);
-  }, [location.pathname, location.key, onboarding?.hasCourses, location.state]);
+  }, [location.pathname, location.key, onboarding?.hasCourses, location.state, isPreFirestoreOnboarding]);
 
   // Handle removing courses
   const handleRemoveCourse = (indexToRemove) => {
@@ -154,7 +163,7 @@ export default function CourseLinking() {
     }
   };
 
-  // Save parsed courses when user clicks "Continue"
+
   const handleConfirmAndContinue = async (coursesArg = null, metaArg = null) => {
     setSavingTranscript(true);
     setTranscriptError('');
@@ -169,15 +178,30 @@ export default function CourseLinking() {
       console.log('[CourseLinking] handleConfirmAndContinue start', {
         coursesCount: coursesToSave?.length || 0,
         meta: metaToSave,
+        isPreFirestoreOnboarding,
       });
+      
       const auth = getAuth();
       const user = auth.currentUser;
-      let onboardingResult = null;
 
       if (!user) {
         setTranscriptError('Please log in first');
         setSavingTranscript(false);
         return;
+      }
+
+      // Always persist courses to Firestore after clicking continue.
+      const pendingOnboarding = sessionStorage.getItem('pendingOnboarding');
+      if (pendingOnboarding) {
+        // Keep a snapshot for debugging/UX, but don't rely on sessionStorage for persistence.
+        try {
+          const onboardingData = JSON.parse(pendingOnboarding);
+          onboardingData.courses = coursesToSave;
+          onboardingData.meta = metaToSave;
+          sessionStorage.setItem('pendingOnboarding', JSON.stringify(onboardingData));
+        } catch (e) {
+          console.warn('[CourseLinking] Failed to update pendingOnboarding snapshot', e);
+        }
       }
 
       const token = await user.getIdToken();
@@ -192,10 +216,12 @@ export default function CourseLinking() {
       console.log('[CourseLinking] confirm-transcript response', { ok: response.ok, status: response.status, data });
       if (!response.ok || !data.success) throw new Error(data.error || 'Failed to save transcript');
 
-      // Navigate on success -> go to account linking
-      // Refresh onboarding state in context so RequireOnboarding can redirect appropriately
+      // Once courses are saved in Firestore, we no longer need the sessionStorage-only onboarding flow.
+      try { sessionStorage.removeItem('pendingOnboarding'); } catch {}
+
+      // Refresh onboarding state
+      let onboardingResult = null;
       try {
-        // Try to refresh onboarding; poll a few times in case of eventual consistency
         let onboarding = await refreshOnboarding(user);
         onboardingResult = onboarding;
         console.log('[CourseLinking] onboarding after save', onboarding);
@@ -213,7 +239,7 @@ export default function CourseLinking() {
         console.warn('refreshOnboarding failed after transcript save', e);
       }
 
-      // For redo flow, mark account linking as skipped so guards won't redirect
+      // For redo flow, mark account linking as skipped
       if (isRedoFlow) {
         try {
           const { db } = await initFirebase();
@@ -230,7 +256,9 @@ export default function CourseLinking() {
           console.warn('Failed to mark accountLinkingSkipped after relink', e);
         }
       }
-      const skipAccountStep = isRedoFlow || (onboardingResult && onboardingResult.accountLinkingSkipped);
+      const skipAccountStep = isRedoFlow || 
+        (onboardingResult && onboardingResult.accountLinkingSkipped) ||
+        (onboardingResult && onboardingResult.discordLinked);
 
       if (skipAccountStep) {
         console.log('[CourseLinking] navigating to /home (skip/accountLinkingSkipped)');
@@ -275,10 +303,11 @@ export default function CourseLinking() {
       </div>
   );
 
-  // While waiting to decide (or redirecting), show nothing to avoid flicker
-  if ((authLoading || !onboarding?.loaded) || (onboarding?.hasCourses && !location.state?.forceCourseRelink)) {
+
+  if ((authLoading || !onboarding?.loaded) || (onboarding?.hasCourses && !location.state?.forceCourseRelink && !isPreFirestoreOnboarding)) {
     return null;
   }
+  
   const floatVariants = {
     float: (custom) => ({
       y: [0, custom.y, 0],
@@ -300,22 +329,22 @@ export default function CourseLinking() {
             position: 'fixed',
             top: '16%',
             right: '5%',
-            width: '18%',
+            width: '20%',
         },
-        custom: { x: 5, y: 6, startRotate: 0, endRotate: 6, duration: 10 }
+        custom: { x: 5, y: 6, startRotate: 0, endRotate: 6, duration: 5.5 }
     },
     {
         name: 'book',
         path: '/assets/Book.svg',
         style: {
             position: 'fixed',
-            bottom: '5%',
+            bottom: '3%',
             right: '2%',
             width: '18%',
         },
-        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 5.5 }
     },
-        {
+    {
         name: 'peechi',
         path: '/assets/LoginPipelineAssets/LoginPipelinePeechi.svg',
         style: {
@@ -324,7 +353,7 @@ export default function CourseLinking() {
             left: '5%',
             width: '12%',
         },
-        custom: { x: 5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+        custom: { x: 8, y: -5, startRotate: 0, endRotate: 3, duration: 5.5 }
     },
     {
         name: 'microphone',
@@ -335,7 +364,7 @@ export default function CourseLinking() {
             left: '5%',
             width: '18%',
         },
-        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 10 }
+        custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 5.5 }
     },
   ]
 
@@ -346,6 +375,7 @@ export default function CourseLinking() {
         backgroundImage: "url('/assets/BasicBG.svg')"
       }}
     >
+    <StarFieldOverlay count={isMobile ? 120 : 220} allowDepthBlur />
     {/* FLOATING ICONS */}
     <div className='fixed overflow-hidden w-full h-full'>
       <FloatingClouds />

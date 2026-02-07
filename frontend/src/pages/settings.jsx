@@ -23,6 +23,7 @@ import {
 } from 'firebase/firestore';
 import Button from '../components/Button';
 import LoadingScreen from '../components/LoadingScreen';
+import StarFieldOverlay from '../components/StarFieldOverlay';
 
 const API_ORIGIN = window.location.origin;
 
@@ -441,11 +442,13 @@ function Settings() {
 
   return (
     <>
-      <div
-        className="flex flex-row min-h-screen bg-center bg-cover max-w-screen bg-nexus900 fixed overflow-hidden inset-0"
-        style={{backgroundImage: 'url("assets/SettingsBG.svg")'}}
-      />
+      <div className="flex flex-row min-h-screen bg-linear-to-b from-nexus900 to-nexus700 fixed overflow-hidden inset-0"/>
       
+      <StarFieldOverlay count={150}/>
+      <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.3}} 
+                  src='/assets/SettingsAssets/SettingsClouds.svg' className='fixed bottom-0'/>
+      
+
       <div className='relative flex min-h-screen overflow-hidden'>
         {/* Sidebar */}
         <motion.aside
@@ -847,7 +850,7 @@ function Settings() {
             </div>
           )}
         </AnimatePresence>
-          
+
         {/* Pidgy */}
         {!isMobile && (
           <motion.div className='absolute top-0 right-10'
@@ -855,7 +858,7 @@ function Settings() {
                       animate={{y:0, opacity: 1}}
                       transition={{duration:1, type:'spring', delay: 0.2}}
             >
-            <motion.img className="flex h-[500px]" src='/assets/SettingsPidgy.svg'
+            <motion.img className="flex h-[500px]" src='/assets/SettingsAssets/SettingsPidgy.svg'
                         animate={{rotate:-12}}
                         transition={{repeat: Infinity, repeatType: "reverse", duration: 4, ease: "easeInOut"}}/>
           </motion.div>

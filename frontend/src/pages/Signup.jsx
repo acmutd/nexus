@@ -1,32 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, Link, useLocation } from "react-router-dom";
-
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
-
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import Button from "../components/Button";
+import StarFieldOverlay from "../components/StarFieldOverlay";
+import { motion, AnimatePresence} from 'framer-motion';
 
 export default function Signup() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [auth, setAuth] = useState(null);
-  const firestoreRef = useRef(null);
-
-  const [loading, setLoading] = useState(true);
   const [pwVisible, setPwVisible] = useState(false);
   const [pw2Visible, setPw2Visible] = useState(false);
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
   const [error, setError] = useState("");
-
-  const location = useLocation();
+  const [sendingEmail, setSendingEmail] = useState(false);
 
   // Popup animation state: retrigger on every navigation to this route
   const popupRef = useRef(null);
   const [popupVisible, setPopupVisible] = useState(false);
+  
   useEffect(() => {
     setPopupVisible(false);
     const t = setTimeout(() => {
@@ -37,42 +31,10 @@ export default function Signup() {
     return () => clearTimeout(t);
   }, [location.pathname, location.key]);
 
-
-  useEffect(() => {
-    (async () => {
-      try {
-        if (getApps().length) {
-          const app = getApp();
-          setAuth(getAuth(app));
-          firestoreRef.current = getFirestore(app);
-        } else {
-          const res = await fetch(`/api/firebase-config`);
-          if (!res.ok) throw new Error(`Config fetch failed: ${res.status} ${res.statusText}`);
-          const cfg = await res.json();
-          if (!cfg?.apiKey) throw new Error("Config missing required keys.");
-
-          const app = initializeApp(cfg);
-          setAuth(getAuth(app));
-          firestoreRef.current = getFirestore(app);
-        }
-      } catch (e) {
-        console.error("Init error:", e);
-        setError(String(e?.message || e));
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
-
-
   const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    if (!auth || !firestoreRef.current) {
-      setError("App not initialized.");
-      return;
-    }
     if (!email || !pw || !pw2) {
       setError("Please fill in all fields.");
       return;
@@ -82,46 +44,98 @@ export default function Signup() {
       return;
     }
 
+    // Basic email validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    setSendingEmail(true);
+
     try {
-      const cred = await createUserWithEmailAndPassword(auth, email.trim(), pw);
-      const user = cred.user;
+      // Store email and password temporarily
+      sessionStorage.setItem('pendingSignup', JSON.stringify({
+        email: email.trim(),
+        password: pw,
+        createdAt: new Date().toISOString(),
+      }));
 
-      await setDoc(
-        doc(firestoreRef.current, "users", user.uid),
-        {
-          uid: user.uid,
-          email: user.email ?? null,
-          servers: [],
-          courses: [],
-          createdAt: new Date().toISOString(),
-        },
-        { merge: true }
-      );
+      // Send verification code WITHOUT creating Firebase account yet
+      const sendCodeResponse = await fetch('/api/email/sendVerificationCode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email: email.trim(),
+          isPreAuth: true // Flag to indicate this is before account creation
+        })
+      });
 
-      // After signup, go to course linking and make sure onboarding state is refreshed
-      try { window.dispatchEvent(new CustomEvent('refreshOnboarding')) } catch (e) { }
-      navigate("/CourseLinking");
+      if (!sendCodeResponse.ok) {
+        const errorData = await sendCodeResponse.json();
+        console.error('Send code error:', errorData);
+        throw new Error(errorData.error || 'Failed to send verification code');
+      }
+
+      // Navigate to verification page
+      navigate("/verify-code", { 
+        state: { 
+          email: email.trim(),
+          isPreAuth: true // Flag to tell verify page to create account after verification
+        } 
+      });
+
     } catch (e) {
-      console.error("Sign Up error:", e);
-      const msg = (e?.message || "Sign Up failed").replace("Firebase: ", "");
+      console.error("Signup error:", e);
+      const msg = (e?.message || "Signup failed").replace("Firebase: ", "");
       setError(msg);
+      setSendingEmail(false);
     }
   };
 
-  if (loading) return <div className="flex items-center justify-center min-h-screen bg-blue-950 text-blue-200 font-titilliumWeb-regular">Loading…</div>;
+  const floatingVariants = {
+    float: (custom) => ({
+      x: [0, custom.x, 0],
+      y: [0, custom.y, 0],
+      rotate: [custom.startRotate, custom.endRotate, custom.startRotate],
+      transition: {
+        duration: custom.duration,
+        ease: 'easeInOut',
+        repeat: Infinity
+      }
+    })
+  }
 
   return (
     <div
-      className="flex flex-col items-center justify-center min-h-screen bg-blue-950 font-titilliumWeb-regular"
-      style={{
-        backgroundImage: "url('/assets/SignUpBG.svg')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
-      }}
-    >
+      className="flex flex-col items-center justify-center min-h-screen bg-linear-to-b from-nexus900 to-nexus700 font-titilliumWeb-regular">
+
+      { /* BACKGROUND ASSETS */}
+      <div className="fixed inset-0">
+        <StarFieldOverlay count={200}/>
+
+        { /* BG CLOUDS */}
+        <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.3}} 
+                    src="/assets/LoginSignUpAssets/LSBGClouds.svg" className="bottom-0 fixed will-change-transform pointer-events-none"/>
+
+        { /* CLIFF */}
+        <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.4}} 
+                    src="/assets/LoginSignUpAssets/LSCliff.svg" className="bottom-0 fixed w-[35%] will-change-transform pointer-events-none"/>
+        
+        { /* MOON */}
+        <motion.div initial={{y:300, opacity:0}} animate={{y:0, opacity:1}} transition={{duration:2.5, type:'spring', damping: 12, delay:0.6}} >
+          <motion.img 
+                      variants={floatingVariants} animate="float" custom={{x:2, y:-6, duration:5.5, startRotate:0, endRotate:5}}
+                      src="/assets/LoginSignUpAssets/LSMoon.svg" className="top-25 right-20 fixed w-[15%] will-change-transform pointer-events-none"/>
+        </motion.div>
+        
+        { /* RIGHT CLOUD */}
+        <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.4}} 
+                    src="/assets/LoginSignUpAssets/LSRightCloud.svg" className="bottom-0 right-0 fixed w-[20%] will-change-transform pointer-events-none"/>
+      </div>
+
       <div
         ref={popupRef}
-        className={`bg-nexus100 rounded-lg shadow-lg p-8 w-full max-w-md transition-all duration-500 transform mt-15
+        className={`bg-nexus100 rounded-lg shadow-lg p-8 w-[clamp(320px,30%,1000px)] overflow-hidden relative transition-all duration-500 transform mt-20
           ${popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
       >
         <h2 className="bodyText mb-1 text-gray-800 font-titilliumWeb-bold">Sign up for Nexus</h2>
@@ -167,7 +181,7 @@ export default function Signup() {
           </div>
 
           <div className="mb-4 relative font-titilliumWeb-semibold tinyText">
-            <h1 className="tinyText font-titilliumWeb-semibold text-nexus700 mb-2 ">
+            <h1 className="tinyText font-titilliumWeb-semibold text-nexus700 mb-2">
               Confirm Password
             </h1>    
             <div className="flex relative tinyText">
@@ -195,16 +209,15 @@ export default function Signup() {
           <Button
             type="submit"
             className={"mb-2"}
-            text={"Sign Up"}
+            text={sendingEmail ? "Verifying..." : "Continue"}
+            disabled={sendingEmail}
           />
-
-
         </form>
 
         <div className="text-center tinyText text-gray-700 font-titilliumWeb-bold">
           Already have an account?{" "}
           <Link to="/login" className="font-bold text-blue-900 hover:underline">
-            Login here
+            Login Here
           </Link>
         </div>
       </div>
