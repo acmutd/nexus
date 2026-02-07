@@ -11,12 +11,12 @@ import {
   getAuth,
   onAuthStateChanged
 } from 'firebase/auth';
-
 import {
   getFirestore,
   doc,
   getDoc
 } from 'firebase/firestore';
+import FloatingClouds from '../components/FloatingClouds';
 
 function LandingPage() {
   const {isMobile} = useMobile()
@@ -128,7 +128,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
       style: {
           position: 'absolute',
           top: '2%',
-          left: '6%',
+          left: '7%',
           width: '17%',
       },
       custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 4.5 }
@@ -139,10 +139,10 @@ const [showScrollTop, setShowScrollTop] = useState(false);
       style: {
           position: 'absolute',
           top: '32%',
-          left: '3%',
+          left: '5%',
           width: '19%',
       },
-      custom: { x: -5, y: -6, startRotate: 0, endRotate: -6, duration: 4.5 }
+      custom: { x: -5, y: -6, startRotate: -6, endRotate: 3, duration: 4.5 }
     },
     {
       name: 'pigy',
@@ -153,7 +153,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           left: '14%',
           width: '20%',
       },
-      custom: { x: -5, y: -6, startRotate: -6, endRotate: 4, duration: 4.5 }
+      custom: { x: -5, y: -6, startRotate: 6, endRotate: -4, duration: 4.5 }
     },
     {
       name: 'coffee',
@@ -161,10 +161,10 @@ const [showScrollTop, setShowScrollTop] = useState(false);
       style: {
           position: 'absolute',
           top: '30%',
-          right: '3%',
+          right: '4%',
           width: '15%',
       },
-      custom: { x: -5, y: -6, startRotate: -6, endRotate: 4, duration: 4.5 }
+      custom: { x: -5, y: -6, startRotate: -6, endRotate: 0, duration: 4.5 }
     },
     {
       name: 'peechi',
@@ -182,8 +182,8 @@ const [showScrollTop, setShowScrollTop] = useState(false);
       path: '/assets/Megaphone.svg',
       style: {
           position: 'absolute',
-          top: '62%',
-          right: '10%',
+          top: '60%',
+          right: '13%',
           width: '18%',
           scaleX: -1
           
@@ -201,7 +201,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
       <StarFieldOverlay count={200}/>
       <div
         ref={popupRef}
-        className={`mt-40 flex flex-col transition-all duration-500 transform gap-100 ${popupVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
+        className={`${isMobile ? 'mt-50' : 'mt-[clamp(120px,10%,300px)]'} flex flex-col transition-all duration-500 transform ${popupVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
         style={{ scrollSnapType: isMobile ? 'none' : 'y mandatory' }}
       >
         {/* --------------------------------- HEADER --------------------------------- */}
@@ -209,21 +209,21 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           className={`flex flex-col h-[60vh] justify-center text-center items-center relative scale-110`}
           style={{ scrollSnapAlign: 'none' }}
         >
-          <h1 className="relative mb-2 z-10 flex font-titilliumWeb-bold text-white text-center text-[clamp(3.25rem,5.2vw,5.5rem)] leading-[1.05]">
+          <h1 className="relative mb-2 z-10 flex font-titilliumWeb-bold text-white text-center text-[clamp(3.0rem,5.2vw,5.5rem)] leading-[1.05]">
             <Typewriter options={{strings: "Welcome To Nexus!", autoStart: true, cursor: "_", delay: 50}} />
           </h1>
           <h2
-            className={`relative z-10 flex font-titilliumWeb-regular text-white text-center text-[clamp(1.75rem,2.4vw,2.6rem)] leading-[1.15] ${isMobile ? 'w-[86%]' : 'w-[62%]'}`}>
+            className={`relative z-10 flex font-titilliumWeb-regular text-white text-center text-[clamp(1.5rem,2.4vw,2.6rem)] leading-[1.15] ${isMobile ? 'w-[86%]' : 'w-[62%]'}`}>
             Your hub for connecting with classmates, enhancing collaboration, and planning for success.
           </h2>
-          <Link to="/signup" className="relative z-10 bg-white text-nexus-blue-900 py-4 px-16 text-2xl font-titilliumWeb-bold rounded-lg mt-6 flex flex-row items-center gap-2 border border-transparent
+          <Link to="/signup" className="relative z-10 bg-white text-nexus-blue-900 py-3 px-12 text-2xl font-titilliumWeb-bold rounded-lg mt-6 flex flex-row items-center gap-2 border border-transparent
                               transition duration-300 hover:scale-105 hover:bg-gray-100 drop-shadow-black">
             Get Started
             <HiArrowNarrowRight className="pt-0.5" size={25} />
           </Link>
       
           {objects.map((obj) => (
-            !isScreenSmall && (
+            !isMobile && (
               <motion.div
                   key={obj.name}
                   style={obj.style}
@@ -242,153 +242,164 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           ))}
         </div>
         
-        {/* -------------------------------- LAPTOP ---------------------------------- */}
-        <motion.div
-          ref={laptopRef}
-          className='flex relative w-full justify-start ml-20 pointer-events-none will-change-transform'
-          style={{ scrollSnapAlign: isMobile ? 'none' : 'start', scrollMarginTop: isMobile ? undefined : '120px' }}
-        >
-          <motion.h1
-            className='flex font-titilliumWeb-semibold text-white w-[52%] text-[clamp(2.6rem,3.4vw,3.8rem)] leading-[1.12]'
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            viewport={{ once: false, amount: 0.5 }}
-          >
-            Effortlessly connect with your peers through automated Discord servers, filtered for each one of your classes.
-          </motion.h1>
+        {!isMobile ? 
+          (
+            <div className='flex flex-col gap-100 mt-100 '>
+              <motion.div
+                ref={laptopRef}
+                className='flex relative w-full justify-start ml-20 pointer-events-none will-change-transform'
+                style={{ scrollSnapAlign: isMobile ? 'none' : 'start', scrollMarginTop: isMobile ? undefined : '120px' }}
+              >
+                <motion.h1
+                  className='flex font-titilliumWeb-semibold text-white w-[50%] text-[clamp(2.4rem,3.4vw,3.8rem)] leading-[1.12]'
+                  initial={{ opacity: 0, y: 25 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, ease: 'easeOut' }}
+                  viewport={{ once: false, amount: 0.5 }}
+                >
+                  Effortlessly connect with your peers through automated Discord servers, filtered for each one of your classes.
+                </motion.h1>
+    
+                { /* Graphics */}
+                  <>            
+                  <motion.img 
+                    className='w-[clamp(350px,33%,1000px)] absolute left-1/2 -translate-x-[20%] -top-70 pointer-events-none will-change-transform'
+                    variants={floatingVariants} 
+                    src='/assets/HomePageAssets/Laptop.svg' 
+                    animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
+                  
+                  <motion.div className='flex absolute w-full justify-end pr-20 top-[55%] pointer-events-none will-change-transform'
+                    initial={{y:400}}
+                    whileInView={{y:0}}
+                    viewport={{once: true, amount: 0.10}}
+                    transition={{duration:2, type: 'spring'}}
+                  >
+                    <motion.img 
+                      className='w-[clamp(200px,20%,1000px)] flex pointer-events-none will-change-transform'
+                      src='/assets/HomePageAssets/BalloonPigy.svg'
+                      variants={floatingVariants}
+                      animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
+    
+                  </motion.div>
+                  </>
+    
+              </motion.div>
+    
+              <motion.div
+                ref={calculatorRef}
+                className='flex relative w-full justify-end pr-20'
+                style={{ scrollSnapAlign: isMobile ? 'none' : 'start', scrollMarginTop: isMobile ? undefined : '120px' }}
+              >
+                <motion.h1
+                  className='flex font-titilliumWeb-semibold text-white w-[52%] text-[clamp(2.4rem,3.4vw,3.8rem)] leading-[1.12]'
+                  initial={{ opacity: 0, y: 25 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, ease: 'easeOut' }}
+                  viewport={{ once: false, amount: 0.5 }}
+                >
+                  Determine the impact of your upcoming test or quiz to stay on top of your grades with Grade Calculator.
+                </motion.h1>
+    
+                {/* Grpahics */}
+                <>
+                  <motion.img 
+                    className={`w-[clamp(300px,25%,1000px)] absolute right-1/2 scale-120 -top-70 pointer-events-none will-change-transform rotate-30`}
+                    variants={floatingVariants} 
+                    src='/assets/Calculator.svg' 
+                    animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
+                  <div
+                    className='flex absolute w-full -left-1 top-[50%] pointer-events-none will-change-transform'
+                  >
+                    <img 
+                      className='w-[clamp(250px,23%,1000px)] flex pointer-events-none will-change-transform'
+                      src='/assets/HomePageAssets/SwingingAnimation.svg'
+                      alt="Swinging animation"
+                    />
+                  </div>
+                </>
+    
+              </motion.div>
+    
+              <motion.div
+                ref={bookRef}
+                className='flex relative w-full justify-start ml-20 mb-100 z-40'
+                style={{ scrollSnapAlign: isMobile ? 'none' : 'start', scrollMarginTop: isMobile ? undefined : '120px' }}
+              >
+                <motion.h1
+                  className='flex font-titilliumWeb-semibold text-white w-[50%] text-[clamp(2.4rem,3.4vw,3.8rem)] leading-[1.12]'
+                  initial={{ opacity: 0, y: 25 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, ease: 'easeOut' }}
+                  viewport={{ once: false, amount: 0.5 }}
+                >
+                  Upload and combine your notes with your classmates through SuperDoc, the ultimate cramming tool and study guide.
+                </motion.h1>
+    
+                {/* Grpahics */}
+                <>
+                  <motion.img 
+                    className='w-[clamp(250px,25%,1000px)] absolute left-1/2 scale-120 -top-40 pointer-events-none will-change-transform'
+                    variants={floatingVariants} 
+                    src='/assets/Book.svg' 
+                    animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
+                </>
+              
+              </motion.div>
+    
+              <img src='/assets/HomePageAssets/LPBottomClouds.svg' className='flex absolute bottom-0 z-0'/>
 
-          <motion.img 
-            className='w-[33%] absolute left-1/2 -translate-x-[25%] -top-70 pointer-events-none will-change-transform'
-            variants={floatingVariants} 
-            src='/assets/HomePageAssets/Laptop.svg' 
-            animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
-          
-          <motion.div className='flex absolute w-full justify-end pr-20 top-[45%] pointer-events-none will-change-transform'
-            initial={{y:300}}
-            whileInView={{y:0}}
-            viewport={{once: true, amount: 0.40}}
-            transition={{duration:2, type: 'spring'}}
-          >
-            <motion.img 
-              className='w-[20%] flex pointer-events-none will-change-transform'
-              src='/assets/HomePageAssets/BalloonPigy.svg'
-              variants={floatingVariants}
-              animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
-
-          </motion.div>
-
-        </motion.div>
-
-        {/* -------------------------------- CALCULATOR ---------------------------------- */}
-        <motion.div
-          ref={calculatorRef}
-          className='flex relative w-full justify-end pr-20'
-          style={{ scrollSnapAlign: isMobile ? 'none' : 'start', scrollMarginTop: isMobile ? undefined : '120px' }}
-        >
-          <motion.h1
-            className='flex font-titilliumWeb-semibold text-white w-[52%] text-[clamp(2.6rem,3.4vw,3.8rem)] leading-[1.12]'
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            viewport={{ once: false, amount: 0.5 }}
-          >
-            Determine the impact of your upcoming test or quiz to stay on top of your grades with Grade Calculator.
-          </motion.h1>
-          <motion.img 
-            className='w-[25%] absolute right-1/2 -translate-x-[20%] scale-120 -top-70 pointer-events-none will-change-transform rotate-30'
-            variants={floatingVariants} 
-            src='/assets/Calculator.svg' 
-            animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
-
-            <div
-              className='flex absolute w-full -left-1 top-[40%] pointer-events-none will-change-transform'
-            >
               <img 
-                className='w-[23%] flex pointer-events-none will-change-transform'
-                src='/assets/HomePageAssets/SwingingAnimation.svg'
-                alt="Swinging animation"
+                className='w-[clamp(380px,30%,1000px)] flex pointer-events-none will-change-transform bottom-0 absolute right-0 -scale-x-100'
+                src='/assets/HomePageAssets/SleepingAnimation.svg'
+                alt="Sleeping animation"
               />
             </div>
-        </motion.div>
-
-        {/* -------------------------------- BOOK ---------------------------------- */}
-        <motion.div
-          ref={bookRef}
-          className='flex relative w-full justify-start ml-20 mb-100'
-          style={{ scrollSnapAlign: isMobile ? 'none' : 'start', scrollMarginTop: isMobile ? undefined : '120px' }}
-        >
-          <motion.h1
-            className='flex font-titilliumWeb-semibold text-white w-[60%] text-[clamp(2.6rem,3.4vw,3.8rem)] leading-[1.12]'
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            viewport={{ once: false, amount: 0.5 }}
-          >
-            Upload and combine your notes with your classmates through SuperDoc, the ultimate cramming tool and study guide.
-          </motion.h1>
-          <motion.img 
-            className='w-[25%] absolute left-1/2 scale-120 translate-x-40 -top-40 pointer-events-none will-change-transform'
-            variants={floatingVariants} 
-            src='/assets/Book.svg' 
-            animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
-        </motion.div>
-
-        <img src='/assets/HomePageAssets/LPBottomClouds.svg' className='flex absolute bottom-0'/>
-{/*         { --------------------------------- CALCULATOR BOX --------------------------------- }
-        <div className="min-w-[300px] w-[53%] bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row mt-15 relative">
-          {!isMobile && <img src="/assets/Person.svg" className="h-[250px] w-[225px] absolute -right-16 -top-32"/>}
-          <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} items-center`}>
-            <div className={`flex flex-col m-10 gap-2 ${isMobile && 'items-center justify-center text-center'}`}>
-              {isMobile && <HiCalculator size={34} color='#003D99'/>}
-              <h1 className="text-nexus700 font-titilliumWeb-bold headingText text-centerflex flex flex-row">
-                Smart Learning
-              </h1>
-              <h2 className="text-nexus900 font-titilliumWeb-regular bodyText overflow-wrap">
-                Determine the impact of your upcoming test or quiz to stay on top of your grades with Grade Calculator.
-              </h2>
+          )
+        
+        :
+          <div className='flex flex-col w-full h-full items-center justify-center gap-15'>
+            <div className="min-w-[300px] w-[53%] bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row mt-20 relative">
+              <img src='/assets/HomePageAssets/SwingingAnimationMobile.svg' className='absolute -right-10 bottom-30 w-[clamp(200px,10%,600px)]'/>
+              <div className={`flex-col' items-center`}>
+                <div className={`flex flex-col m-10 gap-2 items-center justify-center text-center`}>
+                  {<HiCalculator size={34} color='#003D99'/>}
+                  <h1 className="text-nexus700 font-titilliumWeb-bold headingText text-centerflex flex flex-row">
+                    Smart Learning
+                  </h1>
+                  <h2 className="text-nexus900 font-titilliumWeb-regular bodyText overflow-wrap">
+                    Determine the impact of your upcoming test or quiz to stay on top of your grades with Grade Calculator.
+                  </h2>
+                </div>
+              </div>
             </div>
-            {!isMobile && <motion.ul whileHover={{rotate: 12, scale: 1.1}} 
-                      transition={{type: "spring", visualDuration: .25, bounce: .2}}
-                      className="w-full">
-              <img src="/assets/Calculator.svg" />
-            </motion.ul>}
+
+            <div className="min-w-[300px] w-[53%] bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row mt-20 relative items-center justify-center">
+              <div className={`flex flex-col m-10 gap-2 items-center justify-center text-center`}>
+                {<HiUserGroup size={34} color='#003D99'/>}
+                <h1 className="text-nexus700 font-titilliumWeb-bold headingText text-centerflex flex flex-row">
+                  Collaborative Environment
+                </h1>
+                <h2 className="text-nexus900 font-titilliumWeb-regular bodyText overflow-wrap">
+                Effortlessly connect with your peers through automated Discord servers, filtered for each one of your classes.
+                </h2>
+              </div>
+            </div>
+
+            <div className="min-w-[300px] w-[53%] bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row mt-20 relative items-center justify-center">
+              <div className={`flex flex-col m-10 gap-2 items-center justify-center text-center relative`}>
+                <img src='/assets/HomePageAssets/SleepingAnimationMobile.svg' className='absolute -left-10 bottom-38 -scale-x-100 w-[clamp(140px,10%,600px)]'/>
+                {<HiDocumentText size={34} color='#003D99'/>}
+                <h1 className="text-nexus700 font-titilliumWeb-bold headingText text-centerflex flex flex-row">
+                  Resource Sharing
+                </h1>
+                <h2 className="text-nexus900 font-titilliumWeb-regular bodyText overflow-wrap">
+                  Upload and combine your notes with your classmates through SuperDoc, the ultimate cramming tool and study guide.
+                </h2>
+              </div>
+            </div> 
           </div>
-        </div>
-        { --------------------------------- MEGAPHONE BOX --------------------------------- }
-        <div className="min-w-[300px] w-[53%] bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row mt-20 relative items-center justify-center">
-          {!isMobile && <motion.ul whileHover={{rotate: -12, scale: 1.1}} 
-                    transition={{type: "spring", visualDuration: .25, bounce: .2}}
-                    className="w-full">
-            <img src="/assets/Megaphone.svg"/>
-          </motion.ul>}
-          <div className={`flex flex-col m-10 gap-2 ${isMobile && 'items-center justify-center text-center'}`}>
-            {isMobile && <HiUserGroup size={34} color='#003D99'/>}
-            <h1 className="text-nexus700 font-titilliumWeb-bold headingText text-centerflex flex flex-row">
-              Collaborative Environment
-            </h1>
-            <h2 className="text-nexus900 font-titilliumWeb-regular bodyText overflow-wrap">
-            Effortlessly connect with your peers through automated Discord servers, filtered for each one of your classes.
-            </h2>
-          </div>
-        </div>
-        { --------------------------------- NOTES BOX --------------------------------- }
-        <div className="min-w-[300px] w-[53%] bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row mt-20 relative items-center justify-center">
-          <div className={`flex flex-col m-10 gap-2 ${isMobile && 'items-center justify-center text-center'}`}>
-            {isMobile && <HiDocumentText size={34} color='#003D99'/>}
-            <h1 className="text-nexus700 font-titilliumWeb-bold headingText text-centerflex flex flex-row">
-              Resource Sharing
-            </h1>
-            <h2 className="text-nexus900 font-titilliumWeb-regular bodyText overflow-wrap">
-              Upload and combine your notes with your classmates through SuperDoc, the ultimate cramming tool and study guide.
-            </h2>
-          </div>
-          {!isMobile && <motion.ul whileHover={{rotate: 12, scale: 1.1}} 
-                    transition={{type: "spring", visualDuration: .25, bounce: .2}}
-                    className="w-full">
-            <img src="/assets/Book.svg"/>
-          </motion.ul>}
-        </div> */}
+        }
+
       </div>
       <a
       href="https://docs.google.com/forms/d/e/1FAIpQLSfA5sNwJUlHn3QroikwHuDGhOve6qjb7ssMjkvLd-RGK_PLaQ/viewform"

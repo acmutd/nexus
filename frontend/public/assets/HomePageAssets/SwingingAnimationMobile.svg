@@ -1,0 +1,185 @@
+<svg width="392" height="403" viewBox="0 0 392 403" fill="none" xmlns="http://www.w3.org/2000/svg">
+<style>
+#Group_166 {
+	width: 137.31px;
+	height: 149.92px;
+	animation: 4.01s linear 0s infinite normal forwards running Group_166;
+	transform-box: fill-box;
+	transform-origin: 16% 0%;
+}
+@keyframes Group_166 {
+	0% {
+		transform: rotate(0deg);
+	}
+	49.88% {
+		transform: rotate(45deg);
+	}
+	99.75% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(0deg);
+	}
+}
+#Group_167 {
+	width: 115.28px;
+	height: 174.36px;
+	animation: 4.01s linear 0s infinite normal forwards running Group_167;
+	transform-box: fill-box;
+	transform-origin: 78% 12%;
+}
+@keyframes Group_167 {
+	0% {
+		transform: rotate(0deg);
+	}
+	49.88% {
+		transform: rotate(-45deg);
+	}
+	100% {
+		transform: rotate(0deg);
+	}
+}
+</style>
+<g id="Frame 155">
+<g id="Person" filter="url(#filter0_d_537_119)">
+<g id="Right Arm">
+<path id="Right Hand" d="M288.105 221.157L252.456 206.875L245.862 216.284L256.203 235.113L261.325 233.489L260.938 226.351L283.018 233.852L288.105 221.157Z" fill="#726AC9"/>
+<path id="Right Arm_2" d="M234.524 137.768L211.975 146.044L240.857 221.959L257.602 210.513L234.524 137.768Z" fill="#D9D9D9"/>
+<path id="Right Sleeve" d="M223.469 99.3818L206.994 90.3506L195.231 105.555L202.855 149.978C202.855 149.978 219.013 154.886 226.98 151.077C234.947 147.268 234.947 138.455 234.947 138.455L223.469 99.3818Z" fill="#5DAEC4"/>
+</g>
+<g id="Group_167">
+<path id="Rectangle 642" d="M210.966 219.961C210.966 219.961 239.748 183.294 250.835 198.079C255.386 204.148 256.535 214.293 255.274 219.423C250.566 238.574 205.517 317.756 205.517 317.756L195.893 318.517L187.777 323.713L158.396 301.839L161.936 294.935L156.296 282.894L210.966 219.961Z" fill="#342D83"/>
+<g id="Right Shoe">
+<g id="Rectangle 279">
+<path id="Vector" d="M159.122 300.556C159.122 300.556 166.93 308.773 173.495 313.066C180.152 317.419 192.345 322.131 192.345 322.131L175.975 344.863C175.975 344.863 152.51 327.74 143.381 321.166C147.136 311.788 159.122 300.556 159.122 300.556Z" fill="#66A3FF"/>
+<path id="Vector_2" d="M192.345 322.131C192.345 322.131 198.004 332.757 201.982 342.497C204.148 347.801 206.304 349.492 211.371 353.141C216.439 356.79 210.318 369.658 203.411 364.684C196.505 359.711 182.003 349.268 172.874 342.694C174.029 331.554 192.345 322.131 192.345 322.131Z" fill="#66A3FF"/>
+</g>
+<path id="Rectangle 285" d="M192 319.143L203.158 345.056C203.158 345.056 195.997 339.701 192.561 335.286C189.252 331.033 185.679 323.327 185.679 323.327L192 319.143Z" fill="#266589"/>
+<path id="Rectangle 283" d="M144.479 314.823L211.882 363.362C211.882 363.362 208.689 368.803 207.872 368.929C207.056 369.056 140.438 321.617 140.47 320.391C140.502 319.165 144.479 314.823 144.479 314.823Z" fill="#D9D9D9"/>
+</g>
+<path id="Ellipse 69" d="M184.919 333.782C185.87 334.466 187.195 334.251 187.88 333.3C188.564 332.349 188.349 331.024 187.398 330.34C186.448 329.655 185.122 329.871 184.438 330.821C183.753 331.772 183.969 333.097 184.919 333.782Z" fill="#B4B4B4"/>
+<path id="Ellipse 72" d="M182.166 326.568C183.117 327.253 184.442 327.037 185.127 326.087C185.811 325.136 185.595 323.811 184.645 323.126C183.694 322.442 182.369 322.657 181.684 323.608C181 324.558 181.216 325.884 182.166 326.568Z" fill="#B4B4B4"/>
+<path id="Ellipse 70" d="M189.685 340.29C190.636 340.975 191.961 340.759 192.646 339.809C193.33 338.858 193.115 337.533 192.164 336.848C191.214 336.164 189.888 336.379 189.204 337.33C188.519 338.281 188.735 339.606 189.685 340.29Z" fill="#B4B4B4"/>
+<path id="Ellipse 71" d="M195.601 345.911C196.552 346.595 197.877 346.379 198.562 345.429C199.246 344.478 199.031 343.153 198.08 342.468C197.13 341.784 195.804 342 195.12 342.95C194.435 343.901 194.651 345.226 195.601 345.911Z" fill="#B4B4B4"/>
+<path id="Rectangle 284" d="M185.067 316.879C185.586 315.619 187.02 315.008 188.288 315.509L194.502 317.962C196.026 318.564 196.566 320.447 195.591 321.764L194.334 323.461C193.824 324.151 192.994 324.53 192.138 324.464L185.678 323.963C183.99 323.832 182.921 322.094 183.565 320.528L185.067 316.879Z" fill="#66A3FF"/>
+<path id="Vector 24" d="M182.753 324.752L193.818 324.969L194.116 325.689L188.581 330.999L196.341 330.053L196.712 330.942L192.976 336.929L198.706 335.14L199.252 336.272L197.969 342.905L201.765 341.822" stroke="#D9D9D9" stroke-width="2.0775"/>
+</g>
+<path id="Right Thigh" d="M169.221 168.316C169.221 168.316 239.294 182.699 248.585 196.829C257.876 210.959 249.715 220.726 234.964 230.315C220.213 239.903 175.274 229.478 166.163 206.692C157.052 183.907 169.221 168.316 169.221 168.316Z" fill="#342D83"/>
+<g id="Group_166" filter="url(#filter1_d_537_119)">
+<path id="Rectangle 642_2" d="M189.5 223.709L221.935 209.72L281.775 301.558L277.622 310.273L278.065 319.9L244.431 334.408L240.221 327.889L226.974 326.754L189.5 223.709Z" fill="#342D83"/>
+<g id="Left Shoe">
+<g id="Right Shoe_2">
+<g id="Rectangle 279_2">
+<path id="Vector_3" d="M243.226 333.583C243.226 333.583 254.24 330.9 261.229 327.342C268.317 323.733 278.472 315.5 278.472 315.5L290.045 341.012C290.045 341.012 263.517 352.845 253.272 357.493C247.006 349.569 243.226 333.583 243.226 333.583Z" fill="#66A3FF"/>
+<path id="Vector_4" d="M278.472 315.5C278.472 315.5 290.505 315.879 300.933 317.275C306.611 318.035 309.151 317.006 314.837 314.426C320.524 311.846 328.641 323.558 320.89 327.074C313.139 330.591 296.866 337.974 286.621 342.621C277.532 336.077 278.472 315.5 278.472 315.5Z" fill="#66A3FF"/>
+</g>
+<path id="Rectangle 285_2" d="M275.706 314.312L303.735 317.527C303.735 317.527 295.527 321.075 289.988 321.858C284.653 322.612 276.19 321.876 276.19 321.876L275.706 314.312Z" fill="#266589"/>
+<path id="Rectangle 283_2" d="M248.316 353.384L323.957 319.068C323.957 319.068 327.088 324.545 326.791 325.316C326.495 326.087 252.198 360.27 251.151 359.632C250.103 358.994 248.316 353.384 248.316 353.384Z" fill="#D9D9D9"/>
+</g>
+<path id="Ellipse 69_2" d="M284.877 327.736C285.944 327.252 286.417 325.995 285.933 324.928C285.449 323.861 284.192 323.389 283.125 323.873C282.058 324.357 281.586 325.614 282.07 326.68C282.554 327.747 283.811 328.22 284.877 327.736Z" fill="#B4B4B4"/>
+<path id="Ellipse 72_2" d="M277.255 326.537C278.322 326.053 278.795 324.796 278.311 323.729C277.827 322.663 276.57 322.19 275.503 322.674C274.436 323.158 273.964 324.415 274.448 325.482C274.932 326.548 276.189 327.021 277.255 326.537Z" fill="#B4B4B4"/>
+<path id="Ellipse 70_2" d="M292.896 326.84C293.963 326.356 294.436 325.099 293.952 324.032C293.468 322.965 292.211 322.493 291.144 322.977C290.077 323.461 289.605 324.718 290.089 325.784C290.573 326.851 291.83 327.324 292.896 326.84Z" fill="#B4B4B4"/>
+<path id="Ellipse 71_2" d="M300.715 324.506C301.782 324.022 302.255 322.765 301.771 321.698C301.287 320.631 300.03 320.159 298.963 320.643C297.896 321.127 297.424 322.384 297.908 323.451C298.392 324.517 299.649 324.99 300.715 324.506Z" fill="#B4B4B4"/>
+<path id="Rectangle 284_2" d="M270.294 319.2C269.459 318.123 269.644 316.575 270.708 315.724L275.928 311.554C277.209 310.532 279.111 311.001 279.768 312.502L280.615 314.436C280.959 315.223 280.875 316.131 280.391 316.84L276.743 322.195C275.79 323.594 273.749 323.656 272.712 322.319L270.294 319.2Z" fill="#66A3FF"/>
+<path id="Vector 24_2" d="M275.97 325.124L281.663 315.633L282.436 315.733L284.288 323.176L287.328 315.974L288.284 316.095L291.619 322.315L292.917 316.454L294.171 316.544L299.286 320.957L300.236 317.125" stroke="#D9D9D9" stroke-width="2.0775"/>
+</g>
+</g>
+<path id="Left Thigh" d="M137.922 175.237C137.922 175.237 211.053 193.021 220.344 207.151C229.634 221.28 221.474 231.048 206.722 240.637C191.971 250.225 147.033 239.8 137.922 217.014C128.811 194.229 137.922 175.237 137.922 175.237Z" fill="#342D83"/>
+<g id="Hair">
+<g id="Back Hair">
+<path id="Rectangle 324" d="M149.359 66.6475L215.573 59.9302L215.574 99.2822L145.98 99.2834L149.359 66.6475Z" fill="#66A3FF"/>
+<path id="Rectangle 325" d="M149.368 65.4928L215.808 58.9902V87.0026L147.493 88.6142L149.368 65.4928Z" fill="#3385FF"/>
+</g>
+<path id="Bangs" d="M179.758 23.1793C196.575 21.4637 210.57 31.1148 212.212 47.2091C212.462 49.6568 212.41 52.1126 212.086 54.5234L153.276 60.5222C152.795 58.8844 152.458 57.1822 152.279 55.4272C150.637 39.3329 162.939 24.895 179.758 23.1793Z" fill="#66A3FF"/>
+</g>
+<path id="Shirt" d="M155.296 96.1643C155.137 94.8361 156.117 93.6433 157.451 93.542L205.28 89.91C206.496 89.8176 207.666 90.3992 208.326 91.4252L209.412 93.1117C210.836 95.3238 209.248 98.2349 206.617 98.2349H157.629C156.439 98.2349 155.437 97.3457 155.296 96.1643Z" fill="#5DAEC4"/>
+<path id="Neck" d="M198.111 80.8984H169.534V102.767H198.111V80.8984Z" fill="#554F97"/>
+<g id="Right Hair Thing" filter="url(#filter2_d_537_119)">
+<path id="Vector_5" d="M208.463 35.6445L206.531 90.0972C206.531 90.0972 216.394 79.9018 216.393 63.2095C216.392 46.5173 208.463 35.6445 208.463 35.6445Z" fill="#66A3FF"/>
+</g>
+<g id="Head">
+<g id="Head_2" filter="url(#filter3_i_537_119)">
+<path id="Vector_6" d="M184.215 90.0016C200.714 88.7122 213.044 74.2919 211.755 57.7929C210.465 41.2938 196.045 28.964 179.546 30.2533C163.047 31.5427 150.717 45.963 152.007 62.462C153.296 78.961 167.716 91.2909 184.215 90.0016Z" fill="#726AC9"/>
+</g>
+<g id="Head_3" filter="url(#filter4_i_537_119)">
+<path id="Vector_7" d="M184.215 90.0016C200.714 88.7122 213.044 74.2919 211.755 57.7929C210.465 41.2938 196.045 28.964 179.546 30.2533C163.047 31.5427 150.717 45.963 152.007 62.462C153.296 78.961 167.716 91.2909 184.215 90.0016Z" fill="#726AC9"/>
+</g>
+<path id="Rectangle 324_2" d="M152.457 50.0186L189.537 45.6772L211.999 55.6014V62.5781L152.457 68.2528V50.0186Z" fill="#554F97"/>
+</g>
+<path id="Shirt_2" d="M168.998 90.8496L192.506 102.657L202.87 95.0325L211.42 191.475C211.42 191.475 188.437 200.178 181.353 199.973C174.682 199.78 159.016 191.475 159.016 191.475L168.998 90.8496Z" fill="#D9D9D9"/>
+<path id="Left Jacket" d="M189.985 96.7281L169.317 90.5825L149.266 95.407L132.799 190.951L181.318 203.356L189.985 96.7281Z" fill="#5DAEC4"/>
+<path id="Right Jacket" d="M194.429 96.7715L205.382 90.209L208.764 92.8843L223.907 180.865L206.289 202.159L194.429 96.7715Z" fill="#5DAEC4"/>
+<path id="Mouth" d="M183.798 75.8068L197.522 74.1235" stroke="black" stroke-width="1.2465"/>
+<path id="Bangs_2" d="M164.341 28.9218C171.278 24.1996 177.637 22.8142 185.74 22.9633C186.463 22.9766 187.114 23.0595 187.699 23.1976C189.322 23.4615 193.727 24.3252 197.973 26.4753C202.343 28.6886 207.233 33.0069 208.712 36.1386C213.913 47.15 212.574 58.2214 212.567 58.2777L193.782 58.3066L191.757 47.7238L191.029 58.3835L148.715 64.4265C148.715 64.4265 149.687 53.0053 152.389 45.5737C155.091 38.1422 158.723 32.7466 164.341 28.9218Z" fill="#66A3FF"/>
+<g id="Left Hair Thing" filter="url(#filter5_d_537_119)">
+<path id="Vector_8" d="M149.546 57.4624C150.307 52.8293 151.902 46.6597 151.902 46.6597L163.151 96.8962C163.151 96.8962 147.704 78.0462 148.714 64.0828C148.875 61.8648 149.185 59.6567 149.546 57.4624Z" fill="#66A3FF"/>
+</g>
+<g id="Left Arm">
+<path id="Left Hand" d="M73.9504 227.696L109.378 212.873L116.114 222.181L106.06 241.165L100.914 239.619L101.192 232.476L79.2289 240.312L73.9504 227.696Z" fill="#726AC9"/>
+<path id="Left Arm_2" d="M124.614 136.523L146.6 146.224L115.617 226.963L99.7645 217.219L124.614 136.523Z" fill="#D9D9D9"/>
+<path id="Left Sleeve" d="M135.746 98.4814L169.224 90.6372V106.51L158.878 149.317C158.878 149.317 135.151 154.403 130.904 151.738C127.361 149.515 121.293 138.464 121.293 138.464L135.746 98.4814Z" fill="#5DAEC4"/>
+</g>
+</g>
+</g>
+<defs>
+<filter id="filter0_d_537_119" x="62.9504" y="21.9526" width="263.861" height="353.977" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="-7" dy="3"/>
+<feGaussianBlur stdDeviation="2"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_537_119"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_537_119" result="shape"/>
+</filter>
+<filter id="filter1_d_537_119" x="173.5" y="209.72" width="153.311" height="157.921" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="-12" dy="4"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_537_119"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_537_119" result="shape"/>
+</filter>
+<filter id="filter2_d_537_119" x="204.869" y="35.6445" width="13.1861" height="57.7766" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="1.662"/>
+<feGaussianBlur stdDeviation="0.831001"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_537_119"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_537_119" result="shape"/>
+</filter>
+<filter id="filter3_i_537_119" x="151.914" y="28.4986" width="61.5955" height="61.5956" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="6.64801" dy="-8.72551"/>
+<feGaussianBlur stdDeviation="0.831001"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="shape" result="effect1_innerShadow_537_119"/>
+</filter>
+<filter id="filter4_i_537_119" x="151.914" y="28.4986" width="61.5955" height="61.5956" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="5.4015" dy="-1.662"/>
+<feGaussianBlur stdDeviation="0.831001"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="shape" result="effect1_innerShadow_537_119"/>
+</filter>
+<filter id="filter5_d_537_119" x="147.005" y="46.6597" width="17.8085" height="53.5603" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="1.662"/>
+<feGaussianBlur stdDeviation="0.831001"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_537_119"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_537_119" result="shape"/>
+</filter>
+</defs>
+</svg>
