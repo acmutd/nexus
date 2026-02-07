@@ -35,7 +35,7 @@
     "react-type-animation": "^3.2.0",
     "simplebar-react": "^3.3.2",
     "typewriter-effect": "^2.22.0",
-    "vercel": "^50.6.1"
+    "vercel": "^50.13.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
