@@ -45,7 +45,7 @@ router.post('/merge_pdf', upload.single("file"), async(req,res) =>
        }
 
 
-       const response = await axios.post("http://localhost:5000/merge_pdf", form,{headers: form.getHeaders(),});
+       const response = await axios.post("http://localhost:8000/merge_pdf", form,{headers: form.getHeaders(),});
 
 
        res.status(response.status).json(response.data);
@@ -65,27 +65,7 @@ router.delete('/delete_heading',async(req,res)=>
 {
    try
    {
-       const{course_id,old_heading,document_id} = req.body;
-
-
-       if(!course_id||!old_heading)
-       {
-           return res.status(400).json({error:"Missing Fields"});
-       }
-       const payload =
-       {
-           course_id,
-           old_heading,
-       }
-
-
-       if(document_id)
-       {
-           payload.document_id = document_id;
-       }
-
-
-       const response = await axios.delete("http://localhost:5000/delete_heading",{data:payload})
+       const response = await axios.delete("http://localhost:8000/delete_heading",{data:payload})
 
 
        res.status(response.status).json(response.data);
@@ -114,7 +94,7 @@ router.post('/create_heading',async(req,res) =>
            course_id,
            new_heading
        }
-       const response = await axios.post("http://localhost:5000/create_heading",payload);
+       const response = await axios.post("http://localhost:8000/create_heading",payload);
 
 
         res.status(response.status).json(response.data);
@@ -144,7 +124,7 @@ router.put('/update_heading',async(req,res) =>
            old_heading,
            new_heading
        }
-       const response = await axios.put("http://localhost:5000/update_heading",payload);
+       const response = await axios.put("http://localhost:8000/update_heading",payload);
        res.status(response.status).json(response.data);
    }
    catch(err)
@@ -170,7 +150,7 @@ router.post('/get_docids',async(req,res) =>
        }
 
 
-       const response = await axios.post("http://localhost:5000/get_docids",payload);
+       const response = await axios.post("http://localhost:8000/get_docids",payload);
        res.status(response.status).json(response.data);
    }
    catch(err)
@@ -197,7 +177,7 @@ router.post('/create_document',async(req,res) =>
        }
 
 
-       const response = await axios.post("http://localhost:5000/create_document",payload);
+       const response = await axios.post("http://localhost:8000/create_document",payload);
        res.status(response.status).json(response.data);
    }
    catch(err)
