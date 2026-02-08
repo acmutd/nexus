@@ -446,7 +446,7 @@ function Settings() {
       
       <StarFieldOverlay count={150}/>
       <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.3}} 
-                  src='/assets/SettingsAssets/SettingsClouds.svg' className='fixed bottom-0'/>
+                  src='/assets/SettingsAssets/SettingsClouds.svg' className='fixed bottom-0 w-full'/>
       
 
       <div className='relative flex min-h-screen overflow-hidden'>

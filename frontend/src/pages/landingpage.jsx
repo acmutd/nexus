@@ -1,3 +1,4 @@
+
 import React, {useEffect, useState, useRef} from 'react'
 import { HiArrowNarrowRight, HiArrowNarrowUp, HiCalculator, HiUserGroup, HiDocumentText } from 'react-icons/hi';
 import { useMediaQuery } from 'react-responsive';
@@ -17,26 +18,20 @@ import {
   getDoc
 } from 'firebase/firestore';
 import FloatingClouds from '../components/FloatingClouds';
-
 function LandingPage() {
   const {isMobile} = useMobile()
   const {isScreenMedium} = useMobile()
   const {isScreenSmall} = useMobile()
-
   const navigate = useNavigate();
-
   // Firebase handles
   const [auth, setAuth] = useState(null);
   const dbRef = useRef(null);
-
 const [initLoading, setInitLoading] = useState(true);
 const [initError, setInitError] = useState('');
-
 const [user, setUser] = useState(null);
 const popupRef = useRef(null);
 const [popupVisible, setPopupVisible] = useState(false);
 const [showScrollTop, setShowScrollTop] = useState(false);
-
   useEffect(() => {
     let unsub = () => {};
     (async () => {
@@ -57,7 +52,6 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           setAuth(a);
           dbRef.current = db;
         }
-
         // Listen for auth state
         const a = getAuth();
         unsub = onAuthStateChanged(a, async (u) => {
@@ -74,13 +68,11 @@ const [showScrollTop, setShowScrollTop] = useState(false);
       unsub && unsub();
     };
   }, []);
-
   useEffect(() => {
     if(user) {
       navigate("/home")
     } 
   }, [user])
-
   // Entry popup animation
   useEffect(() => {
     setPopupVisible(false);
@@ -90,7 +82,6 @@ const [showScrollTop, setShowScrollTop] = useState(false);
     }, 60);
     return () => clearTimeout(t);
   }, []);
-
   // Toggle scroll-to-top button near bottom
   useEffect(() => {
     const onScroll = () => {
@@ -100,14 +91,11 @@ const [showScrollTop, setShowScrollTop] = useState(false);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
-
   // Section refs for scroll snapping
   const laptopRef = useRef(null);
   const calculatorRef = useRef(null);
   const bookRef = useRef(null);
-
   // No custom wheel handling; rely on CSS scroll snap for parallax-like paging
-
   const floatingVariants = {
     float: (custom) => ({
       x: [0, custom.x, 0],
@@ -120,7 +108,6 @@ const [showScrollTop, setShowScrollTop] = useState(false);
       }
     })
   }
-
   const objects = [
     {
       name: 'books',
@@ -191,7 +178,6 @@ const [showScrollTop, setShowScrollTop] = useState(false);
       custom: { x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 5.5 }
     },
   ]
-
   return (
     <>
     <div
@@ -244,14 +230,14 @@ const [showScrollTop, setShowScrollTop] = useState(false);
         
         {!isMobile ? 
           (
-            <div className='flex flex-col gap-100 mt-100 '>
+            <div className='flex flex-col gap-[clamp(570px,20rem,900px)] mt-[clamp(570px,20rem,900px)] '>
               <motion.div
                 ref={laptopRef}
                 className='flex relative w-full justify-start ml-20 pointer-events-none will-change-transform'
                 style={{ scrollSnapAlign: isMobile ? 'none' : 'start', scrollMarginTop: isMobile ? undefined : '120px' }}
               >
                 <motion.h1
-                  className='flex font-titilliumWeb-semibold text-white w-[50%] text-[clamp(2.4rem,3.4vw,3.8rem)] leading-[1.12]'
+                  className='flex font-titilliumWeb-semibold text-white w-[50%] text-[clamp(2.4rem,3.4vw,3.6rem)] leading-[1.12]'
                   initial={{ opacity: 0, y: 25 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -263,7 +249,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
                 { /* Graphics */}
                   <>            
                   <motion.img 
-                    className='w-[clamp(350px,33%,1000px)] absolute left-1/2 -translate-x-[20%] -top-70 pointer-events-none will-change-transform'
+                    className='w-[clamp(350px,33%,500px)] absolute left-1/2 -translate-x-[15%] -top-75 pointer-events-none will-change-transform'
                     variants={floatingVariants} 
                     src='/assets/HomePageAssets/Laptop.svg' 
                     animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
@@ -275,7 +261,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
                     transition={{duration:2, type: 'spring'}}
                   >
                     <motion.img 
-                      className='w-[clamp(200px,20%,1000px)] flex pointer-events-none will-change-transform'
+                      className='w-[clamp(200px,20%,400px)] flex pointer-events-none will-change-transform'
                       src='/assets/HomePageAssets/BalloonPigy.svg'
                       variants={floatingVariants}
                       animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
@@ -303,7 +289,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
                 {/* Grpahics */}
                 <>
                   <motion.img 
-                    className={`w-[clamp(300px,25%,1000px)] absolute right-1/2 scale-120 -top-70 pointer-events-none will-change-transform rotate-30`}
+                    className={`w-[clamp(300px,25%,500px)] absolute right-1/2 scale-120 -top-70 pointer-events-none will-change-transform rotate-30`}
                     variants={floatingVariants} 
                     src='/assets/Calculator.svg' 
                     animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
@@ -311,7 +297,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
                     className='flex absolute w-full -left-1 top-[50%] pointer-events-none will-change-transform'
                   >
                     <img 
-                      className='w-[clamp(250px,23%,1000px)] flex pointer-events-none will-change-transform'
+                      className='w-[clamp(250px,23%,450px)] flex pointer-events-none will-change-transform'
                       src='/assets/HomePageAssets/SwingingAnimation.svg'
                       alt="Swinging animation"
                     />
@@ -338,7 +324,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
                 {/* Grpahics */}
                 <>
                   <motion.img 
-                    className='w-[clamp(250px,25%,1000px)] absolute left-1/2 scale-120 -top-40 pointer-events-none will-change-transform'
+                    className='w-[clamp(250px,20%,500px)] absolute left-1/2 scale-120 -top-40 pointer-events-none will-change-transform'
                     variants={floatingVariants} 
                     src='/assets/Book.svg' 
                     animate="float" custom={{x: 5, y: -6, startRotate: 4, endRotate: 0, duration: 4.5}}/>
@@ -346,10 +332,9 @@ const [showScrollTop, setShowScrollTop] = useState(false);
               
               </motion.div>
     
-              <img src='/assets/HomePageAssets/LPBottomClouds.svg' className='flex absolute bottom-0 z-0'/>
-
+              <img src='/assets/HomePageAssets/LPBottomClouds.svg' className='flex absolute bottom-0 -z-1 w-full'/>
               <img 
-                className='w-[clamp(380px,30%,1000px)] flex pointer-events-none will-change-transform bottom-0 absolute right-0 -scale-x-100'
+                className='w-[clamp(380px,30%,640px)] flex pointer-events-none will-change-transform bottom-0 absolute right-0 -scale-x-100'
                 src='/assets/HomePageAssets/SleepingAnimation.svg'
                 alt="Sleeping animation"
               />
@@ -372,7 +357,6 @@ const [showScrollTop, setShowScrollTop] = useState(false);
                 </div>
               </div>
             </div>
-
             <div className="min-w-[300px] w-[53%] bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row mt-20 relative items-center justify-center">
               <div className={`flex flex-col m-10 gap-2 items-center justify-center text-center`}>
                 {<HiUserGroup size={34} color='#003D99'/>}
@@ -384,7 +368,6 @@ const [showScrollTop, setShowScrollTop] = useState(false);
                 </h2>
               </div>
             </div>
-
             <div className="min-w-[300px] w-[53%] bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row mt-20 relative items-center justify-center">
               <div className={`flex flex-col m-10 gap-2 items-center justify-center text-center relative`}>
                 <img src='/assets/HomePageAssets/SleepingAnimationMobile.svg' className='absolute -left-10 bottom-38 -scale-x-100 w-[clamp(140px,10%,600px)]'/>
@@ -399,7 +382,6 @@ const [showScrollTop, setShowScrollTop] = useState(false);
             </div> 
           </div>
         }
-
       </div>
       <a
       href="https://docs.google.com/forms/d/e/1FAIpQLSfA5sNwJUlHn3QroikwHuDGhOve6qjb7ssMjkvLd-RGK_PLaQ/viewform"
@@ -418,7 +400,6 @@ const [showScrollTop, setShowScrollTop] = useState(false);
         <span className="tinyText font-titilliumWeb-semibold whitespace-nowrap">
           Give us Feedback!
         </span>
-
         {/*hover tip*/}
         <span
           className="absolute bottom-full right-0 mb-3 w-72 p-3 rounded-lg
@@ -435,7 +416,6 @@ const [showScrollTop, setShowScrollTop] = useState(false);
         </span>
       </motion.div>
     </a>
-
     </div>
     <div
       className={`fixed bottom-8 left-1/2 -translate-x-1/2 transition-all duration-220 ease-out ${
@@ -454,5 +434,4 @@ const [showScrollTop, setShowScrollTop] = useState(false);
     </>
   )
 }
-
 export default LandingPage;
