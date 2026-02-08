@@ -1,0 +1,22 @@
+name: Branch Webhook Trigger
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger branch-specific webhook
+        run: |
+          BRANCH_NAME="${GITHUB_REF##*/}"
+
+          if [ "$BRANCH_NAME" = "main" ]; then
+            curl -f -X POST "${{ secrets.MAIN_WEBHOOK_URL }}" || exit 1
+          elif [ "$BRANCH_NAME" = "develop" ]; then
+            curl -f -X POST "${{ secrets.DEVELOP_WEBHOOK_URL }}" || exit 1
+          fi
