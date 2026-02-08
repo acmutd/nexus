@@ -21,10 +21,10 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: "Missing pdfBase64 field" });
         }
 
-        // 1. Convert Base64 back to Buffer
+        //Convert Base64 back to Buffer
         const pdfBuffer = Buffer.from(pdfBase64, 'base64');
 
-        // 2. Discord Login & Upload
+        //Discord Login & Upload for the pdf-uploader bot
         if (!client.isReady()) {
             await client.login(process.env.PDF_MANAGER_BOT_TOKEN);
         }
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
         const message = await channel.send({ files: [file] });
         const discordUrl = message.attachments.first().url;
 
-        // 3. Trigger Merge (Optional call to your other bot endpoint)
+        //calling merge after we acquire new pdf_url
         const botUrl = process.env.DISCORD_BOT_URL
             ? `${process.env.DISCORD_BOT_URL}/api/superdoc/merge`
             : 'http://localhost:3000/api/superdoc/merge';
