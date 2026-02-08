@@ -7,9 +7,16 @@ const client = new Client({
 
 async function getOrCreateFilesChannel(server) {
     const name = "files";
-    let channel =  server.channels.fetch('1468393627830190144')
+    let channel = server.channels.fetch('1468393627830190144')
     return channel;
 }
+
+
+const getBotUrl = (endpoint) => {
+    const base = process.env.DISCORD_BOT_URL || 'http://localhost:3001';
+    return `${base}/api/superdoc/${endpoint}`;
+};
+
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
@@ -39,13 +46,9 @@ export default async function handler(req, res) {
         const discordUrl = message.attachments.first().url;
 
         //calling merge after we acquire new pdf_url
-        const botUrl = process.env.DISCORD_BOT_URL
-            ? `${process.env.DISCORD_BOT_URL}/api/superdoc/merge`
-            : 'http://localhost:3000/api/superdoc/merge';
-
         let mergeResult = { status: "skipped" };
         try {
-            const mergeResponse = await fetch(botUrl, {
+            const mergeResponse = await fetch(getBotUrl('merge'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

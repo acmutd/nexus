@@ -1,4 +1,5 @@
 {
+  
   "rewrites": [
     {
       "source": "/((?!api/|_next/|static/|assets/|favicon.ico).*)",

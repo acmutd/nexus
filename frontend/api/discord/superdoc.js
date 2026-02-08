@@ -1,7 +1,11 @@
 const express = require('express');
+const path = require('path');
 const router = express.Router();
 const multer = require('multer');
 const { Client, GatewayIntentBits, AttachmentBuilder, ChannelType } = require('discord.js');
+
+const app = express();
+app.use(express.json());
 
 
 const storage = multer.memoryStorage();
@@ -15,9 +19,12 @@ async function getOrCreateFilesChannel(server) {
     let channel = server.channels.fetch('1468393627830190144')
     return channel;
 }
-const botUrl = process.env.DISCORD_BOT_URL
-            ? `${process.env.DISCORD_BOT_URL}/api/superdoc/merge`
-            : 'http://localhost:3000/api/superdoc/merge';
+
+
+const getBotUrl = (endpoint) => {
+    const base = process.env.DISCORD_BOT_URL || 'http://localhost:3001';
+    return `${base}/api/superdoc/${endpoint}`;
+};
 
 
 router.post('/pdfForwarding', upload.single('file'), async (req, res) => {
@@ -57,7 +64,7 @@ router.post('/merge_pdf', upload.single("file"), async (req, res) => {
         //calling merge after we acquire new pdf_url
         let mergeResult = { status: "skipped" };
         try {
-            const mergeResponse = await fetch(botUrl, {
+            const mergeResponse = await fetch(getBotUrl('merge'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -84,84 +91,79 @@ router.post('/merge_pdf', upload.single("file"), async (req, res) => {
 
 })
 
+router.post('/create_document', async (req, res) => {
+    try {
+        const { course_id, document_name } = req.body;
+        // Map snake_case from website-frontend to camelCase for Discord-bot
+        const response = await axios.post(getBotUrl('documents/create'), {
+            courseId: course_id,
+            documentName: document_name
+        });
+        res.status(response.status).json(response.data);
+    } catch (err) {
+        const status = err.response?.status || 500;
+        const data = err.response?.data || { error: err.message };
+        res.status(status).json(data);
+    }
+})
+
 
 router.delete('/delete_heading', async (req, res) => {
     try {
-        const old_heading = req.body.old_heading;
-        const response = await axios.delete(botUrl, { data: { old_heading: old_heading } })
-
-
+        const { courseId, documentName, old_heading } = req.body;
+        const response = await axios.delete(getBotUrl('heading/delete'), {
+            data: { courseId, documentName, oldHeading: old_heading }
+        });
         res.status(response.status).json(response.data);
-    }
-    catch (err) {
-        console.error(err);
-        res.status(500).json({ error: err.message });
+    } catch (err) {
+        res.status(err.response?.status || 500).json(err.response?.data || { error: err.message });
     }
 })
 
 
 router.post('/create_heading', async (req, res) => {
     try {
-        const new_heading = req.body.new_heading;
-        const response = await axios.post(botUrl, { new_heading: new_heading });
-
-
+        const { courseId, documentName, new_heading } = req.body;
+        const response = await axios.post(getBotUrl('heading/create'), {
+            courseId,
+            documentName,
+            newHeading: new_heading
+        });
         res.status(response.status).json(response.data);
+    } catch (err) {
+        res.status(err.response?.status || 500).json(err.response?.data || { error: err.message });
     }
-    catch (err) {
-        console.error(err);
-        res.status(500).json({ error: err.message });
-    }
-})
+});
 
 
 router.put('/update_heading', async (req, res) => {
     try {
-        const old_heading = req.body.old_heading;
-        const new_heading = req.body.new_heading;
-        const response = await axios.put(botUrl, { old_heading: old_heading, new_heading: new_heading });
+        const { courseId, documentName, old_heading, new_heading } = req.body;
+        const response = await axios.put(getBotUrl('heading/update'), {
+            courseId,
+            documentName,
+            oldHeading: old_heading,
+            newHeading: new_heading
+        });
         res.status(response.status).json(response.data);
-    }
-    catch (err) {
-        console.error(err);
-        res.status(500).json({ error: err.message });
+    } catch (err) {
+        res.status(err.response?.status || 500).json(err.response?.data || { error: err.message });
     }
 })
 
 
 router.post('/get_docids', async (req, res) => {
     try {
-        const course_id = req.body.course_id
-        const response = await axios.post(botUrl, { course_id: course_id });
+        const response = await axios.get(getBotUrl(`documents/${req.body.courseId}`));
         res.status(response.status).json(response.data);
     }
     catch (err) {
         console.error(err);
-        res.status(500).json({ error: err.message });
+        res.status(err.response?.status || 500).json(err.response?.data || { error: err.message });
     }
 })
 
 
-router.post('/create_document', async (req, res) => {
-    try {
-        const { course_id, document_name } = req.body;
-        if (!course_id || !document_name) {
-            return res.status(400).json({ error: "Missing Fields" });
-        }
-        const payload =
-        {
-            course_id,
-            document_name
-        }
-
-
-        const response = await axios.post(botUrl, payload);
-        res.status(response.status).json(response.data);
-    }
-    catch (err) {
-        console.error(err);
-        res.status(500).json({ error: err.message });
-    }
-})
-module.exports = router;
+app.use('/api/discord/superdoc', router);
+module.exports = app;
 

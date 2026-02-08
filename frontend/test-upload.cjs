@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // CONFIGURATION
-const ENDPOINT_URL = 'http://127.0.0.1:3000/api/discord/superdoc/merge'; 
+const ENDPOINT_URL = 'http://127.0.0.1:3000/api/discord/superdoc/merge_pdf'; 
 const TEST_FILE_PATH = './basic-text.pdf'; 
 async function testEndpoint() {
     try {
