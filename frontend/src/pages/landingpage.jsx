@@ -387,15 +387,19 @@ const [showScrollTop, setShowScrollTop] = useState(false);
       href="https://docs.google.com/forms/d/e/1FAIpQLSfA5sNwJUlHn3QroikwHuDGhOve6qjb7ssMjkvLd-RGK_PLaQ/viewform"
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-50 group"
+      className="fixed bottom-3 right-3 max-sm:bottom-5 max-sm:right-0 z-50 group"
     >
-      <motion.div
+      <div className="max-sm:scale-90 max-sm:origin-bottom-right">
+        <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.5 }}
-        className="relative bg-nexus800 text-white px-5 py-3 rounded-full shadow-lg
-                  flex items-center gap-2 cursor-pointer
-                  hover:scale-105 hover:bg-nexus700 transition"
+        className="
+          relative bg-nexus800 text-white
+          px-5 py-3 rounded-full shadow-lg
+          flex items-center gap-2 cursor-pointer
+          hover:scale-105 hover:bg-nexus700 transition
+        "
       >
         <span className="tinyText font-titilliumWeb-semibold whitespace-nowrap">
           Give us Feedback!
@@ -415,6 +419,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
           We appreciate any and all input :)
         </span>
       </motion.div>
+      </div>
     </a>
     </div>
     <div

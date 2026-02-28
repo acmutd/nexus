@@ -654,11 +654,11 @@ const GradeCalculator = () => {
                 </AnimatePresence>
                 
                 {/* CONTENT */}
-                <div
-  className={`flex-1 text-white transition-all duration-300 ${
-    isMobile ? 'ml-0' : sidebarCollapsed ? 'ml-16' : 'ml-64'
-  } pb-40 md:pb-24`}
->
+                    <div
+                    className={`flex-1 text-white transition-all duration-300 ${
+                        isMobile ? 'ml-0' : sidebarCollapsed ? 'ml-16' : 'ml-64'
+                    } pb-40 md:pb-24`}
+                    >
                     <div className="flex flex-col items-center headingText overflow-hidden">
                         {/* TITLE */}
                         <motion.h1
