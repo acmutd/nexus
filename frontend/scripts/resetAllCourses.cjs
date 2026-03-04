@@ -4,15 +4,43 @@
 // firestore can only do 500 writes per batch, so we batch in groups of 500
 
 // to run: node + file path of resetAllCourses.cjs
+// only announcmenet cmd test run this:
+// node (filepath) --announce-only
 
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
-const { admin, db } = require('../api/config/firebaseAdmin.js');
 const axios = require('axios');
 
 const DISCORD_BOT_URL = process.env.DISCORD_BOT_URL;
-const BOT_AUTH_TOKEN = process.env.BOT_AUTH_TOKEN;
+const BOT_API_KEY = process.env.BOT_API_KEY || process.env.API_KEY;
+//const ANNOUNCEMENT_MESSAGE ="testing";
+const ANNOUNCEMENT_MESSAGE ="@everyone When entering the Nexus website you'll be prompted to relink your courses for the new semester, please do this to get access to the new channels.";
+
+// for testing only announcment msg
+const ANNOUNCE_ONLY = process.argv.includes('--announce-only');
+
+async function sendDiscordAnnouncement() {
+
+  const base = String(DISCORD_BOT_URL).replace(/\/+$/, '');
+  const url = `${base}/api/discord/send-message`;
+
+  await axios.post(
+    url,
+    {
+      server: 'all',
+      channel: 'announcements',
+      message: ANNOUNCEMENT_MESSAGE,
+    },
+    {
+      headers: { 'content-type': 'application/json', 'x-api-key': BOT_API_KEY },
+      timeout: 15000,
+    }
+  );
+
+  console.log('Discord announcement sent');
+}
 
 async function resetAllUserCourses() {
+  const { admin, db } = require('../api/config/firebaseAdmin.js');
   const snapshot = await db.collection('users').get();
   let count = 0;
   let batch = db.batch();
@@ -64,4 +92,12 @@ async function resetAllUserCourses() {
   //console.log(`Deleted ${gCount} courseGrades docs.`);
 }
 
-resetAllUserCourses().catch(console.error);
+(async () => {
+  if (ANNOUNCE_ONLY) {
+    await sendDiscordAnnouncement();
+    return;
+  }
+
+  await resetAllUserCourses();
+  await sendDiscordAnnouncement();
+})().catch(console.error);
