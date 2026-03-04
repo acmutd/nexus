@@ -922,7 +922,7 @@ const GradeCalculator = () => {
                                                             <h1 className="flex tinyText text-white"><strong>Total Grade: {' '}</strong></h1> 
                                                             <h2 className="flex ml-1 tinyText text-white">{categoryGrades[categoryIndex] || ' N/A'}</h2>
                                                         </div>
-                                                        <Button className="bg-nexus800 flex gap-1 flex-1" onClick={() => addAssignmentRow(categoryIndex)} text={'Add Assignment'} icon={ <span className="-translate-x-2.5"><HiPlus size={25}  /> </span>}/>
+                                                        <Button className="bg-nexus800 flex gap-1 flex-1" onClick={() => addAssignmentRow(categoryIndex)} text={'Add Assignment'} icon={ <span className="-translate-x-2.5 md:translate-x-0"><HiPlus size={25}  /> </span>}/>
                                                     </div>
                                                 </motion.div>
                                             )}
