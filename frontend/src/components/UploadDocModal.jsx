@@ -1,10 +1,41 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { HiOutlineX, HiUpload } from 'react-icons/hi'
 import { motion } from 'motion/react'
 import { HiOutlineDocumentArrowUp } from 'react-icons/hi2'
 import Button from './Button'
 
 const UploadDocModal = ({onClose, isOpen}) => {
+
+    const [file, setFile] = useState(null);
+    const [docName, setDocName] = useState('');
+    const fileInputRef = useRef(null);
+
+    const handleFileChange = (e) =>
+    {
+        const selectedFile = e.target.files[0];
+        if (selectedFile) setFile(selectedFile)
+    };
+
+    const handleUpload = async () => {
+        if (!file) return alert("Please select a PDF first!")
+        
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('document',docName);
+        try{
+            const response = await fetch('/api/merge',{
+                method:'POST',
+                body:formData,
+            });
+            const result = await response.json();
+            console.log("Upload Success: ",result);
+
+        }
+        catch(error){
+            console.error("Upload Error:",error)
+        }
+    }
+
 
   return (
     <div className='inset-0 fixed flex backdrop-brightness-50 min-w-screen min-h-screen z-50 items-center justify-center font-titilliumweb-regular' onClick={() => {onClose && onClose()}}>
@@ -31,7 +62,8 @@ const UploadDocModal = ({onClose, isOpen}) => {
                             Drag and Drop File or
                         </span>
                         <div className='flex w-1/2 my-2'>
-                            <Button className="flex" text={'Browse'}/>
+                            <Button className="flex" text={'Browse'} onClick={() => fileInputRef.current?.click()}/>
+                            <input type="file" ref={fileInputRef} onChange={handleFileChange} accept=".pdf" className = "hidden"/>
                         </div>
                         <span className="block tinyText font-titilliumWeb-regular text-gray-500 mt-1">
                             Max file size: 0.5MB

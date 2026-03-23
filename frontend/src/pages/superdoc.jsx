@@ -12,6 +12,7 @@ import UploadDocModal from '../components/UploadDocModal';
 import UpdateHeadingModal from '../components/UpdateHeadingModal';
 
 function SuperDoc() {
+
   const {isMobile} = useMobile()
   const [search, setSearch] = useState('')
   const [selectedCourse, setSelectedCourse] = useState('')
@@ -21,6 +22,7 @@ function SuperDoc() {
   const [displayCourse, setDisplayCourse] = useState('')
   const [uploadDocumentOpen, setUploadDocumentOpen] = useState(false)
   const [updateHeadingOpen, setUpdateHeadingOpen] = useState(false)
+
 
   /* --------------------------  SEARCH STUFF  ----------------------------*/
   const courses = new Map()
