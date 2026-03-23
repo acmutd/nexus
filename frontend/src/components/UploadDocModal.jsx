@@ -13,7 +13,11 @@ const UploadDocModal = ({onClose, isOpen}) => {
     const handleFileChange = (e) =>
     {
         const selectedFile = e.target.files[0];
-        if (selectedFile) setFile(selectedFile)
+        if (selectedFile) 
+        {
+            setFile(selectedFile)
+        }
+            
     };
 
     const handleUpload = async () => {
@@ -21,14 +25,14 @@ const UploadDocModal = ({onClose, isOpen}) => {
         
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('document',docName);
+        console.log(file?.name)
         try{
-            const response = await fetch('/api/merge',{
-                method:'POST',
-                body:formData,
-            });
-            const result = await response.json();
-            console.log("Upload Success: ",result);
+            // const response = await fetch('/api/merge',{
+            //     method:'POST',
+            //     body:formData,
+            // });
+            // const result = await response.json();
+            // console.log("Upload Success: ",result);
 
         }
         catch(error){
@@ -73,7 +77,7 @@ const UploadDocModal = ({onClose, isOpen}) => {
 
                 <input className='w-full bg-nexus900 h-10 mt-4 placeholder-gray-400 text-white rounded-lg p-2' placeholder='Enter Document Name'/>
                 
-                <Button className={"mt-4"} text={'Upload PDF'}/>
+                <Button className={"mt-4"} text={'Upload PDF'} onClick={handleUpload}/>
                 <Button className={"bg-gray-600 my-4"} text={'Cancel'}/>
             </div>
         </motion.div>

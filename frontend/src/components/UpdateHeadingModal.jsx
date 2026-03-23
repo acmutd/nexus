@@ -12,6 +12,8 @@ const UpdateHeadingModal = ({onClose}) => {
         setSearch(event.target.value)
     }
 
+    
+
     const headings = ["Heading 1", "Heading 2", "Heading 3", "Heading 4", "Heading 5", "Heading 6"]
     const filteredHeadings = search == '' ? headings : headings.filter((heading) => heading.toLowerCase().includes(search.toLowerCase()))
     
