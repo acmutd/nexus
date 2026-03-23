@@ -8,11 +8,52 @@ const UpdateHeadingModal = ({onClose}) => {
 
     const [search, setSearch] = useState('')
     const [selectedHeading, setSelectedHeading] = useState('')
+    const [newHeading, setNewHeading] = useState('')
     const handleInputChange = (event) => {
         setSearch(event.target.value)
     }
 
-    
+    const newHead = async () =>
+    {
+        if(!newHeading.trim())
+        {
+            console.log("Empty Heading")
+        }
+        else
+        {
+            try
+            {
+                const response = await fetch('http://localhost:3001/api/routes/createHeading',{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type' : "application/json",
+                    },
+                    body: JSON.stringify({
+                        courseId: "temp",
+                        newHeading: newHeading,
+                        documentName: "temp",
+                        indexName: "name"
+
+                    })
+                })
+
+                if(!response.ok)
+                {
+                    throw new Error('shit got fucked up')
+                }
+
+                const result = response.json()
+                console.log(result)
+                onClose()
+                alert("Heading aded succesfully!")
+            }
+            catch(error)
+            {
+                console.error("Error Updating heading")
+                alert("Failed to update heading. Please try again")
+            }
+        }
+    }
 
     const headings = ["Heading 1", "Heading 2", "Heading 3", "Heading 4", "Heading 5", "Heading 6"]
     const filteredHeadings = search == '' ? headings : headings.filter((heading) => heading.toLowerCase().includes(search.toLowerCase()))
@@ -62,9 +103,9 @@ const UpdateHeadingModal = ({onClose}) => {
                     <label className='text-white font-titilliumWeb-semibold mt-4 mb-1 text-[clamp(0.5rem,1.2vw,1.5rem)] w-full text-start'>
                         New Heading Name
                     </label>
-                    <input className='w-full bg-nexus900 h-10 placeholder-gray-400 text-white rounded-lg p-2' placeholder='Enter New Heading Name'/>
+                    <input className='w-full bg-nexus900 h-10 placeholder-gray-400 text-white rounded-lg p-2' placeholder='Enter New Heading Name' onChange={(e) => setNewHeading(e.target,value)}/>
                     
-                    <Button className={"mt-4"} text={'Update Heading'}/>
+                    <Button className={"mt-4"} text={'Update Heading'} onClick={newHead}/>
                     <Button className={"bg-gray-600 my-4"} text={'Cancel'}/>
                 </div>
             </motion.div>
