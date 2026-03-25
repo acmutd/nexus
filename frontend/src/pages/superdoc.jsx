@@ -1,36 +1,86 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import StarFieldOverlay from '../components/StarFieldOverlay';
 import { HiOutlineDocument, HiUpload, HiChevronLeft, HiChevronRight, HiChevronDown, HiOutlineUpload, HiArrowLeft, HiSearch, HiOutlineFolder, HiPencil, HiDocument } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMobile } from '../context/mobileContext';
-import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
 import Button from '../components/Button';
 import { HiOutlineDocumentText } from 'react-icons/hi2';
 import UploadDocModal from '../components/UploadDocModal';
 import UpdateHeadingModal from '../components/UpdateHeadingModal';
+import { getFirebaseAuth, getFirebaseFirestore } from '../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
 function SuperDoc() {
   const {isMobile} = useMobile()
   const [search, setSearch] = useState('')
   const [selectedCourse, setSelectedCourse] = useState('')
-  const [coursesSideBar, setCoursesSidebar] = useState(false)
+  const [coursesSideBar, setCoursesSidebar] = useState(true)
   const [documents, setDocuments] = useState([])
   const [selectedDocument, setSelectedDocument] = useState('');
   const [displayCourse, setDisplayCourse] = useState('')
   const [uploadDocumentOpen, setUploadDocumentOpen] = useState(false)
   const [updateHeadingOpen, setUpdateHeadingOpen] = useState(false)
+  const [courseMap, setCourseMap] = useState(new Map())
+  const [isLoadingCourses, setIsLoadingCourses] = useState(true)
 
   /* --------------------------  SEARCH STUFF  ----------------------------*/
-  const courses = new Map()
-  // courses will be a map that uses the section name as the key and the individual unit notes as values
-  courses.set("MATH 1448", ['MATH 1448 Unit 1', 'MATH 1448 Unit 2', 'MATH 1448 Unit 3'])
-  courses.set("CS 1327", ['CS 1337 Unit 1', 'CS 1337 Unit 2 54254235'])
+  const courseOptions = Array.from(courseMap.keys())
 
+  useEffect(() => {
+    const formatCourseName = (courseId) => {
+      const parts = String(courseId || '').split('-')
+      if (parts.length >= 3) {
+        return `${parts[0]} ${parts[1]} - ${parts.slice(2).join('-')}`
+      }
+      return String(courseId || '')
+    }
 
-  const courseOptions = []
-  courses.forEach((document, course) => {courseOptions.push(course)})
+    const auth = getFirebaseAuth()
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        setCourseMap(new Map())
+        setSelectedCourse('')
+        setDocuments([])
+        setSelectedDocument('')
+        setDisplayCourse('')
+        setIsLoadingCourses(false)
+        return
+      }
+
+      try {
+        setIsLoadingCourses(true)
+        const db = getFirebaseFirestore()
+        const userDoc = await getDoc(doc(db, 'users', user.uid))
+        const fetchedCourses = userDoc.exists() ? (userDoc.data()?.courses || []) : []
+        const nextCourseMap = new Map()
+
+        fetchedCourses.forEach((course, index) => {
+          const rawId = (course?.course_id || course?.courseId || course?.id || '').toString().trim()
+          const fallbackName = `Course ${index + 1}`
+          const displayName = rawId ? formatCourseName(rawId) : fallbackName
+          if (!nextCourseMap.has(displayName)) {
+            nextCourseMap.set(displayName, [])
+          }
+        })
+
+        setCourseMap(nextCourseMap)
+        setSelectedCourse((prev) => (nextCourseMap.has(prev) ? prev : ''))
+      } catch (error) {
+        console.error('Failed to fetch SuperDoc courses:', error)
+        setCourseMap(new Map())
+        setSelectedCourse('')
+      } finally {
+        setDocuments([])
+        setSelectedDocument('')
+        setDisplayCourse('')
+        setIsLoadingCourses(false)
+      }
+    })
+
+    return () => unsubscribe()
+  }, [])
 
   const filteredCourseSearch = (search === '' ? courseOptions : 
                                           courseOptions.filter((value) => value.toLowerCase().includes(search.toLowerCase())))
@@ -47,8 +97,8 @@ function SuperDoc() {
     setSelectedCourse(course)
     setSearch('')
     // When the user clicks one of the courses from the sidebar, that course will be selected and its respective documents will show 
-    if(courses.has(course)) {
-      setDocuments(courses.get(course))
+    if(courseMap.has(course)) {
+      setDocuments(courseMap.get(course))
       setCoursesSidebar(false)
     }
   }
@@ -120,7 +170,15 @@ function SuperDoc() {
               {coursesSideBar ? 
               (<motion.div className="space-y-2 mt-4" key={"coursebuttons"}
                           initial={{opacity: 0, x: 20}} animate={{opacity: 1, x: 0}} transition={{duration: 0.5}}>
-                {filteredCourseSearch.map((course, index) => (
+                {isLoadingCourses && (
+                  <p className='text-nexus100 font-titilliumWeb-regular'>Loading courses...</p>
+                )}
+                {!isLoadingCourses && filteredCourseSearch.length === 0 && (
+                  <p className='text-nexus100 font-titilliumWeb-regular'>
+                    {courseOptions.length === 0 ? 'No courses found for your account.' : 'No courses match your search.'}
+                  </p>
+                )}
+                {!isLoadingCourses && filteredCourseSearch.map((course, index) => (
                   <motion.li
                     key={index}
                     initial={{ opacity: 0, x: -20 }}
@@ -138,7 +196,7 @@ function SuperDoc() {
                             {course}
                           </span>
                           <span className='text-gray-400 font-titilliumWeb-regular text-[clamp(0.6rem,0.8vw,1.4rem)] truncate'>
-                            {courses.get(course)?.length || 0} documents
+                            {courseMap.get(course)?.length || 0} documents
                           </span>
                         </div>
                       </div>
