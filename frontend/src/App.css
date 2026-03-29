@@ -120,6 +120,73 @@ html, body {
   width: 4px;
 }
 
+.driver-popover.grade-calc-driver-theme {
+  background-color: #002966;
+  color: #FFF;
+}
+
+.driver-popover.grade-calc-driver-theme .driver-popover-title {
+  font-family: TitilliumWeb-SemiBold, 'sans-serif';
+}
+
+.driver-popover.grade-calc-driver-theme .driver-popover-description {
+  font-family: TitilliumWeb-regular, 'sans-serif';
+  font-size: medium;
+}
+
+.driver-popover.grade-calc-driver-theme .driver-popover-progress-text {
+  font-family: TitilliumWeb-regular, 'sans-serif';
+  color: #FFF;
+}
+
+.driver-popover.grade-calc-driver-theme .driver-popover-prev-btn {
+  font-family: TitilliumWeb-regular, 'sans-serif';
+}
+
+.driver-popover.grade-calc-driver-theme .driver-popover-next-btn {
+  font-family: TitilliumWeb-regular, 'sans-serif';
+}
+
+.driver-popover.grade-calc-driver-theme .driver-popover-close-btn {
+  background-color: #002966;
+}
+
+.driver-popover.grade-calc-driver-theme .driver-popover-close-btn:hover {
+  background-color: #002966;
+}
+
+.driver-popover.grade-calc-driver-theme button {
+  background-color: #0052CC;
+  text-shadow: none;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease;
+  transform: scale(1);
+  border: none;
+  color: #FFF;
+}
+
+.driver-popover.grade-calc-driver-theme button:hover {
+  background-color: #0052CC;
+  transform: scale(1.05);
+  text-shadow: none;
+  color: #FFF;
+}
+
+.driver-popover.grade-calc-driver-theme .driver-popover-arrow-side-top.driver-popover-arrow {
+  border-top-color: #002966;
+}
+
+.driver-popover.grade-calc-driver-theme .driver-popover-arrow-side-bottom.driver-popover-arrow {
+  border-bottom-color: #002966;
+}
+
+.driver-popover.grade-calc-driver-theme .driver-popover-arrow-side-left.driver-popover-arrow {
+  border-left-color: #002966;
+}
+
+.driver-popover.grade-calc-driver-theme .driver-popover-arrow-side-right.driver-popover-arrow {
+  border-right-color: #002966;
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);

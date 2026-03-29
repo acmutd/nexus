@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { HiChevronLeft, HiChevronRight, HiCalculator, HiMenu, HiEye, HiX, HiChevronRight as HiChevronRightSmall } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -7,6 +7,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useMobile } from '../context/mobileContext';
 import axios from 'axios';
+import Button from './Button';
 
 const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propUserCourses, refreshTrigger, lastSavedGrade }) => {
   const navigate = useNavigate();
@@ -18,9 +19,20 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   const [courseHistories, setCourseHistories] = useState({});
   const [loadingHistories, setLoadingHistories] = useState({});
+  const [newCalcWarning, setNewCalcWarning] = useState(false)
   const { isMobile } = useMobile();
-
+  const popupRef = useRef()
   const coursesToUse = propUserCourses && propUserCourses.length > 0 ? propUserCourses : userCourses;
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if(popupRef.current && !popupRef.current.contains(event.target)) {
+        setNewCalcWarning(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {document.removeEventListener("mousedown", handleClickOutside)}
+  }) 
 
   useEffect(() => {
     const auth = getFirebaseAuth();
@@ -241,7 +253,7 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
       setSelectedCourseId(null);
     }
   };
-  const MOBILE_SIDEBAR_W = 136; 
+  const MOBILE_SIDEBAR_W = 156; 
   const sidebarVariants = {
   expanded: { width: isMobile ? MOBILE_SIDEBAR_W : 256 },
   collapsed: { width: 64 },
@@ -271,11 +283,31 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
   return (
     <>
       {!isCollapsed && isMobile && !showHistoryPanel && (
-  <div 
-    className='fixed w-screen h-screen backdrop-brightness-50 z-39 inset-0'
-    onClick={toggleSidebar}
-  />
-)}
+            <div className='fixed w-screen h-screen backdrop-brightness-50 z-39 inset-0'
+            onClick={toggleSidebar}
+        />
+      )}
+
+      <AnimatePresence>
+        {newCalcWarning && (
+          <div className='fixed inset-0 bg-black/40 z-50 flex items-center justify-center'>
+            <motion.div initial={{opacity: 0, y:100}} animate={{opacity: 1, y:0}} exit={{opacity: 0, y:100}} transition={{duration: 0.2}} 
+                        className='drop-shadow-lg flex flex-col p-8 rounded-lg w-[clamp(350px,35%,450px)] bg-nexus800 font-titilliumWeb-semibold text-white'
+                        ref={popupRef}>
+              <h1 className='text-[clamp(1.8rem,1.4vw,2.8rem)]'>
+                Warning!
+              </h1>
+              <span className='text-[clamp(1.1rem,1vw,2.4rem)] font-titilliumWeb-regular mb-2'>
+                Continuing will make any unsaved changes you've made to the current calculation disappear! 
+              </span>
+              <div className='flex flex-row gap-2 mt-2'>
+                <Button text={"Continue"} onClick={() => {handleNewCalculationClick(); setNewCalcWarning(false)}}/>
+                <Button className={'bg-gray-500'} text={"Cancel"} onClick={() => {setNewCalcWarning(false)}}/>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
       
       <motion.aside
         className={`shadow-md flex flex-col h-screen fixed left-0 top-0 pt-16 overflow-visible z-40`}
@@ -328,7 +360,7 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
                         >
                           <button
                             onClick={() => handleCourseClick(course.courseId)}
-                            className={`w-full text-left px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-between ${
+                            className={`cursor-pointer w-full text-left px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-between ${
                               selectedCourseId === course.courseId
                                 ? 'bg-nexus500 text-white'
                                 : hoveredCourseId === course.courseId
@@ -354,13 +386,13 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
 
               <div className="absolute bottom-4 left-0 right-0 px-2">
                 <button
-                  onClick={handleNewCalculationClick}
-                  className={`cursor-pointer w-full rounded-lg bg-nexus600 hover:bg-nexus500 text-white font-semibold transition-colors duration-200
+                  onClick={() => setNewCalcWarning(true)}
+                  className={`cursor-pointer w-full rounded-lg 
                     ${isMobile ? 'py-2 px-2 text-xs' : 'p-3'}
                   `}
                 >
                   {isMobile ? (
-                    <div className="flex items-center gap-2 justify-center">
+                    <div className="flex items-center gap-2 p-2 justify-center bg-nexus600 text-white rounded-lg">
                       <HiCalculator size={20} className="flex-shrink-0" />
                       <span className="flex flex-col leading-tight text-left">
                         <span>Add New</span>
@@ -368,12 +400,12 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
                       </span>
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center">
-                      <HiCalculator className="mr-2" />
-                      Add New Calculation
+                    <div className=''>
+                      <Button text={"Create New Calculation"} icon={<HiCalculator color='white'/>}/>
                     </div>
                   )}
                 </button>
+
               </div>
             </motion.div>
           )}
@@ -485,7 +517,7 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
               <div className="pt-4 border-t border-nexus600">
                 <button
                   onClick={() => handleViewAllHistories(activeCourseId)}
-                  className="w-full flex items-center justify-center p-3 rounded-lg bg-nexus600 hover:bg-nexus500 text-white font-medium transition-colors duration-200"
+                  className="cursor-pointer w-full flex items-center justify-center p-3 rounded-lg bg-nexus600 hover:bg-nexus500 text-white font-medium transition-colors duration-200"
                 >
                   <HiEye className="mr-2" />
                   View All Histories

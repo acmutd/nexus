@@ -46,7 +46,7 @@ const Navbar = () => {
 
           {/* Logo */}
           <button
-            className="flex items-center flex-shrink-0 transition duration-300 transform hover:scale-110 z-60"
+            className="flex items-center flex-shrink-0 transition duration-300 transform hover:scale-110 z-60 cursor-pointer"
             onClick={() => { window.scrollTo(0, 0); user ? navigate('/home') : navigate('/'); }}
           >
             <img src="/assets/Logo.svg" alt="Nexus Logo" className="h-9 w-9 md:h-10 md:w-auto" />
