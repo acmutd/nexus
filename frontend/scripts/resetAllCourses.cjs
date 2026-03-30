@@ -4,6 +4,7 @@
 // firestore can only do 500 writes per batch, so we batch in groups of 500
 
 // to run: node + file path of resetAllCourses.cjs
+
 // only announcmenet cmd test run this:
 // node (filepath) --announce-only
 
