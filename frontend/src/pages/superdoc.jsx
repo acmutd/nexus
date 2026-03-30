@@ -30,6 +30,16 @@ function SuperDoc() {
   /* --------------------------  SEARCH STUFF  ----------------------------*/
   const courseOptions = Array.from(courseMap.keys())
 
+  async function handleClickCourse(course)
+  {
+    //This isnt cached yet but it pulled the doc ids for a specific course
+    setSelectedCourse(course)
+    setSearch('')
+    const response = await fetch("http://localhost:8000/documents/${course}")
+    const docs = await response.json()
+    setDocuments(Object.keys(docs))
+    setCoursesSidebar(false)
+  }
   useEffect(() => {
     const formatCourseName = (courseId) => {
       const parts = String(courseId || '').split('-')

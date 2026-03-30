@@ -27,13 +27,19 @@ const UploadDocModal = ({onClose, isOpen}) => {
         formData.append('file', file);
         console.log(file?.name)
         try{
-            // const response = await fetch('/api/merge',{
-            //     method:'POST',
-            //     body:formData,
-            // });
-            // const result = await response.json();
-            // console.log("Upload Success: ",result);
-
+            const response = await fetch('http://localhost:8000/merge',
+                {
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({
+                        pdfAttachment: file,
+                        courseId: 'some_id',
+                        documentName: docName,
+                        indexName: 'some-index-name',
+                    }),
+                });
+            const result = await response.json();
+            console.log("Upload Worked:", result)
         }
         catch(error){
             console.error("Upload Error:",error)
