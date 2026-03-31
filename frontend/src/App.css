@@ -7,6 +7,61 @@ html, body {
   overscroll-behavior-y: none; 
 }
 
+.custom-scroll::-webkit-scrollbar {
+  width: 5px; /* Adjust width for vertical scrollbar */
+  height: 5px; /* Adjust height for horizontal scrollbar */
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #f1f1f100; /* Color of the track */
+  border-radius: 10px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #94949465; /* Color of the draggable handle */
+  border-radius: 10px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: #55555575; /* Color on hover */
+}
+
+.scrollable-container {
+  overflow-y: auto;
+  /* Apply the mask image to create the fade effect */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    black 0%,
+    black calc(100% - 45px), /* Start fade 48px from bottom */
+    transparent 100%        /* Fully transparent at the bottom */
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    black 0%,
+    black calc(100% - 45px),
+    transparent 100%
+  );
+  --bottom-mask-size: 48px; /* CSS custom property for dynamic control */
+}
+
+.scroll-fade {
+  overflow-y: auto;
+  /* Apply the mask image to create the fade effect */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    black 0%,
+    black calc(100% - 25px), /* Start fade 48px from bottom */
+    transparent 100%        /* Fully transparent at the bottom */
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    black 0%,
+    black calc(100% - 25px),
+    transparent 100%
+  );
+  --bottom-mask-size: 48px; /* CSS custom property for dynamic control */
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

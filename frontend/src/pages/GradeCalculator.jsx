@@ -654,8 +654,11 @@ const GradeCalculator = () => {
                 </AnimatePresence>
                 
                 {/* CONTENT */}
-                <div className={`flex-1 text-white transition-all duration-300 ${isMobile ? 'ml-0' : sidebarCollapsed ? 'ml-16' : 'ml-64'}`}
-                >
+                    <div
+                    className={`flex-1 text-white transition-all duration-300 ${
+                        isMobile ? 'ml-0' : sidebarCollapsed ? 'ml-16' : 'ml-64'
+                    } pb-40 md:pb-24`}
+                    >
                     <div className="flex flex-col items-center headingText overflow-hidden">
                         {/* TITLE */}
                         <motion.h1
@@ -900,14 +903,14 @@ const GradeCalculator = () => {
                                                                 {/* DELETE ASSIGNMENT */}
                                                                 <div className="flex">
                                                                     <HiTrash 
-                                                                        className="ml-4 flex hover:scale-110 transition duration-300 text-white hover:text-red-500 cursor-pointer"
+                                                                        className="ml-2.5 flex hover:scale-110 transition duration-300 text-white hover:text-red-500 cursor-pointer"
                                                                         onClick={() => {
                                                                             if (category.assignments.length > 1) {
                                                                                 deleteAssignmentRow(categoryIndex, assignmentIndex);
                                                                             }
                                                                         }} 
                                                                         title="Delete Category"
-                                                                        size={25}
+                                                                        size={20}
                                                                     />
                                                                 </div>
                                                             </div>
@@ -919,7 +922,7 @@ const GradeCalculator = () => {
                                                             <h1 className="flex tinyText text-white"><strong>Total Grade: {' '}</strong></h1> 
                                                             <h2 className="flex ml-1 tinyText text-white">{categoryGrades[categoryIndex] || ' N/A'}</h2>
                                                         </div>
-                                                        <Button className="bg-nexus800 flex gap-1 flex-1" onClick={() => addAssignmentRow(categoryIndex)} text={'Add Assignment'} icon={<HiPlus size={25}/>}/>
+                                                        <Button className="bg-nexus800 flex gap-1 flex-1" onClick={() => addAssignmentRow(categoryIndex)} text={'Add Assignment'} icon={ <span className="-translate-x-2.5 md:translate-x-0"><HiPlus size={25}  /> </span>}/>
                                                     </div>
                                                 </motion.div>
                                             )}

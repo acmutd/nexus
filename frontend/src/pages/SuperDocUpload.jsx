@@ -4,7 +4,7 @@ import { animate, AnimatePresence, motion, scale } from "motion/react"
 
 function Upload() {
     const isMed = useMediaQuery({ query: '(max-width: 800px)' })
-
+   
     return (
     <div className="min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center"
       style={{ backgroundImage: isMed ? "url('/assets/UploadDocLongBG.svg')" : "url('/assets/UploadDocBG.svg')" }}>
