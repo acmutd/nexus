@@ -35,7 +35,11 @@ function SuperDoc() {
     //This isnt cached yet but it pulled the doc ids for a specific course
     setSelectedCourse(course)
     setSearch('')
-    const response = await fetch("http://localhost:8000/documents/${course}")
+    const response = await fetch(`/api/discord/superdoc/get_docids`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ courseId: course })
+    })
     const docs = await response.json()
     setDocuments(Object.keys(docs))
     setCoursesSidebar(false)
@@ -105,15 +109,7 @@ function SuperDoc() {
     setSearch(event.target.value)
   }
 
-  function handleClickCourse(course) {
-    setSelectedCourse(course)
-    setSearch('')
-    // When the user clicks one of the courses from the sidebar, that course will be selected and its respective documents will show 
-    if(courseMap.has(course)) {
-      setDocuments(courseMap.get(course))
-      setCoursesSidebar(false)
-    }
-  }
+
     
   return (
     <div className="min-h-screen max-w-screen bg-cover bg-center overflow-x-hidden justify-center bg-gradient-to-b from-nexus900 to-nexus700">
@@ -124,6 +120,8 @@ function SuperDoc() {
         {uploadDocumentOpen && (
             <UploadDocModal
             onClose={() => setUploadDocumentOpen(false)}
+            courseId={selectedCourse}
+            onUploadSuccess={(docName) => setDocuments(prev => [...prev, docName])}
             />
         )}
       </AnimatePresence>

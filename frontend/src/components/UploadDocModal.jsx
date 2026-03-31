@@ -4,7 +4,7 @@ import { motion } from 'motion/react'
 import { HiOutlineDocumentArrowUp } from 'react-icons/hi2'
 import Button from './Button'
 
-const UploadDocModal = ({onClose, isOpen}) => {
+const UploadDocModal = ({onClose, isOpen, courseId, onUploadSuccess}) => {
 
     const [file, setFile] = useState(null);
     const [docName, setDocName] = useState('');
@@ -21,25 +21,22 @@ const UploadDocModal = ({onClose, isOpen}) => {
     };
 
     const handleUpload = async () => {
-        if (!file) return alert("Please select a PDF first!")
-        
-        const formData = new FormData();
-        formData.append('file', file);
-        console.log(file?.name)
+        if (!docName) return alert("Please enter a document name!")
+
         try{
-            const response = await fetch('http://localhost:8000/merge',
+            const response = await fetch('/api/discord/superdoc/create_document',
                 {
                     method: 'POST',
                     headers: {'Content-Type':'application/json'},
                     body: JSON.stringify({
-                        pdfAttachment: file,
-                        courseId: 'some_id',
-                        documentName: docName,
-                        indexName: 'some-index-name',
+                        course_id: courseId,
+                        document_name: docName,
                     }),
                 });
             const result = await response.json();
             console.log("Upload Worked:", result)
+            onUploadSuccess && onUploadSuccess(docName)
+            onClose && onClose()
         }
         catch(error){
             console.error("Upload Error:",error)
@@ -81,7 +78,7 @@ const UploadDocModal = ({onClose, isOpen}) => {
 
                 </div>
 
-                <input className='w-full bg-nexus900 h-10 mt-4 placeholder-gray-400 text-white rounded-lg p-2' placeholder='Enter Document Name'/>
+                <input className='w-full bg-nexus900 h-10 mt-4 placeholder-gray-400 text-white rounded-lg p-2' placeholder='Enter Document Name' value={docName} onChange={(e) => setDocName(e.target.value)}/>
                 
                 <Button className={"mt-4"} text={'Upload PDF'} onClick={handleUpload}/>
                 <Button className={"bg-gray-600 my-4"} text={'Cancel'}/>

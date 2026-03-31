@@ -4,7 +4,7 @@ import axios from 'axios'
 
 const getBotUrl = (endpoint) => {
     const base = process.env.DISCORD_BOT_URL || 'http://localhost:3001';
-    return `${base}/api/superdoc/${endpoint}`;
+    return `${base}/${endpoint}`;
 };
 
 export default async function handler(req, res) {
