@@ -8,9 +8,16 @@ const UpdateHeadingModal = ({onClose}) => {
 
     const [search, setSearch] = useState('')
     const [selectedHeading, setSelectedHeading] = useState('')
+    const [atBottom, setAtBottom] = useState(false)
     const handleInputChange = (event) => {
         setSearch(event.target.value)
     }
+
+    const handleScroll = (e) => {
+        const { scrollTop, scrollHeight, clientHeight } = e.target;
+        const bottom = scrollHeight - scrollTop <= clientHeight + 1;
+        setAtBottom(bottom);
+    };
 
     const headings = ["Heading 1", "Heading 2", "Heading 3", "Heading 4", "Heading 5", "Heading 6"]
     const filteredHeadings = search == '' ? headings : headings.filter((heading) => heading.toLowerCase().includes(search.toLowerCase()))
@@ -46,7 +53,7 @@ const UpdateHeadingModal = ({onClose}) => {
 
                         <div className='bg-gray-500 h-px w-full my-2'/>
 
-                            <div className='flex flex-col w-full h-[150px] my-2 gap-2 scroll-fade custom-scroll'>
+                            <div className={`flex flex-col w-full h-[150px] my-2 gap-2 overflow-y-auto ${!atBottom ? 'scroll-fade' : ''} custom-scroll`} onScroll={handleScroll}>
                                 {filteredHeadings.map((heading, index) => (
                                     <div className={`cursor-pointer flex w-full p-2 rounded-lg text-nexus100 font-titilliumWeb-semibold text-center items-center justify-center hover:bg-nexus600 transition duration-300 ${selectedHeading == heading ? 'bg-nexus700' : ' bg-nexus800'}`} 
                                         key={index} onClick={() => {setSelectedHeading(heading)}}>
@@ -63,7 +70,7 @@ const UpdateHeadingModal = ({onClose}) => {
                     <input className='w-full bg-nexus900 h-10 placeholder-gray-400 text-white rounded-lg p-2' placeholder='Enter New Heading Name'/>
                     
                     <Button className={"mt-4"} text={'Update Heading'}/>
-                    <Button className={"bg-gray-600 my-4"} text={'Cancel'}/>
+                    <Button className={"bg-gray-600 my-4"} text={'Cancel'} onClick={() => onClose() && onClose}/>
                 </div>
             </motion.div>
         </div>
