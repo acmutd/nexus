@@ -1,6 +1,13 @@
 import React from 'react'
 
 const Button = ({text, icon, onClick, href, className, disabled, title}) => {
+  const renderIcon = () => {
+    if (typeof icon === 'string') {
+      return <img src={icon} alt="icon" className="p-4" />; // Adjust size as needed
+    }
+    return icon;
+  };
+  
   if (href) {
     return (
       <a 
@@ -14,7 +21,7 @@ const Button = ({text, icon, onClick, href, className, disabled, title}) => {
         <h1 className='font-titilliumWeb-semibold text-white text-lg'>
           {text}
         </h1>
-        {icon}
+        {renderIcon()}
       </a>
     )
   }
@@ -27,10 +34,19 @@ const Button = ({text, icon, onClick, href, className, disabled, title}) => {
       title={title}
       disabled={disabled}
     >
-      <h1 className='font-titilliumWeb-bold tinyText text-white text-lg'>
-        {text}
-      </h1>
-      {icon}
+      {
+      text && (
+        <h1 className='font-titilliumWeb-bold tinyText text-white text-lg'>
+          {text}
+        </h1>
+      )
+    }
+    {
+      icon && (
+        renderIcon()
+      )
+    }
+      
     </button>
   )
 }

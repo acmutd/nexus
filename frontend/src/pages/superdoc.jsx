@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import StarFieldOverlay from '../components/StarFieldOverlay';
-import { HiOutlineDocument, HiUpload, HiChevronLeft, HiChevronRight, HiChevronDown, HiOutlineUpload, HiArrowLeft, HiSearch, HiOutlineFolder, HiPencil, HiDocument } from 'react-icons/hi';
+import { HiOutlineDocument, HiUpload, HiChevronLeft, HiChevronRight, HiChevronDown, HiOutlineUpload, HiArrowLeft, HiSearch, HiOutlineFolder, HiPencil, HiDocument, HiLink, HiDocumentDuplicate, HiDocumentAdd } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMobile } from '../context/mobileContext';
 import 'simplebar-react/dist/simplebar.min.css';
@@ -11,6 +11,7 @@ import UpdateHeadingModal from '../components/UpdateHeadingModal';
 import { getFirebaseAuth, getFirebaseFirestore } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
+import MergeDocModal from '../components/MergeDocModal';
 
 function SuperDoc() {
 
@@ -22,9 +23,17 @@ function SuperDoc() {
   const [selectedDocument, setSelectedDocument] = useState('');
   const [displayCourse, setDisplayCourse] = useState('')
   const [uploadDocumentOpen, setUploadDocumentOpen] = useState(false)
+  const [mergeDocumentOpen, setMergeDocumentOpen] = useState(false)
   const [updateHeadingOpen, setUpdateHeadingOpen] = useState(false)
   const [courseMap, setCourseMap] = useState(new Map())
   const [isLoadingCourses, setIsLoadingCourses] = useState(true)
+  const [atBottom, setAtBottom] = useState(false)
+
+  const handleScroll = (e) => {
+      const { scrollTop, scrollHeight, clientHeight } = e.target;
+      const bottom = scrollHeight - scrollTop <= clientHeight + 1;
+      setAtBottom(bottom);
+  };
 
 
   /* --------------------------  SEARCH STUFF  ----------------------------*/
@@ -127,6 +136,14 @@ function SuperDoc() {
       </AnimatePresence>
 
       <AnimatePresence>
+        {mergeDocumentOpen && (
+            <MergeDocModal
+            onClose={() => setMergeDocumentOpen(false)}
+            />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
         {updateHeadingOpen && (
             <UpdateHeadingModal
             onClose={() => setUpdateHeadingOpen(false)}
@@ -151,115 +168,138 @@ function SuperDoc() {
         style={{backgroundImage: 'linear-gradient(#002966, #001433)'}}>
 
         <AnimatePresence>
-            <motion.div
-              className="flex-1 overflow-y-auto p-4 custom-scroll scrollable-container"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}>
-                {coursesSideBar ?   
-                  <motion.div key={"courses"} initial={{opacity: 0, x: 15}} animate={{opacity: 1, x:0}} transition={{duration: 0.5}}>
-                    <h2 className="headingText font-titilliumWeb-semibold text-nexus100">Courses</h2> 
-                  </motion.div>                
-                  : 
-                  <motion.div key={"documents"} className='flex flex-row items-center gap-1' 
-                              initial={{opacity: 0, x: 15}} animate={{opacity: 1, x:0}} transition={{duration: 0.5}}>
-                    <HiArrowLeft className='cursor-pointer' color='#CCE0FF' size={25} onClick={() => {setCoursesSidebar(true)}}/>
-                    <h2 className="headingText font-titilliumWeb-semibold text-nexus100">Documents</h2> 
-                  </motion.div>
-                }
-              
-              <div className='w-full flex h-10 bg-nexus900 my-2 items-center rounded-lg focus-within:ring-1 focus-within:ring-nexus600'>
-                <input className='flex w-full p-2 focus:outline-none bg-transparent rounded-l-lg placeholder-gray-400 text-nexus100 font-titilliumWeb-semibold'
-                      value={search}
-                      onChange={handleInputChange}
-                      placeholder={coursesSideBar ? 'Search Courses' : 'Search Documents'} />
-                <HiSearch className="mr-2" size={25} color='gray'/>
-              </div>
+          <motion.div
+            className={`flex-1 overflow-y-auto p-4 custom-scroll ${!atBottom ? 'scroll-fade' : ''}`} onScroll={handleScroll}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}>
+              {coursesSideBar ?   
+                <motion.div key={"courses"} initial={{opacity: 0, x: 15}} animate={{opacity: 1, x:0}} transition={{duration: 0.5}}>
+                  <h2 className="headingText font-titilliumWeb-semibold text-nexus100">Courses</h2> 
+                </motion.div>                
+                : 
+                <motion.div key={"documents"} className='flex flex-row items-center gap-1' 
+                            initial={{opacity: 0, x: 15}} animate={{opacity: 1, x:0}} transition={{duration: 0.5}}>
+                  <HiArrowLeft className='cursor-pointer' color='#CCE0FF' size={25} onClick={() => {setCoursesSidebar(true)}}/>
+                  <h2 className="headingText font-titilliumWeb-semibold text-nexus100">Documents</h2> 
+                </motion.div>
+              }
+            
+            <div className='w-full flex h-10 bg-nexus900 my-2 items-center rounded-lg focus-within:ring-1 focus-within:ring-nexus600'>
+              <input className='flex w-full p-2 focus:outline-none bg-transparent rounded-l-lg placeholder-gray-400 text-nexus100 font-titilliumWeb-semibold'
+                    value={search}
+                    onChange={handleInputChange}
+                    placeholder={coursesSideBar ? 'Search Courses' : 'Search Documents'} />
+              <HiSearch className="mr-2" size={25} color='gray'/>
+            </div>
 
-              {coursesSideBar ? 
-              (<motion.div className="space-y-2 mt-4" key={"coursebuttons"}
-                          initial={{opacity: 0, x: 20}} animate={{opacity: 1, x: 0}} transition={{duration: 0.5}}>
-                {isLoadingCourses && (
-                  <p className='text-nexus100 font-titilliumWeb-regular'>Loading courses...</p>
-                )}
-                {!isLoadingCourses && filteredCourseSearch.length === 0 && (
-                  <p className='text-nexus100 font-titilliumWeb-regular'>
-                    {courseOptions.length === 0 ? 'No courses found for your account.' : 'No courses match your search.'}
-                  </p>
-                )}
-                {!isLoadingCourses && filteredCourseSearch.map((course, index) => (
-                  <motion.li
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}>
-                    {/* Course Button */}
-                    <button
-                      className={`cursor-pointer text-start justify-between flex items-center w-full py-4 px-2 rounded-lg ${selectedCourse == course ? 'bg-nexus800 text-white border border-nexus600' : ''} hover:bg-nexus700 text-nexus100 font-titilliumWeb-semibold hover:text-white transition-colors duration-200`}
-                                  onClick={() => handleClickCourse(course)}>
-                      <div className='flex-row flex items-center gap-1 min-w-0'>
-                        <HiOutlineFolder className="mr-2" size={30}/>
-                        {/* Text */}
-                        <div className='flex flex-col text-[clamp(0.7rem,1.3vw,2rem)] min-w-0'>
-                          <span className='truncate'>
-                            {course}
-                          </span>
-                          <span className='text-gray-400 font-titilliumWeb-regular text-[clamp(0.6rem,0.8vw,1.4rem)] truncate'>
-                            {courseMap.get(course)?.length || 0} documents
-                          </span>
-                        </div>
-                      </div>
-                      <HiChevronRight className="mr-2" size={30}/>
-                    </button>
-                  </motion.li>
-                ))}
-              </motion.div>) :
-              (<motion.div className="space-y-2 mt-4" key={"documentbuttons"}
-                          initial={{opacity: 0, x: 20}} animate={{opacity: 1, x: 0}} transition={{duration: 0.5}}>
-                {filteredDocumentSearch.map((document, index) => (
-                  <motion.li
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}>
-                    {/* Document Button */}
-                    <button
-                      className={`cursor-pointer text-start justify-between flex items-center w-full py-4 px-2 rounded-lg hover:bg-nexus700 text-nexus100 ${selectedDocument == document ? 'bg-nexus800 text-white border border-nexus600' : ''} font-titilliumWeb-semibold hover:text-white transition-colors duration-200`}
-                                  onClick={() => {
-                                    setSelectedDocument(document)
-                                    setDisplayCourse(selectedCourse)
-                                  }}>
-                      <div className='flex-row flex items-center gap-1 min-w-0'>
-                        <HiOutlineDocumentText className="mr-2 w-[17%]" size={30}/>
-                        {/* Text */}
-                        <div className='flex flex-col text-[clamp(1.0rem,1.3vw,2rem)] min-w-0'>
-                          <span className='truncate'>
-                            {document}
-                          </span>
-                          <span className='text-gray-400 font-titilliumWeb-regular text-[clamp(0.8rem,0.8vw,1.4rem)] truncate'>
-                            5 Days Ago
-                          </span>
-                        </div>
-                      </div>
-                    </button>
-                  </motion.li>
-                ))}
-              </motion.div>
+            {coursesSideBar ? 
+            (<motion.div className="space-y-2 mt-4" key={"coursebuttons"}
+                        initial={{opacity: 0, x: 20}} animate={{opacity: 1, x: 0}} transition={{duration: 0.5}}>
+              {isLoadingCourses && (
+                <p className='text-nexus100 font-titilliumWeb-regular'>Loading courses...</p>
               )}
+              {!isLoadingCourses && filteredCourseSearch.length === 0 && (
+                <p className='text-nexus100 font-titilliumWeb-regular'>
+                  {courseOptions.length === 0 ? 'No courses found for your account.' : 'No courses match your search.'}
+                </p>
+              )}
+              {!isLoadingCourses && filteredCourseSearch.map((course, index) => (
+                <motion.li
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}>
+                  {/* Course Button */}
+                  <button
+                    className={`cursor-pointer text-start justify-between flex items-center w-full py-4 px-2 rounded-lg ${selectedCourse == course ? 'bg-nexus800 text-white border border-nexus600' : ''} hover:bg-nexus700 text-nexus100 font-titilliumWeb-semibold hover:text-white transition-colors duration-200`}
+                                onClick={() => handleClickCourse(course)}>
+                    <div className='flex-row flex items-center gap-1 min-w-0'>
+                      <HiOutlineFolder className="mr-2" size={30}/>
+                      {/* Text */}
+                      <div className='flex flex-col text-[clamp(0.7rem,1.3vw,2rem)] min-w-0'>
+                        <span className='truncate'>
+                          {course}
+                        </span>
+                        <span className='text-gray-400 font-titilliumWeb-regular text-[clamp(0.6rem,0.8vw,1.4rem)] truncate'>
+                          {courseMap.get(course)?.length || 0} documents
+                        </span>
+                      </div>
+                    </div>
+                    <HiChevronRight className="mr-2" size={30}/>
+                  </button>
+                </motion.li>
+              ))}
+            </motion.div>) :
+            (<motion.div className="space-y-2 mt-4" key={"documentbuttons"}
+                        initial={{opacity: 0, x: 20}} animate={{opacity: 1, x: 0}} transition={{duration: 0.5}}>
+              {filteredDocumentSearch.map((document, index) => (
+                <motion.li
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}>
+                  {/* Document Button */}
+                  <button
+                    className={`cursor-pointer text-start justify-between flex items-center w-full py-4 px-2 rounded-lg hover:bg-nexus700 text-nexus100 ${selectedDocument == document ? 'bg-nexus800 text-white border border-nexus600' : ''} font-titilliumWeb-semibold hover:text-white transition-colors duration-200`}
+                                onClick={() => {
+                                  setSelectedDocument(document)
+                                  setDisplayCourse(selectedCourse)
+                                }}>
+                    <div className='flex-row flex items-center gap-1 min-w-0'>
+                      <HiOutlineDocumentText className="mr-2 w-[17%]" size={30}/>
+                      {/* Text */}
+                      <div className='flex flex-col text-[clamp(1.0rem,1.3vw,2rem)] min-w-0'>
+                        <span className='truncate'>
+                          {document}
+                        </span>
+                        <span className='text-gray-400 font-titilliumWeb-regular text-[clamp(0.8rem,0.8vw,1.4rem)] truncate'>
+                          5 Days Ago
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                </motion.li>
+              ))}
             </motion.div>
+            )}
+          </motion.div>          
+        
+          <div className='px-4 pb-4 pt-2 space-y-2'>
+            {selectedDocument && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className='space-y-2'
+              >
+                <h1 className='text-gray-400 font-titilliumWeb-semibold tinyText'>
+                  Document Specific
+                </h1>
+                <Button text={"Merge Document"} icon={<HiDocumentDuplicate color='white' size={20}/>} onClick={() => {setMergeDocumentOpen(true)}}/>
+                <Button text={"Update Heading"} icon={<HiPencil color='white' size={20}/>} onClick={() => setUpdateHeadingOpen(true)}/>
+              </motion.div>
+            )}
+
+            {selectedCourse && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className='space-y-2'
+              >
+                <h1 className='text-gray-400 font-titilliumWeb-semibold tinyText'>
+                  Course Specific
+                </h1>
+                <Button title={"Upload or Create a Document"} text={"Add Document"} icon={<HiDocumentAdd color='white' size={20}/>} onClick={() => {setUploadDocumentOpen(true)}}/>
+              </motion.div>
+            )}
+          </div>
           
         </AnimatePresence>
-        <motion.div
-          className="p-4 mb-2 mt-auto space-y-2"
-          initial={{ opacity: 1 }}
-          animate={{ opacity:  1 }}
-          transition={{ duration: 0.3 }}
-        >
-          <Button text={"Upload Document"} icon={<HiUpload color='white' size={20}/>} onClick={() => {setUploadDocumentOpen(true)}}/>
-          <Button text={"Update Heading"} icon={<HiPencil color='white' size={20}/>} onClick={() => setUpdateHeadingOpen(true)}/>
-
-        </motion.div>
       </motion.div>
       {/* ---------------------------------- MAIN CONTENT ------------------------------------ */}
       <div className={`flex h-full w-full flex-col items-end px-10`}>
@@ -268,12 +308,20 @@ function SuperDoc() {
                       className={`w-full h-full mt-20 z-30 pl-[clamp(200px,17%,500px)]`}>
 
       {/* ----------------------------- SUPER DOC ----------------------------------- */}
-          <h1 className="flex text-3xl font-titilliumWeb-bold pt-4 text-nexus50">
-            {selectedDocument == '' ? 'No Document Selected' : selectedDocument }
-          </h1>
-          <h2 className='flex text-[clamp(0.8rem,1.3vw,2rem)] text-white font-titilliumWeb-regular'>
-            SuperDoc - {displayCourse}
-          </h2>
+          <div className='flex flex-row w-full h-full justify-between items-center'>
+            <div className='flex flex-col'>
+              <h1 className="flex text-3xl font-titilliumWeb-bold pt-4 text-nexus50">
+                {selectedDocument == '' ? 'No Document Selected' : selectedDocument }
+              </h1>
+              <h2 className='flex text-[clamp(0.8rem,1.3vw,2rem)] text-white font-titilliumWeb-regular'>
+                SuperDoc - {displayCourse}
+              </h2>
+            </div>
+            <div className='flex'>
+              {/* use the href to direct them to the google doc link */}
+              <Button className={"p-2 "} href={''} title={"Go to Google Doc"} icon={<HiLink size={25} color='white'/>} onClick={() => {setSelectedDocument("fff")}}/>
+            </div>
+          </div>
 
           { /*
           <span className="text-gray-400 font-titilliumWeb-regular">
@@ -284,13 +332,27 @@ function SuperDoc() {
           </span>
           */ }
 
-          <div className={`flex flex-col p-4 h-full w-[clamp(300px,100%,full)] max-h-[685px] bg-nexus900 py-10 mt-2 rounded-md items-center justify-center`}>
-            <h1 className="flex text-lg font-titilliumWeb-regular text-white text-center w-full justify-center mx-4">
-                There is currently no document uploaded for this unit.
-            </h1>
-            <div className='w-1/2 mt-4 flex'>
-              <Button fullWidth={"w-[200px]"} icon={<HiUpload color='white'/>} text={'Upload Document'}/>
-            </div>
+          <div className={`flex flex-col p-4 h-full w-[clamp(300px,100%,full)] bg-nexus900 mb-4 ${selectedDocument ? '' : 'py-10'} mt-2 rounded-md items-center justify-center`}>
+            {selectedDocument ? 
+            (
+              <div className='flex w-full h-full bg-white'>
+                <div className='flex w-full h-[1000px] text-xl'>
+                  MOCK DOCUMENT VIEW
+                </div>
+              </div>
+            )
+            :
+            (
+              <>
+                <h1 className="flex text-lg font-titilliumWeb-regular text-white text-center w-full justify-center mx-4">
+                    There is currently no document uploaded for this unit.
+                </h1>
+                <div className='w-1/2 mt-4 flex'>
+                  <Button fullWidth={"w-[200px]"} icon={<HiUpload color='white'/>} text={'Upload Document'}/>
+                </div>
+              </>
+            )
+            }
           </div>
           </motion.div>
       {/* ---------------------------------------------------------------------------------- */}
