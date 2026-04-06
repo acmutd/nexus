@@ -32,7 +32,7 @@ function SuperDoc() {
 
   async function handleClickCourse(course)
   {
-    //This isnt cached yet but it pulled the doc ids for a specific course
+   
     setSelectedCourse(course)
     setSearch('')
     const response = await fetch(`/api/discord/superdoc/get_docids`, {
