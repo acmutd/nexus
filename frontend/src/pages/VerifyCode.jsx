@@ -310,7 +310,7 @@ export default function VerifyCode() {
         </p>
 
         <form onSubmit={handleSubmit}>
-          <div className="flex justify-center gap-2 mb-4">
+          <div className="flex justify-center gap-2 mb-4 px-2 sm:px-4">
             {code.map((digit, index) => (
               <input
                 key={index}
@@ -320,7 +320,7 @@ export default function VerifyCode() {
                 value={digit}
                 onChange={(e) => handleChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
-                className="w-12 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-lg focus:border-nexus500 focus:outline-none bg-white text-nexus700"
+                className="w-10 sm:w-12 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-lg focus:border-nexus500 focus:outline-none bg-white text-nexus700"
                 disabled={verifying}
               />
             ))}
