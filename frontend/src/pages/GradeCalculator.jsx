@@ -65,6 +65,15 @@ const GradeCalculator = () => {
     };
 
     useEffect(() => {
+        const setHighlightRadius = (radius) => {
+            requestAnimationFrame(() => {
+                document.querySelectorAll('#driver-page-overlay rect, .driver-stage-no-animation rect').forEach(rect => {
+                    rect.setAttribute('rx', radius);
+                    rect.setAttribute('ry', radius);
+                });
+            });
+        };
+
         const driverInstance = driver({
             showProgress: true,
             showButtons: ['next', 'previous', 'close'],
@@ -77,14 +86,16 @@ const GradeCalculator = () => {
                         description: 'Each category represents a graded section of your course (e.g. Homework, Exams). Give it a name and set its weight percentage.',
                         side: 'bottom',
                     },
+                    onHighlightStarted: () => setHighlightRadius(8),
                 },
                 {
                     element: '[data-tour="category-weight"]',
                     popover: {
                         title: 'Category Weight',
-                        description: 'Enter how much this category counts toward your final grade as a percentage. All weights should add up to 100%.',
+                        description: 'Enter how much this category counts toward your final grade as a percentage. IMPORTANT: Make sure you leave one category out (e.g. Final Exam), whose weight will show under “Remaining Assignment Weight.” ',
                         side: 'bottom',
                     },
+                    onHighlightStarted: () => setHighlightRadius(6),
                 },
                 {
                     element: '[data-tour="assignment-row"]',
@@ -93,6 +104,7 @@ const GradeCalculator = () => {
                         description: 'Enter each assignment\'s name, the score you received, and the total points possible (e.g. 25 / 30).',
                         side: 'top',
                     },
+                    onHighlightStarted: () => setHighlightRadius(8),
                 },
                 {
                     element: '[data-tour="overall-grade"]',
@@ -101,6 +113,7 @@ const GradeCalculator = () => {
                         description: 'This updates live as you enter grades — it shows your weighted overall grade across all categories.',
                         side: 'top',
                     },
+                    onHighlightStarted: () => setHighlightRadius(8),
                 },
                 {
                     element: '[data-tour="desired-grade"]',
@@ -109,6 +122,16 @@ const GradeCalculator = () => {
                         description: 'Enter the final grade you\'re aiming for. The calculator will tell you what score you need on your remaining work.',
                         side: 'top',
                     },
+                    onHighlightStarted: () => setHighlightRadius(6),
+                },
+                {
+                    element: '[data-tour="grade-needed"]',
+                    popover: {
+                        title: 'Grade Needed on Remaining Category',
+                        description: 'Once all other information is entered, this will show you what score you need on that category you left out to earn your Desired Class Grade.',
+                        side: 'top',
+                    },
+                    onHighlightStarted: () => setHighlightRadius(0),
                 },
                 {
                     element: '[data-tour="add-category"]',
@@ -117,6 +140,7 @@ const GradeCalculator = () => {
                         description: 'Click here to add another grading category. You can have up to 10 categories.',
                         side: 'top',
                     },
+                    onHighlightStarted: () => setHighlightRadius(8),
                 },
                 {
                     element: '[data-tour="save-calculation"]',
@@ -125,6 +149,7 @@ const GradeCalculator = () => {
                         description: 'Save this calculation to a course in your schedule so you can come back to it anytime.',
                         side: 'top',
                     },
+                    onHighlightStarted: () => setHighlightRadius(8),
                 },
                 {
                     element: '[data-tour="help-button"]',
@@ -133,6 +158,7 @@ const GradeCalculator = () => {
                         description: 'Click here at any time to replay this tutorial.',
                         side: 'left',
                     },
+                    onHighlightStarted: () => setHighlightRadius(9999),
                 },
             ],
             onDestroyed: async () => {
@@ -1074,7 +1100,7 @@ const GradeCalculator = () => {
                                             required
                                         />
                                     </div>
-                                    <div className="flex flex-col items-center justify-center tinyText gap-2">
+                                    <div data-tour="grade-needed" className="flex flex-col items-center justify-center tinyText gap-2">
                                         <h1 className="text-nexus50">
                                             Grade Needed on Remaining Category:
                                         </h1>
