@@ -26,8 +26,11 @@ function SuperDoc() {
   const [mergeDocumentOpen, setMergeDocumentOpen] = useState(false)
   const [updateHeadingOpen, setUpdateHeadingOpen] = useState(false)
   const [courseMap, setCourseMap] = useState(new Map())
+  const [courseIdMap, setCourseIdMap] = useState(new Map()) // displayName -> rawId
   const [isLoadingCourses, setIsLoadingCourses] = useState(true)
   const [atBottom, setAtBottom] = useState(false)
+  const [docUrl, setDocUrl] = useState('')
+  const [docIdMap, setDocIdMap] = useState(new Map()) // docName -> googleDocId
 
   const handleScroll = (e) => {
       const { scrollTop, scrollHeight, clientHeight } = e.target;
@@ -44,13 +47,18 @@ function SuperDoc() {
    
     setSelectedCourse(course)
     setSearch('')
-    const response = await fetch(`/api/discord/superdoc/get_docids`, {
+    const rawId = courseIdMap.get(course) || course
+    const response = await fetch('/api/discord/superdoc/get_docids', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ courseId: course })
+      body: JSON.stringify({ courseId: rawId })
     })
     const docs = await response.json()
-    setDocuments(Object.keys(docs))
+    const documentIds = docs.documentIds || {}
+    const nextDocIdMap = new Map()
+    Object.entries(documentIds).forEach(([name, id]) => nextDocIdMap.set(name, id))
+    setDocIdMap(nextDocIdMap)
+    setDocuments(Object.keys(documentIds))
     setCoursesSidebar(false)
   }
   useEffect(() => {
@@ -66,6 +74,7 @@ function SuperDoc() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
         setCourseMap(new Map())
+        setCourseIdMap(new Map())
         setSelectedCourse('')
         setDocuments([])
         setSelectedDocument('')
@@ -80,6 +89,7 @@ function SuperDoc() {
         const userDoc = await getDoc(doc(db, 'users', user.uid))
         const fetchedCourses = userDoc.exists() ? (userDoc.data()?.courses || []) : []
         const nextCourseMap = new Map()
+        const nextCourseIdMap = new Map()
 
         fetchedCourses.forEach((course, index) => {
           const rawId = (course?.course_id || course?.courseId || course?.id || '').toString().trim()
@@ -87,10 +97,12 @@ function SuperDoc() {
           const displayName = rawId ? formatCourseName(rawId) : fallbackName
           if (!nextCourseMap.has(displayName)) {
             nextCourseMap.set(displayName, [])
+            nextCourseIdMap.set(displayName, rawId)
           }
         })
 
         setCourseMap(nextCourseMap)
+        setCourseIdMap(nextCourseIdMap)
         setSelectedCourse((prev) => (nextCourseMap.has(prev) ? prev : ''))
       } catch (error) {
         console.error('Failed to fetch SuperDoc courses:', error)
@@ -129,7 +141,7 @@ function SuperDoc() {
         {uploadDocumentOpen && (
             <UploadDocModal
             onClose={() => setUploadDocumentOpen(false)}
-            courseId={selectedCourse}
+            courseId={courseIdMap.get(selectedCourse) || selectedCourse}
             onUploadSuccess={(docName) => setDocuments(prev => [...prev, docName])}
             />
         )}
@@ -139,6 +151,8 @@ function SuperDoc() {
         {mergeDocumentOpen && (
             <MergeDocModal
             onClose={() => setMergeDocumentOpen(false)}
+            courseId={courseIdMap.get(selectedCourse) || selectedCourse}
+            documentName={selectedDocument}
             />
         )}
       </AnimatePresence>
@@ -169,6 +183,7 @@ function SuperDoc() {
 
         <AnimatePresence>
           <motion.div
+            key="sidebar-scroll"
             className={`flex-1 overflow-y-auto p-4 custom-scroll ${!atBottom ? 'scroll-fade' : ''}`} onScroll={handleScroll}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -181,7 +196,7 @@ function SuperDoc() {
                 : 
                 <motion.div key={"documents"} className='flex flex-row items-center gap-1' 
                             initial={{opacity: 0, x: 15}} animate={{opacity: 1, x:0}} transition={{duration: 0.5}}>
-                  <HiArrowLeft className='cursor-pointer' color='#CCE0FF' size={25} onClick={() => {setCoursesSidebar(true)}}/>
+                  <HiArrowLeft className='cursor-pointer' color='#CCE0FF' size={25} onClick={() => { setCoursesSidebar(true); setSelectedDocument(''); setDocUrl(''); setDocIdMap(new Map()); }}/>
                   <h2 className="headingText font-titilliumWeb-semibold text-nexus100">Documents</h2> 
                 </motion.div>
               }
@@ -246,6 +261,8 @@ function SuperDoc() {
                                 onClick={() => {
                                   setSelectedDocument(document)
                                   setDisplayCourse(selectedCourse)
+                                  const docId = docIdMap.get(document)
+                                  setDocUrl(docId ? `https://docs.google.com/document/d/${docId}/preview` : '')
                                 }}>
                     <div className='flex-row flex items-center gap-1 min-w-0'>
                       <HiOutlineDocumentText className="mr-2 w-[17%]" size={30}/>
@@ -266,7 +283,7 @@ function SuperDoc() {
             )}
           </motion.div>          
         
-          <div className='px-4 pb-4 pt-2 space-y-2'>
+          <div key="sidebar-actions" className='px-4 pb-4 pt-2 space-y-2'>
             {selectedDocument && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
@@ -319,7 +336,7 @@ function SuperDoc() {
             </div>
             <div className='flex'>
               {/* use the href to direct them to the google doc link */}
-              <Button className={"p-2 "} href={''} title={"Go to Google Doc"} icon={<HiLink size={25} color='white'/>} onClick={() => {setSelectedDocument("fff")}}/>
+              <Button className={"p-2 "} href={docUrl ? docUrl.replace('/preview', '/edit') : undefined} disabled={!docUrl} title={"Go to Google Doc"} icon={<HiLink size={25} color='white'/>}/>
             </div>
           </div>
 
@@ -333,12 +350,16 @@ function SuperDoc() {
           */ }
 
           <div className={`flex flex-col p-4 h-full w-[clamp(300px,100%,full)] bg-nexus900 mb-4 ${selectedDocument ? '' : 'py-10'} mt-2 rounded-md items-center justify-center`}>
-            {selectedDocument ? 
+            {selectedDocument ?
             (
               <div className='flex w-full h-full bg-white'>
-                <div className='flex w-full h-[1000px] text-xl'>
-                  MOCK DOCUMENT VIEW
-                </div>
+                {docUrl ? (
+                  <iframe src={docUrl} className='w-full h-[1000px]' title={selectedDocument} allow='autoplay'/>
+                ) : (
+                  <div className='flex w-full h-[1000px] items-center justify-center text-gray-400 font-titilliumWeb-regular'>
+                    Loading document...
+                  </div>
+                )}
               </div>
             )
             :

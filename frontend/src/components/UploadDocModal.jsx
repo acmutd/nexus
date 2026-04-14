@@ -22,21 +22,34 @@ const UploadDocModal = ({onClose, isOpen, courseId, onUploadSuccess}) => {
 
     const handleUpload = async () => {
         if (!docName) return alert("Please enter a document name!")
+        if (!file) return alert("Please upload a file!")
 
         try{
-            const response = await fetch('/api/discord/superdoc/create_document',
-                {
-                    method: 'POST',
-                    headers: {'Content-Type':'application/json'},
-                    body: JSON.stringify({
-                        course_id: courseId,
-                        document_name: docName,
-                    }),
-                });
-            const result = await response.json();
-            console.log("Upload Worked:", result)
-            onUploadSuccess && onUploadSuccess(docName)
-            onClose && onClose()
+            const reader = new FileReader()
+            reader.onload = async() =>
+            {
+                const pdf = reader.result.split(',')[1]
+                const response = await fetch('/api/discord/superdoc/upload_pdf',
+                    {
+                        method: 'POST',
+                        headers: {'Content-Type':'application/json'},
+                        body: JSON.stringify({
+                            pdfBase64: pdf,
+                            courseId,
+                            docName,
+                        }),
+                    });
+                if (!response.ok) {
+                    const text = await response.text()
+                    console.error("Upload failed:", response.status, text)
+                    return alert(`Upload failed (${response.status}). Check console for details.`)
+                }
+                const result = await response.json();
+                console.log("Upload Worked:", result)
+                onUploadSuccess && onUploadSuccess(docName)
+                onClose && onClose()
+            }
+            reader.readAsDataURL(file)
         }
         catch(error){
             console.error("Upload Error:",error)

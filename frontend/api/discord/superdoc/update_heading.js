@@ -1,12 +1,11 @@
-import axios from 'axios'
-
-
+const axios = require('axios')
 
 const getBotUrl = (endpoint) => {
     const base = process.env.DISCORD_BOT_URL || 'http://localhost:3001';
     return `${base}/api/superdoc/${endpoint}`;
 };
-export default async function handler(req, res) {
+
+module.exports = async function handler(req, res) {
     if (req.method !== 'PUT') return res.status(405).send('Method Not Allowed');
 
     try {

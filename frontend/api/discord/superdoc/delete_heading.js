@@ -1,16 +1,14 @@
-import axios from 'axios'
-
-
+const axios = require('axios')
 
 const getBotUrl = (endpoint) => {
     const base = process.env.DISCORD_BOT_URL || 'http://localhost:3001';
     return `${base}/api/superdoc/${endpoint}`;
 };
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
     if (req.method !== 'DELETE') return res.status(405).send('Method Not Allowed');
 
-   try {
+    try {
         const { courseId, documentName, old_heading } = req.body;
         const response = await axios.delete(getBotUrl('heading/delete'), {
             data: { courseId, documentName, oldHeading: old_heading }
