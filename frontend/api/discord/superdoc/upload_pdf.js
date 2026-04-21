@@ -38,7 +38,6 @@ module.exports = async function handler(req, res) {
         const message = await channel.send({ files: [file] });
         const discordUrl = message.attachments.first().url;
 
-        // TODO: uncomment once Lambda has create_document route deployed
         const createResponse = await fetch(getBotUrl('documents/create'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -48,6 +47,8 @@ module.exports = async function handler(req, res) {
              const err = await createResponse.text();
              throw new Error(`create_document failed: ${err}`);
          }
+        const createData = await createResponse.json();
+        const documentId = createData.document?.documentId;
 
         let mergeResult = { status: "skipped" };
         try {
@@ -57,7 +58,8 @@ module.exports = async function handler(req, res) {
                 body: JSON.stringify({
                     pdfAttachment: discordUrl,
                     courseId,
-                    documentName: docName
+                    documentName: docName,
+                    ...(documentId && { documentId })
                 }),
             });
             mergeResult = await mergeResponse.json();

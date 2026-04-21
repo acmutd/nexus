@@ -6,9 +6,7 @@ const client = new Client({
 });
 
 async function getOrCreateFilesChannel(server) {
-    const name = "files";
-    let channel = server.channels.fetch('1468393627830190144')
-    return channel;
+    return server.channels.fetch('1468393627830190144');
 }
 
 
@@ -24,8 +22,8 @@ module.exports = async function handler(req, res) {
     try {
         const { pdfBase64, docName, courseId } = req.body;
 
-        if (!pdfBase64) {
-            return res.status(400).json({ error: "Missing pdfBase64 field" });
+        if (!pdfBase64 || !docName || !courseId) {
+            return res.status(400).json({ error: "Missing pdfBase64, docName, or courseId" });
         }
 
         //Convert Base64 back to Buffer
