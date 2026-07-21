@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { HiChevronLeft, HiChevronRight, HiCalculator, HiMenu, HiEye, HiChevronRight as HiChevronRightSmall } from 'react-icons/hi';
+import { HiChevronLeft, HiChevronRight, HiCalculator, HiMenu, HiEye, HiX, HiChevronRight as HiChevronRightSmall } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getFirebaseAuth, getFirebaseFirestore } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
@@ -241,11 +241,11 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
       setSelectedCourseId(null);
     }
   };
-
+  const MOBILE_SIDEBAR_W = 185; 
   const sidebarVariants = {
-    expanded: { width: 256 },
-    collapsed: { width: 64 },
-  };
+  expanded: { width: isMobile ? MOBILE_SIDEBAR_W : 256 },
+  collapsed: { width: 64 },
+};
 
   const activeCourseId = selectedCourseId || hoveredCourseId;
   const showHistoryPanel = activeCourseId && !isCollapsed;
@@ -270,12 +270,12 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
 
   return (
     <>
-      {!isCollapsed && isMobile && (
-        <div 
-          className='fixed w-screen h-screen backdrop-brightness-50 z-39 inset-0'
-          onClick={toggleSidebar}
-        ></div>
-      )}
+      {!isCollapsed && isMobile && !showHistoryPanel && (
+  <div 
+    className='fixed w-screen h-screen backdrop-brightness-50 z-39 inset-0'
+    onClick={toggleSidebar}
+  />
+)}
       
       <motion.aside
         className={`shadow-md flex flex-col h-screen fixed left-0 top-0 pt-16 overflow-visible z-40`}
@@ -310,8 +310,8 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
               transition={{ duration: 0.3 }}
             >
               <div className="flex-1">
-                <h2 className={`text-2xl font-bold text-nexus100 ${isMobile ? 'ml-8 my-3' : 'my-4'}`}>
-                  Grade Calculator
+                <h2 className={`font-bold text-nexus100 my-3 ${isMobile ? 'text-lg px-8' : 'text-2xl my-4'}`}>
+                  {isMobile ? 'Grades' : 'Grade Calculator'}
                 </h2>
                 
                 <div className="mb-6">
@@ -352,13 +352,27 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
                 </div>
               </div>
 
-              <div className="w-[85%] absolute bottom-4">
-                <button 
+              <div className="absolute bottom-4 left-0 right-0 px-2">
+                <button
                   onClick={handleNewCalculationClick}
-                  className="cursor-pointer flex items-center justify-center w-full p-3 rounded-lg bg-nexus600 hover:bg-nexus500 text-white font-semibold transition-colors duration-200"
+                  className={`cursor-pointer w-full rounded-lg bg-nexus600 hover:bg-nexus500 text-white font-semibold transition-colors duration-200
+                    ${isMobile ? 'py-2 px-2 text-xs' : 'p-3'}
+                  `}
                 >
-                  <HiCalculator className="mr-2" />
-                  Add New Calculation
+                  {isMobile ? (
+                    <div className="flex items-center gap-2 justify-center">
+                      <HiCalculator size={20} className="flex-shrink-0" />
+                      <span className="flex flex-col leading-tight text-left">
+                        <span>Add New</span>
+                        <span>Calculation</span>
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center">
+                      <HiCalculator className="mr-2" />
+                      Add New Calculation
+                    </div>
+                  )}
                 </button>
               </div>
             </motion.div>
@@ -388,7 +402,9 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.2 }}
-            className="fixed left-64 top-16 h-[calc(100vh-4rem)] w-80 bg-nexus700 shadow-xl z-30 overflow-visible"
+            className={`fixed top-16 h-[calc(100vh-4rem)] bg-nexus700 shadow-xl overflow-visible z-30
+              ${isMobile ? 'left-[175px] w-[calc(100vw-175px)]' : 'left-64 w-80'}
+            `}
             onMouseEnter={() => !isMobile && setHoveredCourseId(activeCourseId)}
             onMouseLeave={() => !isMobile && !selectedCourseId && setHoveredCourseId(null)}
           >
@@ -400,7 +416,19 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
                 {isCollapsed ? <HiChevronRight size={20} /> : <HiChevronLeft size={20} />}
               </button>
             )}
-            <div className="p-4 h-full overflow-y-auto">
+            <div className="p-4 h-full overflow-y-auto relative">
+              {isMobile &&(
+              <button
+                onClick={() => {
+                  setSelectedCourseId(null);
+                  setHoveredCourseId(null);
+                }}
+                className="absolute top-5 right-1.5 text-nexus300 hover:text-white transition-colors cursor-pointer"
+                title="Close History"
+              >
+                <HiX size={20} />
+              </button>
+                  )}
               <h3 className="text-lg font-semibold text-white mb-1">
                 Calculation History
               </h3>

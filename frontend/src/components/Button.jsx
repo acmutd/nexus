@@ -1,20 +1,27 @@
 import React from 'react'
 
 const Button = ({text, icon, onClick, href, className, disabled, title}) => {
+  const renderIcon = () => {
+    if (typeof icon === 'string') {
+      return <img src={icon} alt="icon" className="p-4" />; // Adjust size as needed
+    }
+    return icon;
+  };
+  
   if (href) {
     return (
       <a 
         href={disabled ? '' : href} 
         target="_blank" 
         rel="noopener noreferrer"
-        className={`${className} flex bg-nexus600 w-full h-[40px] rounded-md items-center justify-center active:scale-95 
-                  transition duration-300  ${disabled ? "opacity-50" : "hover:scale-102 cursor-pointer"}`}
+        className={`flex bg-nexus600 w-full h-[40px] rounded-md items-center justify-center active:scale-95 
+                  transition duration-300  ${disabled ? "opacity-50" : "hover:scale-102 cursor-pointer"} ${className}`}
         title={title}
       >
         <h1 className='font-titilliumWeb-semibold text-white text-lg'>
           {text}
         </h1>
-        {icon}
+        {renderIcon()}
       </a>
     )
   }
@@ -22,15 +29,24 @@ const Button = ({text, icon, onClick, href, className, disabled, title}) => {
   return (
     <button 
       onClick={disabled ? undefined : onClick}
-      className={`${className} flex bg-nexus600 w-full h-[40px] rounded-md items-center justify-center active:scale-95 
-                 transition duration-300  ${disabled ? "opacity-50" : "hover:scale-102 cursor-pointer"}`}
+      className={`flex bg-nexus600 w-full h-[40px] rounded-md items-center justify-center active:scale-95 
+                 transition duration-300  ${disabled ? "opacity-50" : "hover:scale-102 cursor-pointer"} gap-2 ${className}`}
       title={title}
       disabled={disabled}
     >
-      <h1 className='font-titilliumWeb-bold tinyText text-white text-lg'>
-        {text}
-      </h1>
-      {icon}
+      {
+      text && (
+        <h1 className='font-titilliumWeb-bold tinyText text-white text-lg'>
+          {text}
+        </h1>
+      )
+    }
+    {
+      icon && (
+        renderIcon()
+      )
+    }
+      
     </button>
   )
 }

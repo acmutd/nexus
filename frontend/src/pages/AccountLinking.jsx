@@ -505,7 +505,7 @@ const AccountLinking = () => {
         <div
           ref={popupRef}
           className={`flex flex-col w-full h-full items-center justify-center scale-90 transition-all duration-500 transform ${popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}>
-            <h1 className='headingText text-white font-titilliumWeb-bold mb-2'>
+            <h1 className='headingText text-white font-titilliumWeb-bold mt-1'>
                 Account Linking
             </h1>
             <div

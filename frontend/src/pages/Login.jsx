@@ -132,7 +132,7 @@ const Login = () => {
       <div className="fixed inset-0">
         <StarFieldOverlay count={200}/>
         <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.3}} 
-                    src="/assets/LoginSignUpAssets/LSBGClouds.svg" className="bottom-0 fixed will-change-transform pointer-events-none"/>
+                    src="/assets/LoginSignUpAssets/LSBGClouds.svg" className="bottom-0 fixed will-change-transform pointer-events-none w-full"/>
         <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.4}} 
                     src="/assets/LoginSignUpAssets/LSCliffGuy.svg" className="bottom-0 fixed w-[35%] will-change-transform pointer-events-none"/>
         
