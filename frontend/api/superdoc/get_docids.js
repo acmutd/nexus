@@ -2,16 +2,17 @@ import axios from 'axios'
 
 
 
-const getBotUrl = (endpoint) => {
-    const base = process.env.DISCORD_BOT_URL || 'http://localhost:3001';
-    return `${base}/api/superdoc/${endpoint}`;
+const getUrl = (endpoint) => {
+    const base = process.env.SUPERDOC_LAMBDA_URL || 'http://localhost:8000';
+    return `${base}/${endpoint}`;
 };
+
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
     try {
-        const response = await axios.get(getBotUrl(`documents/${req.body.courseId}`));
+        const response = await axios.get(getUrl(`documents/${req.body.courseId}`));
         res.status(response.status).json(response.data);
     }
     catch (err) {
