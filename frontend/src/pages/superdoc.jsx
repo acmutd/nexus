@@ -307,7 +307,7 @@ function SuperDoc() {
                 className='space-y-2'
               >
                 <h1 className='text-gray-400 font-titilliumWeb-semibold tinyText'>
-                  Document Specific
+                  Document Functions
                 </h1>
                 <Button text={"Merge Document"} icon={<HiDocumentDuplicate color='white' size={20}/>} onClick={() => {setMergeDocumentOpen(true)}}/>
                 <Button text={"Update Heading"} icon={<HiPencil color='white' size={20}/>} onClick={() => setUpdateHeadingOpen(true)}/>
@@ -323,7 +323,7 @@ function SuperDoc() {
                 className='space-y-2'
               >
                 <h1 className='text-gray-400 font-titilliumWeb-semibold tinyText'>
-                  Course Specific
+                  Course Functions
                 </h1>
                 <Button title={"Upload or Create a Document"} text={"Add Document"} icon={<HiDocumentAdd color='white' size={20}/>} onClick={() => {setUploadDocumentOpen(true)}}/>
               </motion.div>
@@ -344,9 +344,15 @@ function SuperDoc() {
               <h1 className="flex text-3xl font-titilliumWeb-bold pt-4 text-nexus50">
                 {selectedDocument == '' ? 'No Document Selected' : selectedDocument }
               </h1>
+              {selectedCourse ?
               <h2 className='flex text-[clamp(0.8rem,1.3vw,2rem)] text-white font-titilliumWeb-regular'>
-                SuperDoc - {displayCourse}
+                SuperDoc - {selectedCourse}
               </h2>
+              :
+              <h2 className='flex text-[clamp(0.8rem,1.3vw,2rem)] text-white font-titilliumWeb-regular'>
+                SuperDoc - No Course Selected
+              </h2>
+              }
             </div>
             <div className='flex'>
               {/* use the href to direct them to the google doc link */}
@@ -378,14 +384,17 @@ function SuperDoc() {
             )
             :
             (
-              <>
-                <h1 className="flex text-lg font-titilliumWeb-regular text-white text-center w-full justify-center mx-4">
+              <div className='flex py-20 flex-col items-center justify-center w-[clamp(100px,25%,500px)]'>
+                <img className='flex select-none' src='/assets/SuperDocEmpty.svg'/>
+                
+                {selectedCourse ? <h1 className="flex text-lg font-titilliumWeb-regular text-white text-center w-full justify-center mx-4">
                     There is currently no document uploaded for this unit.
                 </h1>
-                <div className='w-1/2 mt-4 flex'>
-                  <Button fullWidth={"w-[200px]"} icon={<HiUpload color='white'/>} text={'Upload Document'}/>
-                </div>
-              </>
+                :
+                <h1 className="flex text-lg font-titilliumWeb-regular text-white text-center w-full justify-center mx-4">
+                    No course currently selected.
+                </h1>}
+              </div>
             )
             }
           </div>
