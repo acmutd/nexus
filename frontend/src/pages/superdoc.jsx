@@ -228,15 +228,29 @@ function SuperDoc() {
                   transition={{ duration: 0.3, delay: index * 0.05 }}>
                   {/* Course Button */}
                   <button
-                    className={`cursor-pointer text-start justify-between flex items-center w-full py-4 px-2 rounded-lg ${selectedCourse == course ? 'bg-nexus800 text-white border border-nexus600' : ''} hover:bg-nexus700 text-nexus100 font-titilliumWeb-semibold hover:text-white transition-colors duration-200`}
+                    className={`group cursor-pointer text-start justify-between flex items-center w-full py-4 px-2 rounded-lg ${selectedCourse == course ? 'bg-nexus800 text-white border border-nexus600' : ''} hover:bg-nexus700 text-nexus100 font-titilliumWeb-semibold hover:text-white transition-colors duration-200`}
                                 onClick={() => handleClickCourse(course)}>
                     <div className='flex-row flex items-center gap-1 min-w-0'>
                       <HiOutlineFolder className="mr-2" size={30}/>
                       {/* Text */}
                       <div className='flex flex-col text-[clamp(0.7rem,1.3vw,2rem)] min-w-0'>
-                        <span className='truncate'>
-                          {course}
-                        </span>
+                        <div className="relative group inline-block">
+                          <span className='truncate'>
+                            {course.replace(/\s*\-\s*.*$/, '').replace(/\s+/g, '')}
+                          </span>
+
+                          {!isMobile && (
+                            <div className="pointer-events-none absolute left-0 mt-2 w-56 bg-nexus900 text-white text-xs rounded-md p-3 shadow-xl opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200 z-20">
+                              {(() => {
+                                const code = course.replace(/\s*\-\s*.*/, '').replace(/\s+/g, '');
+                                const prof = course.includes(' - ') ? course.split(' - ').slice(1).join(' - ') : '';
+                                return (
+                                  <div className="font-titilliumWeb-regular">{prof ? `${code} - ${prof}` : course}</div>
+                                );
+                              })()}
+                            </div>
+                          )}
+                        </div>
                         <span className='text-gray-400 font-titilliumWeb-regular text-[clamp(0.6rem,0.8vw,1.4rem)] truncate'>
                           {courseMap.get(course)?.length || 0} documents
                         </span>
