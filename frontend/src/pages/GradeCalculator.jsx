@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 import Modal from '@mui/material/Modal';
 import Backdrop from '@mui/material/Backdrop';
 import { AnimatePresence, motion } from "framer-motion";
@@ -54,13 +56,158 @@ const GradeCalculator = () => {
     const [successMessage, setSuccessMessage] = useState('');
     const [validationErrors, setValidationErrors] = useState({});
     const [isSaving, setIsSaving] = useState(false);
+    const [driverObj, setDriverObj] = useState(null);
 
     const location = useLocation();
 
     const handleSidebarToggle = (collapsed) => {
         setSidebarCollapsed(collapsed);
     };
+
+    useEffect(() => {
+        const setHighlightRadius = (radius) => {
+            requestAnimationFrame(() => {
+                document.querySelectorAll('#driver-page-overlay rect, .driver-stage-no-animation rect').forEach(rect => {
+                    rect.setAttribute('rx', radius);
+                    rect.setAttribute('ry', radius);
+                });
+            });
+        };
+
+        const prepareHighlight = (selector, radius) => {
+            const el = document.querySelector(selector);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+            }
+            setTimeout(() => setHighlightRadius(radius), 350);
+        };
+
+        const driverInstance = driver({
+            showProgress: true,
+            showButtons: ['next', 'previous', 'close'],
+            popoverClass: 'grade-calc-driver-theme',
+            stagePadding: 4,
+            onPopoverRender: (popover) => {
+                if (!isMobile) return;
+                const el = popover.wrapper;
+                if (!el) return;
+                requestAnimationFrame(() => {
+                    el.style.left = '50%';
+                    el.style.right = 'auto';
+                    el.style.transform = 'translateX(-50%)';
+                    el.style.maxWidth = '90vw';
+                    el.style.width = '90vw';
+                });
+            },
+            steps: [
+                {
+                    element: '[data-tour="category-card"]',
+                    popover: {
+                        title: 'Grade Categories',
+                        description: 'Each category represents a graded section of your course (e.g. Homework, Exams). Give it a name and set its weight percentage.',
+                        side: 'bottom',
+                    },
+                    onHighlightStarted: () => prepareHighlight('[data-tour="category-card"]', 8),
+                },
+                {
+                    element: '[data-tour="category-weight"]',
+                    popover: {
+                        title: 'Category Weight',
+                        description: 'Enter how much this category counts toward your final grade as a percentage. IMPORTANT: Make sure you leave one category out (e.g. Final Exam), whose weight will show under "Remaining Assignment Weight." ',
+                        side: 'bottom',
+                    },
+                    onHighlightStarted: () => prepareHighlight('[data-tour="category-weight"]', 6),
+                },
+                {
+                    element: '[data-tour="assignment-row"]',
+                    popover: {
+                        title: 'Assignments',
+                        description: 'Enter each assignment\'s name, the score you received, and the total points possible (e.g. 25 / 30).',
+                        side: 'top',
+                    },
+                    onHighlightStarted: () => prepareHighlight('[data-tour="assignment-row"]', 8),
+                },
+                {
+                    element: '[data-tour="overall-grade"]',
+                    popover: {
+                        title: 'Your Current Grade',
+                        description: 'This updates live as you enter grades — it shows your weighted overall grade across all categories.',
+                        side: 'top',
+                    },
+                    onHighlightStarted: () => prepareHighlight('[data-tour="overall-grade"]', 8),
+                },
+                {
+                    element: '[data-tour="desired-grade"]',
+                    popover: {
+                        title: 'Desired Final Grade',
+                        description: 'Enter the final grade you\'re aiming for. The calculator will tell you what score you need on your remaining work.',
+                        side: 'top',
+                    },
+                    onHighlightStarted: () => prepareHighlight('[data-tour="desired-grade"]', 6),
+                },
+                {
+                    element: '[data-tour="grade-needed"]',
+                    popover: {
+                        title: 'Grade Needed on Remaining Category',
+                        description: 'Once all other information is entered, this will show you what score you need on that category you left out to earn your Desired Class Grade.',
+                        side: 'top',
+                    },
+                    onHighlightStarted: () => prepareHighlight('[data-tour="grade-needed"]', 0),
+                },
+                {
+                    element: '[data-tour="add-category"]',
+                    popover: {
+                        title: 'Add a Category',
+                        description: 'Click here to add another grading category. You can have up to 10 categories.',
+                        side: 'top',
+                    },
+                    onHighlightStarted: () => prepareHighlight('[data-tour="add-category"]', 8),
+                },
+                {
+                    element: '[data-tour="save-calculation"]',
+                    popover: {
+                        title: 'Save Your Calculation',
+                        description: 'Save this calculation to a course in your schedule so you can come back to it anytime.',
+                        side: 'top',
+                    },
+                    onHighlightStarted: () => prepareHighlight('[data-tour="save-calculation"]', 8),
+                },
+                {
+                    element: '[data-tour="help-button"]',
+                    popover: {
+                        title: 'Replay Tutorial',
+                        description: 'Click here at any time to replay this tutorial.',
+                        side: 'left',
+                    },
+                    onHighlightStarted: () => prepareHighlight('[data-tour="help-button"]', 9999),
+                },
+            ],
+            onDestroyed: async () => {
+                localStorage.setItem('gradeCalc_hasSeenInstructions', 'true');
+                if (currentUser) {
+                    try {
+                        const db = getFirebaseFirestore();
+                        await updateDoc(doc(db, 'users', currentUser.uid), {
+                            hasSeenGradeCalcInstructions: true,
+                        });
+                    } catch (error) {
+                        console.error('Error marking tutorial as seen:', error);
+                    }
+                }
+            },
+        });
+
+        setDriverObj(driverInstance);
+    }, []); 
     
+    useEffect(() => {
+        if (!driverObj || !currentUser) return;
+        const hasSeen = localStorage.getItem('gradeCalc_hasSeenInstructions');
+        if (!hasSeen) {
+            setTimeout(() => driverObj.drive(), 500);
+        }
+    }, [driverObj, currentUser]);
+   
     useEffect(() => {
         const handleClickOutside = (event) => {
             if(infoRef.current && !infoRef.current.contains(event.target)) {
@@ -74,30 +221,6 @@ const GradeCalculator = () => {
         document.addEventListener("mousedown", handleClickOutside)
         return () => {document.removeEventListener("mousedown", handleClickOutside)}
     }, [])
-
-    useEffect(() => {
-        const checkInstructions = async () => {
-            if (currentUser) {
-                try {
-                    const db = getFirebaseFirestore();
-                    const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-                    
-                    if (userDoc.exists()) {
-                        const userData = userDoc.data();
-                        const hasSeenInstructions = userData.hasSeenGradeCalcInstructions || false;
-                        
-                        if (!hasSeenInstructions) {
-                            setInfoOpen(true);
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error checking instructions status:', error);
-                }
-            }
-        };
-        
-        checkInstructions();
-    }, [currentUser]);
 
 
     useEffect(() => {
@@ -133,7 +256,6 @@ const GradeCalculator = () => {
                         setSaveTitle(gradeToEdit.saveTitle);
                         setClassGrade(gradeToEdit.desiredGrade);
 
-                        // Reconstruct categories with proper structure
                         const loadedCategories = gradeToEdit.categories.map(cat => ({
                             id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`,
                             name: cat.categoryName,
@@ -166,7 +288,6 @@ const GradeCalculator = () => {
             if (userDoc.exists()) {
                 const userData = userDoc.data();
                 const userCourses = userData.courses || [];
-                
                 
                 const coursesWithIds = userCourses
                     .map((course, index) => {
@@ -297,22 +418,18 @@ const GradeCalculator = () => {
         remainingWeightDecimal
         );
         
-        // Grade is guaranteed (negative score needed)
         if (requiredGrade < 0) {
             return { status: 'guaranteed', value: requiredGrade.toFixed(2) };
         }
         
-        // Achievable with extra credit (100 < score <= 120)
         if (requiredGrade > 100 && requiredGrade <= 120) {
             return { status: 'extra_credit', value: requiredGrade.toFixed(2) };
         }
         
-        // Not possible (score > 120)
         if (requiredGrade > 120) {
             return { status: 'not_possible', value: requiredGrade.toFixed(2) };
         }
         
-        // Achievable normally (0 <= score <= 100)
         return { status: 'achievable', value: requiredGrade.toFixed(2) };
     };
 
@@ -487,13 +604,9 @@ const GradeCalculator = () => {
 
             window.history.replaceState({}, '', window.location.pathname);
             
-            //resetCalculator();
-            
             setSuccessMessage(message);
             setShowSuccessNotification(true);
 
-
-            // OPTIMISTIC UPDATE: Immediately pass grade data to sidebar
             const gradeId = editingGradeId || response.data.gradeId || Date.now().toString();
             setLastSavedGrade({
                 courseId: selectedCourseForSave,
@@ -509,8 +622,6 @@ const GradeCalculator = () => {
                 }
             });
 
-
-            // Trigger sidebar refresh with delay to ensure DB write completes
             setTimeout(() => {
                 setSidebarRefreshTrigger(prev => prev + 1);
             }, 500);
@@ -535,13 +646,6 @@ const GradeCalculator = () => {
         ) || classGrade;
 
         resetCalculator();
-        /*if (hasData) {
-            if (window.confirm('Are you sure you want to start a new calculation? This will clear all current data.')) {
-                resetCalculator();
-            }
-        } else {
-            resetCalculator();
-        }*/
     };
 
     const resetCalculator = () => {
@@ -573,7 +677,6 @@ const GradeCalculator = () => {
                     lastSavedGrade={lastSavedGrade}
                 />
                 
-                {/* INFO POP UP */}
                 <AnimatePresence>
                     {infoOpen && (
                         <motion.div
@@ -612,14 +715,14 @@ const GradeCalculator = () => {
                                         What are Categories and Weight?
                                     </h1>
                                     <span className="text-white font-titilliumWeb-regular tinyText flex w-full mt-2">
-                                        From the buttons on the bottom right, add in the categories that contribute to your final grade (ex. homework, quizzes, midterms, projects). It is important to LEAVE OUT at least one category: the Grade Calculator determines what portion of your overall grade remains on its own, and calculates what grade is needed on the REMAINING work to achieve your desired final grade. <br/>For example, if you know what you have achieved on all assignments, quizzes, and your midterm, enter those three as categories; if your one remaining category is the final exam, the Grade Calculator will tell you what score you need on that exam. For the ones that you’ve added, enter their weight: if homework is 25% of your grade, put 25 into the box.
+                                        From the buttons on the bottom right, add in the categories that contribute to your final grade (ex. homework, quizzes, midterms, projects). It is important to LEAVE OUT at least one category: the Grade Calculator determines what portion of your overall grade remains on its own, and calculates what grade is needed on the REMAINING work to achieve your desired final grade. <br/>For example, if you know what you have achieved on all assignments, quizzes, and your midterm, enter those three as categories; if your one remaining category is the final exam, the Grade Calculator will tell you what score you need on that exam. For the ones that you've added, enter their weight: if homework is 25% of your grade, put 25 into the box.
                                     </span>
                                     <img src="/assets/GradeCalcGif1.gif" className="flex my-4 w-[55%] mx-auto"/>
                                     <h1 className="text-white font-titilliumWeb-bold bodyText flex items-start w-full pt-4">
                                         How Do Assignments Work?
                                     </h1>
                                     <span className="text-white font-titilliumWeb-regular tinyText flex w-full mt-2">
-                                        Once you’ve added as many categories as you need, type in the score you’ve received on each assignment in that category as a point value. <br/>For example, if you received a 25/30 on your first homework assignment, put 25 in the first box and 30 in the second. <br/>Repeat until all your graded assignments have been entered. You should be able to see the overall grade for each category.
+                                        Once you've added as many categories as you need, type in the score you've received on each assignment in that category as a point value. <br/>For example, if you received a 25/30 on your first homework assignment, put 25 in the first box and 30 in the second. <br/>Repeat until all your graded assignments have been entered. You should be able to see the overall grade for each category.
                                     </span>
                                     <img src="/assets/GradeCalcGif2.gif" className="flex my-4 w-[55%] mx-auto"/>
                                     <h1 className="text-white font-titilliumWeb-bold bodyText flex items-start w-full pt-4">
@@ -627,7 +730,7 @@ const GradeCalculator = () => {
                                     </h1>
                                     <span className="text-white font-titilliumWeb-regular tinyText flex w-full mt-2">
                                         Now scroll down and enter the numerical value for the grade you want in the class. If you want an A and need a 94% in the class to do so, enter 94 into the box.
-                                        <br/>You should now be able to see the grade you need to achieve on the remaining tasks to earn your desired grade! <br/>Press the “Save” button to refer back to this calculation later.
+                                        <br/>You should now be able to see the grade you need to achieve on the remaining tasks to earn your desired grade! <br/>Press the "Save" button to refer back to this calculation later.
                                     </span>
                                     <img src="/assets/GradeCalcGif3.gif" className="flex my-4 w-[55%] mx-auto"/>
                                     <img src="/assets/GradeCalcGif4.gif" className="flex mt-8 mb-4 w-[55%] mx-auto"/>
@@ -638,7 +741,6 @@ const GradeCalculator = () => {
                     )}
                 </AnimatePresence>
 
-                {/* SAVE SUCCESS NOTIFICATION */}
                 <AnimatePresence>
                     {showSuccessNotification && (
                         <motion.div
@@ -653,14 +755,12 @@ const GradeCalculator = () => {
                     )}
                 </AnimatePresence>
                 
-                {/* CONTENT */}
                     <div
                     className={`flex-1 text-white transition-all duration-300 ${
                         isMobile ? 'ml-0' : sidebarCollapsed ? 'ml-16' : 'ml-64'
                     } pb-40 md:pb-24`}
                     >
                     <div className="flex flex-col items-center headingText overflow-hidden">
-                        {/* TITLE */}
                         <motion.h1
                             className="mt-25 text-center flex flex-row flex-wrap items-center justify-center gap-1 w-[clamp(300px,70%,1000px)]"
                             initial={{ opacity: 0, y: 20 }}
@@ -678,7 +778,6 @@ const GradeCalculator = () => {
 >
 </textarea>
                         </motion.h1>
-                        {/* ERROR NOTIFICATION */}
                         <AnimatePresence>
                             {error && (
                                 <motion.div
@@ -694,7 +793,6 @@ const GradeCalculator = () => {
                             )}
                         </AnimatePresence>
 
-                        { /* CATGORIES */}
                         <motion.div 
                             className={`mb-6 pt-6 w-[70%] ${categories.length === 1 ? 'flex justify-center' : isScreenMedium ? 'flex flex-wrap gap-4 justify-center' : 'grid grid-cols-2 gap-6'} categories`}
                             initial={{ opacity: 0, y: 20 }}
@@ -710,17 +808,15 @@ const GradeCalculator = () => {
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{duration: 0.15, type: 'tween'}}
                                         className={`rounded-lg category relative w-[clamp(300px,100%,600px)]`}
+                                        {...(categoryIndex === 0 ? { 'data-tour': 'category-card' } : {})}
                                     >
 
-                                        {/* LIGHT BLUE TAB */}
                                         <div className={`flex flex-row items-center bg-nexus600 ${category.isOpen ? 'rounded-t-lg' : 'rounded-lg'} justify-between px-4 py-4 font-titilliumWeb-semibold gap-2 ${categories.length > 1 ? '' : 'pr-12'}`}>
-                                            {/* COLLAPSE */}
                                             <div className="flex">
                                                 <HiChevronDown size={25} className={`flex cursor-pointer text-white transition duration-300 ${category.isOpen ? 'rotate-180': 'rotate-0'}`} onClick={() => {handleCategoryChange(categoryIndex, "isOpen", !category.isOpen)}}/>
                                             </div>
                                             <div className="flex w-full flex-row flex-wrap gap-2">
 
-                                                {/* CATEGORY NAME */}
                                                 <div className="flex flex-3">
                                                     <input
                                                         id={`category-${categoryIndex}`}
@@ -743,7 +839,6 @@ const GradeCalculator = () => {
                                                         required
                                                     />
                                                 </div>
-                                                {/* WEIGHT */}
                                                 <div className="flex flex-row items-center w-auto">
                                                     <label htmlFor={`category-weight-${categoryIndex}`} className="pr-1 block tinyText text-white">Weight:</label>
                                                     <input
@@ -751,6 +846,7 @@ const GradeCalculator = () => {
                                                     id={`category-weight-${categoryIndex}`}
                                                     inputMode="numeric"
                                                     pattern="[0-9]*"
+                                                    {...(categoryIndex === 0 ? { 'data-tour': 'category-weight' } : {})}
                                                     className={`bg-nexus800 tinyText w-10 text-white block rounded-md focus:outline-none p-1.5 ${
                                                         validationErrors[`category-${categoryIndex}-weight`] 
                                                         ? 'border-2 border-[#D73A49] focus:border-[#D73A49] focus:ring-[#D73A49]' 
@@ -775,7 +871,6 @@ const GradeCalculator = () => {
                                                     <h1 className="pl-1 pr-1 block tinyText text-white">%</h1>
                                                 </div>
                                             </div>
-                                            {/* DELETE CATEGORY */}
                                             {categories.length > 1 && (
                                             <button
                                                 type="button"
@@ -798,7 +893,6 @@ const GradeCalculator = () => {
                                         )}
                                         </div>
 
-                                        {/* ASSIGNMENTS */}
                                         <AnimatePresence>
                                             {category.isOpen && (
                                                 <motion.div
@@ -814,10 +908,8 @@ const GradeCalculator = () => {
                                                         );
 
                                                         return (
-                                                            <div key={assignmentIndex} className="flex flex-row items-center justify-center bg-nexus800 px-4 py-2 rounded-lg  w-full">
-                                                                {/* NAME + POINTS + PERCENTAGE BAR */}
+                                                            <div key={assignmentIndex} {...(categoryIndex === 0 && assignmentIndex === 0 ? { 'data-tour': 'assignment-row' } : {})} className="flex flex-row items-center justify-center bg-nexus800 px-4 py-2 rounded-lg  w-full">
                                                                 <div className="flex flex-col w-full pl-2">
-                                                                    {/* NAME + POINTS */}
                                                                     <div className="flex flex-row gap-2 tinyText mb-2 w-full">
                                                                     <input
                                                                         type="text"
@@ -886,7 +978,6 @@ const GradeCalculator = () => {
                                                                     </div>
                                                                 </div>
 
-                                                                    {/* PERCENTAGE BAR */}
                                                                     <div className="flex flex-row items-center justify-center gap-2">
                                                                         <div className="w-full h-2 bg-nexus900 overflow-hidden rounded-full">
                                                                             <div
@@ -900,7 +991,6 @@ const GradeCalculator = () => {
                                                                     </div>
                                                                 </div>
 
-                                                                {/* DELETE ASSIGNMENT */}
                                                                 <div className="flex">
                                                                     <HiTrash 
                                                                         className="ml-2.5 flex hover:scale-110 transition duration-300 text-white hover:text-red-500 cursor-pointer"
@@ -932,7 +1022,6 @@ const GradeCalculator = () => {
                             </AnimatePresence>
                         </motion.div>
 
-                        {/* OTHER NUMBERS */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -947,7 +1036,7 @@ const GradeCalculator = () => {
                                 transition={{duration: 0.15, type: 'tween'}}
 
                             >
-                                <div className="flex flex-row justify-center items-center gap-4 bg-nexus600 w-full py-4 rounded-t-lg ">
+                                <div data-tour="overall-grade" className="flex flex-row justify-center items-center gap-4 bg-nexus600 w-full py-4 rounded-t-lg ">
                                     <h1 className="bodyText text-nexus50"><strong>Overall Grade: </strong> {overallGrade}%</h1>
                                 </div>
                                 <div className={`flex flex-row items-start justify-between bg-nexus800 w-[95%] ${isMobile ? 'px-4' : 'px-12'} my-4 rounded-lg py-2 gap-6 `}>
@@ -981,6 +1070,7 @@ const GradeCalculator = () => {
                                         <h1 className="tinyText text-nexus50"><strong>Desired Class Grade:</strong></h1>
                                         <input
                                             id="classGrade"
+                                            data-tour="desired-grade"
                                             type="text"
                                             inputMode="numeric"  
                                             pattern="[0-9]*"    
@@ -995,7 +1085,7 @@ const GradeCalculator = () => {
                                             required
                                         />
                                     </div>
-                                    <div className="flex flex-col items-center justify-center tinyText gap-2">
+                                    <div data-tour="grade-needed" className="flex flex-col items-center justify-center tinyText gap-2">
                                         <h1 className="text-nexus50">
                                             Grade Needed on Remaining Category:
                                         </h1>
@@ -1033,23 +1123,24 @@ const GradeCalculator = () => {
                         </motion.div>
                     </div>
 
-                    {/* INFO BUTTON */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
                         className="fixed top-24 right-8 flex flex-col gap-2 ">
-                        <HiQuestionMarkCircle className="cursor-pointer" size={25} onClick={() => setInfoOpen(true)}/>
+                        <HiQuestionMarkCircle data-tour="help-button" className="cursor-pointer" size={25} onClick={() => driverObj?.drive()}/>
                     </motion.div>
 
-                    {/* BUTTONS */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
                         className="fixed bottom-6 right-4 flex flex-col gap-2"
                     >
-                        <Button className="p-1 gap-2" text={"Add Category"} icon={<HiPlus/>} onClick={addCategory}/>
+                        <div data-tour="add-category">
+                            <Button className="p-1 gap-2" text={"Add Category"} icon={<HiPlus/>} onClick={addCategory}/>
+                        </div>
+                        <div data-tour="save-calculation">
                         <Button className="p-1 px-2 gap-2" text={editMode ? 'Update Calculation' : 'Save Calculation'} icon={<HiOutlineSave/>} onClick={() => {
                             const errors = validateFields();
                             setValidationErrors(errors);
@@ -1064,6 +1155,7 @@ const GradeCalculator = () => {
                             setError('');
                             setSaveDialogOpen(true);
                         }}/>
+                        </div>
 
                         <Modal
                             open={saveDialogOpen}
