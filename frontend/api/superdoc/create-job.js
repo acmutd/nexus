@@ -36,7 +36,7 @@ async function createJob({ jobId, documentId, courseId, action }) {
 async function enqueueMergeJob({ jobId, documentId, pdfUrl, courseId }) {
   const command = new SendMessageCommand({
     QueueUrl: SQS_QUEUE_URL,
-    MessageBody: JSON.stringify({ action: 'merge_pdf', payload: { jobId, pdfUrl, courseId } }),
+    MessageBody: JSON.stringify({ action: 'merge_pdf', payload: { jobId, pdfUrl, courseId, documentId } }),
     MessageGroupId: documentId,
   });
   return sqs.send(command);
