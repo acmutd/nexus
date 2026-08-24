@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import StarFieldOverlay from '../components/StarFieldOverlay';
-import { HiOutlineDocument, HiUpload, HiChevronLeft, HiChevronRight, HiChevronDown, HiOutlineUpload, HiArrowLeft, HiSearch, HiOutlineFolder, HiPencil, HiDocument, HiLink, HiDocumentDuplicate, HiDocumentAdd } from 'react-icons/hi';
+import { HiOutlineDocument, HiUpload, HiChevronLeft, HiChevronRight, HiChevronDown, HiOutlineUpload, HiArrowLeft, HiSearch, HiOutlineFolder, HiDocument, HiLink, HiDocumentDuplicate, HiDocumentAdd } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMobile } from '../context/mobileContext';
 import 'simplebar-react/dist/simplebar.min.css';
@@ -12,8 +12,10 @@ import { getFirebaseAuth, getFirebaseFirestore } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import MergeDocModal from '../components/MergeDocModal';
+import axios from 'axios';
 
 function SuperDoc() {
+
 
   const {isMobile} = useMobile()
   const [search, setSearch] = useState('')
@@ -24,7 +26,6 @@ function SuperDoc() {
   const [displayCourse, setDisplayCourse] = useState('')
   const [uploadDocumentOpen, setUploadDocumentOpen] = useState(false)
   const [mergeDocumentOpen, setMergeDocumentOpen] = useState(false)
-  const [updateHeadingOpen, setUpdateHeadingOpen] = useState(false)
   const [courseMap, setCourseMap] = useState(new Map())
   const [courseIdMap, setCourseIdMap] = useState(new Map()) // displayName -> rawId
   const [isLoadingCourses, setIsLoadingCourses] = useState(true)
@@ -85,6 +86,24 @@ function SuperDoc() {
         setCourseMap(nextCourseMap)
         setCourseIdMap(nextCourseIdMap)
         setSelectedCourse((prev) => (nextCourseMap.has(prev) ? prev : ''))
+
+        // Fill in per-course document counts in the background, doesn't block the course list from showing
+        Promise.all(Array.from(nextCourseIdMap.entries()).map(async ([displayName, rawId]) => {
+          try {
+            const { data } = await axios.post('/api/superdoc/get-docids', { courseId: rawId })
+            const docMap = data?.documentIds || data || {}
+            return [displayName, Object.keys(docMap)]
+          } catch (error) {
+            console.error(`[superdoc] failed to fetch document count for ${displayName}:`, error)
+            return [displayName, []]
+          }
+        })).then((entries) => {
+          setCourseMap((prev) => {
+            const next = new Map(prev)
+            entries.forEach(([name, docs]) => next.set(name, docs))
+            return next
+          })
+        })
       } catch (error) {
         console.error('Failed to fetch SuperDoc courses:', error)
         setCourseMap(new Map())
@@ -111,13 +130,28 @@ function SuperDoc() {
     setSearch(event.target.value)
   }
 
-  function handleClickCourse(course) {
+  async function handleClickCourse(course) {
     setSelectedCourse(course)
     setSearch('')
-    // When the user clicks one of the courses from the sidebar, that course will be selected and its respective documents will show 
-    if(courseMap.has(course)) {
-      setDocuments(courseMap.get(course))
-      setCoursesSidebar(false)
+    if(!courseMap.has(course)) return
+
+    setCoursesSidebar(false)
+    setSelectedDocument('')
+    setDisplayCourse('')
+    setDocUrl('')
+    setDocuments([])
+    setDocIdMap(new Map())
+    const courseId = courseIdMap.get(course) || course
+
+    try {
+      const { data } = await axios.post('/api/superdoc/get-docids', { courseId })
+      const docMap = data?.documentIds || data || {}
+      setDocuments(Object.keys(docMap))
+      setDocIdMap(new Map(Object.entries(docMap)))
+    } catch (error) {
+      console.error('[superdoc] failed to fetch documents for course:', error)
+      setDocuments([])
+      setDocIdMap(new Map())
     }
   }
     
@@ -131,7 +165,10 @@ function SuperDoc() {
             <UploadDocModal
             onClose={() => setUploadDocumentOpen(false)}
             courseId={courseIdMap.get(selectedCourse) || selectedCourse}
-            onUploadSuccess={(docName) => setDocuments(prev => [...prev, docName])}
+            onUploadSuccess={(docName, docId) => {
+              setDocuments(prev => [...prev, docName])
+              if (docId) setDocIdMap(prev => new Map(prev).set(docName, docId))
+            }}
             />
         )}
       </AnimatePresence>
@@ -141,20 +178,17 @@ function SuperDoc() {
             <MergeDocModal
             onClose={() => setMergeDocumentOpen(false)}
             courseId={courseIdMap.get(selectedCourse) || selectedCourse}
+            documentId={docIdMap.get(selectedDocument)}
             documentName={selectedDocument}
+            onMergeSuccess={() => {
+              const docId = docIdMap.get(selectedDocument)
+              setDocUrl(docId ? `https://docs.google.com/document/d/${docId}/preview?t=${Date.now()}` : '')
+            }}
             />
         )}
       </AnimatePresence>
 
-      <AnimatePresence>
-        {updateHeadingOpen && (
-            <UpdateHeadingModal
-            onClose={() => setUpdateHeadingOpen(false)}
-            />
-        )}
-      </AnimatePresence>
-
-      <motion.div 
+<motion.div 
           initial={{translateX: 0}} 
           animate={{translateX: isMobile ? 400 : 700}}
           transition={{
@@ -260,9 +294,6 @@ function SuperDoc() {
                         <span className='truncate'>
                           {document}
                         </span>
-                        <span className='text-gray-400 font-titilliumWeb-regular text-[clamp(0.8rem,0.8vw,1.4rem)] truncate'>
-                          5 Days Ago
-                        </span>
                       </div>
                     </div>
                   </button>
@@ -285,7 +316,6 @@ function SuperDoc() {
                   Document Functions
                 </h1>
                 <Button text={"Merge Document"} icon={<HiDocumentDuplicate color='white' size={20}/>} onClick={() => {setMergeDocumentOpen(true)}}/>
-                <Button text={"Update Heading"} icon={<HiPencil color='white' size={20}/>} onClick={() => setUpdateHeadingOpen(true)}/>
               </motion.div>
             )}
 

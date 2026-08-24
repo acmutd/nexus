@@ -3,58 +3,53 @@ import { HiOutlineX, HiUpload } from 'react-icons/hi'
 import { motion } from 'motion/react'
 import { HiOutlineDocumentArrowUp } from 'react-icons/hi2'
 import Button from './Button'
+import { createDocument, uploadPdfAndCreateJob, pollJob } from '../utils/superdocJobs'
 
 const UploadDocModal = ({onClose, isOpen, courseId, onUploadSuccess}) => {
 
     const [file, setFile] = useState(null);
     const [docName, setDocName] = useState('');
+    const [progress, setProgress] = useState(0);
+    const [status, setStatus] = useState('idle'); // idle | uploading | merging | success | failed
     const fileInputRef = useRef(null);
 
     const handleFileChange = (e) =>
     {
         const selectedFile = e.target.files[0];
-        if (selectedFile) 
+        if (selectedFile)
         {
+            console.log(`[superdoc] file selected: ${selectedFile.name} (${selectedFile.size} bytes)`)
             setFile(selectedFile)
         }
-            
+
     };
 
     const handleUpload = async () => {
         if (!docName) return alert("Please enter a document name!")
         if (!file) return alert("Please upload a file!")
 
-        try{
-            const reader = new FileReader()
-            reader.onload = async() =>
-            {
-                const pdf = reader.result.split(',')[1]
-                const response = await fetch('/api/discord/superdoc/upload_pdf',
-                    {
-                        method: 'POST',
-                        headers: {'Content-Type':'application/json'},
-                        body: JSON.stringify({
-                            pdfBase64: pdf,
-                            courseId,
-                            docName,
-                        }),
-                    });
-                if (!response.ok) {
-                    const text = await response.text()
-                    console.error("Upload failed:", response.status, text)
-                    return alert(`Upload failed (${response.status}). Check console for details.`)
-                }
-                const result = await response.json();
-                console.log("Upload Worked:", result)
-                onUploadSuccess && onUploadSuccess(docName)
-                onClose && onClose()
-            }
-            reader.readAsDataURL(file)
-        }
-        catch(error){
-            console.error("Upload Error:",error)
+        try {
+            console.log(`[superdoc] starting upload for course ${courseId}`)
+            setStatus('uploading')
+            const documentId = await createDocument(courseId, docName)
+            const { jobId } = await uploadPdfAndCreateJob(file, { docName, courseId, documentId }, setProgress)
+            setStatus('merging')
+            await pollJob(jobId)
+            console.log(`[superdoc] "${file.name}" merged successfully`)
+            setStatus('success')
+            onUploadSuccess && onUploadSuccess(docName, documentId)
+            setTimeout(() => onClose && onClose(), 1200)
+        } catch (error) {
+            console.error("[superdoc] upload failed:", error)
+            setStatus('failed')
         }
     }
+
+    const statusText = {
+        uploading: `Uploading... ${Math.round(progress * 100)}%`,
+        merging: 'Processing document...',
+        failed: 'Upload failed. Please try again.',
+    }[status]
 
 
   return (
@@ -76,25 +71,58 @@ const UploadDocModal = ({onClose, isOpen, courseId, onUploadSuccess}) => {
                     <HiOutlineX size={24} />
                 </button>
 
-                <div className="flex flex-col text-center bg-nexus900 p-4 rounded-lg w-full items-center justify-center">
-                        
-                        <span className="bodyText font-titilliumWeb-regular text-white mt-1">
-                            Drag and Drop File or
-                        </span>
-                        <div className='flex w-1/2 my-2'>
-                            <Button className="flex" text={'Browse'} onClick={() => fileInputRef.current?.click()}/>
-                            <input type="file" ref={fileInputRef} onChange={handleFileChange} accept=".pdf" className = "hidden"/>
+                {status === 'success' ? (
+                    <div className="w-full mt-2 p-4 bg-green-900/30 border border-green-500 rounded-lg text-green-400 text-center">
+                        <span className="text-2xl">✓</span>
+                        <p className="bodyText font-titilliumWeb-semibold mt-1">"{file?.name}" uploaded</p>
+                    </div>
+                ) : (
+                    <>
+                        <div className="flex flex-col text-center bg-nexus900 p-4 rounded-lg w-full items-center justify-center">
+
+                                <span className="bodyText font-titilliumWeb-regular text-white mt-1">
+                                    {file ? file.name : 'Drag and Drop File or'}
+                                </span>
+                                <div className='flex w-1/2 my-2'>
+                                    <Button className="flex" text={'Browse'} onClick={() => fileInputRef.current?.click()} disabled={status === 'uploading' || status === 'merging'}/>
+                                    <input type="file" ref={fileInputRef} onChange={handleFileChange} accept=".pdf" className = "hidden"/>
+                                </div>
+                                <span className="block tinyText font-titilliumWeb-regular text-gray-500 mt-1">
+                                    Max file size: 0.5MB
+                                </span>
+
                         </div>
-                        <span className="block tinyText font-titilliumWeb-regular text-gray-500 mt-1">
-                            Max file size: 0.5MB
-                        </span>
 
-                </div>
+                        <input className='w-full bg-nexus900 h-10 mt-4 placeholder-gray-400 text-white rounded-lg p-2' placeholder='Enter Document Name' value={docName} onChange={(e) => setDocName(e.target.value)}/>
 
-                <input className='w-full bg-nexus900 h-10 mt-4 placeholder-gray-400 text-white rounded-lg p-2' placeholder='Enter Document Name' value={docName} onChange={(e) => setDocName(e.target.value)}/>
-                
-                <Button className={"mt-4"} text={'Upload PDF'} onClick={handleUpload}/>
-                <Button className={"bg-gray-600 my-4"} text={'Cancel'}/>
+                        {status === 'uploading' && (
+                            <div className="w-full mt-3">
+                                <div className="w-full h-2 bg-nexus900 rounded-full overflow-hidden">
+                                    <motion.div className="h-full bg-nexus400" animate={{ width: `${Math.round(progress * 100)}%` }} transition={{ duration: 0.2 }}/>
+                                </div>
+                                <span className="tinyText font-titilliumWeb-regular text-gray-400 mt-1 block">{statusText}</span>
+                            </div>
+                        )}
+
+                        {status === 'merging' && (
+                            <div className="flex items-center gap-2 mt-3">
+                                <motion.div
+                                    className="w-4 h-4 border-2 border-nexus400 border-t-transparent rounded-full"
+                                    animate={{ rotate: 360 }}
+                                    transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
+                                />
+                                <span className="tinyText font-titilliumWeb-regular text-gray-400">{statusText}</span>
+                            </div>
+                        )}
+
+                        {status === 'failed' && (
+                            <span className="tinyText font-titilliumWeb-regular mt-2 text-red-400">{statusText}</span>
+                        )}
+
+                        <Button className={"mt-4"} text={status === 'uploading' || status === 'merging' ? 'Uploading...' : 'Upload PDF'} disabled={status === 'uploading' || status === 'merging'} onClick={handleUpload}/>
+                        <Button className={"bg-gray-600 my-4"} text={'Cancel'} onClick={() => onClose && onClose()}/>
+                    </>
+                )}
             </div>
         </motion.div>
     </div>
