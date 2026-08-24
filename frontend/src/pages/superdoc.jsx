@@ -248,33 +248,38 @@ function SuperDoc() {
                   {courseOptions.length === 0 ? 'No courses found for your account.' : 'No courses match your search.'}
                 </p>
               )}
-              {!isLoadingCourses && filteredCourseSearch.map((course, index) => (
-                <motion.li
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.05 }}>
-                  {/* Course Button */}
-                  <button
-                    className={`cursor-pointer text-start justify-between flex items-center w-full py-4 px-2 rounded-lg ${selectedCourse == course ? 'bg-nexus800 text-white border border-nexus600' : ''} hover:bg-nexus700 text-nexus100 font-titilliumWeb-semibold hover:text-white transition-colors duration-200`}
-                                onClick={() => handleClickCourse(course)}
-                                title={course}>
-                    <div className='flex-row flex items-center gap-1 min-w-0'>
-                      <HiOutlineFolder className="mr-2" size={30}/>
-                      {/* Text */}
-                      <div className='flex flex-col text-[clamp(0.7rem,1.3vw,2rem)] min-w-0'>
-                        <span className='truncate'>
-                          {course}
-                        </span>
-                        <span className='text-gray-400 font-titilliumWeb-regular text-[clamp(0.6rem,0.8vw,1.4rem)] truncate'>
-                          {courseMap.get(course)?.length || 0} documents
-                        </span>
+              {!isLoadingCourses && filteredCourseSearch.map((course, index) => {
+                const [courseName, professorName] = course.split(' - ')
+                const fullCourseName = professorName ? `${courseName} - ${professorName}` : course
+
+                return (
+                  <motion.li
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}>
+                    {/* Course Button */}
+                    <button
+                      className={`cursor-pointer text-start justify-between flex items-center w-full py-4 px-2 rounded-lg ${selectedCourse == course ? 'bg-nexus800 text-white border border-nexus600' : ''} hover:bg-nexus700 text-nexus100 font-titilliumWeb-semibold hover:text-white transition-colors duration-200`}
+                                  onClick={() => handleClickCourse(course)}
+                                  title={fullCourseName}>
+                      <div className='flex-row flex items-center gap-1 min-w-0'>
+                        <HiOutlineFolder className="mr-2" size={30}/>
+                        {/* Text */}
+                        <div className='flex flex-col text-[clamp(0.7rem,1.3vw,2rem)] min-w-0'>
+                          <span className='truncate'>
+                            {courseName}
+                          </span>
+                          <span className='text-gray-400 font-titilliumWeb-regular text-[clamp(0.6rem,0.8vw,1.4rem)] truncate'>
+                            {courseMap.get(course)?.length || 0} documents
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    <HiChevronRight className="mr-2" size={30}/>
-                  </button>
-                </motion.li>
-              ))}
+                      <HiChevronRight className="mr-2" size={30}/>
+                    </button>
+                  </motion.li>
+                )
+              })}
             </motion.div>) :
             (<motion.div className="space-y-2 mt-4" key={"documentbuttons"}
                         initial={{opacity: 0, x: 20}} animate={{opacity: 1, x: 0}} transition={{duration: 0.5}}>
