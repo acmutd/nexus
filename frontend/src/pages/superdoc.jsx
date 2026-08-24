@@ -29,6 +29,7 @@ function SuperDoc() {
   const [courseMap, setCourseMap] = useState(new Map())
   const [courseIdMap, setCourseIdMap] = useState(new Map()) // displayName -> rawId
   const [isLoadingCourses, setIsLoadingCourses] = useState(true)
+  const [isLoadingDocuments, setIsLoadingDocuments] = useState(true)
   const [atBottom, setAtBottom] = useState(false)
   const [docUrl, setDocUrl] = useState('')
   const [docIdMap, setDocIdMap] = useState(new Map()) // docName -> googleDocId
@@ -143,6 +144,8 @@ function SuperDoc() {
     setDocIdMap(new Map())
     const courseId = courseIdMap.get(course) || course
 
+    setIsLoadingDocuments(true)
+
     try {
       const { data } = await axios.post('/api/superdoc/get-docids', { courseId })
       const docMap = data?.documentIds || data || {}
@@ -152,6 +155,8 @@ function SuperDoc() {
       console.error('[superdoc] failed to fetch documents for course:', error)
       setDocuments([])
       setDocIdMap(new Map())
+    } finally {
+      setIsLoadingDocuments(false)
     }
   }
     
@@ -252,7 +257,8 @@ function SuperDoc() {
                   {/* Course Button */}
                   <button
                     className={`cursor-pointer text-start justify-between flex items-center w-full py-4 px-2 rounded-lg ${selectedCourse == course ? 'bg-nexus800 text-white border border-nexus600' : ''} hover:bg-nexus700 text-nexus100 font-titilliumWeb-semibold hover:text-white transition-colors duration-200`}
-                                onClick={() => handleClickCourse(course)}>
+                                onClick={() => handleClickCourse(course)}
+                                title={course}>
                     <div className='flex-row flex items-center gap-1 min-w-0'>
                       <HiOutlineFolder className="mr-2" size={30}/>
                       {/* Text */}
@@ -272,7 +278,10 @@ function SuperDoc() {
             </motion.div>) :
             (<motion.div className="space-y-2 mt-4" key={"documentbuttons"}
                         initial={{opacity: 0, x: 20}} animate={{opacity: 1, x: 0}} transition={{duration: 0.5}}>
-              {filteredDocumentSearch.map((document, index) => (
+              {isLoadingDocuments && (
+                <p className='text-nexus100 font-titilliumWeb-regular'>Loading documents...</p>
+              )}
+              {!isLoadingDocuments && filteredDocumentSearch.map((document, index) => (
                 <motion.li
                   key={index}
                   initial={{ opacity: 0, x: -20 }}
@@ -288,7 +297,7 @@ function SuperDoc() {
                                   setDocUrl(docId ? `https://docs.google.com/document/d/${docId}/preview` : '')
                                 }}>
                     <div className='flex-row flex items-center gap-1 min-w-0'>
-                      <HiOutlineDocumentText className="mr-2 w-[17%]" size={30}/>
+                      <HiOutlineDocumentText className="mr-2" size={20} strokeWidth={2}/>
                       {/* Text */}
                       <div className='flex flex-col text-[clamp(1.0rem,1.3vw,2rem)] min-w-0'>
                         <span className='truncate'>
@@ -393,7 +402,7 @@ function SuperDoc() {
                 <img className='flex select-none' src='/assets/SuperDocEmpty.svg'/>
                 
                 {selectedCourse ? <h1 className="flex text-lg font-titilliumWeb-regular text-white text-center w-full justify-center mx-4">
-                    There is currently no document uploaded for this unit.
+                    There is currently no document selected.
                 </h1>
                 :
                 <h1 className="flex text-lg font-titilliumWeb-regular text-white text-center w-full justify-center mx-4">
