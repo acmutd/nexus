@@ -212,13 +212,6 @@ const GradeCalculator = () => {
 
         setDriverObj(driverInstance);
 
-        // Window resize (e.g. dragging the window to a different monitor)
-        // doesn't reliably cross an isMobile/isScreenMedium breakpoint, so
-        // relying on that state to trigger a reposition misses most
-        // monitor-swap cases. Listen directly, and redo the *full*
-        // prepareHighlight sequence — not just refresh() — since the
-        // active element may now be off-screen and need to be scrolled
-        // back into view, same as when the step first opens.
         let resizeRaf;
         const handleResize = () => {
             cancelAnimationFrame(resizeRaf);
@@ -229,9 +222,6 @@ const GradeCalculator = () => {
                 if (typeof selector === 'string') {
                     prepareHighlight(selector);
                 }
-                // prepareHighlight's scroll + radius reapplication runs on a
-                // 350ms delay; ask driver.js to reposition right after so the
-                // popover/arrow line up with the element's final location.
                 setTimeout(() => driverInstance.refresh(), 360);
             });
         };
@@ -245,10 +235,6 @@ const GradeCalculator = () => {
     
     useEffect(() => {
         if (!driverObj || !driverObj.isActive || !driverObj.isActive()) return;
-        // sidebarCollapsed can change from a manual toggle click, with no
-        // window resize event at all — window resize itself is handled
-        // directly in the effect above. Wait two frames so the sidebar's
-        // width transition has actually committed before repositioning.
         const raf1 = requestAnimationFrame(() => {
             const raf2 = requestAnimationFrame(() => {
                 driverObj.refresh();
