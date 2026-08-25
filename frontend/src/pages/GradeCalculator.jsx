@@ -65,6 +65,18 @@ const GradeCalculator = () => {
     };
 
     useEffect(() => {
+        const radiusMap = {
+            '[data-tour="category-card"]': 8,
+            '[data-tour="category-weight"]': 6,
+            '[data-tour="assignment-row"]': 8,
+            '[data-tour="overall-grade"]': 8,
+            '[data-tour="desired-grade"]': 6,
+            '[data-tour="grade-needed"]': 12,
+            '[data-tour="add-category"]': 8,
+            '[data-tour="save-calculation"]': 8,
+            '[data-tour="help-button"]': 9999,
+        };
+
         const setHighlightRadius = (radius) => {
             requestAnimationFrame(() => {
                 document.querySelectorAll('#driver-page-overlay rect, .driver-stage-no-animation rect').forEach(rect => {
@@ -74,7 +86,8 @@ const GradeCalculator = () => {
             });
         };
 
-        const prepareHighlight = (selector, radius) => {
+        const prepareHighlight = (selector) => {
+            const radius = radiusMap[selector] ?? 8;
             const el = document.querySelector(selector);
             if (el) {
                 el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
@@ -107,7 +120,7 @@ const GradeCalculator = () => {
                         description: 'Each category represents a graded section of your course (e.g. Homework, Exams). Give it a name and set its weight percentage.',
                         side: 'bottom',
                     },
-                    onHighlightStarted: () => prepareHighlight('[data-tour="category-card"]', 8),
+                    onHighlightStarted: () => prepareHighlight('[data-tour="category-card"]'),
                 },
                 {
                     element: '[data-tour="category-weight"]',
@@ -116,7 +129,7 @@ const GradeCalculator = () => {
                         description: 'Enter how much this category counts toward your final grade as a percentage. IMPORTANT: Make sure you leave one category out (e.g. Final Exam), whose weight will show under "Remaining Assignment Weight." ',
                         side: 'bottom',
                     },
-                    onHighlightStarted: () => prepareHighlight('[data-tour="category-weight"]', 6),
+                    onHighlightStarted: () => prepareHighlight('[data-tour="category-weight"]'),
                 },
                 {
                     element: '[data-tour="assignment-row"]',
@@ -125,7 +138,7 @@ const GradeCalculator = () => {
                         description: 'Enter each assignment\'s name, the score you received, and the total points possible (e.g. 25 / 30).',
                         side: 'top',
                     },
-                    onHighlightStarted: () => prepareHighlight('[data-tour="assignment-row"]', 8),
+                    onHighlightStarted: () => prepareHighlight('[data-tour="assignment-row"]'),
                 },
                 {
                     element: '[data-tour="overall-grade"]',
@@ -134,7 +147,7 @@ const GradeCalculator = () => {
                         description: 'This updates live as you enter grades — it shows your weighted overall grade across all categories.',
                         side: 'top',
                     },
-                    onHighlightStarted: () => prepareHighlight('[data-tour="overall-grade"]', 8),
+                    onHighlightStarted: () => prepareHighlight('[data-tour="overall-grade"]'),
                 },
                 {
                     element: '[data-tour="desired-grade"]',
@@ -143,7 +156,7 @@ const GradeCalculator = () => {
                         description: 'Enter the final grade you\'re aiming for. The calculator will tell you what score you need on your remaining work.',
                         side: 'top',
                     },
-                    onHighlightStarted: () => prepareHighlight('[data-tour="desired-grade"]', 6),
+                    onHighlightStarted: () => prepareHighlight('[data-tour="desired-grade"]'),
                 },
                 {
                     element: '[data-tour="grade-needed"]',
@@ -152,7 +165,7 @@ const GradeCalculator = () => {
                         description: 'Once all other information is entered, this will show you what score you need on that category you left out to earn your Desired Class Grade.',
                         side: 'top',
                     },
-                    onHighlightStarted: () => prepareHighlight('[data-tour="grade-needed"]', 0),
+                    onHighlightStarted: () => prepareHighlight('[data-tour="grade-needed"]'),
                 },
                 {
                     element: '[data-tour="add-category"]',
@@ -161,7 +174,7 @@ const GradeCalculator = () => {
                         description: 'Click here to add another grading category. You can have up to 10 categories.',
                         side: 'top',
                     },
-                    onHighlightStarted: () => prepareHighlight('[data-tour="add-category"]', 8),
+                    onHighlightStarted: () => prepareHighlight('[data-tour="add-category"]'),
                 },
                 {
                     element: '[data-tour="save-calculation"]',
@@ -170,7 +183,7 @@ const GradeCalculator = () => {
                         description: 'Save this calculation to a course in your schedule so you can come back to it anytime.',
                         side: 'top',
                     },
-                    onHighlightStarted: () => prepareHighlight('[data-tour="save-calculation"]', 8),
+                    onHighlightStarted: () => prepareHighlight('[data-tour="save-calculation"]'),
                 },
                 {
                     element: '[data-tour="help-button"]',
@@ -179,7 +192,7 @@ const GradeCalculator = () => {
                         description: 'Click here at any time to replay this tutorial.',
                         side: 'left',
                     },
-                    onHighlightStarted: () => prepareHighlight('[data-tour="help-button"]', 9999),
+                    onHighlightStarted: () => prepareHighlight('[data-tour="help-button"]'),
                 },
             ],
             onDestroyed: async () => {
@@ -198,8 +211,53 @@ const GradeCalculator = () => {
         });
 
         setDriverObj(driverInstance);
+
+        // Window resize (e.g. dragging the window to a different monitor)
+        // doesn't reliably cross an isMobile/isScreenMedium breakpoint, so
+        // relying on that state to trigger a reposition misses most
+        // monitor-swap cases. Listen directly, and redo the *full*
+        // prepareHighlight sequence — not just refresh() — since the
+        // active element may now be off-screen and need to be scrolled
+        // back into view, same as when the step first opens.
+        let resizeRaf;
+        const handleResize = () => {
+            cancelAnimationFrame(resizeRaf);
+            resizeRaf = requestAnimationFrame(() => {
+                if (!driverInstance.isActive || !driverInstance.isActive()) return;
+                const activeStep = driverInstance.getActiveStep ? driverInstance.getActiveStep() : null;
+                const selector = activeStep?.element;
+                if (typeof selector === 'string') {
+                    prepareHighlight(selector);
+                }
+                // prepareHighlight's scroll + radius reapplication runs on a
+                // 350ms delay; ask driver.js to reposition right after so the
+                // popover/arrow line up with the element's final location.
+                setTimeout(() => driverInstance.refresh(), 360);
+            });
+        };
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            cancelAnimationFrame(resizeRaf);
+        };
     }, []); 
     
+    useEffect(() => {
+        if (!driverObj || !driverObj.isActive || !driverObj.isActive()) return;
+        // sidebarCollapsed can change from a manual toggle click, with no
+        // window resize event at all — window resize itself is handled
+        // directly in the effect above. Wait two frames so the sidebar's
+        // width transition has actually committed before repositioning.
+        const raf1 = requestAnimationFrame(() => {
+            const raf2 = requestAnimationFrame(() => {
+                driverObj.refresh();
+            });
+            return () => cancelAnimationFrame(raf2);
+        });
+        return () => cancelAnimationFrame(raf1);
+    }, [sidebarCollapsed, driverObj]);
+
     useEffect(() => {
         if (!driverObj || !currentUser) return;
         const hasSeen = localStorage.getItem('gradeCalc_hasSeenInstructions');
@@ -665,6 +723,124 @@ const GradeCalculator = () => {
 
     return (
         <>
+        <style>{`
+            /* Nexus theme for the Grade Calculator driver.js walkthrough */
+
+            /* --- Popover shell --- */
+            .grade-calc-driver-theme.driver-popover {
+                background: linear-gradient(180deg, #001433 0%, #002966 50%, #001433 100%);
+                border: 2px solid #3385FF; /* nexus-400 */
+                border-radius: 0.5rem;
+                box-shadow: 0 10px 30px rgba(0, 20, 51, 0.5);
+                font-family: 'titilliumWeb-Regular', sans-serif;
+                padding: 18px 20px;
+                max-width: 360px;
+            }
+
+            /* --- Title --- */
+            .grade-calc-driver-theme .driver-popover-title {
+                color: #FFFFFF; /* nexus-white */
+                font-family: 'titilliumWeb-SemiBold', sans-serif;
+                font-weight: 700;
+                font-size: 1.125rem;
+                margin-bottom: 6px;
+            }
+
+            /* --- Description --- */
+            .grade-calc-driver-theme .driver-popover-description {
+                color: #66A3FF; /* nexus-300 */
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+
+            /* --- Close (x) button --- */
+            .grade-calc-driver-theme .driver-popover-close-btn {
+                color: #99C2FF; /* nexus-200 */
+                transition: color 0.2s ease;
+            }
+            .grade-calc-driver-theme .driver-popover-close-btn:hover {
+                color: #FFFFFF;
+            }
+
+            /* --- Progress text ("1 of 6") --- */
+            .grade-calc-driver-theme .driver-popover-progress-text {
+                color: #66A3FF; /* nexus-300 */
+                font-size: 0.75rem;
+            }
+
+            /* --- Footer / nav buttons --- */
+            .grade-calc-driver-theme .driver-popover-footer {
+                margin-top: 14px;
+            }
+
+            .grade-calc-driver-theme .driver-popover-footer button {
+                background: #0066FF; /* nexus-500 */
+                color: #FFFFFF;
+                border: none;
+                border-radius: 0.375rem;
+                padding: 6px 14px;
+                font-size: 0.85rem;
+                font-weight: 600;
+                text-shadow: none;
+                transition: background 0.2s ease;
+                cursor: pointer;
+            }
+
+            .grade-calc-driver-theme .driver-popover-footer button:hover {
+                background: #0052CC; /* nexus-600 */
+            }
+
+            .grade-calc-driver-theme .driver-popover-prev-btn {
+                background: transparent !important;
+                color: #99C2FF !important; /* nexus-200 */
+                border: 1px solid #3385FF !important; /* nexus-400 */
+            }
+
+            .grade-calc-driver-theme .driver-popover-prev-btn:hover {
+                background: rgba(51, 133, 255, 0.15) !important;
+                color: #FFFFFF !important;
+            }
+
+            .grade-calc-driver-theme .driver-popover-prev-btn.driver-popover-btn-disabled {
+                opacity: 0.4;
+                color: #66A3FF !important;
+            }
+
+            /* --- Arrow (larger, brighter, glowing so it clearly points at the target) --- */
+            .grade-calc-driver-theme .driver-popover-arrow {
+                border-width: 12px;
+                filter: drop-shadow(0 0 6px rgba(51, 133, 255, 0.85));
+            }
+            .grade-calc-driver-theme .driver-popover-arrow-side-top.driver-popover-arrow {
+                border-top-color: #3385FF; /* nexus-400 */
+            }
+            .grade-calc-driver-theme .driver-popover-arrow-side-bottom.driver-popover-arrow {
+                border-bottom-color: #3385FF;
+            }
+            .grade-calc-driver-theme .driver-popover-arrow-side-left.driver-popover-arrow {
+                border-left-color: #3385FF;
+            }
+            .grade-calc-driver-theme .driver-popover-arrow-side-right.driver-popover-arrow {
+                border-right-color: #3385FF;
+            }
+
+            /* --- Highlighted-element overlay tint (subtle Nexus navy instead of plain black) --- */
+            #driver-page-overlay {
+                fill: #001433;
+                opacity: 0.75;
+            }
+
+            /* --- Stage highlight outline around the active element --- */
+            .driver-active-element {
+                box-shadow: 0 0 0 2px #3385FF; /* nexus-400 */
+                border-radius: 12px;
+            }
+
+            /* Grade Needed on Remaining Category: spotlight only, no ring */
+            [data-tour="grade-needed"].driver-active-element {
+                box-shadow: none;
+            }
+        `}</style>
         <motion.div className={`inset-0 min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center fixed overflow-x-hidden`} 
                     style={{ backgroundImage: "url('/assets/GradeCalcBG.svg')"}}
                     />
