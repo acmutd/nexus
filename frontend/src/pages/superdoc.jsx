@@ -7,12 +7,12 @@ import 'simplebar-react/dist/simplebar.min.css';
 import Button from '../components/Button';
 import { HiOutlineDocumentText } from 'react-icons/hi2';
 import UploadDocModal from '../components/UploadDocModal';
-import UpdateHeadingModal from '../components/UpdateHeadingModal';
 import { getFirebaseAuth, getFirebaseFirestore } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import MergeDocModal from '../components/MergeDocModal';
 import axios from 'axios';
+import { fetchDocNames } from '../utils/googleDriveNames';
 
 function SuperDoc() {
 
@@ -92,8 +92,8 @@ function SuperDoc() {
         Promise.all(Array.from(nextCourseIdMap.entries()).map(async ([displayName, rawId]) => {
           try {
             const { data } = await axios.post('/api/superdoc/get-docids', { courseId: rawId })
-            const docMap = data?.documentIds || data || {}
-            return [displayName, Object.keys(docMap)]
+            const docIds = data?.documentIds || data || []
+            return [displayName, docIds]
           } catch (error) {
             console.error(`[superdoc] failed to fetch document count for ${displayName}:`, error)
             return [displayName, []]
@@ -148,9 +148,10 @@ function SuperDoc() {
 
     try {
       const { data } = await axios.post('/api/superdoc/get-docids', { courseId })
-      const docMap = data?.documentIds || data || {}
-      setDocuments(Object.keys(docMap))
-      setDocIdMap(new Map(Object.entries(docMap)))
+      const docIds = data?.documentIds || data || []
+      const nameById = await fetchDocNames(docIds)
+      setDocuments(docIds.map((id) => nameById.get(id)))
+      setDocIdMap(new Map(docIds.map((id) => [nameById.get(id), id])))
     } catch (error) {
       console.error('[superdoc] failed to fetch documents for course:', error)
       setDocuments([])
