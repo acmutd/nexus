@@ -13,6 +13,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import MergeDocModal from '../components/MergeDocModal';
 import axios from 'axios';
 import { fetchDocNames } from '../utils/googleDriveNames';
+import LoadingScreen from '../components/LoadingScreen';
 
 function SuperDoc() {
 
@@ -27,12 +28,14 @@ function SuperDoc() {
   const [uploadDocumentOpen, setUploadDocumentOpen] = useState(false)
   const [mergeDocumentOpen, setMergeDocumentOpen] = useState(false)
   const [courseMap, setCourseMap] = useState(new Map())
+  const [isCourseMapLoading, setIsCourseMapLoading] = useState(true)
   const [courseIdMap, setCourseIdMap] = useState(new Map()) // displayName -> rawId
   const [isLoadingCourses, setIsLoadingCourses] = useState(true)
   const [isLoadingDocuments, setIsLoadingDocuments] = useState(true)
   const [atBottom, setAtBottom] = useState(false)
   const [docUrl, setDocUrl] = useState('')
   const [docIdMap, setDocIdMap] = useState(new Map()) // docName -> googleDocId
+  const [isDocContentLoading, setIsDocContentLoading] = useState(false)
 
   const handleScroll = (e) => {
       const { scrollTop, scrollHeight, clientHeight } = e.target;
@@ -40,6 +43,11 @@ function SuperDoc() {
       setAtBottom(bottom);
   };
 
+  useEffect(() => {
+    if (docUrl) {
+      setIsDocContentLoading(true)
+    }
+  }, [docUrl])
 
   /* --------------------------  SEARCH STUFF  ----------------------------*/
   const courseOptions = Array.from(courseMap.keys())
@@ -63,6 +71,7 @@ function SuperDoc() {
         setSelectedDocument('')
         setDisplayCourse('')
         setIsLoadingCourses(false)
+        setIsCourseMapLoading(false)  
         return
       }
 
@@ -104,6 +113,7 @@ function SuperDoc() {
             entries.forEach(([name, docs]) => next.set(name, docs))
             return next
           })
+         setIsCourseMapLoading(false) 
         })
       } catch (error) {
         console.error('Failed to fetch SuperDoc courses:', error)
@@ -161,11 +171,34 @@ function SuperDoc() {
     }
   }
     
+  {/* ----------------------------------- SUPERDOC VIEW FUNCTION ------------------------------------------- */}
+  function DocViewer({ docUrl, docName, isLoading, onLoaded }) {
+    return (
+      <div className={`flex w-full ${isLoading ? '' : 'bg-white'} relative`}>
+        {isLoading && (
+          <div className='flex flex-col items-center justify-center w-full py-10 text-gray-400 font-titilliumWeb-regular'>
+            <img className='flex w-[10%]' src='/assets/LoadingAnimation.gif' />
+            Loading document...
+          </div>
+        )}
+        <iframe
+          src={docUrl}
+          className={`${isLoading ? 'w-[0px] h-[0px]' : 'w-full h-[1000px]'}`}
+          style={{opacity: isLoading ? 0 : 1 }}
+          title={docName}
+          allow='autoplay'
+          onLoad={() => onLoaded()}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen max-w-screen bg-cover bg-center overflow-x-hidden justify-center bg-gradient-to-b from-nexus900 to-nexus700">
       
       <StarFieldOverlay count={isMobile ? 150 : 200}/>
 
+      {/* --------------------------------- UPLOAD DOC MODAL ---------------------------------*/}
       <AnimatePresence>
         {uploadDocumentOpen && (
             <UploadDocModal
@@ -178,7 +211,8 @@ function SuperDoc() {
             />
         )}
       </AnimatePresence>
-
+      
+      {/* ---------------------------------- MERGE DOC MODAL --------------------------------- */}
       <AnimatePresence>
         {mergeDocumentOpen && (
             <MergeDocModal
@@ -194,7 +228,7 @@ function SuperDoc() {
         )}
       </AnimatePresence>
 
-<motion.div 
+      <motion.div 
           initial={{translateX: 0}} 
           animate={{translateX: isMobile ? 400 : 700}}
           transition={{
@@ -254,7 +288,7 @@ function SuperDoc() {
                 const fullCourseName = professorName ? `${courseName} - ${professorName}` : course
 
                 return (
-                  <motion.li
+                  <motion.div
                     key={index}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -272,13 +306,13 @@ function SuperDoc() {
                             {courseName}
                           </span>
                           <span className='text-gray-400 font-titilliumWeb-regular text-[clamp(0.6rem,0.8vw,1.4rem)] truncate'>
-                            {courseMap.get(course)?.length || 0} documents
+                            {isCourseMapLoading ? 'Loading' : courseMap.get(course)?.length || 0} documents
                           </span>
                         </div>
                       </div>
                       <HiChevronRight className="mr-2" size={30}/>
                     </button>
-                  </motion.li>
+                  </motion.div>
                 )
               })}
             </motion.div>) :
@@ -287,8 +321,13 @@ function SuperDoc() {
               {isLoadingDocuments && (
                 <p className='text-nexus100 font-titilliumWeb-regular'>Loading documents...</p>
               )}
+              {!isLoadingDocuments && filteredDocumentSearch.length === 0 && (
+                  <span className='text-nexus100 font-titilliumWeb-regular'>
+                    No Documents Found.
+                  </span>
+              )}
               {!isLoadingDocuments && filteredDocumentSearch.map((document, index) => (
-                <motion.li
+                <motion.div
                   key={index}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -312,7 +351,7 @@ function SuperDoc() {
                       </div>
                     </div>
                   </button>
-                </motion.li>
+                </motion.div>
               ))}
             </motion.div>
             )}
@@ -392,12 +431,20 @@ function SuperDoc() {
           <div className={`flex flex-col p-4 h-full w-[clamp(300px,100%,full)] bg-nexus900 mb-4 ${selectedDocument ? '' : 'py-10'} mt-2 rounded-md items-center justify-center`}>
             {selectedDocument ?
             (
-              <div className='flex w-full h-full bg-white'>
+              <div className='flex w-full h-full'>
                 {docUrl ? (
-                  <iframe src={docUrl} className='w-full h-[1000px]' title={selectedDocument} allow='autoplay'/>
+                  <DocViewer
+                    docUrl={docUrl}
+                    docName={selectedDocument}
+                    isLoading={isDocContentLoading}
+                    onLoaded={() => setIsDocContentLoading(prev => (prev ? false : prev))}
+                  />
                 ) : (
                   <div className='flex w-full h-[1000px] items-center justify-center text-gray-400 font-titilliumWeb-regular'>
-                    Loading document...
+                    <img className='flex w-[50%] h-[50%]' src='/assets/LoadingAnimation.gif' />
+                    <span>
+                      Loading document...
+                    </span>
                   </div>
                 )}
               </div>
