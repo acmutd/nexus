@@ -429,7 +429,8 @@ export default function CourseLinking() {
         setShowLoginNetIDModal(true);
       }}/>
 
-    <LoginWithNetIDModal
+
+{/*     <LoginWithNetIDModal                // NET ID MODAL 
       isOpen={showLoginNetIDModal}
       onClose={() => setShowLoginNetIDModal(false)}
       onSuccess={(courses, meta) => {
@@ -441,7 +442,7 @@ export default function CourseLinking() {
           handleConfirmAndContinue(courses || [], meta || null);
         }
       }}
-    />
+    /> */}
 
     <TranscriptModal
       isOpen={showTranscriptModal}
@@ -478,7 +479,7 @@ export default function CourseLinking() {
         className="flex flex-col bg-nexus50 rounded-xl shadow-2xl p-6"
         style={{
           zIndex: 2,
-          width: isMobile ? "90%" : "50rem",
+          width: isMobile ? "90%" : "35rem",
           minHeight: isMobile ? "auto" : "28rem",
         }}
       >
@@ -486,12 +487,13 @@ export default function CourseLinking() {
           <p className="headingText font-titilliumWeb-bold text-nexus900 mb-2">
             Nexus Needs Access to Your Courses
           </p>
-          <p className="bodyText font-titilliumWeb-regular text-nexus800 mb-2">
+{/*       ------------------NET ID TEXT-----------------
+          <p className="bodyText font-titilliumWeb-regular text-nexus800 mb-2">   
             Login through eLearning and let Nexus do the rest
           </p>
           <p className="bodyText font-titilliumWeb-bold text-nexus900 mb-2">
             OR
-          </p>
+          </p> */}
           <p className="bodyText font-titilliumWeb-regular text-nexus800">
             Upload your transcript for automatic parsing
           </p>
@@ -500,6 +502,7 @@ export default function CourseLinking() {
         <div
           className={`flex ${isMobile ? "flex-col" : "flex-row"} w-full h-full gap-8 justify-center`}
         >
+{/*     ============================== NETID OPTION BOX ====================================      
           <OptionBox
             icon={
               <img
@@ -513,7 +516,7 @@ export default function CourseLinking() {
             details={["Quick Login", "Real-Time Sync"]}
             buttonText="Click to Login"
             onClick={() => setShowAccessRequestModal(true)}
-          />
+          /> */}
 
 
           <OptionBox

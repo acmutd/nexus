@@ -444,7 +444,7 @@ function Settings() {
     <>
       <div className="flex flex-row min-h-screen bg-linear-to-b from-nexus900 to-nexus700 fixed overflow-hidden inset-0"/>
       
-      <StarFieldOverlay count={150}/>
+      <StarFieldOverlay count={isMobile ? 50 : 150}/>
       <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.3}} 
                   src='/assets/SettingsAssets/SettingsClouds.svg' className='fixed bottom-0 w-full'/>
       

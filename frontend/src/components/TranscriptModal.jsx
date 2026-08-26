@@ -32,7 +32,7 @@ export default function TranscriptModal({
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="bg-nexus50 rounded-lg p-8 max-w-2xl w-[35%] mx-4 min-w-[300px] overflow-y-auto shadow-2xl"
+            className="bg-nexus50 rounded-lg p-8 max-w-2xl w-[35%] mx-4 max-h-[95%] min-w-[300px] overflow-y-auto shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-col justify-center items-center mb-4 relative">
