@@ -37,11 +37,11 @@ async function enqueueMergeJob({ jobId, documentId, pdfUrl, courseId }) {
   const command = new SendMessageCommand({
     QueueUrl: SQS_QUEUE_URL,
     MessageBody: JSON.stringify({ action: 'merge_pdf', payload: { jobId, pdfUrl, courseId, documentId } }),
-    MessageGroupId: documentId,
+    MessageGroupId: documentId,           // unchanged — preserves per-document ordering
+    MessageDeduplicationId: jobId,        // unique per job, ignores content-based dedup
   });
   return sqs.send(command);
 }
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
