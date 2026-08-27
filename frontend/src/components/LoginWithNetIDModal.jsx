@@ -179,12 +179,25 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
           // don't close on outside click; user should explicitly continue or cancel
         >
           <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            className="w-[35%] min-w-[300px] p-8 bg-nexus50 rounded-lg shadow-2xl max-h-[90vh] overflow-y-auto items-center justify-center flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="w-full max-w-[500px] p-6 sm:p-8 bg-nexus50 rounded-lg shadow-2xl max-h-[90vh] overflow-y-auto flex flex-col items-center justify-center relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+            <button
+              onClick={() => {
+                setParsedSuccess(false);
+                setParsedCourses([]);
+                setError('');
+                onClose && onClose();
+              }}
+                className="absolute top-4 right-4 z-50 bg-white rounded-full p-1.5 sm:hidden shadow-md hover:bg-gray-100 transition"
+                aria-label="Close modal"
+                type="button"
+              >
+              <HiOutlineX size={20} className="text-nexus900" />
+          </button>
             <div className='flex flex-col items-center justify-center mb-4'>
               <img src='assets/loginIcon.svg' className='w-[10%] min-w-[50px]'/>
               <h2 className="mt-4 mb-2 headingText font-titilliumWeb-bold text-nexus900">Login via eLearning</h2>
@@ -220,7 +233,6 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
             <div className="flex flex-col w-full gap-4">
               <Button
                 onClick={() => {
-                  // pass autoSave=true so parent can immediately confirm+save
                   if (onSuccess) onSuccess(parsedCourses, { netId, autoSave: true });
                   setParsedSuccess(false);
                   setParsedCourses([]);
@@ -229,16 +241,19 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
                 disabled={parsedCourses.length === 0}
                 text={"Continue"}
               />
-              <Button
-                onClick={() => {
-                  setParsedSuccess(false);
-                  setParsedCourses([]);
-                  setError('');
-                  onClose && onClose();
-                }}
-                className={"bg-gray-500"}
-                text={"Cancel"}
-              />
+              {/* Wrap the cancel button to hide on mobile */}
+              <div className="hidden sm:block">
+                <Button
+                  onClick={() => {
+                    setParsedSuccess(false);
+                    setParsedCourses([]);
+                    setError('');
+                    onClose && onClose();
+                  }}
+                  className={"bg-gray-500"}
+                  text={"Cancel"}
+                />
+              </div>
             </div>
           </motion.div>
         </motion.div>
@@ -257,18 +272,26 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
       initial={{ scale: 0.95, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       exit={{ scale: 0.95, opacity: 0 }}
-      className={`bg-nexus50 rounded-xl min-w-[300px] ${embedded ? 'p-2 w-[35%] mx-auto' : 'p-6 w-[35%] mx-4'}`}
+      className={`bg-nexus50 rounded-xl w-full max-w-[350px] relative ${embedded ? 'p-4 mx-auto' : 'p-6 sm:p-8 mx-auto'}`}
       onClick={(e) => e.stopPropagation()}
     >
+      <button 
+        onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (onClose) onClose();
+      }}
+        className="absolute top-4 right-4 z-50 bg-white rounded-full p-1.5 sm:hidden ..."
+        aria-label="Close modal"
+        type="button"
+      >
+        <HiOutlineX size={20} className="text-nexus900" />
+      </button>
       <div className="flex flex-col justify-center items-center mb-4 relative">
         <img src='assets/loginIcon.svg' className='w-[10%] min-w-[50px]'/>
         <h2 className="mt-4 mb-2 headingText font-titilliumWeb-bold text-nexus900">Login via eLearning</h2>
         <h3 className='flex w-[80%] tinyText text-center font-titilliumWeb-semibold text-nexus700'> Allow Nexus to directly access your courses in eLearning via our Web Scraper. </h3>
-        {!submitting && (
-          <button onClick={() => onClose && onClose()} className="absolute top-0 right-0 text-gray-500 hover:text-gray-700">
-            <HiOutlineX size={22} />
-          </button>
-        )}
+
       </div>
 
       {initLoading ? (
@@ -331,10 +354,13 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
                 />
               </div>
 
+              <div className="hidden sm:block">
               <Button
-                 onClick={() => onClose && onClose()}
-                 className={'bg-gray-500'}
-                 text={"Cancel"}/>
+                onClick={() => onClose && onClose()}
+                className={'bg-gray-500'}
+                text={"Cancel"}
+              />
+            </div>
             </form>
           ) : null}
         </>
@@ -350,7 +376,7 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 flex items-center justify-center z-50"
+        className="fixed inset-0 flex items-center justify-center z-50 p-4" // Added p-4 for mobile spacing
         style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
         onClick={() => !submitting && onClose && onClose()}
       >

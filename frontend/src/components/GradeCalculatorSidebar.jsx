@@ -241,7 +241,7 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
       setSelectedCourseId(null);
     }
   };
-  const MOBILE_SIDEBAR_W = 136; 
+  const MOBILE_SIDEBAR_W = 185; 
   const sidebarVariants = {
   expanded: { width: isMobile ? MOBILE_SIDEBAR_W : 256 },
   collapsed: { width: 64 },
@@ -403,7 +403,7 @@ const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propU
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.2 }}
             className={`fixed top-16 h-[calc(100vh-4rem)] bg-nexus700 shadow-xl overflow-visible z-30
-              ${isMobile ? 'left-[135px] w-[calc(100vw-135px)]' : 'left-64 w-80'}
+              ${isMobile ? 'left-[175px] w-[calc(100vw-175px)]' : 'left-64 w-80'}
             `}
             onMouseEnter={() => !isMobile && setHoveredCourseId(activeCourseId)}
             onMouseLeave={() => !isMobile && !selectedCourseId && setHoveredCourseId(null)}
