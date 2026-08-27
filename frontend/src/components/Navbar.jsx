@@ -24,7 +24,7 @@ const Navbar = () => {
   }`;
 
   const handleSuperdocClick = () => {
-    navigate('/underconstruction', {
+    navigate('/superdoc', {
       state: { fileName: 'Superdoc', documentName: 'Superdoc', selectedUnit: 'Unit 1' }
     });
   };

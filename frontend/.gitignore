@@ -29,3 +29,14 @@ package-lock.json
 # env
 .env
 .env*.local
+<<<<<<< HEAD
+.env*
+=======
+
+
+#.next
+
+.next 
+.vercel 
+.vite
+>>>>>>> origin/feat/lambda-presigned-urls
