@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-//require('dotenv').config();
+// require('dotenv').config();
 
 function parseServiceAccount(raw) {
   if (!raw) {

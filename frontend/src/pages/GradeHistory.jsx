@@ -415,7 +415,7 @@ const GradeHistory = () => {
                 </div>
               </div>
             ) : (
-              <div className="h-full flex items-center justify-center bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 bg-opacity-30 border-2 border-nexus400 rounded-lg p-6 relative mt-20 md:mt-0">
+              <div className="h-full flex items-center justify-center bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 bg-opacity-30 border-2 border-nexus400 rounded-lg p-6 relative">
                 <img className="absolute -top-34 right-0 w-[175px] h-[175px]" src="/assets/GradeHistoryPigy.svg"/>
                 <p className="text-nexus300 text-xl">
                   Select a grade history to view details
