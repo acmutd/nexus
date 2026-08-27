@@ -184,7 +184,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
       className="min-h-screen w-full flex justify-center bg-nexus700 bg-linear-to-b from-nexus900 to-nexus700 bg-no-repeat bg-top bg-[length:100%_85vh] overflow-hidden snap-y snap-mandatory overflow-y-auto"
       style={{ scrollPaddingTop: isMobile ? 0 : '120px' }}
     >
-      <StarFieldOverlay count={200}/>
+      <StarFieldOverlay count={isMobile ? 50 : 200}/>
       <div
         ref={popupRef}
         className={`${isMobile ? 'mt-50' : 'mt-[clamp(120px,10%,300px)]'} flex flex-col transition-all duration-500 transform ${popupVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
@@ -343,8 +343,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
         
         :
           <div className='flex flex-col w-full h-full items-center justify-center gap-15'>
-            <div className="min-w-[300px] w-[53%] bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row mt-20 relative">
-              <img src='/assets/HomePageAssets/SwingingAnimationMobile.svg' className='absolute -right-10 bottom-30 w-[clamp(200px,10%,600px)]'/>
+            <div className="min-w-[300px] w-[53%] bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row mt-40 relative">
               <div className={`flex-col' items-center`}>
                 <div className={`flex flex-col m-10 gap-2 items-center justify-center text-center`}>
                   {<HiCalculator size={34} color='#003D99'/>}
@@ -360,6 +359,8 @@ const [showScrollTop, setShowScrollTop] = useState(false);
             <div className="min-w-[300px] w-[53%] bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row mt-20 relative items-center justify-center">
               <div className={`flex flex-col m-10 gap-2 items-center justify-center text-center`}>
                 {<HiUserGroup size={34} color='#003D99'/>}
+              <img src='/assets/HomePageAssets/SwingingAnimationMobile.svg' className='absolute -right-10 bottom-42 w-[clamp(200px,10%,600px)]'/>
+
                 <h1 className="text-nexus700 font-titilliumWeb-bold headingText text-centerflex flex flex-row">
                   Collaborative Environment
                 </h1>
@@ -370,7 +371,7 @@ const [showScrollTop, setShowScrollTop] = useState(false);
             </div>
             <div className="min-w-[300px] w-[53%] bg-gradient-to-b from-nexus50 to-nexus200 rounded-xl flex flex-row mt-20 relative items-center justify-center">
               <div className={`flex flex-col m-10 gap-2 items-center justify-center text-center relative`}>
-                <img src='/assets/HomePageAssets/SleepingAnimationMobile.svg' className='absolute -left-10 bottom-38 -scale-x-100 w-[clamp(140px,10%,600px)]'/>
+                <img src='/assets/HomePageAssets/SleepingAnimationMobile.svg' className='absolute -left-10 bottom-43 -scale-x-100 w-[clamp(140px,10%,600px)]'/>
                 {<HiDocumentText size={34} color='#003D99'/>}
                 <h1 className="text-nexus700 font-titilliumWeb-bold headingText text-centerflex flex flex-row">
                   Resource Sharing

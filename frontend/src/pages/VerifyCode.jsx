@@ -310,7 +310,7 @@ export default function VerifyCode() {
         </p>
 
         <form onSubmit={handleSubmit}>
-          <div className="flex justify-center gap-2 mb-4 px-2 sm:px-4">
+          <div className="flex justify-center gap-1 mb-4">
             {code.map((digit, index) => (
               <input
                 key={index}

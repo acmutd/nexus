@@ -4,10 +4,13 @@ import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import Button from "../components/Button";
 import StarFieldOverlay from "../components/StarFieldOverlay";
 import { motion, AnimatePresence} from 'framer-motion';
+import { useMobile } from '../context/mobileContext';
 
 export default function Signup() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const {isMobile} = useMobile()
 
   const [pwVisible, setPwVisible] = useState(false);
   const [pw2Visible, setPw2Visible] = useState(false);
@@ -111,7 +114,7 @@ export default function Signup() {
 
       { /* BACKGROUND ASSETS */}
       <div className="fixed inset-0">
-        <StarFieldOverlay count={200}/>
+        <StarFieldOverlay count={isMobile ? 50 : 200}/>
 
         { /* BG CLOUDS */}
         <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.3}} 

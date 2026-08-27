@@ -6,7 +6,7 @@ import { HiChevronLeft, HiTrash, HiRefresh, HiPencil } from 'react-icons/hi';
 import { getFirebaseAuth, getFirebaseFirestore } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
-import pigeonIcon from '../assets/gradeistoryPigeon.svg'
+import { useMobile } from "../context/mobileContext.jsx";
 
 const GradeHistory = () => {
   const { courseId } = useParams();
@@ -18,6 +18,7 @@ const GradeHistory = () => {
   const [selectedHistoryDetails, setSelectedHistoryDetails] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+    const {isMobile} = useMobile()
 
   useEffect(() => {
     const auth = getFirebaseAuth();
@@ -120,7 +121,7 @@ const GradeHistory = () => {
     return (
       <div className="h-screen flex flex-col justify-center items-center bg-gradient-to-br from-nexus800 via-nexus900 to-nexus700">
         <img src='/assets/LoadingAnimation.gif' className='w-40 h-40 flex'/>
-        <div className="text-white text-xl">Loading grade histories...</div>
+        <div className="text-white text-xl font-titilliumWeb-regular">Loading grade histories...</div>
       </div>
     );
   }
@@ -273,7 +274,7 @@ const GradeHistory = () => {
             
             {selectedHistoryDetails ? (
               <div className="bg-nexus900 bg-opacity-30 border-2 border-nexus400 rounded-lg p-6 relative">
-                <img className="absolute -top-34 right-0 w-[175px] h-[175px]" src="/assets/GradeHistoryPigy.svg"/>
+                {!isMobile && <img className="absolute -top-34 right-0 w-[175px] h-[175px]" src={"/assets/GradeHistoryPigy.svg"}/>}
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl text-white font-bold">{selectedHistoryDetails.saveTitle}</h2>
                   <div className="flex space-x-2">
@@ -336,7 +337,7 @@ const GradeHistory = () => {
                         const colors = ['#60A5FA', '#34D399', '#F59E0B', '#EF4444', '#8B5CF6'];
                         
                         return (
-                          <div key={idx} className="flex items-center space-x-4">
+                          <div key={idx} className="flex flex-col items-center space-x-4">
                             <div className="relative w-16 h-16">
                               <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 70 70">
                                 <circle
@@ -364,7 +365,7 @@ const GradeHistory = () => {
                                 <span className="text-sm font-bold text-white">{gradeValue.toFixed(1)}%</span>
                               </div>
                             </div>
-                            <div className="flex-1">
+                            <div className="flex-1 w-full">
                               <div className="text-white font-medium">{category.categoryName}</div>
                               <div className="text-nexus300 text-sm">Weight: {category.categoryWeight}%</div>
                               <div className="text-nexus400 text-xs">
@@ -415,8 +416,8 @@ const GradeHistory = () => {
                 </div>
               </div>
             ) : (
-              <div className="h-full flex items-center justify-center bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 bg-opacity-30 border-2 border-nexus400 rounded-lg p-6 relative mt-20 md:mt-0">
-                <img className="absolute -top-34 right-0 w-[175px] h-[175px]" src="/assets/GradeHistoryPigy.svg"/>
+              <div className="h-full flex items-center justify-center bg-gradient-to-b from-nexus900 via-nexus800 to-nexus900 bg-opacity-30 border-2 border-nexus400 rounded-lg p-6 relative md:mt-0">
+                {!isMobile && <img className="absolute -top-34 right-0 w-[175px] h-[175px]" src="/assets/GradeHistoryPigy.svg"/>}
                 <p className="text-nexus300 text-xl">
                   Select a grade history to view details
                 </p>

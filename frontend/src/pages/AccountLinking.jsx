@@ -391,31 +391,32 @@ const AccountLinking = () => {
       }
     }, [onboarding, navigate, isPreFirestoreOnboarding]);
 
-    const OptionBox = ({ icon, title, description, details, buttonText, onClick, boxWidth }) => (
-        <div className="relative w-full flex" style={{ maxWidth: boxWidth || '100%' }}>
-            <div className={`absolute inset-0 rounded-lg bg-gray-400 shadow-md`}
-                 style={{ transform: 'translate(6px, 6px)', zIndex: 0 }}
-            />
+  const OptionBox = ({ icon, title, description, details, buttonText, onClick }) => (
+      <div className="relative w-full flex">
+          <div className={`absolute inset-0 rounded-lg bg-gray-400 shadow-md`}
+                style={{ transform: 'translate(6px, 6px)', zIndex: 0 }}
+          />
 
-            <div
-                className="flex flex-col min-h-[265px] md:min-h-[265px] items-start bg-white rounded-lg p-6 border border-gray-200 
-             transition duration-300 ease-in-out relative z-10 font-titilliumWeb"
-                style={{ height: '100%', width: '100%' }}
-            >
-                <div className="mb-4 self-start">{icon}</div>
-                <h3 className="font-bold bodyText text-gray-800 mb-2 text-left w-full">{title}</h3>
-                <p className="text-nexus900 text-left tinyText mb-2 flex-1 w-full">
-                {description}
-                </p>
-                <ul className="list-disc list-inside tinyText text-left text-nexus900 w-full mb-6 pl-4">
-                {details.map((detail, index) => (
-                    <li key={index} className="mb-1">{detail}</li>
-                ))}
-                </ul>
-                <Button text={buttonText} onClick={onClick} />
-            </div>
-        </div>
-    );
+          <div
+              className="flex flex-col min-h[265px] items-start bg-white rounded-lg p-6 border border-gray-200 
+                      transition duration-300 ease-in-out relative z-10 
+                      font-titilliumWeb"
+              style={{ height: '100%', width: '100%' }}
+          >
+              <div className="mb-4 self-start">{icon}</div>
+              <h3 className="font-bold bodyText text-gray-800 mb-2 text-left w-full">{title}</h3>
+              <p className="text-nexus900 text-left tinyText mb-2 flex-1 w-full">
+              {description}
+              </p>
+              <ul className="list-disc list-inside tinyText text-left text-nexus900 w-full mb-6 pl-4">
+              {details.map((detail, index) => (
+                  <li key={index} className="mb-1">{detail}</li>
+              ))}
+              </ul>
+              <Button text={buttonText} onClick={onClick} />
+          </div>
+      </div>
+  );
 
   const floatVariants = {
     float: (custom) => ({
@@ -505,16 +506,17 @@ const AccountLinking = () => {
         <div
           ref={popupRef}
           className={`flex flex-col w-full h-full items-center justify-center scale-90 transition-all duration-500 transform ${popupVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}>
-            <h1 className='headingText text-white font-titilliumWeb-bold mt-1'>
+            <h1 className='headingText text-white font-titilliumWeb-bold mt-1 mb-2'>
                 Account Linking
             </h1>
-            <div
-              className='flex flex-col bg-nexus50 p-6 rounded-xl items-center justify-center shadow-2xl'
-              style={{
-                width: isMobile ? '90%' : '35rem',
-                minHeight: isMobile ? 'auto' : '28rem'
-              }}
-            >
+              <div
+                className="flex flex-col bg-nexus50 rounded-xl shadow-2xl p-6"
+                style={{
+                  zIndex: 2,
+                  width: isMobile ? "90%" : "35rem",
+                  minHeight: isMobile ? "auto" : "28rem",
+                }}
+              >
                 <div className='flex flex-col text-center mx-6 mb-4 w-full'>
                     <p className="headingText font-titilliumWeb-bold text-nexus900">
                         Link Your Discord Account

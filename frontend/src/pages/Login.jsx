@@ -14,8 +14,13 @@ import StarFieldOverlay from "../components/StarFieldOverlay";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import Button from "../components/Button";
 import {motion} from 'framer-motion'
+import { useMobile } from '../context/mobileContext';
+
+
 const Login = () => {
   const navigate = useNavigate();
+
+  const {isMobile} = useMobile()
 
   const [auth, setAuth] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -130,7 +135,7 @@ const Login = () => {
 
       { /* BACKGROUN ASSETS */}
       <div className="fixed inset-0">
-        <StarFieldOverlay count={200}/>
+        <StarFieldOverlay count={isMobile ? 50 : 200}/>
         <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.3}} 
                     src="/assets/LoginSignUpAssets/LSBGClouds.svg" className="bottom-0 fixed will-change-transform pointer-events-none w-full"/>
         <motion.img initial={{y:200, opacity:0}} animate={{y:10, opacity:1}} transition={{duration:1, type: 'spring', damping: 15, delay:0.4}} 

@@ -969,7 +969,7 @@ const GradeCalculator = () => {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{duration: 0.15, type: 'tween'}}
-                                        className={`rounded-lg category relative w-[clamp(300px,100%,600px)]`}
+                                        className={`rounded-lg category relative w-[clamp(300px,100%,600px)] shrink-0`}
                                         {...(categoryIndex === 0 ? { 'data-tour': 'category-card' } : {})}
                                     >
 
@@ -1008,7 +1008,7 @@ const GradeCalculator = () => {
                                                     id={`category-weight-${categoryIndex}`}
                                                     inputMode="numeric"
                                                     pattern="[0-9]*"
-                                                    {...(categoryIndex === 0 ? { 'data-tour': 'category-weight' } : {})}
+                                                    {...(categoryIndex === 0 ? { 'data-tour': 'category-weight' } : {})}                                                    
                                                     className={`bg-nexus800 tinyText w-10 text-white block rounded-md focus:outline-none p-1.5 ${
                                                         validationErrors[`category-${categoryIndex}-weight`] 
                                                         ? 'border-2 border-[#D73A49] focus:border-[#D73A49] focus:ring-[#D73A49]' 
@@ -1050,7 +1050,7 @@ const GradeCalculator = () => {
                                                 className=" flex items-center justify-center text-nexus200 rounded-md transition-all duration-200 hover:text-white group z-10"
                                                 title="Delete Category"
                                             >
-                                                <HiTrash size={25} className="hover:scale-110 transition duration-300 text-white hover:text-red-500 cursor-pointer"/>
+                                                <HiTrash className="w-[clamp(20px,80%,60px)] hover:scale-110 transition duration-300 text-white hover:text-red-500 cursor-pointer"/>
                                             </button>
                                         )}
                                         </div>
@@ -1063,14 +1063,15 @@ const GradeCalculator = () => {
                                                     exit={{scaleY: 0, originY: 0}}
                                                     transition={{duration: 0.15, type: 'tween'}}
                                                     className="flex flex-col rounded-b-lg relative p-4 gap-4 bg-nexus900 ">                             
-                                                        {category.assignments.map((assignment, assignmentIndex) => {
+                                                    {category.assignments.map((assignment, assignmentIndex) => {
                                                         const percent = getAssignmentPercentage(
                                                             assignment.grade,
                                                             assignment.weight
                                                         );
 
                                                         return (
-                                                            <div key={assignmentIndex} {...(categoryIndex === 0 && assignmentIndex === 0 ? { 'data-tour': 'assignment-row' } : {})} className="flex flex-row items-center justify-center bg-nexus800 px-4 py-2 rounded-lg  w-full">
+                                                            <div key={assignmentIndex} {...(categoryIndex === 0 && assignmentIndex === 0 ? { 'data-tour': 'assignment-row' } : {})} className="flex flex-row items-center justify-center bg-nexus800 gap-3 px-4 py-2 rounded-lg  w-full">
+                                                                {/* NAME + POINTS + PERCENTAGE BAR */}
                                                                 <div className="flex flex-col w-full pl-2">
                                                                     <div className="flex flex-row gap-2 tinyText mb-2 w-full">
                                                                     <input
@@ -1138,7 +1139,7 @@ const GradeCalculator = () => {
                                                                         placeholder="30"
                                                                     />
                                                                     </div>
-                                                                </div>
+                                                                    </div>
 
                                                                     <div className="flex flex-row items-center justify-center gap-2">
                                                                         <div className="w-full h-2 bg-nexus900 overflow-hidden rounded-full">
@@ -1153,9 +1154,11 @@ const GradeCalculator = () => {
                                                                     </div>
                                                                 </div>
 
-                                                                <div className="flex">
+                                                                {/* DELETE ASSIGNMENT */}
+                                                                <div className="flex w-[clamp(20px,5%,100px)] items-center justify-center">
                                                                     <HiTrash 
-                                                                        className="ml-2.5 flex hover:scale-110 transition duration-300 text-white hover:text-red-500 cursor-pointer"
+
+                                                                        className="flex hover:scale-110 transition duration-300 text-white hover:text-red-500 cursor-pointer"
                                                                         onClick={() => {
                                                                             if (category.assignments.length > 1) {
                                                                                 deleteAssignmentRow(categoryIndex, assignmentIndex);
