@@ -1,5 +1,4 @@
 {
-  
   "rewrites": [
     {
       "source": "/((?!api/|_next/|static/|assets/|favicon.ico).*)",
@@ -10,7 +9,7 @@
     "api/parse-transcript.js": {
       "includeFiles": "node_modules/pdf-parse/dist/pdf-parse/cjs/**",
       "memory": 1024,
-      "maxDuration": 15
+      "maxDuration": 10
     }
   }
 }

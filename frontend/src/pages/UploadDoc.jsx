@@ -7,35 +7,6 @@ import axios from 'axios';
 import { jsPDF } from 'jspdf';
 import { PDFDocument } from 'pdf-lib';
 
-async function uploadPdf(file, docName, courseId) {
-  // 1. Get presigned URL
-  const presignRes = await fetch('/api/s3/presign', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ docName, courseId, contentType: file.type }),
-  });
-  const { uploadUrl, key } = await presignRes.json();
-
-  // 2. Upload directly to S3
-  await fetch(uploadUrl, {
-    method: 'PUT',
-    headers: { 'Content-Type': file.type },
-    body: file, // raw File object, no base64 needed
-  });
-
-  // 3. Tell your backend it's done, trigger merge with just the key/metadata
-  const mergeRes = await fetch('/api/discord/superdoc/merge', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ s3Key: key, docName, courseId }),
-  });
-
-  return mergeRes.json();
-}
-
-
-
-
 const UploadDoc = () => {
     const [file, setFile] = useState(null);
     const [message, setMessage] = useState('');
@@ -148,6 +119,7 @@ const UploadDoc = () => {
     };
 
     const handleUpload = async (event) => {
+        
         event.preventDefault();
         let unitLable = '';
         if (!file) {
@@ -166,38 +138,49 @@ const UploadDoc = () => {
             setMessage('Please select a unit.');
             return;
         }
+        
+        // Create a temporary URL for the file
+        let fileUrl = URL.createObjectURL(file);
+        console.log("Unit Value:",unit.value);
 
-        let fileUrl = '';
-
-        try {
+        //
+        
+        const formData = new FormData();
+        formData.append('media',file);
+        formData.append('unitid',unit.value);
+        try{
             setMessage('File starting to upload!');
-
-            const result = await uploadPdf(file, documentName, location.value);
-
-            if (!result.success) {
-                throw new Error(result.error || 'Upload failed');
-            }
-
-            fileUrl = result.pdfUrl; // presigned GET url returned from merge.js
-            console.log('superdoc url:', fileUrl);
+            const response = await axios.post('http://localhost:3000/api/upload/aws',formData,{
+                headers:{
+                    'Content-Type ': 'multipart/form-data',
+                },
+            });
+            fileUrl = response.data.superdoc;
+            //console.log('Response: ',response);
+            console.log('superdoc url :', fileUrl);
             setMessage('File uploaded successfully!');
-
-        } catch (error) {
+        } catch(error){
             console.log(error);
-            setMessage('Upload failed. Please try again.');
-            return; // don't navigate on failure
         }
 
+        
+        
+        //
+
+
+        // Navigate to the DocPreview page with file information
         const state = {
             fileName: file.name,
             fileUrl,
             selectedUnit: unit.label ? unit.label : unitLable,
-            documentName: documentName,
+            documentName: documentName, 
             selectedCourse: location.value
-        };
+        }
         console.log(state);
-
-        navigate('/doc-preview', { state });
+        
+        navigate('/doc-preview', {
+            state
+        }); 
     };
 
     const handleAddUnit = async () => {

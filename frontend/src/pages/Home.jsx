@@ -20,7 +20,7 @@ const Home = () => {
         navigate('/discordservers')
         break;
       case "Superdoc":
-        navigate("/superdoc")
+        navigate("/underconstruction")
         break;
       case "GradeCalc":
         navigate("/grade-calculator")
@@ -208,9 +208,8 @@ const Home = () => {
       href="https://docs.google.com/forms/d/e/1FAIpQLSfA5sNwJUlHn3QroikwHuDGhOve6qjb7ssMjkvLd-RGK_PLaQ/viewform"
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-3 right-3 max-sm:bottom-14 max-sm:right-2 z-50 group"
+      className="fixed bottom-6 right-6 z-50 group"
     >
-      <div className="max-sm:scale-95 max-sm:origin-bottom-right">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -238,7 +237,6 @@ const Home = () => {
           We appreciate any and all input :)
         </span>
       </motion.div>
-      </div>
     </a>
 
     </>
