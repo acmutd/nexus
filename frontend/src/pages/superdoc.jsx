@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import StarFieldOverlay from '../components/StarFieldOverlay';
-import { HiOutlineDocument, HiUpload, HiChevronLeft, HiChevronRight, HiChevronDown, HiOutlineUpload, HiArrowLeft, HiSearch, HiOutlineFolder, HiPencil, HiDocument, HiLink, HiDocumentDuplicate, HiDocumentAdd } from 'react-icons/hi';
+import { HiOutlineDocument, HiUpload, HiChevronLeft, HiChevronRight, HiChevronDown, HiOutlineUpload, HiArrowLeft, HiSearch, HiOutlineFolder, HiDocument, HiLink, HiDocumentDuplicate, HiDocumentAdd } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMobile } from '../context/mobileContext';
 import 'simplebar-react/dist/simplebar.min.css';
 import Button from '../components/Button';
 import { HiOutlineDocumentText } from 'react-icons/hi2';
 import UploadDocModal from '../components/UploadDocModal';
-import UpdateHeadingModal from '../components/UpdateHeadingModal';
 import { getFirebaseAuth, getFirebaseFirestore } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import MergeDocModal from '../components/MergeDocModal';
+import axios from 'axios';
+import { fetchDocNames } from '../utils/googleDriveNames';
+import LoadingScreen from '../components/LoadingScreen';
 
 function SuperDoc() {
+
 
   const {isMobile} = useMobile()
   const [search, setSearch] = useState('')
@@ -24,13 +27,15 @@ function SuperDoc() {
   const [displayCourse, setDisplayCourse] = useState('')
   const [uploadDocumentOpen, setUploadDocumentOpen] = useState(false)
   const [mergeDocumentOpen, setMergeDocumentOpen] = useState(false)
-  const [updateHeadingOpen, setUpdateHeadingOpen] = useState(false)
   const [courseMap, setCourseMap] = useState(new Map())
+  const [isCourseMapLoading, setIsCourseMapLoading] = useState(true)
   const [courseIdMap, setCourseIdMap] = useState(new Map()) // displayName -> rawId
   const [isLoadingCourses, setIsLoadingCourses] = useState(true)
+  const [isLoadingDocuments, setIsLoadingDocuments] = useState(true)
   const [atBottom, setAtBottom] = useState(false)
   const [docUrl, setDocUrl] = useState('')
   const [docIdMap, setDocIdMap] = useState(new Map()) // docName -> googleDocId
+  const [isDocContentLoading, setIsDocContentLoading] = useState(false)
 
   const handleScroll = (e) => {
       const { scrollTop, scrollHeight, clientHeight } = e.target;
@@ -38,6 +43,11 @@ function SuperDoc() {
       setAtBottom(bottom);
   };
 
+  useEffect(() => {
+    if (docUrl) {
+      setIsDocContentLoading(true)
+    }
+  }, [docUrl])
 
   /* --------------------------  SEARCH STUFF  ----------------------------*/
   const courseOptions = Array.from(courseMap.keys())
@@ -61,6 +71,7 @@ function SuperDoc() {
         setSelectedDocument('')
         setDisplayCourse('')
         setIsLoadingCourses(false)
+        setIsCourseMapLoading(false)  
         return
       }
 
@@ -85,6 +96,25 @@ function SuperDoc() {
         setCourseMap(nextCourseMap)
         setCourseIdMap(nextCourseIdMap)
         setSelectedCourse((prev) => (nextCourseMap.has(prev) ? prev : ''))
+
+        // Fill in per-course document counts in the background, doesn't block the course list from showing
+        Promise.all(Array.from(nextCourseIdMap.entries()).map(async ([displayName, rawId]) => {
+          try {
+            const { data } = await axios.post('/api/superdoc/get-docids', { courseId: rawId })
+            const docIds = data?.documentIds || data || []
+            return [displayName, docIds]
+          } catch (error) {
+            console.error(`[superdoc] failed to fetch document count for ${displayName}:`, error)
+            return [displayName, []]
+          }
+        })).then((entries) => {
+          setCourseMap((prev) => {
+            const next = new Map(prev)
+            entries.forEach(([name, docs]) => next.set(name, docs))
+            return next
+          })
+         setIsCourseMapLoading(false) 
+        })
       } catch (error) {
         console.error('Failed to fetch SuperDoc courses:', error)
         setCourseMap(new Map())
@@ -111,45 +141,89 @@ function SuperDoc() {
     setSearch(event.target.value)
   }
 
-  function handleClickCourse(course) {
+  async function handleClickCourse(course) {
     setSelectedCourse(course)
     setSearch('')
-    // When the user clicks one of the courses from the sidebar, that course will be selected and its respective documents will show 
-    if(courseMap.has(course)) {
-      setDocuments(courseMap.get(course))
-      setCoursesSidebar(false)
+    if(!courseMap.has(course)) return
+
+    setCoursesSidebar(false)
+    setSelectedDocument('')
+    setDisplayCourse('')
+    setDocUrl('')
+    setDocuments([])
+    setDocIdMap(new Map())
+    const courseId = courseIdMap.get(course) || course
+
+    setIsLoadingDocuments(true)
+
+    try {
+      const { data } = await axios.post('/api/superdoc/get-docids', { courseId })
+      const docIds = data?.documentIds || data || []
+      const nameById = await fetchDocNames(docIds)
+      setDocuments(docIds.map((id) => nameById.get(id)))
+      setDocIdMap(new Map(docIds.map((id) => [nameById.get(id), id])))
+    } catch (error) {
+      console.error('[superdoc] failed to fetch documents for course:', error)
+      setDocuments([])
+      setDocIdMap(new Map())
+    } finally {
+      setIsLoadingDocuments(false)
     }
   }
     
+  {/* ----------------------------------- SUPERDOC VIEW FUNCTION ------------------------------------------- */}
+  function DocViewer({ docUrl, docName, isLoading, onLoaded }) {
+    return (
+      <div className={`flex w-full ${isLoading ? '' : 'bg-white'} relative`}>
+        {isLoading && (
+          <div className='flex flex-col items-center justify-center w-full py-10 text-gray-400 font-titilliumWeb-regular'>
+            <img className='flex w-[10%]' src='/assets/LoadingAnimation.gif' />
+            Loading document...
+          </div>
+        )}
+        <iframe
+          src={docUrl}
+          className={`${isLoading ? 'w-[0px] h-[0px]' : 'w-full h-[1000px]'}`}
+          style={{opacity: isLoading ? 0 : 1 }}
+          title={docName}
+          allow='autoplay'
+          onLoad={() => onLoaded()}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen max-w-screen bg-cover bg-center overflow-x-hidden justify-center bg-gradient-to-b from-nexus900 to-nexus700">
       
       <StarFieldOverlay count={isMobile ? 150 : 200}/>
 
+      {/* --------------------------------- UPLOAD DOC MODAL ---------------------------------*/}
       <AnimatePresence>
         {uploadDocumentOpen && (
             <UploadDocModal
             onClose={() => setUploadDocumentOpen(false)}
             courseId={courseIdMap.get(selectedCourse) || selectedCourse}
-            onUploadSuccess={(docName) => setDocuments(prev => [...prev, docName])}
+            onUploadSuccess={(docName, docId) => {
+              setDocuments(prev => [...prev, docName])
+              if (docId) setDocIdMap(prev => new Map(prev).set(docName, docId))
+            }}
             />
         )}
       </AnimatePresence>
-
+      
+      {/* ---------------------------------- MERGE DOC MODAL --------------------------------- */}
       <AnimatePresence>
         {mergeDocumentOpen && (
             <MergeDocModal
             onClose={() => setMergeDocumentOpen(false)}
             courseId={courseIdMap.get(selectedCourse) || selectedCourse}
+            documentId={docIdMap.get(selectedDocument)}
             documentName={selectedDocument}
-            />
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {updateHeadingOpen && (
-            <UpdateHeadingModal
-            onClose={() => setUpdateHeadingOpen(false)}
+            onMergeSuccess={() => {
+              const docId = docIdMap.get(selectedDocument)
+              setDocUrl(docId ? `https://docs.google.com/document/d/${docId}/preview?t=${Date.now()}` : '')
+            }}
             />
         )}
       </AnimatePresence>
@@ -209,37 +283,51 @@ function SuperDoc() {
                   {courseOptions.length === 0 ? 'No courses found for your account.' : 'No courses match your search.'}
                 </p>
               )}
-              {!isLoadingCourses && filteredCourseSearch.map((course, index) => (
-                <motion.li
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.05 }}>
-                  {/* Course Button */}
-                  <button
-                    className={`cursor-pointer text-start justify-between flex items-center w-full py-4 px-2 rounded-lg ${selectedCourse == course ? 'bg-nexus800 text-white border border-nexus600' : ''} hover:bg-nexus700 text-nexus100 font-titilliumWeb-semibold hover:text-white transition-colors duration-200`}
-                                onClick={() => handleClickCourse(course)}>
-                    <div className='flex-row flex items-center gap-1 min-w-0'>
-                      <HiOutlineFolder className="mr-2" size={30}/>
-                      {/* Text */}
-                      <div className='flex flex-col text-[clamp(0.7rem,1.3vw,2rem)] min-w-0'>
-                        <span className='truncate'>
-                          {course}
-                        </span>
-                        <span className='text-gray-400 font-titilliumWeb-regular text-[clamp(0.6rem,0.8vw,1.4rem)] truncate'>
-                          {courseMap.get(course)?.length || 0} documents
-                        </span>
+              {!isLoadingCourses && filteredCourseSearch.map((course, index) => {
+                const [courseName, professorName] = course.split(' - ')
+                const fullCourseName = professorName ? `${courseName} - ${professorName}` : course
+
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}>
+                    {/* Course Button */}
+                    <button
+                      className={`cursor-pointer text-start justify-between flex items-center w-full py-4 px-2 rounded-lg ${selectedCourse == course ? 'bg-nexus800 text-white border border-nexus600' : ''} hover:bg-nexus700 text-nexus100 font-titilliumWeb-semibold hover:text-white transition-colors duration-200`}
+                                  onClick={() => handleClickCourse(course)}
+                                  title={fullCourseName}>
+                      <div className='flex-row flex items-center gap-1 min-w-0'>
+                        <HiOutlineFolder className="mr-2" size={30}/>
+                        {/* Text */}
+                        <div className='flex flex-col text-[clamp(0.7rem,1.3vw,2rem)] min-w-0'>
+                          <span className='truncate'>
+                            {courseName}
+                          </span>
+                          <span className='text-gray-400 font-titilliumWeb-regular text-[clamp(0.6rem,0.8vw,1.4rem)] truncate'>
+                            {isCourseMapLoading ? 'Loading' : courseMap.get(course)?.length || 0} documents
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    <HiChevronRight className="mr-2" size={30}/>
-                  </button>
-                </motion.li>
-              ))}
+                      <HiChevronRight className="mr-2" size={30}/>
+                    </button>
+                  </motion.div>
+                )
+              })}
             </motion.div>) :
             (<motion.div className="space-y-2 mt-4" key={"documentbuttons"}
                         initial={{opacity: 0, x: 20}} animate={{opacity: 1, x: 0}} transition={{duration: 0.5}}>
-              {filteredDocumentSearch.map((document, index) => (
-                <motion.li
+              {isLoadingDocuments && (
+                <p className='text-nexus100 font-titilliumWeb-regular'>Loading documents...</p>
+              )}
+              {!isLoadingDocuments && filteredDocumentSearch.length === 0 && (
+                  <span className='text-nexus100 font-titilliumWeb-regular'>
+                    No Documents Found.
+                  </span>
+              )}
+              {!isLoadingDocuments && filteredDocumentSearch.map((document, index) => (
+                <motion.div
                   key={index}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -254,19 +342,16 @@ function SuperDoc() {
                                   setDocUrl(docId ? `https://docs.google.com/document/d/${docId}/preview` : '')
                                 }}>
                     <div className='flex-row flex items-center gap-1 min-w-0'>
-                      <HiOutlineDocumentText className="mr-2 w-[17%]" size={30}/>
+                      <HiOutlineDocumentText className="mr-2" size={20} strokeWidth={2}/>
                       {/* Text */}
                       <div className='flex flex-col text-[clamp(1.0rem,1.3vw,2rem)] min-w-0'>
                         <span className='truncate'>
                           {document}
                         </span>
-                        <span className='text-gray-400 font-titilliumWeb-regular text-[clamp(0.8rem,0.8vw,1.4rem)] truncate'>
-                          5 Days Ago
-                        </span>
                       </div>
                     </div>
                   </button>
-                </motion.li>
+                </motion.div>
               ))}
             </motion.div>
             )}
@@ -285,7 +370,6 @@ function SuperDoc() {
                   Document Functions
                 </h1>
                 <Button text={"Merge Document"} icon={<HiDocumentDuplicate color='white' size={20}/>} onClick={() => {setMergeDocumentOpen(true)}}/>
-                <Button text={"Update Heading"} icon={<HiPencil color='white' size={20}/>} onClick={() => setUpdateHeadingOpen(true)}/>
               </motion.div>
             )}
 
@@ -347,12 +431,20 @@ function SuperDoc() {
           <div className={`flex flex-col p-4 h-full w-[clamp(300px,100%,full)] bg-nexus900 mb-4 ${selectedDocument ? '' : 'py-10'} mt-2 rounded-md items-center justify-center`}>
             {selectedDocument ?
             (
-              <div className='flex w-full h-full bg-white'>
+              <div className='flex w-full h-full'>
                 {docUrl ? (
-                  <iframe src={docUrl} className='w-full h-[1000px]' title={selectedDocument} allow='autoplay'/>
+                  <DocViewer
+                    docUrl={docUrl}
+                    docName={selectedDocument}
+                    isLoading={isDocContentLoading}
+                    onLoaded={() => setIsDocContentLoading(prev => (prev ? false : prev))}
+                  />
                 ) : (
                   <div className='flex w-full h-[1000px] items-center justify-center text-gray-400 font-titilliumWeb-regular'>
-                    Loading document...
+                    <img className='flex w-[50%] h-[50%]' src='/assets/LoadingAnimation.gif' />
+                    <span>
+                      Loading document...
+                    </span>
                   </div>
                 )}
               </div>
@@ -363,7 +455,7 @@ function SuperDoc() {
                 <img className='flex select-none' src='/assets/SuperDocEmpty.svg'/>
                 
                 {selectedCourse ? <h1 className="flex text-lg font-titilliumWeb-regular text-white text-center w-full justify-center mx-4">
-                    There is currently no document uploaded for this unit.
+                    There is currently no document selected.
                 </h1>
                 :
                 <h1 className="flex text-lg font-titilliumWeb-regular text-white text-center w-full justify-center mx-4">

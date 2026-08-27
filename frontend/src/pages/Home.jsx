@@ -20,7 +20,7 @@ const Home = () => {
         navigate('/discordservers')
         break;
       case "Superdoc":
-        navigate("/underconstruction")
+        navigate("/superdoc")
         break;
       case "GradeCalc":
         navigate("/grade-calculator")
