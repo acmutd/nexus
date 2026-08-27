@@ -1,29 +1,4 @@
-let db;
-
-try {
-  const admin = require('../../config/firebaseAdmin.js');
-  db = admin.db;
-} catch (e) {
-  try {
-    const admin = require('../config/firebaseAdmin.js');
-    db = admin.db;
-  } catch (e2) {
-    const admin = require('firebase-admin');
-    
-    if (!admin.apps.length) {
-      const serviceAccount = JSON.parse(
-        process.env.FIREBASE_SERVICE_ACCOUNT_JSON || '{}'
-      );
-      
-      admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-        databaseURL: `https://${process.env.FIREBASE_PROJECT_ID}.firebaseio.com`
-      });
-    }
-    
-    db = admin.firestore();
-  }
-}
+const { db } = require('../config/firebaseAdmin.js');
 
 module.exports = async (req, res) => {
   // Set CORS headers

@@ -1,5 +1,6 @@
-const firebaseAdmin = require('firebase-admin');
-const admin = firebaseAdmin.default || firebaseAdmin;
+const admin = require('firebase-admin');
+const { cert, getApps, initializeApp } = require('firebase-admin/app');
+const { getFirestore } = require('firebase-admin/firestore');
 //require('dotenv').config();
 
 function parseServiceAccount(raw) {
@@ -25,11 +26,11 @@ function parseServiceAccount(raw) {
 }
 
 // Initialize Firebase Admin if not already initialized
-if (!admin.apps.length) {
+if (getApps().length === 0) {
   const serviceAccount = parseServiceAccount(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
 
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+  initializeApp({
+    credential: cert(serviceAccount),
     projectId: process.env.FIREBASE_PROJECT_ID,
     databaseURL: `https://${process.env.FIREBASE_PROJECT_ID}.firebaseio.com`,
   });
@@ -37,6 +38,6 @@ if (!admin.apps.length) {
   console.log('Firebase Admin initialized');
 }
 
-const db = admin.firestore();
+const db = getFirestore();
 
 module.exports = { admin, db };
