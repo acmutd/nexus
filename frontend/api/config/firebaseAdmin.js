@@ -1,4 +1,5 @@
-const admin = require('firebase-admin');
+const firebaseAdmin = require('firebase-admin');
+const admin = firebaseAdmin.default || firebaseAdmin;
 //require('dotenv').config();
 
 function parseServiceAccount(raw) {
