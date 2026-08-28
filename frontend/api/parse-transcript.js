@@ -1,4 +1,4 @@
-const {admin} = require("./config/firebaseAdmin.js");
+const { auth } = require("./config/firebaseAdmin.js");
 
 // DOM polyfills for pdfjs in serverless envs (Vercel)
 // placeholders so pdfjs doesn't throw when DOM types are missin they avoid the process crashing when @napi-rs/canvas isn't available
@@ -46,7 +46,7 @@ async function verifyUserOrFail(req, res) {
     if (!id || !token) return {ok: false, res: fail(res, 400, "Missing required fields: id or token")};
 
     try {
-        const decoded = await admin.auth().verifyIdToken(token);
+        const decoded = await auth.verifyIdToken(token);
         if (decoded.uid !== id) return {ok: false, res: fail(res, 403, "Token does not match user ID")};
         return {ok: true, uid: decoded.uid};
     } catch (e) {

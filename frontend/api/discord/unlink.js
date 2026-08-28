@@ -1,5 +1,5 @@
 const axios = require('axios');
-const {admin} = require('../config/firebaseAdmin.js');
+const {db, FieldValue} = require('../config/firebaseAdmin.js');
 
 // require('dotenv').config()
 
@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
             return res.status(401).json({error: 'Missing authorization token'});
         }
 
-        const userRef = admin.firestore().collection('users').doc(uid);
+        const userRef = db.collection('users').doc(uid);
         const userDoc = await userRef.get();
 
         if (!userDoc.exists) {
@@ -38,8 +38,8 @@ module.exports = async (req, res) => {
 
         // Remove Discord info from database first
         await userRef.update({
-            discord: admin.firestore.FieldValue.delete(),
-            lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
+            discord: FieldValue.delete(),
+            lastUpdated: FieldValue.serverTimestamp(),
         });
 
         console.log(`Discord unlinked for user: ${uid}`);

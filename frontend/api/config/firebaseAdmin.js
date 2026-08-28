@@ -1,6 +1,6 @@
-const admin = require('firebase-admin');
 const { cert, getApps, initializeApp } = require('firebase-admin/app');
-const { getFirestore } = require('firebase-admin/firestore');
+const { getFirestore, FieldValue } = require('firebase-admin/firestore');
+const { getAuth } = require('firebase-admin/auth');
 //require('dotenv').config();
 
 function parseServiceAccount(raw) {
@@ -39,5 +39,6 @@ if (getApps().length === 0) {
 }
 
 const db = getFirestore();
+const auth = getAuth();
 
-module.exports = { admin, db };
+module.exports = { db, auth, FieldValue };

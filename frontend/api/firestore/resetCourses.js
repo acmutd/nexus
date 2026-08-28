@@ -1,4 +1,4 @@
-const { admin, db } = require('../config/firebaseAdmin.js');
+const { auth, db, FieldValue } = require('../config/firebaseAdmin.js');
 const axios = require('axios');
 const { DISCORD_BOT_URL } = process.env;
 
@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
     }
 
     // Verify the caller is the same authenticated user
-    const decoded = await admin.auth().verifyIdToken(token);
+    const decoded = await auth.verifyIdToken(token);
     if (decoded.uid !== id) {
       return fail(res, 403, 'Token does not match user ID');
     }
@@ -34,10 +34,10 @@ module.exports = async (req, res) => {
     // Remove all course-related data and any saved grade histories so onboarding resets cleanly
     await Promise.all([
       userRef.set({
-        courses: admin.firestore.FieldValue.delete(),
-        lastTranscriptUpload: admin.firestore.FieldValue.delete(),
-        netId: admin.firestore.FieldValue.delete(),
-        accountLinkingSkipped: admin.firestore.FieldValue.delete(),
+        courses: FieldValue.delete(),
+        lastTranscriptUpload: FieldValue.delete(),
+        netId: FieldValue.delete(),
+        accountLinkingSkipped: FieldValue.delete(),
       }, { merge: true }),
       gradesRef.delete(),
     ]);

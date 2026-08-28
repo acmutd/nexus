@@ -1,5 +1,5 @@
 const axios = require('axios');
-const {admin} = require('../config/firebaseAdmin.js');
+const {db} = require('../../config/firebaseAdmin.js');
 // require('dotenv').config();
 
 module.exports = async (req, res) => {
@@ -17,8 +17,7 @@ module.exports = async (req, res) => {
             });
         }
 
-        const userQuery = await admin
-            .firestore()
+        const userQuery = await db
             .collection('users')
             .where('discordId', '==', discordId)
             .get();

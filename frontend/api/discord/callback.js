@@ -1,5 +1,5 @@
 const axios = require('axios');
-const {admin} = require('../config/firebaseAdmin.js');
+const {db, FieldValue} = require('../config/firebaseAdmin.js');
 
 // require('dotenv').config()
 
@@ -110,7 +110,7 @@ module.exports = async (req, res) => {
         // Linking only for link mode (not join_all)
         if (mode === 'link') {
             // Prevent linking the same Discord account to multiple Nexus users
-            const dupSnap = await admin.firestore()
+            const dupSnap = await db
                 .collection('users')
                 .where('discord.id', '==', d.id)
                 .limit(1)
@@ -133,7 +133,7 @@ module.exports = async (req, res) => {
                 }
             }
 
-            const userRef = admin.firestore().collection('users').doc(uid);
+            const userRef = db.collection('users').doc(uid);
             await userRef.set(
                 {
                     discord: {
@@ -142,9 +142,9 @@ module.exports = async (req, res) => {
                         globalName: d.global_name ?? null,
                         avatarHash: d.avatar ?? null,
                         avatarUrl: avatarUrl,
-                        linkedAt: admin.firestore.FieldValue.serverTimestamp(),
+                        linkedAt: FieldValue.serverTimestamp(),
                     },
-                    lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
+                    lastUpdated: FieldValue.serverTimestamp(),
                 },
                 {merge: true}
             );

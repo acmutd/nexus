@@ -1,4 +1,4 @@
-const { admin, db } = require('./config/firebaseAdmin');
+const { auth, db } = require('./config/firebaseAdmin');
 const axios = require('axios');
 const { DISCORD_BOT_URL } = process.env;
 
@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
     const { id, token, courses = [], meta = {} } = req.body || {};
     if (!id || !token) return fail(res, 400, 'Missing required fields');
 
-    const decoded = await admin.auth().verifyIdToken(token);
+    const decoded = await auth.verifyIdToken(token);
     if (decoded.uid !== id) return fail(res, 403, 'Token does not match user');
 
     // Save courses + meta
