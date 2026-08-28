@@ -1,7 +1,7 @@
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { randomUUID } from 'crypto';
-import axios from 'axios';
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+const { randomUUID } = require('crypto');
+const axios = require('axios');
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
@@ -30,7 +30,7 @@ async function resolveDocumentId(courseId, docName, providedDocId) {
   return randomUUID();
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
   try {

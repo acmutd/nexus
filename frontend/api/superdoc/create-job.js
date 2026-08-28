@@ -1,9 +1,9 @@
-import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
-import { randomUUID } from 'crypto';
+const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+const { SQSClient, SendMessageCommand } = require('@aws-sdk/client-sqs');
+const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
+const { DynamoDBDocumentClient, PutCommand } = require('@aws-sdk/lib-dynamodb');
+const { randomUUID } = require('crypto');
 
 const s3 = new S3Client({ region: process.env.AWS_REGION, credentials: {
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -42,7 +42,7 @@ async function enqueueMergeJob({ jobId, documentId, pdfUrl, courseId }) {
   });
   return sqs.send(command);
 }
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
   try {

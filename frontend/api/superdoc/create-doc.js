@@ -1,4 +1,4 @@
-import axios from 'axios'
+const axios = require('axios')
 
 const getUrl = (endpoint) => {
     const base = process.env.SUPERDOC_LAMBDA_URL || 'http://localhost:8000';
@@ -6,7 +6,7 @@ const getUrl = (endpoint) => {
 };
 
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
     try {

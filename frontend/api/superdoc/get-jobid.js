@@ -11,8 +11,8 @@
 // terminal value (e.g. 'completed' / 'failed') as set by your merge
 // worker when it updates the row.
 
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
+const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
+const { DynamoDBDocumentClient, GetCommand } = require('@aws-sdk/lib-dynamodb');
 
 const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({
   region: process.env.AWS_REGION,
@@ -24,7 +24,7 @@ const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({
 
 const JOBS_TABLE = process.env.SUPERDOC_JOBS_TABLE || 'superdoc-jobs';
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).send('Method Not Allowed');
 
   try {
