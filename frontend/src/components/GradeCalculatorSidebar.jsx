@@ -11,7 +11,10 @@ import axios from 'axios';
 const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propUserCourses, refreshTrigger, lastSavedGrade }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < 768;
+  });
   const [userCourses, setUserCourses] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [hoveredCourseId, setHoveredCourseId] = useState(null);
