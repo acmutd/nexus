@@ -212,24 +212,38 @@ const GradeCalculator = () => {
 
         setDriverObj(driverInstance);
 
-        let resizeRaf;
-        const handleResize = () => {
-            cancelAnimationFrame(resizeRaf);
-            resizeRaf = requestAnimationFrame(() => {
+       let refreshRaf;
+        const scheduleRefresh = () => {
+            cancelAnimationFrame(refreshRaf);
+            refreshRaf = requestAnimationFrame(() => {
                 if (!driverInstance.isActive || !driverInstance.isActive()) return;
                 const activeStep = driverInstance.getActiveStep ? driverInstance.getActiveStep() : null;
                 const selector = activeStep?.element;
                 if (typeof selector === 'string') {
-                    prepareHighlight(selector);
+                    const radius = radiusMap[selector] ?? 8;
+                    setHighlightRadius(radius);
                 }
-                setTimeout(() => driverInstance.refresh(), 360);
+                driverInstance.refresh();
             });
         };
-        window.addEventListener('resize', handleResize);
-
+ 
+        window.addEventListener('resize', scheduleRefresh);
+        window.addEventListener('orientationchange', scheduleRefresh);
+        window.addEventListener('scroll', scheduleRefresh, true);
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', scheduleRefresh);
+            window.visualViewport.addEventListener('scroll', scheduleRefresh);
+        }
+ 
         return () => {
-            window.removeEventListener('resize', handleResize);
-            cancelAnimationFrame(resizeRaf);
+            window.removeEventListener('resize', scheduleRefresh);
+            window.removeEventListener('orientationchange', scheduleRefresh);
+            window.removeEventListener('scroll', scheduleRefresh, true);
+            if (window.visualViewport) {
+                window.visualViewport.removeEventListener('resize', scheduleRefresh);
+                window.visualViewport.removeEventListener('scroll', scheduleRefresh);
+            }
+            cancelAnimationFrame(refreshRaf);
         };
     }, []); 
     
