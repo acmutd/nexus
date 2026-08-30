@@ -1,502 +1,1422 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { HiChevronLeft, HiChevronRight, HiCalculator, HiMenu, HiEye, HiX, HiChevronRight as HiChevronRightSmall } from 'react-icons/hi';
-import { motion, AnimatePresence } from 'framer-motion';
-import { getFirebaseAuth, getFirebaseFirestore } from '../firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import React, { useState, useEffect, useRef } from "react";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import Modal from '@mui/material/Modal';
+import Backdrop from '@mui/material/Backdrop';
+import { AnimatePresence, motion } from "framer-motion";
+import axios from "axios";
+import { getFirebaseAuth, getFirebaseFirestore } from '../firebase.js';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
-import { useMobile } from '../context/mobileContext';
-import axios from 'axios';
+import GradeCalculatorSidebar from '../components/GradeCalculatorSidebar.jsx'
+import { HiTrash, HiCheckCircle, HiX, HiChevronDown, HiPlus, HiOutlineSave, HiQuestionMarkCircle, HiExclamationCircle, HiPencil } from 'react-icons/hi'; 
+import Fade from "@mui/material/Fade";
+import Button from "../components/Button.jsx";
+import { useMobile } from "../context/mobileContext.jsx";
+import SimpleBar from 'simplebar-react';
+import { useLocation } from 'react-router-dom';
 
-const GradeCalculatorSidebar = ({ onToggle, onNewCalculation, userCourses: propUserCourses, refreshTrigger, lastSavedGrade }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [userCourses, setUserCourses] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [hoveredCourseId, setHoveredCourseId] = useState(null);
-  const [selectedCourseId, setSelectedCourseId] = useState(null);
-  const [courseHistories, setCourseHistories] = useState({});
-  const [loadingHistories, setLoadingHistories] = useState({});
-  const { isMobile } = useMobile();
-
-  const coursesToUse = propUserCourses && propUserCourses.length > 0 ? propUserCourses : userCourses;
-
-  useEffect(() => {
-    const auth = getFirebaseAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-        fetchUserCourses(user.uid);
-      }
+const GradeCalculator = () => {
+    const {isScreenMedium} = useMobile()
+    const {isMobile} = useMobile()
+    
+    const makeCategory = () => ({
+        id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`,
+        name: "",
+        weight: "",
+        assignments: [{ assignment: "", grade: "", weight: "" }],
+        isOpen: true
     });
 
-    return () => unsubscribe();
-  }, []);
+    const [categories, setCategories] = useState([ makeCategory() ]);
+    const [classGrade, setClassGrade] = useState('');
+    const [overallGrade, setOverallGrade] = useState(0);
+    const [remainingWeight, setRemainingWeight] = useState(100);
+    const [categoryGrades, setCategoryGrades] = useState([]);
+    const [requiredGrade, setRequiredGrade] = useState(null);
+    const [error, setError] = useState('');
 
-  useEffect(() => {
-    if (onToggle) {
-      onToggle(isCollapsed);
-    }
-  }, [isCollapsed, onToggle]);
+    const [infoOpen, setInfoOpen] = useState(false)
+    const [hasSeenInstructions, setHasSeenInstructions] = useState(false)
+    const infoRef = useRef(null)
+    const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+    const [saveTitle, setSaveTitle] = useState('');
+    const [courses, setCourses] = useState([]);
+    const [selectedCourseForSave, setSelectedCourseForSave] = useState('');
+    const [currentUser, setCurrentUser] = useState(null);
+    const [warningOpen, setWarningOpen] = useState(false);
 
-  // OPTIMISTIC UPDATE: Add new grade immediately without waiting for fetch
-  useEffect(() => {
-    if (lastSavedGrade && currentUser) {
-      const { courseId, gradeData } = lastSavedGrade;
-      
-      // Immediately add the new grade to the UI
-      setCourseHistories(prev => {
-        const existingHistories = prev[courseId] || [];
-        
-        // Check if this is an update (grade already exists)
-        const existingIndex = existingHistories.findIndex(h => h.id === gradeData.id);
-        
-        let updatedHistories;
-        if (existingIndex >= 0) {
-          // Update existing grade
-          updatedHistories = [...existingHistories];
-          updatedHistories[existingIndex] = gradeData;
-        } else {
-          // Add new grade at the beginning (most recent)
-          updatedHistories = [gradeData, ...existingHistories];
-        }
-        
-        return {
-          ...prev,
-          [courseId]: updatedHistories
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [editingGradeId, setEditingGradeId] = useState(null);
+    const [sidebarRefreshTrigger, setSidebarRefreshTrigger] = useState(0);
+    const [lastSavedGrade, setLastSavedGrade] = useState(null);
+
+    const [showSuccessNotification, setShowSuccessNotification] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
+    const [validationErrors, setValidationErrors] = useState({});
+    const [isSaving, setIsSaving] = useState(false);
+    const [driverObj, setDriverObj] = useState(null);
+
+    const location = useLocation();
+
+    const handleSidebarToggle = (collapsed) => {
+        setSidebarCollapsed(collapsed);
+    };
+
+    useEffect(() => {
+        const radiusMap = {
+            '[data-tour="category-card"]': 8,
+            '[data-tour="category-weight"]': 6,
+            '[data-tour="assignment-row"]': 8,
+            '[data-tour="overall-grade"]': 8,
+            '[data-tour="desired-grade"]': 6,
+            '[data-tour="grade-needed"]': 12,
+            '[data-tour="add-category"]': 8,
+            '[data-tour="save-calculation"]': 8,
+            '[data-tour="help-button"]': 9999,
         };
-      });
-      
-      // Then fetch to ensure data is synced (with shorter delay)
-      setTimeout(() => {
-        fetchCourseHistory(courseId, true);
-      }, 200);
-    }
-  }, [lastSavedGrade]);
 
-  // Original refresh trigger (as backup)
-  useEffect(() => {
-    if (refreshTrigger && currentUser) {
-      // Only clear and refetch if we don't have lastSavedGrade (fallback)
-      if (!lastSavedGrade) {
-        setCourseHistories({});
-        
-        const activeCourse = selectedCourseId || hoveredCourseId;
-        if (activeCourse) {
-          fetchCourseHistory(activeCourse, true);
+        const setHighlightRadius = (radius) => {
+            requestAnimationFrame(() => {
+                document.querySelectorAll('#driver-page-overlay rect, .driver-stage-no-animation rect').forEach(rect => {
+                    rect.setAttribute('rx', radius);
+                    rect.setAttribute('ry', radius);
+                });
+            });
+        };
+
+        const prepareHighlight = (selector) => {
+            const radius = radiusMap[selector] ?? 8;
+            const el = document.querySelector(selector);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+            }
+            setTimeout(() => setHighlightRadius(radius), 350);
+        };
+
+        const driverInstance = driver({
+            showProgress: true,
+            showButtons: ['next', 'previous', 'close'],
+            popoverClass: 'grade-calc-driver-theme',
+            stagePadding: 4,
+            onPopoverRender: (popover) => {
+                if (!isMobile) return;
+                const el = popover.wrapper;
+                if (!el) return;
+                requestAnimationFrame(() => {
+                    el.style.left = '50%';
+                    el.style.right = 'auto';
+                    el.style.transform = 'translateX(-50%)';
+                    el.style.maxWidth = '90vw';
+                    el.style.width = '90vw';
+                });
+            },
+            steps: [
+                {
+                    element: '[data-tour="category-card"]',
+                    popover: {
+                        title: 'Grade Categories',
+                        description: 'Each category represents a graded section of your course (e.g. Homework, Exams). Give it a name and set its weight percentage.',
+                        side: 'bottom',
+                    },
+                    onHighlightStarted: () => prepareHighlight('[data-tour="category-card"]'),
+                },
+                {
+                    element: '[data-tour="category-weight"]',
+                    popover: {
+                        title: 'Category Weight',
+                        description: 'Enter how much this category counts toward your final grade as a percentage. IMPORTANT: Make sure you leave one category out (e.g. Final Exam), whose weight will show under "Remaining Assignment Weight." ',
+                        side: 'bottom',
+                    },
+                    onHighlightStarted: () => prepareHighlight('[data-tour="category-weight"]'),
+                },
+                {
+                    element: '[data-tour="assignment-row"]',
+                    popover: {
+                        title: 'Assignments',
+                        description: 'Enter each assignment\'s name, the score you received, and the total points possible (e.g. 25 / 30).',
+                        side: 'top',
+                    },
+                    onHighlightStarted: () => prepareHighlight('[data-tour="assignment-row"]'),
+                },
+                {
+                    element: '[data-tour="overall-grade"]',
+                    popover: {
+                        title: 'Your Current Grade',
+                        description: 'This updates live as you enter grades — it shows your weighted overall grade across all categories.',
+                        side: 'top',
+                    },
+                    onHighlightStarted: () => prepareHighlight('[data-tour="overall-grade"]'),
+                },
+                {
+                    element: '[data-tour="desired-grade"]',
+                    popover: {
+                        title: 'Desired Final Grade',
+                        description: 'Enter the final grade you\'re aiming for. The calculator will tell you what score you need on your remaining work.',
+                        side: 'top',
+                    },
+                    onHighlightStarted: () => prepareHighlight('[data-tour="desired-grade"]'),
+                },
+                {
+                    element: '[data-tour="grade-needed"]',
+                    popover: {
+                        title: 'Grade Needed on Remaining Category',
+                        description: 'Once all other information is entered, this will show you what score you need on that category you left out to earn your Desired Class Grade.',
+                        side: 'top',
+                    },
+                    onHighlightStarted: () => prepareHighlight('[data-tour="grade-needed"]'),
+                },
+                {
+                    element: '[data-tour="add-category"]',
+                    popover: {
+                        title: 'Add a Category',
+                        description: 'Click here to add another grading category. You can have up to 10 categories.',
+                        side: 'top',
+                    },
+                    onHighlightStarted: () => prepareHighlight('[data-tour="add-category"]'),
+                },
+                {
+                    element: '[data-tour="save-calculation"]',
+                    popover: {
+                        title: 'Save Your Calculation',
+                        description: 'Save this calculation to a course in your schedule so you can come back to it anytime.',
+                        side: 'top',
+                    },
+                    onHighlightStarted: () => prepareHighlight('[data-tour="save-calculation"]'),
+                },
+                {
+                    element: '[data-tour="help-button"]',
+                    popover: {
+                        title: 'Replay Tutorial',
+                        description: 'Click here at any time to replay this tutorial.',
+                        side: 'left',
+                    },
+                    onHighlightStarted: () => prepareHighlight('[data-tour="help-button"]'),
+                },
+            ],
+            onDestroyed: async () => {
+                localStorage.setItem('gradeCalc_hasSeenInstructions', 'true');
+                if (currentUser) {
+                    try {
+                        const db = getFirebaseFirestore();
+                        await updateDoc(doc(db, 'users', currentUser.uid), {
+                            hasSeenGradeCalcInstructions: true,
+                        });
+                    } catch (error) {
+                        console.error('Error marking tutorial as seen:', error);
+                    }
+                }
+            },
+        });
+
+        setDriverObj(driverInstance);
+
+        let resizeRaf;
+        const handleLayoutChange = () => {
+            cancelAnimationFrame(resizeRaf);
+            resizeRaf = requestAnimationFrame(() => {
+                if (!driverInstance.isActive || !driverInstance.isActive()) return;
+                const activeStep = driverInstance.getActiveStep ? driverInstance.getActiveStep() : null;
+                const selector = activeStep?.element;
+                if (typeof selector === 'string') {
+                    prepareHighlight(selector);
+                }
+                setTimeout(() => driverInstance.refresh(), 360);
+            });
+        };
+
+        window.addEventListener('resize', handleLayoutChange);
+        window.addEventListener('orientationchange', handleLayoutChange);
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', handleLayoutChange);
+            window.visualViewport.addEventListener('scroll', handleLayoutChange);
         }
-      }
-    }
-  }, [refreshTrigger]);
 
-  const fetchUserCourses = async (uid) => {
-    try {
-      const db = getFirebaseFirestore();
-      const userDoc = await getDoc(doc(db, 'users', uid));
-      
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        const courses = userData.courses || [];
-        
-        const coursesWithIds = courses
-          .map((course, index) => {
-            const fallbackKey = `course-${index}-${Date.now()}`;
-            
-            if (!course || !course.course_id || typeof course.course_id !== 'string') {
-              console.log('Invalid course at index', index, ':', course);
-              return {
-                courseCode: 'Unknown',
-                courseNumber: 'Unknown',
-                instructor: 'Unknown',
-                courseId: fallbackKey,
-                displayName: `Unknown Course ${index + 1}`,
-                uniqueKey: fallbackKey
-              };
+        return () => {
+            window.removeEventListener('resize', handleLayoutChange);
+            window.removeEventListener('orientationchange', handleLayoutChange);
+            if (window.visualViewport) {
+                window.visualViewport.removeEventListener('resize', handleLayoutChange);
+                window.visualViewport.removeEventListener('scroll', handleLayoutChange);
             }
-
-            const parts = course.course_id.split('-');
-            
-            if (parts.length >= 3) {
-              const courseCode = parts[0] || 'Unknown';
-              const courseNumber = parts[1] || 'Unknown';
-              const instructor = parts.slice(2).join('-') || 'Unknown';
-              
-              return {
-                courseCode,
-                courseNumber,
-                instructor,
-                courseId: course.course_id,
-                displayName: `${courseCode} ${courseNumber} - ${instructor}`,
-                uniqueKey: `${course.course_id}-${index}`
-              };
-            } else {
-              return {
-                courseCode: 'Unknown',
-                courseNumber: 'Unknown',
-                instructor: 'Unknown',
-                courseId: course.course_id,
-                displayName: course.course_id,
-                uniqueKey: `${course.course_id}-${index}`
-              };
-            }
-          });
-        
-        setUserCourses(coursesWithIds);
-      }
-    } catch (error) {
-      console.error('Error fetching user courses:', error);
-    }
-  };
-
-  const fetchCourseHistory = async (courseId, forceRefresh = false) => {
-    // Skip if already loaded and not forcing refresh
-    if (!forceRefresh && (courseHistories[courseId] || loadingHistories[courseId])) {
-      return;
-    }
-
-    if (!currentUser) {
-      return;
-    }
-
-    setLoadingHistories(prev => ({ ...prev, [courseId]: true }));
-
-    try {
-      // Use your existing API endpoint
-      const response = await axios.get(
-        `/api/grades/getGradesByCourse/${currentUser.uid}/${courseId}`
-      );
-      
-      const histories = response.data || [];
-      
-      // Map the histories to the format we need
-      const formattedHistories = histories.map(grade => ({
-        id: grade.id,
-        title: grade.saveTitle || 'Untitled Calculation',
-        timestamp: grade.timestamp,
-        courseId: grade.courseId,
-        currentGrade: grade.currentGrade,
-        desiredGrade: grade.desiredGrade,
-        requiredGrade: grade.requiredGrade,
-        categories: grade.categories
-      }));
-
-      setCourseHistories(prev => ({
-        ...prev,
-        [courseId]: formattedHistories
-      }));
-    } catch (error) {
-      console.error('Error fetching course history:', error);
-      // Set empty array on error
-      setCourseHistories(prev => ({
-        ...prev,
-        [courseId]: []
-      }));
-    } finally {
-      setLoadingHistories(prev => ({ ...prev, [courseId]: false }));
-    }
-  };
-
-  const handleCourseHover = (courseId) => {
-    setHoveredCourseId(courseId);
-    if (!courseHistories[courseId]) {
-      fetchCourseHistory(courseId);
-    }
-  };
-
-  const handleCourseClick = (courseId) => {
-    if (selectedCourseId === courseId) {
-      setSelectedCourseId(null);
-    } else {
-      setSelectedCourseId(courseId);
-      if (!courseHistories[courseId]) {
-        fetchCourseHistory(courseId);
-      }
-    }
-  };
-
-  const handleHistoryClick = (gradeId, courseId) => {
-    // Navigate to grade calculator with edit parameters
-    navigate(`/grade-calculator?edit=${gradeId}&courseId=${courseId}`);
-  };
-
-  const handleViewAllHistories = (courseId) => {
-    navigate(`/grade-history/${courseId}`);
-  };
-
-  const handleNewCalculationClick = () => {
-    if (onNewCalculation) {
-      onNewCalculation();
-    } else {
-      // Clear query params for new calculation
-      navigate('/grade-calculator');
-    }
-  };
-
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-    onToggle(!isCollapsed);
-    if (!isCollapsed) {
-      setHoveredCourseId(null);
-      setSelectedCourseId(null);
-    }
-  };
-  const MOBILE_SIDEBAR_W = 185; 
-  const sidebarVariants = {
-  expanded: { width: isMobile ? MOBILE_SIDEBAR_W : 256 },
-  collapsed: { width: 64 },
-};
-
-  const activeCourseId = selectedCourseId || hoveredCourseId;
-  const showHistoryPanel = activeCourseId && !isCollapsed;
-
-  // Helper function to format timestamp
-  const formatTimestamp = (timestamp) => {
-    if (!timestamp) return 'Unknown date';
+            cancelAnimationFrame(resizeRaf);
+        };
+    }, []); 
     
-    try {
-      const date = new Date(timestamp);
-      return date.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    } catch (error) {
-      return 'Unknown date';
-    }
-  };
+    useEffect(() => {
+        if (!driverObj || !driverObj.isActive || !driverObj.isActive()) return;
+        const raf1 = requestAnimationFrame(() => {
+            const raf2 = requestAnimationFrame(() => {
+                driverObj.refresh();
+            });
+            return () => cancelAnimationFrame(raf2);
+        });
+        return () => cancelAnimationFrame(raf1);
+    }, [sidebarCollapsed, driverObj]);
 
-  return (
-    <>
-      {!isCollapsed && isMobile && !showHistoryPanel && (
-  <div 
-    className='fixed w-screen h-screen backdrop-brightness-50 z-39 inset-0'
-    onClick={toggleSidebar}
-  />
-)}
-      
-      <motion.aside
-        className={`shadow-md flex flex-col h-screen fixed left-0 top-0 pt-16 overflow-visible z-40`}
-        initial="expanded"
-        animate={isCollapsed ? "collapsed" : "expanded"}
-        variants={sidebarVariants}
-        transition={{ type: "tween", duration: 0.4 }}
-        style={{
-          backgroundImage: isMobile && isCollapsed 
-            ? 'linear-gradient(transparent)' 
-            : isCollapsed 
-            ? 'linear-gradient(#002966, #002966)' 
-            : 'linear-gradient(#002966, #001433)'
-        }}
-      >
-        {!isMobile && !showHistoryPanel && (
-          <button
-            onClick={toggleSidebar}
-            className="absolute top-24 -right-6 bg-nexus600 text-white p-2 rounded-r-md z-50 shadow-md cursor-pointer"
-          >
-            {isCollapsed ? <HiChevronRight size={20} /> : <HiChevronLeft size={20} />}
-          </button>
-        )}
-        
-        <AnimatePresence>
-          {!isCollapsed && (
-            <motion.div
-              className="flex flex-col flex-1 overflow-y-auto p-4 overflow-x-hidden"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="flex-1">
-                <h2 className={`font-bold text-nexus100 my-3 ${isMobile ? 'text-lg px-8' : 'text-2xl my-4'}`}>
-                  {isMobile ? 'Grades' : 'Grade Calculator'}
-                </h2>
+    useEffect(() => {
+        if (!driverObj || !currentUser) return;
+        const hasSeen = localStorage.getItem('gradeCalc_hasSeenInstructions');
+        if (!hasSeen) {
+            setTimeout(() => driverObj.drive(), 500);
+        }
+    }, [driverObj, currentUser]);
+   
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if(infoRef.current && !infoRef.current.contains(event.target)) {
+                if (infoOpen) {
+                    localStorage.setItem('gradeCalc_hasSeenInstructions', 'true');
+                }
+                setInfoOpen(false)
+                setWarningOpen(false)
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => {document.removeEventListener("mousedown", handleClickOutside)}
+    }, [])
+
+
+    useEffect(() => {
+        const auth = getFirebaseAuth();
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setCurrentUser(user);
+                fetchUserCourses(user.uid);
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    useEffect(() => {
+        const loadEditData = async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const gradeId = urlParams.get('edit');
+            const courseId = urlParams.get('courseId');
+
+            if (gradeId && courseId && currentUser) {
+                try {
+                    const response = await axios.get(
+                        `/api/grades/getGradesByCourse/${currentUser.uid}/${courseId}`
+                    );
+
+                    const gradeToEdit = response.data.find(g => g.id === gradeId);
+
+                    if (gradeToEdit) {
+                        setEditMode(true);
+                        setEditingGradeId(gradeId);
+                        setSelectedCourseForSave(courseId);
+                        setSaveTitle(gradeToEdit.saveTitle);
+                        setClassGrade(gradeToEdit.desiredGrade);
+
+                        const loadedCategories = gradeToEdit.categories.map(cat => ({
+                            id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`,
+                            name: cat.categoryName,
+                            weight: cat.categoryWeight,
+                            assignments: cat.assignments.map(asn => ({
+                                assignment: asn.assignmentName,
+                                grade: asn.grade,
+                                weight: asn.weight
+                            })),
+                            isOpen: true
+                        }));
+
+                        setCategories(loadedCategories);
+                    }
+                } catch (error) {
+                    console.error('Error loading grade for editing:', error);
+                    setError('Failed to load grade data for editing');
+                }
+            }
+        };
+
+        loadEditData();
+    }, [currentUser, location.search]);
+
+    const fetchUserCourses = async (uid) => {
+        try {
+            const db = getFirebaseFirestore();
+            const userDoc = await getDoc(doc(db, 'users', uid));
+            
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                const userCourses = userData.courses || [];
                 
-                <div className="mb-6">
-                  <h3 className="text-sm font-semibold text-nexus300 mb-3 px-2">Your Courses</h3>
-                  
-                  <div className="space-y-1">
-                    {coursesToUse.length > 0 ? (
-                      coursesToUse.map((course, index) => (
-                        <div
-                          key={course.uniqueKey || `sidebar-course-${index}`}
-                          className="relative"
-                          onMouseEnter={() => !isMobile && handleCourseHover(course.courseId)}
-                          onMouseLeave={() => !isMobile && setHoveredCourseId(null)}
-                        >
-                          <button
-                            onClick={() => handleCourseClick(course.courseId)}
-                            className={`w-full text-left px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-between ${
-                              selectedCourseId === course.courseId
-                                ? 'bg-nexus500 text-white'
-                                : hoveredCourseId === course.courseId
-                                ? 'bg-nexus600 text-white'
-                                : 'text-nexus200 hover:bg-nexus700 hover:text-white'
-                            }`}
-                          >
-                            <span className="truncate">{course.displayName}</span>
-                            {(selectedCourseId === course.courseId || hoveredCourseId === course.courseId) && (
-                              <HiChevronRightSmall className="flex-shrink-0 ml-2" size={16} />
-                            )}
-                          </button>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="px-3 py-2 text-sm text-nexus300">
-                        No courses found
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
+                const coursesWithIds = userCourses
+                    .map((course, index) => {
+                        const fallbackKey = `course-calc-${index}-${Date.now()}`;
+                        
+                        if (!course || !course.course_id || typeof course.course_id !== 'string') {
+                            console.log('Invalid course at index', index, ':', course);
+                            return {
+                                courseCode: 'Unknown',
+                                courseNumber: 'Unknown',
+                                instructor: 'Unknown',
+                                courseId: fallbackKey,
+                                displayName: `Unknown Course ${index + 1}`,
+                                uniqueKey: fallbackKey
+                            };
+                        }
 
-              <div className="absolute bottom-4 left-0 right-0 px-2">
-                <button
-                  onClick={handleNewCalculationClick}
-                  className={`cursor-pointer w-full rounded-lg bg-nexus600 hover:bg-nexus500 text-white font-semibold transition-colors duration-200
-                    ${isMobile ? 'py-2 px-2 text-xs' : 'p-3'}
-                  `}
-                >
-                  {isMobile ? (
-                    <div className="flex items-center gap-2 justify-center">
-                      <HiCalculator size={20} className="flex-shrink-0" />
-                      <span className="flex flex-col leading-tight text-left">
-                        <span>Add New</span>
-                        <span>Calculation</span>
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center">
-                      <HiCalculator className="mr-2" />
-                      Add New Calculation
-                    </div>
-                  )}
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                        const parts = course.course_id.split('-');
+                        
+                        if (parts.length >= 3) {
+                            const courseCode = parts[0] || 'Unknown';
+                            const courseNumber = parts[1] || 'Unknown';
+                            const instructor = parts.slice(2).join('-') || 'Unknown';
+                            
+                            return {
+                                courseCode,
+                                courseNumber,
+                                instructor,
+                                courseId: course.course_id,
+                                displayName: `${courseCode} ${courseNumber} - ${instructor}`,
+                                uniqueKey: `${course.course_id}-calc-${index}`
+                            };
+                        } else {
+                            return {
+                                courseCode: 'Unknown',
+                                courseNumber: 'Unknown',
+                                instructor: 'Unknown',
+                                courseId: course.course_id,
+                                displayName: course.course_id,
+                                uniqueKey: `${course.course_id}-calc-${index}`
+                            };
+                        }
+                    });
+                
+                setCourses(coursesWithIds);
+            }
+        } catch (error) {
+            console.error('Error fetching user courses:', error);
+            setError('Failed to load your courses.');
+        }
+    };
 
-        <AnimatePresence>
-          <div className="absolute mt-4">
-            {isMobile && (
-              <button 
-                className="p-3 rounded-full cursor-pointer"
-                title="Toggle Menu"
-                onClick={() => setIsCollapsed(!isCollapsed)}
-              >
-                <HiMenu className='text-nexus100' size={30} />
-              </button>
-            )}
-          </div>
-        </AnimatePresence>
-      </motion.aside>
+    useEffect(() => {
+        const totalWeight = categories.reduce((sum, category) => {
+            return sum + (parseFloat(category.weight) || 0);
+        }, 0);
+        setRemainingWeight(100 - totalWeight);
+    
+        const currentGrade = calculateOverallGrade();
+        setOverallGrade(currentGrade); 
+    
+        if (classGrade) {
+            const required = calculateRequiredGrade(
+                parseFloat(currentGrade),
+                remainingWeight,
+                parseFloat(classGrade)
+            );
+            setRequiredGrade(required);
+        }
+    
+        categories.forEach((category, index) => {
+            const grade = calculateCategoryGrade(category, index);
+            updateCategoryGrade(index, grade);
+        });
+    }, [categories, classGrade]);
 
-      {/* History Panel */}
-      <AnimatePresence>
-        {showHistoryPanel && (
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.2 }}
-            className={`fixed top-16 h-[calc(100vh-4rem)] bg-nexus700 shadow-xl overflow-visible z-30
-              ${isMobile ? 'left-[175px] w-[calc(100vw-175px)]' : 'left-64 w-80'}
-            `}
-            onMouseEnter={() => !isMobile && setHoveredCourseId(activeCourseId)}
-            onMouseLeave={() => !isMobile && !selectedCourseId && setHoveredCourseId(null)}
-          >
-            {!isMobile && (
-              <button
-                onClick={toggleSidebar}
-                className="absolute top-8 -right-6 bg-nexus600 text-white p-2 rounded-r-md z-50 shadow-md cursor-pointer"
-              >
-                {isCollapsed ? <HiChevronRight size={20} /> : <HiChevronLeft size={20} />}
-              </button>
-            )}
-            <div className="p-4 h-full overflow-y-auto relative">
-              {isMobile &&(
-              <button
-                onClick={() => {
-                  setSelectedCourseId(null);
-                  setHoveredCourseId(null);
-                }}
-                className="absolute top-5 right-1.5 text-nexus300 hover:text-white transition-colors cursor-pointer"
-                title="Close History"
-              >
-                <HiX size={20} />
-              </button>
-                  )}
-              <h3 className="text-lg font-semibold text-white mb-1">
-                Calculation History
-              </h3>
-              <p className="text-sm text-nexus300 mb-4">
-                {coursesToUse.find(c => c.courseId === activeCourseId)?.displayName}
-              </p>
+    const updateCategoryGrade = (index, grade) => {
+        setCategoryGrades(prevGrades => {
+            const newGrades = [...prevGrades];
+            newGrades[index] = grade !== 'N/A' ? `${grade}%` : 'N/A';
+            return newGrades;
+        });
+    };
 
-              {loadingHistories[activeCourseId] ? (
-                <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-                </div>
-              ) : courseHistories[activeCourseId]?.length > 0 ? (
-                <div className="space-y-2 mb-4">
-                  {courseHistories[activeCourseId].map((history) => (
-                    <motion.button
-                      key={history.id}
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.2 }}
-                      onClick={() => handleHistoryClick(history.id, activeCourseId)}
-                      className="w-full text-left p-3 rounded-lg bg-nexus600 hover:bg-nexus500 transition-colors duration-200 group"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1 min-w-0">
-                          <p className="text-white font-medium truncate group-hover:text-nexus100">
-                            {history.title}
-                          </p>
-                          {history.timestamp && (
-                            <p className="text-xs text-nexus300 mt-1">
-                              {formatTimestamp(history.timestamp)}
-                            </p>
-                          )}
-                          {history.currentGrade !== undefined && history.currentGrade !== null && (
-                            <p className="text-xs text-nexus200 mt-1">
-                              Current: {history.currentGrade}%
-                            </p>
-                          )}
-                        </div>
-                        <HiChevronRightSmall 
-                          className="flex-shrink-0 ml-2 text-nexus300 group-hover:text-white" 
-                          size={20} 
-                        />
-                      </div>
-                    </motion.button>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8 text-nexus300">
-                  <p className="text-sm">No calculations yet</p>
-                  <p className="text-xs mt-1">Create your first calculation!</p>
-                </div>
-              )}
+    const calculateCategoryGrade = (category, index) => {
+        const validAssignments = category.assignments.filter(a => 
+          a.grade !== "" && 
+          a.weight !== "" && 
+          !isNaN(parseFloat(a.grade)) && 
+          !isNaN(parseFloat(a.weight))
+        );
+        
+        if (validAssignments.length === 0) return 'N/A';
+    
+        const totalPointsEarned = validAssignments.reduce((sum, assignment) => 
+          sum + (parseFloat(assignment.grade) || 0), 0
+        );
+        
+        const totalPointsPossible = validAssignments.reduce((sum, assignment) => 
+          sum + (parseFloat(assignment.weight) || 0), 0
+        );
+    
+        if (totalPointsPossible > 0) {
+          const percentage = (totalPointsEarned / totalPointsPossible) * 100;
+          return percentage.toFixed(2);
+        }
+    
+        return 'N/A';
+    };
 
-              <div className="pt-4 border-t border-nexus600">
-                <button
-                  onClick={() => handleViewAllHistories(activeCourseId)}
-                  className="w-full flex items-center justify-center p-3 rounded-lg bg-nexus600 hover:bg-nexus500 text-white font-medium transition-colors duration-200"
-                >
-                  <HiEye className="mr-2" />
-                  View All Histories
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  );
+    const getAssignmentPercentage = (grade, weight) => {
+    const g = parseFloat(grade);
+    const w = parseFloat(weight);
+
+    if (isNaN(g) || isNaN(w) || w <= 0) return null;
+    return Math.min(100, ((g / w) * 100).toFixed(2));
+    };
+
+    const calculateRequiredGrade = (currentWeightedGrade, remainingWeight, desiredGrade) => {
+        if (remainingWeight <= 0) return { status: 'not_possible', value: null };
+        
+        const currentWeight = 100 - remainingWeight;
+        const currentWeightDecimal = currentWeight / 100;
+        const remainingWeightDecimal = remainingWeight / 100;
+        
+        const requiredGrade = (
+        (desiredGrade - (currentWeightedGrade * currentWeightDecimal)) / 
+        remainingWeightDecimal
+        );
+        
+        if (requiredGrade < 0) {
+            return { status: 'guaranteed', value: requiredGrade.toFixed(2) };
+        }
+        
+        if (requiredGrade > 100 && requiredGrade <= 120) {
+            return { status: 'extra_credit', value: requiredGrade.toFixed(2) };
+        }
+        
+        if (requiredGrade > 120) {
+            return { status: 'not_possible', value: requiredGrade.toFixed(2) };
+        }
+        
+        return { status: 'achievable', value: requiredGrade.toFixed(2) };
+    };
+
+    const calculateOverallGrade = () => {
+        let weightedTotal = 0;
+        let totalWeight = 0;
+
+        categories.forEach(category => {
+          const categoryWeight = parseFloat(category.weight);
+          if (!categoryWeight || isNaN(categoryWeight)) return;
+
+          const categoryGrade = parseFloat(calculateCategoryGrade(category));
+          
+          if (!isNaN(categoryGrade)) {
+            weightedTotal += (categoryGrade * (categoryWeight / 100));
+            totalWeight += categoryWeight;
+          }
+        });
+
+        if (totalWeight === 0) return '0.00';
+
+        const scaledGrade = (weightedTotal / totalWeight) * 100;
+        
+        return scaledGrade.toFixed(2);
+    };
+
+    const handleCategoryChange = (index, field, value) => {
+        const newCategories = [...categories];
+        newCategories[index][field] = value;
+        setCategories(newCategories);
+    };
+
+    const handleAssignmentChange = (categoryIndex, assignmentIndex, field, value) => {
+        const newCategories = [...categories];
+        newCategories[categoryIndex].assignments[assignmentIndex][field] = value;
+        setCategories(newCategories);
+    };
+
+    const addCategory = () => {
+    if (categories.length >= 10) {
+        setError('Maximum of 10 categories allowed');
+        setTimeout(() => setError(''), 3000);
+        return;
+    }
+    setCategories(prev => [...prev, makeCategory()]);
 };
 
-export default GradeCalculatorSidebar;
+    const addAssignmentRow = (categoryIndex) => {
+        const newCategories = [...categories];
+        newCategories[categoryIndex].assignments.push({ assignment: "", grade: "", weight: "" });
+        setCategories(newCategories);
+    };
+
+   const deleteAssignmentRow = (categoryIndex, assignmentIndex) => {
+        const newCategories = [...categories];
+
+        if (newCategories[categoryIndex].assignments.length > 1) {
+            newCategories[categoryIndex].assignments.splice(assignmentIndex, 1);
+            setCategories(newCategories);
+            
+            const newErrors = {...validationErrors};
+            delete newErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-name`];
+            delete newErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-grade`];
+            delete newErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-weight`];
+            setValidationErrors(newErrors);
+    }
+    };
+
+    const validateFields = () => {
+        const errors = {};
+        
+        categories.forEach((category, catIndex) => {
+            if (!category.name.trim()) {
+                errors[`category-${catIndex}-name`] = true;
+            }
+            
+            if (!category.weight || category.weight === '') {
+                errors[`category-${catIndex}-weight`] = true;
+            }
+            
+            category.assignments.forEach((assignment, asnIndex) => {
+                if (!assignment.assignment.trim()) {
+                    errors[`category-${catIndex}-assignment-${asnIndex}-name`] = true;
+                }
+                if (!assignment.grade || assignment.grade === '') {
+                    errors[`category-${catIndex}-assignment-${asnIndex}-grade`] = true;
+                }
+                if (!assignment.weight || assignment.weight === '') {
+                    errors[`category-${catIndex}-assignment-${asnIndex}-weight`] = true;
+                }
+            });
+        });
+        
+        return errors;
+    };
+
+    const handleSaveGradeHistory = async () => {
+
+        if (isSaving) return; 
+    
+        const errors = validateFields();
+        
+        if (!saveTitle.trim()) {
+            errors['saveTitle'] = true;
+        }
+        
+        if (!selectedCourseForSave) {
+            errors['courseSelection'] = true;
+        }
+        
+        setValidationErrors(errors);
+        
+        if (Object.keys(errors).length > 0) {
+            setError('Please fill in all required fields');
+            return;
+        }
+        
+        setError('');
+        setIsSaving(true);
+        
+        try {
+            const auth = getFirebaseAuth(); 
+            const user = auth.currentUser;
+            
+            if (!user) {
+                setError('Please log in to save your grades');
+                return;
+            }
+
+            const finalGrade = calculateOverallGrade();
+            
+            const gradeHistoryData = {
+                uid: user.uid,
+                courseId: selectedCourseForSave,
+                saveTitle,
+                categories: categories.map(category => ({
+                    categoryName: category.name,
+                    categoryWeight: category.weight,
+                    categoryGrade: categoryGrades[categories.indexOf(category)] || 'N/A',
+                    assignments: category.assignments.map(assignment => ({
+                        assignmentName: assignment.assignment,
+                        grade: assignment.grade,
+                        weight: assignment.weight
+                    }))
+                })),
+                requiredGrade: requiredGrade,
+                currentGrade: finalGrade,
+                desiredGrade: classGrade
+            };
+            
+            let response;
+            let message = '';
+
+            if (editMode && editingGradeId) {
+                gradeHistoryData.gradeId = editingGradeId;
+                message = 'Grade updated successfully!';
+            } else {
+                message = 'Grades saved successfully!';
+            }
+
+            response = await axios.post(
+                '/api/grades/saveGrades',
+                gradeHistoryData
+            );
+            
+            console.log('Grade history saved:', response.data);
+            setSaveDialogOpen(false);
+            setError('');
+            
+            setEditMode(false);
+            setEditingGradeId(null);
+
+            window.history.replaceState({}, '', window.location.pathname);
+            
+            setSuccessMessage(message);
+            setShowSuccessNotification(true);
+
+            const gradeId = editingGradeId || response.data.gradeId || Date.now().toString();
+            setLastSavedGrade({
+                courseId: selectedCourseForSave,
+                gradeData: {
+                    id: gradeId,
+                    title: saveTitle,
+                    timestamp: Date.now(),
+                    courseId: selectedCourseForSave,
+                    currentGrade: finalGrade,
+                    desiredGrade: classGrade,
+                    requiredGrade: requiredGrade,
+                    categories: gradeHistoryData.categories
+                }
+            });
+
+            setTimeout(() => {
+                setSidebarRefreshTrigger(prev => prev + 1);
+            }, 500);
+            setTimeout(() => {
+                setShowSuccessNotification(false);
+            }, 3000);
+            
+        } catch (error) {
+            console.error('Error saving grade history:', error);
+            setError('Failed to save grades. Please try again.');
+        } finally {
+            setIsSaving(false); 
+        }
+
+    };
+
+    const handleNewCalculation = () => {
+        const hasData = categories.some(cat => 
+            cat.name || 
+            cat.weight || 
+            cat.assignments.some(a => a.assignment || a.grade || a.weight)
+        ) || classGrade;
+
+        resetCalculator();
+    };
+
+    const resetCalculator = () => {
+        setCategories([ makeCategory() ]);
+        setClassGrade('');
+        setOverallGrade(0);
+        setRemainingWeight(100);
+        setCategoryGrades([]);
+        setRequiredGrade(null);
+        setError('');
+        setSaveTitle('');
+        setSelectedCourseForSave('');
+        setEditMode(false);
+        setEditingGradeId(null);
+        window.history.replaceState({}, '', window.location.pathname);
+    };
+
+    return (
+        <>
+        <style>{`
+            /* Nexus theme for the Grade Calculator driver.js walkthrough */
+
+            /* --- Popover shell --- */
+            .grade-calc-driver-theme.driver-popover {
+                background: linear-gradient(180deg, #001433 0%, #002966 50%, #001433 100%);
+                border: 2px solid #3385FF; /* nexus-400 */
+                border-radius: 0.5rem;
+                box-shadow: 0 10px 30px rgba(0, 20, 51, 0.5);
+                font-family: 'titilliumWeb-Regular', sans-serif;
+                padding: 18px 20px;
+                max-width: 360px;
+            }
+
+            /* --- Title --- */
+            .grade-calc-driver-theme .driver-popover-title {
+                color: #FFFFFF; /* nexus-white */
+                font-family: 'titilliumWeb-SemiBold', sans-serif;
+                font-weight: 700;
+                font-size: 1.125rem;
+                margin-bottom: 6px;
+            }
+
+            /* --- Description --- */
+            .grade-calc-driver-theme .driver-popover-description {
+                color: #66A3FF; /* nexus-300 */
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+
+            /* --- Close (x) button --- */
+            .grade-calc-driver-theme .driver-popover-close-btn {
+                color: #99C2FF; /* nexus-200 */
+                transition: color 0.2s ease;
+            }
+            .grade-calc-driver-theme .driver-popover-close-btn:hover {
+                color: #FFFFFF;
+            }
+
+            /* --- Progress text ("1 of 6") --- */
+            .grade-calc-driver-theme .driver-popover-progress-text {
+                color: #66A3FF; /* nexus-300 */
+                font-size: 0.75rem;
+            }
+
+            /* --- Footer / nav buttons --- */
+            .grade-calc-driver-theme .driver-popover-footer {
+                margin-top: 14px;
+            }
+
+            .grade-calc-driver-theme .driver-popover-footer button {
+                background: #0066FF; /* nexus-500 */
+                color: #FFFFFF;
+                border: none;
+                border-radius: 0.375rem;
+                padding: 6px 14px;
+                font-size: 0.85rem;
+                font-weight: 600;
+                text-shadow: none;
+                transition: background 0.2s ease;
+                cursor: pointer;
+            }
+
+            .grade-calc-driver-theme .driver-popover-footer button:hover {
+                background: #0052CC; /* nexus-600 */
+            }
+
+            .grade-calc-driver-theme .driver-popover-prev-btn {
+                background: transparent !important;
+                color: #99C2FF !important; /* nexus-200 */
+                border: 1px solid #3385FF !important; /* nexus-400 */
+            }
+
+            .grade-calc-driver-theme .driver-popover-prev-btn:hover {
+                background: rgba(51, 133, 255, 0.15) !important;
+                color: #FFFFFF !important;
+            }
+
+            .grade-calc-driver-theme .driver-popover-prev-btn.driver-popover-btn-disabled {
+                opacity: 0.4;
+                color: #66A3FF !important;
+            }
+
+            /* --- Arrow (larger, brighter, glowing so it clearly points at the target) --- */
+            .grade-calc-driver-theme .driver-popover-arrow {
+                border-width: 12px;
+                filter: drop-shadow(0 0 6px rgba(51, 133, 255, 0.85));
+            }
+            .grade-calc-driver-theme .driver-popover-arrow-side-top.driver-popover-arrow {
+                border-top-color: #3385FF; /* nexus-400 */
+            }
+            .grade-calc-driver-theme .driver-popover-arrow-side-bottom.driver-popover-arrow {
+                border-bottom-color: #3385FF;
+            }
+            .grade-calc-driver-theme .driver-popover-arrow-side-left.driver-popover-arrow {
+                border-left-color: #3385FF;
+            }
+            .grade-calc-driver-theme .driver-popover-arrow-side-right.driver-popover-arrow {
+                border-right-color: #3385FF;
+            }
+
+            /* --- Highlighted-element overlay tint (subtle Nexus navy instead of plain black) --- */
+            #driver-page-overlay {
+                fill: #001433;
+                opacity: 0.75;
+            }
+
+            /* --- Stage highlight outline around the active element --- */
+            .driver-active-element {
+                box-shadow: 0 0 0 2px #3385FF; /* nexus-400 */
+                border-radius: 12px;
+            }
+
+            /* Grade Needed on Remaining Category: spotlight only, no ring */
+            [data-tour="grade-needed"].driver-active-element {
+                box-shadow: none;
+            }
+        `}</style>
+        <motion.div className={`inset-0 min-h-screen flex items-center justify-center bg-blue-950 bg-cover bg-center fixed overflow-x-hidden`} 
+                    style={{ backgroundImage: "url('/assets/GradeCalcBG.svg')"}}
+                    />
+            <div className="flex justify-center items-center relative font-titilliumWeb-semibold">
+                <GradeCalculatorSidebar 
+                    onToggle={handleSidebarToggle} 
+                    onNewCalculation={handleNewCalculation}
+                    userCourses={courses}
+                    refreshTrigger={sidebarRefreshTrigger}
+                    lastSavedGrade={lastSavedGrade}
+                />
+                
+                <AnimatePresence>
+                    {infoOpen && (
+                        <motion.div
+                            initial={{opacity: 0}}
+                            animate={{opacity:1}}
+                            exit={{opacity:0}}
+                            transition={{duration:0.25}}
+                            className="fixed inset-0 backdrop-brightness-50 flex z-50 items-center justify-center">
+
+                            <motion.div
+                                ref={infoRef}
+                                initial={{opacity: 0}}
+                                animate={{opacity:1}}
+                                exit={{opacity:0}}
+                                transition={{duration:0.25}}
+                                className="flex relative flex-col w-[clamp(300px,60vw,600px)] bg-nexus800 h-auto rounded-lg z-60 p-6 shadow-2xl">
+                                
+                                <HiX size={25} className="text-white absolute right-6 top-6 hover:text-gray-300 cursor-pointer transition duration-300" onClick={async () => {
+                                    setInfoOpen(false);
+                                    if (currentUser) {
+                                        try {
+                                            const db = getFirebaseFirestore();
+                                            await updateDoc(doc(db, 'users', currentUser.uid), {
+                                                hasSeenGradeCalcInstructions: true
+                                            });
+                                        } catch (error) {
+                                            console.error('Error updating instructions status:', error);
+                                        }
+                                    }
+                                }}/>
+                                <h1 className="text-white font-titilliumWeb-bold headingText flex items-start w-full mb-4">
+                                    Welcome To Grade Calculator!
+                                </h1>
+                                <SimpleBar className="flex flex-col bg-nexus900 p-6 rounded-lg custom-scrollbar" style={{ maxHeight: 330}}>
+                                    <h1 className="text-white font-titilliumWeb-bold bodyText flex items-start w-full">
+                                        What are Categories and Weight?
+                                    </h1>
+                                    <span className="text-white font-titilliumWeb-regular tinyText flex w-full mt-2">
+                                        From the buttons on the bottom right, add in the categories that contribute to your final grade (ex. homework, quizzes, midterms, projects). It is important to LEAVE OUT at least one category: the Grade Calculator determines what portion of your overall grade remains on its own, and calculates what grade is needed on the REMAINING work to achieve your desired final grade. <br/>For example, if you know what you have achieved on all assignments, quizzes, and your midterm, enter those three as categories; if your one remaining category is the final exam, the Grade Calculator will tell you what score you need on that exam. For the ones that you've added, enter their weight: if homework is 25% of your grade, put 25 into the box.
+                                    </span>
+                                    <img src="/assets/GradeCalcGif1.gif" className="flex my-4 w-[55%] mx-auto"/>
+                                    <h1 className="text-white font-titilliumWeb-bold bodyText flex items-start w-full pt-4">
+                                        How Do Assignments Work?
+                                    </h1>
+                                    <span className="text-white font-titilliumWeb-regular tinyText flex w-full mt-2">
+                                        Once you've added as many categories as you need, type in the score you've received on each assignment in that category as a point value. <br/>For example, if you received a 25/30 on your first homework assignment, put 25 in the first box and 30 in the second. <br/>Repeat until all your graded assignments have been entered. You should be able to see the overall grade for each category.
+                                    </span>
+                                    <img src="/assets/GradeCalcGif2.gif" className="flex my-4 w-[55%] mx-auto"/>
+                                    <h1 className="text-white font-titilliumWeb-bold bodyText flex items-start w-full pt-4">
+                                        How Do Desired Grades Work?
+                                    </h1>
+                                    <span className="text-white font-titilliumWeb-regular tinyText flex w-full mt-2">
+                                        Now scroll down and enter the numerical value for the grade you want in the class. If you want an A and need a 94% in the class to do so, enter 94 into the box.
+                                        <br/>You should now be able to see the grade you need to achieve on the remaining tasks to earn your desired grade! <br/>Press the "Save" button to refer back to this calculation later.
+                                    </span>
+                                    <img src="/assets/GradeCalcGif3.gif" className="flex my-4 w-[55%] mx-auto"/>
+                                    <img src="/assets/GradeCalcGif4.gif" className="flex mt-8 mb-4 w-[55%] mx-auto"/>
+                                </SimpleBar>
+
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                <AnimatePresence>
+                    {showSuccessNotification && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -50 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -50 }}
+                            className="fixed top-20 right-8 z-50 bg-[#5CA7BA] text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2"
+                        >
+                            <HiCheckCircle className="text-2xl" />
+                            <span className="font-semibold">{successMessage}</span>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+                
+                    <div
+                    className={`flex-1 text-white transition-all duration-300 ${
+                        isMobile ? 'ml-0' : sidebarCollapsed ? 'ml-16' : 'ml-64'
+                    } pb-40 md:pb-24`}
+                    >
+                    <div className="flex flex-col items-center headingText overflow-hidden">
+                        <motion.h1
+                            className="mt-25 text-center flex flex-row flex-wrap items-center justify-center gap-1 w-[clamp(300px,70%,1000px)]"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                        >
+                            Grade Calculator -
+                            <textarea
+    className="focus:outline-none border-b-2 border-transparent hover:border-b-2 hover:border-dotted hover:border-gray-400 focus:border-blue-500 focus:border-solid p-1 rounded-sm flex overflow-hidden field-sizing-content resize-none min-w-25" 
+    data-gramm_editor="false" data-gramm="false" data-enable-grammarly="false" spellcheck="false" autocorrect="off" autocapitalize="off"
+    value={saveTitle}
+    placeholder={"Untitled Calculation"}
+    onChange={(e) => setSaveTitle(e.target.value)}
+    title="Click to edit title"
+>
+</textarea>
+                        </motion.h1>
+                        <AnimatePresence>
+                            {error && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2"
+                                >
+                                    <HiExclamationCircle size={20} />
+                                    <span className="tinyText">{error}</span>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        <motion.div 
+                            className={`mb-6 pt-6 w-[70%] ${categories.length === 1 ? 'flex justify-center' : isScreenMedium ? 'flex flex-wrap gap-4 justify-center' : 'grid grid-cols-2 gap-6'} categories`}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                        >
+                            <AnimatePresence>
+                                {categories.map((category, categoryIndex) => (
+                                    <motion.div
+                                        key={category.id}
+                                        layout={"position"}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{duration: 0.15, type: 'tween'}}
+                                        className={`rounded-lg category relative w-[clamp(300px,100%,600px)] shrink-0`}
+                                        {...(categoryIndex === 0 ? { 'data-tour': 'category-card' } : {})}
+                                    >
+
+                                        <div className={`flex flex-row items-center bg-nexus600 ${category.isOpen ? 'rounded-t-lg' : 'rounded-lg'} justify-between px-4 py-4 font-titilliumWeb-semibold gap-2 ${categories.length > 1 ? '' : 'pr-12'}`}>
+                                            <div className="flex">
+                                                <HiChevronDown size={25} className={`flex cursor-pointer text-white transition duration-300 ${category.isOpen ? 'rotate-180': 'rotate-0'}`} onClick={() => {handleCategoryChange(categoryIndex, "isOpen", !category.isOpen)}}/>
+                                            </div>
+                                            <div className="flex w-full flex-row flex-wrap gap-2">
+
+                                                <div className="flex flex-3">
+                                                    <input
+                                                        id={`category-${categoryIndex}`}
+                                                        className={`flex bg-nexus800 tinyText w-full text-white rounded-md focus:outline-none p-1.5 ${
+                                                            validationErrors[`category-${categoryIndex}-name`] 
+                                                            ? 'border-2 border-[#D73A49] focus:border-[#D73A49] focus:ring-[#D73A49]' 
+                                                            : 'focus:border-nexus300 focus:ring-nexus200 focus:ring-opacity-50'
+                                                        }`}
+                                                        value={category.name}
+                                                        onChange={(e) => {
+                                                            handleCategoryChange(categoryIndex, "name", e.target.value);
+                                                            if (validationErrors[`category-${categoryIndex}-name`]) {
+                                                                const newErrors = {...validationErrors};
+                                                                delete newErrors[`category-${categoryIndex}-name`];
+                                                                setValidationErrors(newErrors);
+                                                            }
+                                                        }}
+                                                        autoComplete="off"
+                                                        placeholder="Enter category (e.g. Homework)"
+                                                        required
+                                                    />
+                                                </div>
+                                                <div className="flex flex-row items-center w-auto">
+                                                    <label htmlFor={`category-weight-${categoryIndex}`} className="pr-1 block tinyText text-white">Weight:</label>
+                                                    <input
+                                                    type="text"
+                                                    id={`category-weight-${categoryIndex}`}
+                                                    inputMode="numeric"
+                                                    pattern="[0-9]*"
+                                                    {...(categoryIndex === 0 ? { 'data-tour': 'category-weight' } : {})}                                                    
+                                                    className={`bg-nexus800 tinyText w-10 text-white block rounded-md focus:outline-none p-1.5 ${
+                                                        validationErrors[`category-${categoryIndex}-weight`] 
+                                                        ? 'border-2 border-[#D73A49] focus:border-[#D73A49] focus:ring-[#D73A49]' 
+                                                        : 'focus:border-nexus300 focus:ring-nexus200 focus:ring-opacity-50'
+                                                    }`}
+                                                    value={category.weight}
+                                                    onChange={(e) => {
+                                                        const value = e.target.value;
+                                                        if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                                                            handleCategoryChange(categoryIndex, "weight", value);
+                                                            if (validationErrors[`category-${categoryIndex}-weight`]) {
+                                                                const newErrors = {...validationErrors};
+                                                                delete newErrors[`category-${categoryIndex}-weight`];
+                                                                setValidationErrors(newErrors);
+                                                            }
+                                                        }
+                                                    }}
+                                                    autoComplete="off"
+                                                    required
+                                                    placeholder="25"
+                                                />
+                                                    <h1 className="pl-1 pr-1 block tinyText text-white">%</h1>
+                                                </div>
+                                            </div>
+                                            {categories.length > 1 && (
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const newCategories = categories.filter((_, index) => index !== categoryIndex);
+                                                    setCategories(newCategories);
+                                                    const newErrors = {...validationErrors};
+                                                    Object.keys(newErrors).forEach(key => {
+                                                        if (key.startsWith(`category-${categoryIndex}-`)) {
+                                                            delete newErrors[key];
+                                                        }
+                                                    });
+                                                    setValidationErrors(newErrors);
+                                                }}
+                                                className=" flex items-center justify-center text-nexus200 rounded-md transition-all duration-200 hover:text-white group z-10"
+                                                title="Delete Category"
+                                            >
+                                                <HiTrash className="w-[clamp(20px,80%,60px)] hover:scale-110 transition duration-300 text-white hover:text-red-500 cursor-pointer"/>
+                                            </button>
+                                        )}
+                                        </div>
+
+                                        <AnimatePresence>
+                                            {category.isOpen && (
+                                                <motion.div
+                                                    initial={{scaleY: 0, originY: 0}}
+                                                    animate={{scaleY: 1}}
+                                                    exit={{scaleY: 0, originY: 0}}
+                                                    transition={{duration: 0.15, type: 'tween'}}
+                                                    className="flex flex-col rounded-b-lg relative p-4 gap-4 bg-nexus900 ">                             
+                                                    {category.assignments.map((assignment, assignmentIndex) => {
+                                                        const percent = getAssignmentPercentage(
+                                                            assignment.grade,
+                                                            assignment.weight
+                                                        );
+
+                                                        return (
+                                                            <div key={assignmentIndex} {...(categoryIndex === 0 && assignmentIndex === 0 ? { 'data-tour': 'assignment-row' } : {})} className="flex flex-row items-center justify-center bg-nexus800 gap-3 px-4 py-2 rounded-lg  w-full">
+                                                                {/* NAME + POINTS + PERCENTAGE BAR */}
+                                                                <div className="flex flex-col w-full pl-2">
+                                                                    <div className="flex flex-row gap-2 tinyText mb-2 w-full">
+                                                                    <input
+                                                                        type="text"
+                                                                        className={`py-1.5 bg-nexus900 tinyText flex-3 text-white rounded-md focus:outline-none p-1 ${
+                                                                            validationErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-name`]
+                                                                            ? 'border-2 border-[#D73A49] focus:border-[#D73A49] focus:ring-[#D73A49]'
+                                                                            : ''
+                                                                        }`}
+                                                                        value={assignment.assignment}
+                                                                        onChange={(e) => {
+                                                                            handleAssignmentChange(categoryIndex, assignmentIndex, "assignment", e.target.value);
+                                                                            if (validationErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-name`]) {
+                                                                                const newErrors = {...validationErrors};
+                                                                                delete newErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-name`];
+                                                                                setValidationErrors(newErrors);
+                                                                            }
+                                                                        }}
+                                                                        placeholder="Assignment name (e.g. Homework #1)"
+                                                                    />
+                                                                    <div className="flex flex-row gap-1 items-center justify-center">
+                                                                        <input
+                                                                            inputMode="numeric"
+                                                                            pattern="[0-9]*"
+                                                                            className={`bg-nexus900 tinyText w-10 text-white block rounded-md focus:outline-none p-1 ${
+                                                                                validationErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-grade`]
+                                                                                ? 'border-2 border-[#D73A49] focus:border-[#D73A49] focus:ring-[#D73A49]'
+                                                                                : ''
+                                                                            }`}
+                                                                            value={assignment.grade}
+                                                                            onChange={(e) => {
+                                                                                const value = e.target.value;
+                                                                                if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                                                                                    handleAssignmentChange(categoryIndex, assignmentIndex, "grade", value);
+                                                                                    if (validationErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-grade`]) {
+                                                                                        const newErrors = {...validationErrors};
+                                                                                        delete newErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-grade`];
+                                                                                        setValidationErrors(newErrors);
+                                                                                    }
+                                                                                }
+                                                                            }}
+                                                                            placeholder="25"
+                                                                        />
+                                                                        /
+                                                                        <input
+                                                                        inputMode="numeric"
+                                                                        pattern="[0-9]*"
+                                                                        className={`bg-nexus900 tinyText w-10 text-white block rounded-md focus:outline-none p-1 ${
+                                                                            validationErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-weight`]
+                                                                            ? 'border-2 border-[#D73A49] focus:border-[#D73A49] focus:ring-[#D73A49]'
+                                                                            : ''
+                                                                        }`}
+                                                                        value={assignment.weight}
+                                                                        onChange={(e) => {
+                                                                            const value = e.target.value;
+                                                                            if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                                                                                handleAssignmentChange(categoryIndex, assignmentIndex, "weight", value);
+                                                                                if (validationErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-weight`]) {
+                                                                                    const newErrors = {...validationErrors};
+                                                                                    delete newErrors[`category-${categoryIndex}-assignment-${assignmentIndex}-weight`];
+                                                                                    setValidationErrors(newErrors);
+                                                                                }
+                                                                            }
+                                                                        }}
+                                                                        placeholder="30"
+                                                                    />
+                                                                    </div>
+                                                                    </div>
+
+                                                                    <div className="flex flex-row items-center justify-center gap-2">
+                                                                        <div className="w-full h-2 bg-nexus900 overflow-hidden rounded-full">
+                                                                            <div
+                                                                                className="h-full transition-all duration-300 bg-blue-500"
+                                                                                style={{ width: `${percent == null ? 0 : percent }%` }}
+                                                                            />
+                                                                        </div>
+                                                                        <p className="tinyText text-white text-right">
+                                                                            {percent == null ? "N/A" : percent+"%"}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* DELETE ASSIGNMENT */}
+                                                                <div className="flex w-[clamp(20px,5%,100px)] items-center justify-center">
+                                                                    <HiTrash 
+
+                                                                        className="flex hover:scale-110 transition duration-300 text-white hover:text-red-500 cursor-pointer"
+                                                                        onClick={() => {
+                                                                            if (category.assignments.length > 1) {
+                                                                                deleteAssignmentRow(categoryIndex, assignmentIndex);
+                                                                            }
+                                                                        }} 
+                                                                        title="Delete Category"
+                                                                        size={20}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                    
+                                                    <div className="flex flex-row items-center gap-4">
+                                                        <div className="flex flex-row flex-1 pl-4">
+                                                            <h1 className="flex tinyText text-white"><strong>Total Grade: {' '}</strong></h1> 
+                                                            <h2 className="flex ml-1 tinyText text-white">{categoryGrades[categoryIndex] || ' N/A'}</h2>
+                                                        </div>
+                                                        <Button className="bg-nexus800 flex gap-1 flex-1" onClick={() => addAssignmentRow(categoryIndex)} text={'Add Assignment'} icon={ <span className="-translate-x-2.5 md:translate-x-0"><HiPlus size={25}  /> </span>}/>
+                                                    </div>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </motion.div>
+                                ))}
+                            </AnimatePresence>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                            className="flex w-full items-center justify-center"
+                        >
+                            <motion.div
+                                className="rounded-lg flex flex-col justify-center items-center bg-nexus900 w-[clamp(300px,70%,2000px)] mb-20 text-center"
+                                layout={"position"}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{duration: 0.15, type: 'tween'}}
+
+                            >
+                                <div data-tour="overall-grade" className="flex flex-row justify-center items-center gap-4 bg-nexus600 w-full py-4 rounded-t-lg ">
+                                    <h1 className="bodyText text-nexus50"><strong>Overall Grade: </strong> {overallGrade}%</h1>
+                                </div>
+                                <div className={`flex flex-row items-start justify-between bg-nexus800 w-[95%] ${isMobile ? 'px-4' : 'px-12'} my-4 rounded-lg py-2 gap-6 `}>
+                                    <div className="flex flex-col items-center justify-center gap-2 tinyText relative">
+                                        <h1 className="tinyText text-nexus50"><strong>Remaining Assignment Weight:</strong> </h1>
+                                        <h1 className="relative items-center justify-center flex">
+                                            {remainingWeight}%
+                                            {remainingWeight == 0 && (
+                                                <div className="flex flex-row items-center justify-center absolute gap-2 left-6 select-none" ref={infoRef}>
+                                                    <div className="flex">
+                                                        <HiExclamationCircle onClick={() => setWarningOpen(!warningOpen)} className="flex cursor-pointer" />
+                                                    </div>
+                                                    <AnimatePresence>                                                    
+                                                        {warningOpen && (
+                                                        <motion.div
+                                                                    className="w-[clamp(200px,45vw,300px)] bg-white tinyText text-nexus900 items-center justify-center flex p-2 rounded-lg"
+                                                                    initial={{scaleX: 0, opacity: 0, originX: 0}}
+                                                                    animate={{scaleX: 1, opacity: 1,  originX: 0}}
+                                                                    exit={{scaleX: 0, opacity: 0}}
+                                                                    transition={{duration:0.1}}>
+                                                                    
+                                                            The Grade Needed for your Desired Grade can't be calculated if the Remaining Assignment Weight is 0!
+                                                        </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
+                                                </div>
+                                            )}
+                                        </h1>
+                                    </div>
+                                    <div className="flex flex-col items-center justify-center ">
+                                        <h1 className="tinyText text-nexus50"><strong>Desired Class Grade:</strong></h1>
+                                        <input
+                                            id="classGrade"
+                                            data-tour="desired-grade"
+                                            type="text"
+                                            inputMode="numeric"  
+                                            pattern="[0-9]*"    
+                                            className="font-titilliumWeb-bold mt-1 block tinyText text-center min-w-10 w-[20%] bg-nexus50 rounded-md border-gray-300 focus:outline-none text-nexus800 p-1"
+                                            value={classGrade}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                                                    setClassGrade(value);
+                                                }
+                                            }}
+                                            required
+                                        />
+                                    </div>
+                                    <div data-tour="grade-needed" className="flex flex-col items-center justify-center tinyText gap-2">
+                                        <h1 className="text-nexus50">
+                                            Grade Needed on Remaining Category:
+                                        </h1>
+                                        <div className="flex flex-col items-center gap-1">
+                                            {requiredGrade === null || requiredGrade.status === 'not_possible' ? (
+                                                <div className="flex flex-col items-center">
+                                                    <span className="text-red-400 font-bold">Not Possible</span>
+                                                    {requiredGrade?.value && (
+                                                        <span className="text-red-300 text-xs mt-1">
+                                                            (Above {requiredGrade.value}% required)
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            ) : requiredGrade.status === 'guaranteed' ? (
+                                                <div className="flex flex-col items-center">
+                                                    <span className="text-green-400 font-bold">Grade Guaranteed!</span>
+                                                    <span className="text-gray-400 text-xs mt-1">
+                                                        (You've already secured your desired grade)
+                                                    </span>
+                                                </div>
+                                            ) : requiredGrade.status === 'extra_credit' ? (
+                                                <div className="flex flex-col items-center">
+                                                    <span className="text-yellow-400 font-bold">Extra Credit Required</span>
+                                                    <span className="text-yellow-300 text-xs mt-1">
+                                                        (Above {requiredGrade.value}% required)
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <span className="font-bold">{requiredGrade.value}%</span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </motion.div>
+                    </div>
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                        className="fixed top-24 right-8 flex flex-col gap-2 ">
+                        <HiQuestionMarkCircle data-tour="help-button" className="cursor-pointer" size={25} onClick={() => driverObj?.drive()}/>
+                    </motion.div>
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                        className="fixed bottom-6 right-4 flex flex-col gap-2"
+                    >
+                        <div data-tour="add-category">
+                            <Button className="p-1 gap-2" text={"Add Category"} icon={<HiPlus/>} onClick={addCategory}/>
+                        </div>
+                        <div data-tour="save-calculation">
+                        <Button className="p-1 px-2 gap-2" text={editMode ? 'Update Calculation' : 'Save Calculation'} icon={<HiOutlineSave/>} onClick={() => {
+                            const errors = validateFields();
+                            setValidationErrors(errors);
+                            
+                            if (Object.keys(errors).length > 0) {
+                                setError('Please fill in all required fields before saving');
+                                setTimeout(() => setError(''), 3000);
+                                return;
+                            }
+                            
+                            setValidationErrors({});
+                            setError('');
+                            setSaveDialogOpen(true);
+                        }}/>
+                        </div>
+
+                        <Modal
+                            open={saveDialogOpen}
+                            onClose={() => setSaveDialogOpen(false)}
+                            closeAfterTransition
+                            className="fixed flex items-center justify-center"
+                        >
+                            <Fade in={saveDialogOpen}>
+
+                                <div className="flex flex-col bg-nexus800 rounded-lg shadow-lg w-[clamp(300px,30%,500px)]">
+                                    <div className="flex w-full justify-between h-[60px] bg-nexus500 rounded-t-lg items-center p-4">
+                                        <h2 className="bodyText text-white font-titilliumWeb-bold">
+                                            {editMode ? 'Update Calculation' : 'Save Calculation'}
+                                        </h2>
+                                        <HiX className="cursor-pointer transition duration-300 text-white hover:text-gray-300" size={24} onClick={() => setSaveDialogOpen(false)}/>
+                                    </div>
+                                    <div className="flex flex-col p-6 font-titilliumWeb-semibold">
+                                        {error && (
+                                            <div className="bg-red-500 text-white p-2 rounded mb-4 text-sm">
+                                                {error}
+                                            </div>
+                                        )}
+
+                                        <div className="mb-4">
+                                            <label className="block text-white text-sm font-medium mb-2">
+                                                Select Course
+                                            </label>
+                                            <select
+                                                value={selectedCourseForSave}
+                                                onChange={(e) => setSelectedCourseForSave(e.target.value)}
+                                                className={`w-full p-2 rounded bg-nexus50 cursor-pointer ${selectedCourseForSave ? 'text-nexus800' : 'text-gray-400'}`}
+                                            >
+                                                <option value="" disabled className="text-gray-400">Choose a course...</option>
+                                                {courses.map((course, index) => (
+                                                    <option key={course.uniqueKey || `calc-option-${index}`} value={course.courseId} className="text-nexus800">
+                                                        {course.displayName}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+
+                                        <div className="mb-6">
+                                            <label className="block text-white text-sm font-medium mb-2">
+                                                Calculation Title
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="w-full p-2 rounded bg-nexus50 text-nexus800"
+                                                placeholder="Enter a title for this calculation"
+                                                value={saveTitle}
+                                                onChange={(e) => setSaveTitle(e.target.value)}
+                                            />
+                                        </div>
+
+                                        <div className="flex justify-between space-x-3">
+                                            <button
+                                                className="px-4 py-2 cursor-pointer bg-[#D73A49] text-white text-xl rounded-md transition duration-200 hover:bg-red-700"
+                                                onClick={() => {
+                                                    setSaveDialogOpen(false);
+                                                    setError('');
+                                                    setSelectedCourseForSave('');
+                                                    setSaveTitle('');
+                                                }}
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                            className="px-4 py-2 bg-nexus500 text-white text-xl rounded-md transition duration-300 hover:bg-nexus600 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                            onClick={handleSaveGradeHistory}
+                                            disabled={!saveTitle.trim() || !selectedCourseForSave || isSaving}
+                                        >
+                                            {isSaving ? 'Saving...' : (editMode ? 'Update' : 'Save')}
+                                        </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </Fade>
+                        </Modal>
+
+                    </motion.div>
+                </div>
+            </div>
+        </>
+    );
+};
+
+export default GradeCalculator;
