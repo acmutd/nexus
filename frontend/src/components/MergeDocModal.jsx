@@ -84,7 +84,7 @@ const MergeDocModal = ({ onClose, courseId, documentId, documentName, onMergeSuc
                   <input type="file" ref={fileInputRef} onChange={handleFileChange} accept=".pdf" className="hidden" />
                 </div>
                 <span className="block tinyText font-titilliumWeb-regular text-gray-500 mt-1">
-                  PDF only, max file size: 8MB
+                  Max File Size: 8MB. PDF Only. 
                 </span>
               </div>
 
