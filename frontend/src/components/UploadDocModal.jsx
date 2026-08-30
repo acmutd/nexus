@@ -5,6 +5,8 @@ import { HiOutlineDocumentArrowUp } from 'react-icons/hi2'
 import Button from './Button'
 import { createDocument, uploadPdfAndCreateJob, pollJob } from '../utils/superdocJobs'
 
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024
+
 const UploadDocModal = ({onClose, isOpen, courseId, onUploadSuccess}) => {
 
     const [file, setFile] = useState(null);
@@ -16,12 +18,13 @@ const UploadDocModal = ({onClose, isOpen, courseId, onUploadSuccess}) => {
     const handleFileChange = (e) =>
     {
         const selectedFile = e.target.files[0];
-        if (selectedFile)
-        {
-            console.log(`[superdoc] file selected: ${selectedFile.name} (${selectedFile.size} bytes)`)
-            setFile(selectedFile)
+        if (!selectedFile) return
+        if (selectedFile.size > MAX_UPLOAD_BYTES) {
+            alert('File is too large. Max size is 10MB.')
+            return
         }
-
+        console.log(`[superdoc] file selected: ${selectedFile.name} (${selectedFile.size} bytes)`)
+        setFile(selectedFile)
     };
 
     const handleUpload = async () => {
@@ -88,7 +91,7 @@ const UploadDocModal = ({onClose, isOpen, courseId, onUploadSuccess}) => {
                                     <input type="file" ref={fileInputRef} onChange={handleFileChange} accept=".pdf" className = "hidden"/>
                                 </div>
                                 <span className="block tinyText font-titilliumWeb-regular text-gray-500 mt-1">
-                                    Max file size: 0.5MB
+                                    Max File Size: 8MB. PDF Only.
                                 </span>
 
                         </div>

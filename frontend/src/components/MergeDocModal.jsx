@@ -4,6 +4,8 @@ import { motion } from 'motion/react'
 import Button from './Button'
 import { uploadPdfAndCreateJob, pollJob } from '../utils/superdocJobs'
 
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024
+
 const MergeDocModal = ({ onClose, courseId, documentId, documentName, onMergeSuccess }) => {
   const [file, setFile] = useState(null)
   const [progress, setProgress] = useState(0)
@@ -12,10 +14,13 @@ const MergeDocModal = ({ onClose, courseId, documentId, documentName, onMergeSuc
 
   const handleFileChange = (e) => {
     const selected = e.target.files[0]
-    if (selected) {
-      console.log(`[superdoc] file selected: ${selected.name} (${selected.size} bytes)`)
-      setFile(selected)
+    if (!selected) return
+    if (selected.size > MAX_UPLOAD_BYTES) {
+      alert('File is too large. Max size is 10MB.')
+      return
     }
+    console.log(`[superdoc] file selected: ${selected.name} (${selected.size} bytes)`)
+    setFile(selected)
   }
 
   const handleMerge = async () => {
@@ -79,7 +84,7 @@ const MergeDocModal = ({ onClose, courseId, documentId, documentName, onMergeSuc
                   <input type="file" ref={fileInputRef} onChange={handleFileChange} accept=".pdf" className="hidden" />
                 </div>
                 <span className="block tinyText font-titilliumWeb-regular text-gray-500 mt-1">
-                  Max file size: 0.5MB
+                  Max File Size: 8MB. PDF Only. 
                 </span>
               </div>
 
