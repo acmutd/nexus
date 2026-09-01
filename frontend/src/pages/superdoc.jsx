@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import StarFieldOverlay from '../components/StarFieldOverlay';
-import { HiOutlineDocument, HiUpload, HiChevronLeft, HiChevronRight, HiChevronDown, HiOutlineUpload, HiArrowLeft, HiSearch, HiOutlineFolder, HiDocument, HiLink, HiDocumentDuplicate, HiDocumentAdd } from 'react-icons/hi';
+import { HiOutlineDocument, HiUpload, HiChevronLeft, HiChevronRight, HiChevronDown, HiOutlineUpload, HiArrowLeft, HiSearch, HiOutlineFolder, HiDocument, HiLink, HiDocumentDuplicate, HiDocumentAdd, HiQuestionMarkCircle } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMobile } from '../context/mobileContext';
 import 'simplebar-react/dist/simplebar.min.css';
@@ -36,6 +36,18 @@ function SuperDoc() {
   const [docUrl, setDocUrl] = useState('')
   const [docIdMap, setDocIdMap] = useState(new Map()) // docName -> googleDocId
   const [isDocContentLoading, setIsDocContentLoading] = useState(false)
+  const [isInfoOpen, setInfoOpen] = useState(false)
+  const infoRef = useRef(null)
+
+  useEffect(() => {
+      const handleClickOutside = (event) => {
+          if(infoRef.current && !infoRef.current.contains(event.target)) {
+              setInfoOpen(false)
+          }
+      }
+      document.addEventListener("mousedown", handleClickOutside)
+      return () => {document.removeEventListener("mousedown", handleClickOutside)}
+  }, [])
 
   const handleScroll = (e) => {
       const { scrollTop, scrollHeight, clientHeight } = e.target;
@@ -240,7 +252,7 @@ function SuperDoc() {
       </motion.div>
       { /* ------------------------------- DOC SIDE BAR ------------------------------------ */}
       <motion.div
-        className="shadow-md flex flex-col h-screen fixed left-0 top-0 pt-20 overflow-visible z-40 w-[clamp(200px,17%,500px)]"
+        className="shadow-md flex flex-col h-screen fixed left-0 top-0 pt-20 overflow-visible z-40 w-[clamp(200px,17vw,500px)]"
         transition={{ type: "tween", duration: 0.4 }}
         style={{backgroundImage: 'linear-gradient(#002966, #001433)'}}>
 
@@ -392,10 +404,10 @@ function SuperDoc() {
         </AnimatePresence>
       </motion.div>
       {/* ---------------------------------- MAIN CONTENT ------------------------------------ */}
-      <div className={`flex h-full w-full flex-col items-end px-10`}>
+      <div className={`flex h-full w-full flex-col px-10 `}>
         <AnimatePresence>
           <motion.div transition={{duration: 0.4}}
-                      className={`w-full h-full mt-20 z-30 pl-[clamp(200px,17%,500px)]`}>
+                      className={`w-full h-full mt-20 z-30 pl-[clamp(200px,17vw,500px)]`}>
 
       {/* ----------------------------- SUPER DOC ----------------------------------- */}
           <div className='flex flex-row w-full h-full justify-between items-center'>
@@ -413,9 +425,25 @@ function SuperDoc() {
               </h2>
               }
             </div>
-            <div className='flex'>
+            <div className='flex flex-row gap-2'>
               {/* use the href to direct them to the google doc link */}
               <Button className={"p-2 "} href={docUrl ? docUrl.replace('/preview', '/edit') : undefined} disabled={!docUrl} title={"Go to Google Doc"} icon={<HiLink size={25} color='white'/>}/>
+              <div className='flex w-full h-full relative items-start justify-end' ref={infoRef}>
+                <Button className={"p-2 bg-transparent"} onClick={() => setInfoOpen(!isInfoOpen)} title={"Go to Google Doc"} icon={<HiQuestionMarkCircle className='opacity-50 hover:opacity-100 transition duration-300' size={25} color='white'/>}/>
+                <AnimatePresence>
+                  {isInfoOpen && (
+                  <motion.div transition={{duration:0.3}} initial={{x:5, opacity:0}} animate={{x:0, opacity:1}} exit={{x:5, opacity:0}}
+                              className="absolute items-center justify-center mr-10 bg-nexus800 w-[clamp(250px,17vw,300px)] p-3 rounded-lg shadow-2xl"
+                              >
+
+                        <span className='flex text-[clamp(0.8rem,1.3vw,2rem)] text-white font-titilliumWeb-regular'>
+                          Welcome to SuperDoc, your communal study guide! Choose a class, then create a doc or merge in your notes (as a PDF). We'll remove redundancy and combine your shared knowledge. You can also edit these from the Discord channel for your class.
+                        </span>
+
+                      
+                  </motion.div>)}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
 
@@ -469,6 +497,11 @@ function SuperDoc() {
       {/* ---------------------------------------------------------------------------------- */}
 
         </AnimatePresence>
+      </div>
+      <div className='pl-[clamp(200px,17%,500px)] w-full items-center text-center pb-5'>
+        <span className='text-gray-400 font-titilliumWeb-semibold tinyText'>
+          This feature is in development. If you experience issues or have feedback, please fill out the feedback form found on the home page.
+        </span>
       </div>
     </div>
   )
