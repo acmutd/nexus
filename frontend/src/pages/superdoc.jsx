@@ -247,8 +247,8 @@ function SuperDoc() {
                         duration: 2.5,
                         type: "spring",
                         bounce: .4
-                      }}>
-        <img className="absolute top-12 left-10 scale-80" src='/assets/SuperDocPigeon.svg'/>
+          }}>
+              <img className="absolute top-12 right-10 scale-80" src='/assets/SuperDocPigeon.svg'/>
       </motion.div>
       { /* ------------------------------- DOC SIDE BAR ------------------------------------ */}
       <motion.div
@@ -433,10 +433,10 @@ function SuperDoc() {
                 <AnimatePresence>
                   {isInfoOpen && (
                   <motion.div transition={{duration:0.3}} initial={{x:5, opacity:0}} animate={{x:0, opacity:1}} exit={{x:5, opacity:0}}
-                              className="absolute items-center justify-center mr-10 bg-nexus800 w-[clamp(250px,17vw,300px)] p-3 rounded-lg shadow-2xl"
+                              className="absolute items-center justify-center mr-10 bg-nexus800 w-[clamp(250px,17vw,600px)] p-3 rounded-lg shadow-2xl"
                               >
 
-                        <span className='flex text-[clamp(0.8rem,1.3vw,2rem)] text-white font-titilliumWeb-regular'>
+                        <span className='flex text-[clamp(0.8rem,1.2vw,1.4rem)] text-white font-titilliumWeb-regular'>
                           Welcome to SuperDoc, your communal study guide! Choose a class, then create a doc or merge in your notes (as a PDF). We'll remove redundancy and combine your shared knowledge. You can also edit these from the Discord channel for your class.
                         </span>
 
