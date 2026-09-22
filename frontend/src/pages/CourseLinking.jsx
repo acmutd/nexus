@@ -430,7 +430,7 @@ export default function CourseLinking() {
       }}/>
 
 
-{/*     <LoginWithNetIDModal                // NET ID MODAL 
+  <LoginWithNetIDModal                // NET ID MODAL
       isOpen={showLoginNetIDModal}
       onClose={() => setShowLoginNetIDModal(false)}
       onSuccess={(courses, meta) => {
@@ -442,7 +442,7 @@ export default function CourseLinking() {
           handleConfirmAndContinue(courses || [], meta || null);
         }
       }}
-    /> */}
+    />
 
     <TranscriptModal
       isOpen={showTranscriptModal}

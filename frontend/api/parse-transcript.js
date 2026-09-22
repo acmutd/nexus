@@ -134,7 +134,7 @@ async function loadCoursebookTerm(term) {
     let rows = [];
 
     // The remote coursebook URL must be provided via term-specific env var `COURSEBOOK_URL_<TERM>` (ex COURSEBOOK_URL_26S)
-    const envVar = `COURSEBOOK_URL_${t.toUpperCase().replace(/[^A-Z0-9]/g,'')}`;
+    const envVar = `COURSEBOOK_URL_${t.toUpperCbase().replace(/[^A-Z0-9]/g,'')}`;
     const remote = process.env[envVar] || null;
     if (!remote) {
         throw new Error(`Missing required environment variable ${envVar}. Please set it to the read-only coursebook URL`);
