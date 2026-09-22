@@ -74,7 +74,7 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
       return;
     }
     if (!netId || !elearnPw) {
-      setError('Please enter your NetID and eLearning password.');
+      setError('Please enter your NetID and Canvas password.');
       return;
     }
 
@@ -200,15 +200,15 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
           </button>
             <div className='flex flex-col items-center justify-center mb-4'>
               <img src='assets/loginIcon.svg' className='w-[10%] min-w-[50px]'/>
-              <h2 className="mt-4 mb-2 headingText font-titilliumWeb-bold text-nexus900">Login via eLearning</h2>
-              <h3 className='flex w-[80%] tinyText text-center font-titilliumWeb-semibold text-nexus700'> Allow Nexus to directly access your courses in eLearning via our Web Scraper. </h3>
+              <h2 className="mt-4 mb-2 headingText font-titilliumWeb-bold text-nexus900">Login via Canvas</h2>
+              <h3 className='flex w-[80%] tinyText text-center font-titilliumWeb-semibold text-nexus700'> Allow Nexus to directly access your courses in Canvas via our Web Scraper. </h3>
             </div>
             <div className="mb-4 p-4 w-full bg-green-100 border border-green-400 rounded text-green-700 text-center">
               <div className="flex items-center gap-2 mb-1 justify-center">
                 <span className="text-xl">✓</span>
-                <span className="font-semibold text-base">eLearning Parsed Successfully!</span>
+                <span className="font-semibold text-base">Canvas Parsed Successfully!</span>
               </div>
-              <p className="text-sm">Found {parsedCourses.length} course{parsedCourses.length !== 1 ? 's' : ''} from eLearning</p>
+              <p className="text-sm">Found {parsedCourses.length} course{parsedCourses.length !== 1 ? 's' : ''} from Canvas</p>
             </div>
 
             <div className="flex flex-col mb-6">
@@ -264,7 +264,7 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
   if (!isOpen && !embedded) return null;
 
   if (submitting) {
-    return <LoadingScreen message={"Please wait while we fetch your courses from eLearning..."} />
+    return <LoadingScreen message={"Please wait while we fetch your courses from Canvas..."} />
   }
 
   const innerPanel = (
@@ -272,7 +272,7 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
       initial={{ scale: 0.95, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       exit={{ scale: 0.95, opacity: 0 }}
-      className={`bg-nexus50 rounded-xl w-full max-w-[350px] relative ${embedded ? 'p-4 mx-auto' : 'p-6 sm:p-8 mx-auto'}`}
+      className={`bg-nexus50 rounded-xl max-w-2xl w-[35%] mx-4 min-w-[300px] relative ${embedded ? 'p-4 mx-auto' : 'p-6 sm:p-8 mx-auto'}`}
       onClick={(e) => e.stopPropagation()}
     >
       <button 
@@ -289,8 +289,8 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
       </button>
       <div className="flex flex-col justify-center items-center mb-4 relative">
         <img src='assets/loginIcon.svg' className='w-[10%] min-w-[50px]'/>
-        <h2 className="mt-4 mb-2 headingText font-titilliumWeb-bold text-nexus900">Login via eLearning</h2>
-        <h3 className='flex w-[80%] tinyText text-center font-titilliumWeb-semibold text-nexus700'> Allow Nexus to directly access your courses in eLearning via our Web Scraper. </h3>
+        <h2 className="mt-4 mb-2 headingText font-titilliumWeb-bold text-nexus900">Login via Canvas</h2>
+        <h3 className='flex w-[80%] tinyText text-center font-titilliumWeb-semibold text-nexus700'> Allow Nexus to directly access your courses in Canvas via our Web Scraper. </h3>
 
       </div>
 
@@ -320,7 +320,7 @@ export default function LoginWithNetIDModal({ isOpen, onClose, onSuccess, embedd
 
                 <div className="mb-4">
                   <h1 className="tinyText font-titilliumWeb-semibold text-nexus700 mb-2">
-                    eLearning Password
+                    Canvas Password
                   </h1> 
                   <div className="relative flex items-center">
                     <input
