@@ -425,11 +425,11 @@ function SuperDoc() {
               </h2>
               }
             </div>
-            <div className='flex flex-row gap-2'>
+            <div className='flex flex-row gap-2 z-40'>
               {/* use the href to direct them to the google doc link */}
               <Button className={"p-2 "} href={docUrl ? docUrl.replace('/preview', '/edit') : undefined} disabled={!docUrl} title={"Go to Google Doc"} icon={<HiLink size={25} color='white'/>}/>
               <div className='flex w-full h-full relative items-start justify-end' ref={infoRef}>
-                <Button className={"p-2 bg-transparent"} onClick={() => setInfoOpen(!isInfoOpen)} title={"Go to Google Doc"} icon={<HiQuestionMarkCircle className='opacity-50 hover:opacity-100 transition duration-300' size={25} color='white'/>}/>
+                <Button className={"p-2 bg-transparent"} onClick={() => setInfoOpen(!isInfoOpen)} title={"Go to Google Doc"} icon={<HiQuestionMarkCircle className='opacity-100 hover:opacity-50 transition duration-300' size={25} color='white'/>}/>
                 <AnimatePresence>
                   {isInfoOpen && (
                   <motion.div transition={{duration:0.3}} initial={{x:5, opacity:0}} animate={{x:0, opacity:1}} exit={{x:5, opacity:0}}
