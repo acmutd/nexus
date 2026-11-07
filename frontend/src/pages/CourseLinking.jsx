@@ -430,7 +430,7 @@ export default function CourseLinking() {
       }}/>
 
 
-{/*     <LoginWithNetIDModal                // NET ID MODAL 
+  <LoginWithNetIDModal                // NET ID MODAL
       isOpen={showLoginNetIDModal}
       onClose={() => setShowLoginNetIDModal(false)}
       onSuccess={(courses, meta) => {
@@ -442,7 +442,7 @@ export default function CourseLinking() {
           handleConfirmAndContinue(courses || [], meta || null);
         }
       }}
-    /> */}
+    />
 
     <TranscriptModal
       isOpen={showTranscriptModal}
@@ -479,7 +479,7 @@ export default function CourseLinking() {
         className="flex flex-col bg-nexus50 rounded-xl shadow-2xl p-6"
         style={{
           zIndex: 2,
-          width: isMobile ? "90%" : "35rem",
+          width: isMobile ? "90%" : "45rem",
           minHeight: isMobile ? "auto" : "28rem",
         }}
       >
@@ -487,13 +487,13 @@ export default function CourseLinking() {
           <p className="headingText font-titilliumWeb-bold text-nexus900 mb-2">
             Nexus Needs Access to Your Courses
           </p>
-{/*       ------------------NET ID TEXT-----------------
+          {/*------------------CANVAS TEXT----------------- */}
           <p className="bodyText font-titilliumWeb-regular text-nexus800 mb-2">   
-            Login through eLearning and let Nexus do the rest
+            Login through Canvas and let Nexus do the rest
           </p>
           <p className="bodyText font-titilliumWeb-bold text-nexus900 mb-2">
             OR
-          </p> */}
+          </p>
           <p className="bodyText font-titilliumWeb-regular text-nexus800">
             Upload your transcript for automatic parsing
           </p>
@@ -502,7 +502,7 @@ export default function CourseLinking() {
         <div
           className={`flex ${isMobile ? "flex-col" : "flex-row"} w-full h-full gap-8 justify-center`}
         >
-{/*     ============================== NETID OPTION BOX ====================================      
+{/*============================== NETID OPTION BOX ====================================      */}
           <OptionBox
             icon={
               <img
@@ -511,12 +511,12 @@ export default function CourseLinking() {
                 className="w-10 h-10"
               />
             }
-            title="Login via eLearning"
-            description="Allow Nexus to directly access your courses in eLearning."
+            title="Login via Canvas"
+            description="Allow Nexus to directly access your courses in Canvas."
             details={["Quick Login", "Real-Time Sync"]}
             buttonText="Click to Login"
             onClick={() => setShowAccessRequestModal(true)}
-          /> */}
+          /> 
 
 
           <OptionBox

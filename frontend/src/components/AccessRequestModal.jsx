@@ -29,8 +29,8 @@ export default function AccessRequestModal({ isOpen, onClose, onAgree }) {
           >
             <div className="flex flex-col justify-center items-center mb-4 relative">
               <img src='assets/loginIcon.svg' className='w-[10%] min-w-[50px]'/>
-              <h2 className="mt-4 mb-2 headingText font-titilliumWeb-bold text-nexus900">Login via eLearning</h2>
-              <h3 className='flex w-[80%] tinyText text-center font-titilliumWeb-semibold text-nexus700'> Allow Nexus to directly access your courses in eLearning. </h3>
+              <h2 className="mt-4 mb-2 headingText font-titilliumWeb-bold text-nexus900">Login via Canvas</h2>
+              <h3 className='flex w-[80%] tinyText text-center font-titilliumWeb-semibold text-nexus700'> Allow Nexus to directly access your courses in Canvas. </h3>
                 <button
                   onClick={() => onClose && onClose()}
                   className="text-gray-500 hover:text-gray-700 cursor-pointer absolute right-0 top-0"
